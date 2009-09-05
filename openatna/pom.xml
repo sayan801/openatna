@@ -72,6 +72,7 @@
 
     <modules>
         <module>syslog</module>
+		<module>anom</module>
     </modules>
     
 
