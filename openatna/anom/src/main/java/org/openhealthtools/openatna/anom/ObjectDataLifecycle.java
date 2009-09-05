@@ -43,7 +43,7 @@ package org.openhealthtools.openatna.anom;
  * @created Sep 5, 2009: 2:50:03 PM
  * @date $Date:$ modified by $Author:$
  */
-public enum ObjectLifecycle {
+public enum ObjectDataLifecycle {
 
     ORIGINATION(1),
     IMPORT(2),
@@ -63,7 +63,7 @@ public enum ObjectLifecycle {
 
     private int value;
 
-    ObjectLifecycle(int value) {
+    ObjectDataLifecycle(int value) {
         this.value = value;
     }
 

@@ -20,35 +20,20 @@
 package org.openhealthtools.openatna.anom;
 
 /**
- *
- * Coded Value
+ * Object Detail
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface CodedValue {
+public interface AnomObjectDetail {
 
-    public String getCode();
+    public String getType();
 
-    public CodedValue setCode(String value);
+    public AnomObjectDetail setType(String value);
 
-    public String getCodeSystem();
+    public byte[] getValue();
 
-    public CodedValue setCodeSystem(String value);
-
-    public String getCodeSystemName();
-
-    public CodedValue setCodeSystemName(String value);
-
-    public String getDisplayName();
-
-    public CodedValue setDisplayName(String value);
-
-    public String getOriginalText();
-
-    public CodedValue setOriginalText(String value);
-
-
+    public AnomObjectDetail setValue(byte[] value);
 }

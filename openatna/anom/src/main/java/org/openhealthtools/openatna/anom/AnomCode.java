@@ -20,21 +20,34 @@
 package org.openhealthtools.openatna.anom;
 
 /**
- *
- * Object Detail
+ * Coded Value
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AuditObjectDetail {
+public interface AnomCode {
 
-    public String getType();
+    public String getCode();
 
-    public AuditObjectDetail setType(String value);
+    public AnomCode setCode(String value);
 
-    public byte[] getValue();
+    public String getCodeSystem();
 
-    public AuditObjectDetail setValue(byte[] value);
+    public AnomCode setCodeSystem(String value);
+
+    public String getCodeSystemName();
+
+    public AnomCode setCodeSystemName(String value);
+
+    public String getDisplayName();
+
+    public AnomCode setDisplayName(String value);
+
+    public String getOriginalText();
+
+    public AnomCode setOriginalText(String value);
+
+
 }

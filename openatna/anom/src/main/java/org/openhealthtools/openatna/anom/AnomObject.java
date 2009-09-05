@@ -22,7 +22,6 @@ package org.openhealthtools.openatna.anom;
 import java.util.List;
 
 /**
- *
  * ParticipantObject
  *
  * @author Andrew Harrison
@@ -30,45 +29,45 @@ import java.util.List;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AuditObject {
+public interface AnomObject {
 
-    public CodedValue getObjectIDTypeCode();
+    public AnomCode getObjectIDTypeCode();
 
-    public AuditObject setObjectIDTypeCode(CodedValue value);
+    public AnomObject setObjectIDTypeCode(AnomCode value);
 
     public String getObjectName();
 
-    public AuditObject setObjectName(String value);
+    public AnomObject setObjectName(String value);
 
     public byte[] getObjectQuery();
 
-    public AuditObject setObjectQuery(byte[] value);
+    public AnomObject setObjectQuery(byte[] value);
 
-    public List<AuditObjectDetail> getObjectDetails();
+    public List<AnomObjectDetail> getObjectDetails();
 
-    public AuditObject addObjectDetail(AuditObjectDetail detail);
+    public AnomObject addObjectDetail(AnomObjectDetail detail);
 
-    public AuditObject removeObjectDetail(AuditObjectDetail detail);
+    public AnomObject removeObjectDetail(AnomObjectDetail detail);
 
     public String getObjectID();
 
-    public AuditObject setObjectID(String value);
+    public AnomObject setObjectID(String value);
 
-    public ObjectType gettObjectTypeCode();
+    public ObjectType getObjectTypeCode();
 
-    public AuditObject setObjectTypeCode(ObjectType value);
+    public AnomObject setObjectTypeCode(ObjectType value);
 
     public ObjectTypeCodeRole getObjectTypeCodeRole();
 
-    public AuditObject setObjectTypeCodeRole(ObjectTypeCodeRole value);
+    public AnomObject setObjectTypeCodeRole(ObjectTypeCodeRole value);
 
-    public ObjectLifecycle getObjectDataLifeCycle();
+    public ObjectDataLifecycle getObjectDataLifeCycle();
 
-    public AuditObject setObjectDataLifeCycle(ObjectLifecycle value);
+    public AnomObject setObjectDataLifeCycle(ObjectDataLifecycle value);
 
     public String getObjectSensitivity();
 
-    public AuditObject setObjectSensitivity(String value);
+    public AnomObject setObjectSensitivity(String value);
 
 
 }

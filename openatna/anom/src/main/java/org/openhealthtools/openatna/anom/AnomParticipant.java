@@ -22,35 +22,43 @@ package org.openhealthtools.openatna.anom;
 import java.util.List;
 
 /**
- *  Audit message interface
+ * Active Participant
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
+public interface AnomParticipant {
 
-public interface AuditMessage {
+    public List<AnomCode> getRoleIDCodes();
 
-    public AuditEvent getAuditEvent();
+    public AnomParticipant addRoleIDCode(AnomCode value);
 
-    public AuditMessage setAuditEvent(AuditEvent value);
+    public AnomParticipant removeRoleIDCode(AnomCode value);
 
-    public List<AuditParticipant> getAuditParticipants();
+    public String getUserID();
 
-    public AuditMessage addAuditParticipant(AuditParticipant participant);
+    public AnomParticipant setUserID(String value);
 
-    public AuditMessage removeAuditParticipant(AuditParticipant participant);
+    public String getAlternativeUserID();
 
-    public List<AuditSource> getAuditSources();
+    public AnomParticipant setAlternativeUserID(String value);
 
-    public AuditMessage addAuditSource(AuditSource auditSource);
+    public String getUserName();
 
-    public AuditMessage removeAuditSource(AuditSource auditSource);
+    public AnomParticipant setUserName(String value);
 
-    public List<AuditObject> getAuditObjects();
+    public boolean isUserIsRequestor();
 
-    public AuditMessage addAuditObject(AuditObject object);
+    public AnomParticipant setUserIsRequestor(Boolean value);
 
-    public AuditMessage removeAuditObject(AuditObject object);
+    public String getNetworkAccessPointID();
+
+    public AnomParticipant setNetworkAccessPointID(String value);
+
+    public NetworkAccessPoint getNetworkAccessPointTypeCode();
+
+    public AnomParticipant setNetworkAccessPointTypeCode(NetworkAccessPoint value);
+
 }
