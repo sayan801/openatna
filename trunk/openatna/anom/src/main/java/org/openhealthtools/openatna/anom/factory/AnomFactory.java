@@ -26,7 +26,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * factory for reading, writing, and creating anom objects
+ * factory for reading, writing, and creating anom objects.
+ * Messages are created by first creating an AnomEvent, and then passing this in.
+ * An AnomEvent is created using an AnomCode, which in turn requires a string code at least:
+ * <p/>
+ * AnomEvent evt = factory.newEvent(factory.newCode("xyz"), EventOutcome.SUCCESS);
+ * AnomMessage msg = factory.newMessage(evt);
+ * msg.addSource(factory.newSource("localhost"))
+ * .addParticipant(factory.newParticipant("me"));
+ * <p/>
+ * confused? :-)
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -40,17 +49,21 @@ public interface AnomFactory {
 
     public void write(AnomMessage message, OutputStream out) throws AnomException, IOException;
 
-    public AnomMessage newMessage();
+    public AnomMessage newMessage(AnomEvent event);
 
-    public AnomSource newSource();
+    public AnomSource newSource(String sourceId);
 
-    public AnomEvent newEvent();
+    public AnomEvent newEvent(AnomCode code, EventOutcome outcome);
 
-    public AnomParticipant newParticipant();
+    public AnomParticipant newParticipant(String userId);
 
-    public AnomObject newObject();
+    public AnomObject newObject(AnomCode objectIdType, String objectId);
 
     public AnomObjectDetail newObjectDetail();
 
-    public AnomCode newCode();
+    public AnomCode newCode(String code);
+
+    public AnomCode newCode(String code, String codeSystem, String codeSystemName);
+
+
 }

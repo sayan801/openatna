@@ -33,8 +33,6 @@ public interface AnomObject {
 
     public AnomCode getObjectIDTypeCode();
 
-    public AnomObject setObjectIDTypeCode(AnomCode value);
-
     public String getObjectName();
 
     public AnomObject setObjectName(String value);
@@ -50,8 +48,6 @@ public interface AnomObject {
     public AnomObject removeObjectDetail(AnomObjectDetail detail);
 
     public String getObjectID();
-
-    public AnomObject setObjectID(String value);
 
     public ObjectType getObjectTypeCode();
 
