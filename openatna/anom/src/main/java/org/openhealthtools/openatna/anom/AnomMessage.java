@@ -23,6 +23,10 @@ import java.util.List;
 
 /**
  * Audit message interface
+ * <p/>
+ * This contains modifiers for everything bar the event.
+ * A message should always have an event, i.e. be constructed with one.
+ * The event itself is still mutable.
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -34,13 +38,13 @@ public interface AnomMessage {
 
     public AnomEvent getEvent();
 
-    public AnomMessage setEvent(AnomEvent value);
-
     public List<AnomParticipant> getParticipants();
 
     public AnomMessage addParticipant(AnomParticipant participant);
 
     public AnomMessage removeParticipant(AnomParticipant participant);
+
+    public AnomParticipant getParticipant(String id);
 
     public List<AnomSource> getSources();
 
@@ -48,9 +52,13 @@ public interface AnomMessage {
 
     public AnomMessage removeSource(AnomSource anomSource);
 
+    public AnomSource getSource(String id);
+
     public List<AnomObject> getObjects();
 
     public AnomMessage addObject(AnomObject object);
 
     public AnomMessage removeObject(AnomObject object);
+
+    public AnomObject getObject(String id);
 }

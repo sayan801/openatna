@@ -21,6 +21,8 @@ package org.openhealthtools.openatna.anom;
 
 /**
  * Coded Value
+ * <p/>
+ * provides setters for everything bar the code which is required
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -30,8 +32,6 @@ package org.openhealthtools.openatna.anom;
 public interface AnomCode {
 
     public String getCode();
-
-    public AnomCode setCode(String value);
 
     public String getCodeSystem();
 
