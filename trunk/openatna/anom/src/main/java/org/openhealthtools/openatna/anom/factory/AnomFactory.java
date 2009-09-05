@@ -21,9 +21,9 @@ package org.openhealthtools.openatna.anom.factory;
 
 import org.openhealthtools.openatna.anom.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
 
 /**
  * factory for reading, writing, and creating anom objects
@@ -36,21 +36,21 @@ import java.io.IOException;
 
 public interface AnomFactory {
 
-    public AuditMessage read(InputStream in) throws AnomException, IOException;
+    public AnomMessage read(InputStream in) throws AnomException, IOException;
 
-    public void write(AuditMessage message, OutputStream out) throws AnomException, IOException;
+    public void write(AnomMessage message, OutputStream out) throws AnomException, IOException;
 
-    public AuditMessage newMessage();
+    public AnomMessage newMessage();
 
-    public AuditSource newSource();
+    public AnomSource newSource();
 
-    public AuditEvent newEvent();
+    public AnomEvent newEvent();
 
-    public AuditParticipant newParticipant();
+    public AnomParticipant newParticipant();
 
-    public AuditObject newObject();
+    public AnomObject newObject();
 
-    public AuditObjectDetail newObjectDetail();
+    public AnomObjectDetail newObjectDetail();
 
-    public CodedValue newCodedValue();
+    public AnomCode newCode();
 }

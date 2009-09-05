@@ -22,27 +22,35 @@ package org.openhealthtools.openatna.anom;
 import java.util.List;
 
 /**
- *
- * Audit Source
+ * Audit message interface
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AuditSource {
 
-    public List<CodedValue> getAuditSourceTypeCodes();
+public interface AnomMessage {
 
-    public AuditSource addAuditSourceTypeCode(CodedValue value);
+    public AnomEvent getEvent();
 
-    public AuditSource removeAuditSourceTypeCode(CodedValue value);
+    public AnomMessage setEvent(AnomEvent value);
 
-    public String getAuditEnterpriseSiteID();
+    public List<AnomParticipant> getParticipants();
 
-    public AuditSource setAuditEnterpriseSiteID(String value);
+    public AnomMessage addParticipant(AnomParticipant participant);
 
-    public String getAuditSourceID();
+    public AnomMessage removeParticipant(AnomParticipant participant);
 
-    public AuditSource setAuditSourceID(String value);
+    public List<AnomSource> getSources();
+
+    public AnomMessage addSource(AnomSource anomSource);
+
+    public AnomMessage removeSource(AnomSource anomSource);
+
+    public List<AnomObject> getObjects();
+
+    public AnomMessage addObject(AnomObject object);
+
+    public AnomMessage removeObject(AnomObject object);
 }

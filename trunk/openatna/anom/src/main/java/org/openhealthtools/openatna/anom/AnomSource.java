@@ -20,39 +20,28 @@
 package org.openhealthtools.openatna.anom;
 
 import java.util.List;
-import java.util.Date;
 
 /**
- *
- * Event Identification
+ * Audit Source
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AuditEvent {
+public interface AnomSource {
 
-    public CodedValue getEventID();
+    public List<AnomCode> getSourceTypeCodes();
 
-    public AuditEvent setEventID(CodedValue value);
+    public AnomSource addSourceTypeCode(AnomCode value);
 
-    public List<CodedValue> getEventTypeCodes();
+    public AnomSource removeSourceTypeCode(AnomCode value);
 
-    public AuditEvent addEventTypeCode(CodedValue value);
+    public String getEnterpriseSiteID();
 
-    public AuditEvent removeEventTypeCode(CodedValue value);
+    public AnomSource setEnterpriseSiteID(String value);
 
-    public String getEventActionCode();
+    public String getSourceID();
 
-    public AuditEvent setEventActionCode(String value);
-
-    public Date getEventDateTime();
-
-    public AuditEvent setEventDateTime(Date value);
-
-    public EventOutcome getEventOutcome();
-
-    public AuditEvent setEventOutcome(EventOutcome value);
-
+    public AnomSource setSourceID(String value);
 }
