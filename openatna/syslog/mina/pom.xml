@@ -16,8 +16,8 @@
     <url>https://openatna.projects.openhealthtools.org</url>
 
     <dependencies>
-		<dependency>
-            <groupId>org.openhealthtools.syslog</groupId>
+        <dependency>
+            <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>syslog-core</artifactId>
             <version>0.1</version>
         </dependency>
@@ -49,8 +49,8 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-            
-		</plugins>
+
+        </plugins>
     </build>
 
 </project>

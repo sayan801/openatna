@@ -19,6 +19,7 @@
 
 package org.openhealthtools.openatna.syslog.transport;
 
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 
 /**
@@ -32,4 +33,6 @@ import org.openhealthtools.openatna.syslog.SyslogMessage;
 public interface SyslogListener {
 
     public void messageArrived(SyslogMessage message);
+
+    public void exceptionThrown(SyslogException exception);
 }

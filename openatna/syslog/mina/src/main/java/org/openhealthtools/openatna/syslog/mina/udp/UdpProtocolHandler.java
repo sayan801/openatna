@@ -19,7 +19,11 @@
 
 package org.openhealthtools.openatna.syslog.mina.udp;
 
-import org.apache.mina.common.*;
+import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IdleStatus;
+import org.apache.mina.common.IoHandlerAdapter;
+import org.apache.mina.common.IoSession;
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
@@ -38,7 +42,7 @@ import java.util.logging.Logger;
 public class UdpProtocolHandler extends IoHandlerAdapter {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.udp.UdpProtocolHandler");
-    
+
 
     private UdpServer server;
     private UdpConfig config;
@@ -64,18 +68,22 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
     public void messageReceived(IoSession session, Object message)
             throws Exception {
         log.info("Enter");
-        
+
         if (!(message instanceof ByteBuffer)) {
             return;
         }
-        ByteBuffer buff = (ByteBuffer)message;
-        if(buff.limit() > config.getMtu()) {
+        ByteBuffer buff = (ByteBuffer) message;
+        if (buff.limit() > config.getMtu()) {
             log.info("message is too long: " + buff.limit() + ". It exceeds config MTU of " + config.getMtu());
             return;
         }
-        InputStream in = buff.asInputStream();
-        SyslogMessageFactory factory = SyslogMessageFactory.getFactory();
-        SyslogMessage msg = factory.read(in);
-        server.notifyListeners(msg);
+        try {
+            InputStream in = buff.asInputStream();
+            SyslogMessageFactory factory = SyslogMessageFactory.getFactory();
+            SyslogMessage msg = factory.read(in);
+            server.notifyListeners(msg);
+        } catch (SyslogException e) {
+            e.printStackTrace();
+        }
     }
 }

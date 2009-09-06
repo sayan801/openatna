@@ -19,12 +19,13 @@
 
 package org.openhealthtools.openatna.syslog.test.udp;
 
-import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
-import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 import org.openhealthtools.openatna.syslog.bsd.BsdMessageFactory;
+import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
+import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 
 import java.io.IOException;
 
@@ -65,6 +66,10 @@ public class BsdServerTest {
             System.out.println(message.toString());
             System.out.println("application message:");
             System.out.println(message.getMessage().getMessageObject());
+        }
+
+        public void exceptionThrown(SyslogException exception) {
+            exception.printStackTrace();
         }
     }
 }

@@ -19,20 +19,23 @@
 
 package org.openhealthtools.openatna.syslog.core.test.tls;
 
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.core.test.tls.ssl.AuthSSLSocketFactory;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 
-import java.util.logging.Logger;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.Set;
-import java.util.HashSet;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * very simple BIO test
@@ -105,6 +108,18 @@ public class TlsServer {
 
     }
 
+    protected void notifyException(final SyslogException ex) {
+        exec.execute(new Runnable() {
+            public void run() {
+                for (SyslogListener listener : listeners) {
+                    log.info("notifying exception...");
+                    listener.exceptionThrown(ex);
+                }
+            }
+        });
+
+    }
+
     private class ServerThread extends Thread {
 
         private ServerSocket server;
@@ -151,7 +166,12 @@ public class TlsServer {
                     }
                     if (count > 0) {
                         int length = Integer.parseInt(new String(b, 0, count));
-                        SyslogMessage msg = createMessage(in, length);
+                        SyslogMessage msg = null;
+                        try {
+                            msg = createMessage(in, length);
+                        } catch (SyslogException e) {
+                            notifyException(e);
+                        }
                         if (msg != null) {
                             notifyListeners(msg);
                         }
@@ -159,20 +179,18 @@ public class TlsServer {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                notifyException(new SyslogException(e));
             }
 
         }
 
-        private SyslogMessage createMessage(InputStream in, int length) {
-            try {
-                byte[] msg = new byte[length];
-                int len = in.read(msg);
-                // doesn't even check to see if the full length has been read!
-                return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(msg));
-            } catch (Exception e) {
-                return null;
-            }
+        private SyslogMessage createMessage(InputStream in, int length) throws SyslogException, IOException {
+
+            byte[] msg = new byte[length];
+            int len = in.read(msg);
+            // doesn't even check to see if the full length has been read!
+            return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(msg));
+
         }
     }
 }

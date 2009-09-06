@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
+import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoSession;
+import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.apache.mina.filter.codec.demux.MessageDecoder;
 import org.apache.mina.filter.codec.demux.MessageDecoderResult;
-import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.apache.mina.common.IoSession;
-import org.apache.mina.common.ByteBuffer;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
@@ -44,7 +44,8 @@ public class SyslogMessageDecoder implements MessageDecoder {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.SyslogMessageDecoder");
 
-    private ByteBuffer msg = ByteBuffer.wrap(new byte[0]);;
+    private ByteBuffer msg = ByteBuffer.wrap(new byte[0]);
+    ;
     private int headerLength = 0;
 
     public MessageDecoderResult decodable(IoSession ioSession, ByteBuffer byteBuffer) {
@@ -66,17 +67,20 @@ public class SyslogMessageDecoder implements MessageDecoder {
         if (msg.remaining() > 0) {
             return MessageDecoderResult.NEED_DATA;
         } else {
-            SyslogMessage sm = createMessage(msg);
-            msg.clear();
-            if (sm != null) {
-                protocolDecoderOutput.write(sm);
+            try {
+                SyslogMessage sm = createMessage(msg);
+                msg.clear();
+                if (sm != null) {
+                    protocolDecoderOutput.write(sm);
+                    return MessageDecoderResult.OK;
+                }
+            } catch (SyslogException e) {
+                protocolDecoderOutput.write(e);
                 return MessageDecoderResult.OK;
             }
             return MessageDecoderResult.NOT_OK;
         }
     }
-
-
 
 
     public void finishDecode(IoSession ioSession, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
@@ -120,11 +124,7 @@ public class SyslogMessageDecoder implements MessageDecoder {
 
     }
 
-    private SyslogMessage createMessage(ByteBuffer buff) {
-        try {
-            return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(buff.array()));
-        } catch (SyslogException e) {
-            return null;
-        }
+    private SyslogMessage createMessage(ByteBuffer buff) throws SyslogException {
+        return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(buff.array()));
     }
 }
