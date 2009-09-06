@@ -166,11 +166,13 @@ public class TlsServer {
                     }
                     if (count > 0) {
                         int length = Integer.parseInt(new String(b, 0, count));
+                        byte[] bytes = new byte[length];
+                        int len = in.read(bytes);
                         SyslogMessage msg = null;
                         try {
-                            msg = createMessage(in, length);
+                            msg = createMessage(bytes);
                         } catch (SyslogException e) {
-                            notifyException(e);
+                            notifyException(new SyslogException(e, bytes));
                         }
                         if (msg != null) {
                             notifyListeners(msg);
@@ -184,12 +186,11 @@ public class TlsServer {
 
         }
 
-        private SyslogMessage createMessage(InputStream in, int length) throws SyslogException, IOException {
+        private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
 
-            byte[] msg = new byte[length];
-            int len = in.read(msg);
+
             // doesn't even check to see if the full length has been read!
-            return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(msg));
+            return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
 
         }
     }

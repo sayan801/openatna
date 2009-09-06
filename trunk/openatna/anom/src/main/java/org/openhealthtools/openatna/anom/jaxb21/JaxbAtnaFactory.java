@@ -19,8 +19,6 @@
 
 package org.openhealthtools.openatna.anom.jaxb21;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.*;
 import org.openhealthtools.openatna.anom.jaxb21.schema.AuditMessage;
 
@@ -42,10 +40,7 @@ import java.util.Date;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomFactory extends AnomFactory {
-
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.anom.jaxb21.JaxbAnomFactory");
-
+public class JaxbAtnaFactory extends AtnaFactory {
 
     static JAXBContext jc;
 
@@ -53,82 +48,82 @@ public class JaxbAnomFactory extends AnomFactory {
         try {
             jc = JAXBContext.newInstance("org.openhealthtools.openatna.anom.jaxb21.schema");
         } catch (JAXBException e) {
-            log.error("Error creating JAXB context:", e);
+            // this is fatal and out fault
+            throw new RuntimeException("Error creating JAXB context:", e);
         }
     }
 
-    public AnomMessage read(InputStream in) throws AnomException, IOException {
+    public AtnaMessage read(InputStream in) throws AtnaException, IOException {
         if (jc == null) {
-            throw new AnomException("Could not create Jaxb Context");
+            throw new AtnaException("Could not create Jaxb Context");
         }
         try {
             Unmarshaller u = jc.createUnmarshaller();
             AuditMessage a = (AuditMessage) u.unmarshal(in);
-            JaxbAnomMessage jm = new JaxbAnomMessage(a);
+            JaxbAtnaMessage jm = new JaxbAtnaMessage(a);
             validate(jm);
             return jm;
         } catch (JAXBException e) {
-            e.printStackTrace();
-            return null;
+            throw new AtnaException(e);
         }
     }
 
-    public void write(AnomMessage message, OutputStream out) throws AnomException, IOException {
+    public void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException {
         if (jc == null) {
-            throw new AnomException("Could not create Jaxb Context");
+            throw new AtnaException("Could not create Jaxb Context");
         }
         if (message.getEvent().getEventDateTime() == null) {
             message.getEvent().setEventDateTime(new Date());
         }
         validate(message);
         try {
-            if (message instanceof JaxbAnomMessage) {
-                JaxbAnomMessage jmessage = (JaxbAnomMessage) message;
+            if (message instanceof JaxbAtnaMessage) {
+                JaxbAtnaMessage jmessage = (JaxbAtnaMessage) message;
                 Marshaller marshaller = jc.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                 marshaller.marshal(jmessage.getMessage(), out);
             }
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new AtnaException(e);
         }
     }
 
-    public AnomMessage newMessage(AnomEvent event) {
-        if (event instanceof JaxbAnomEvent) {
-            return new JaxbAnomMessage((JaxbAnomEvent) event);
-        }
-        return null;
-    }
-
-    public AnomSource newSource(String sourceId) {
-        return new JaxbAnomSource(sourceId);
-    }
-
-    public AnomEvent newEvent(AnomCode code, EventOutcome outcome) {
-        if (code instanceof JaxbAnomCode) {
-            return new JaxbAnomEvent((JaxbAnomCode) code, outcome);
+    public AtnaMessage newMessage(AtnaEvent event) {
+        if (event instanceof JaxbAtnaEvent) {
+            return new JaxbAtnaMessage((JaxbAtnaEvent) event);
         }
         return null;
     }
 
-    public AnomParticipant newParticipant(String userId) {
-        return new JaxbAnomParticipant(userId);
+    public AtnaSource newSource(String sourceId) {
+        return new JaxbAtnaSource(sourceId);
     }
 
-    public AnomObject newObject(AnomCode objectIdType, String objectId) {
-        return new JaxbAnomObject(objectIdType, objectId);
+    public AtnaEvent newEvent(AtnaCode code, EventOutcome outcome) {
+        if (code instanceof JaxbAtnaCode) {
+            return new JaxbAtnaEvent((JaxbAtnaCode) code, outcome);
+        }
+        return null;
     }
 
-    public AnomObjectDetail newObjectDetail() {
+    public AtnaParticipant newParticipant(String userId) {
+        return new JaxbAtnaParticipant(userId);
+    }
+
+    public AtnaObject newObject(AtnaCode objectIdType, String objectId) {
+        return new JaxbAtnaObject(objectIdType, objectId);
+    }
+
+    public AtnaObjectDetail newObjectDetail() {
         return new JaxbObjectDetail();
     }
 
-    public AnomCode newCode(String code) {
-        return new JaxbAnomCode(code);
+    public AtnaCode newCode(String code) {
+        return new JaxbAtnaCode(code);
     }
 
-    public AnomCode newCode(String code, String codeSystem, String codeSystemName) {
-        JaxbAnomCode jcode = new JaxbAnomCode(code);
+    public AtnaCode newCode(String code, String codeSystem, String codeSystemName) {
+        JaxbAtnaCode jcode = new JaxbAtnaCode(code);
         jcode.setCodeSystem(codeSystem);
         jcode.setCodeSystemName(codeSystemName);
         return jcode;

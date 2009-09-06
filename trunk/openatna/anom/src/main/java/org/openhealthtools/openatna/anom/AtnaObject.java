@@ -29,19 +29,19 @@ import java.util.List;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AnomObject {
+public interface AtnaObject {
 
-    public AnomCode getObjectIDTypeCode();
+    public AtnaCode getObjectIDTypeCode();
 
     public String getObjectName();
 
-    public AnomObject setObjectName(String value);
+    public AtnaObject setObjectName(String value);
 
     public byte[] getObjectQuery();
 
-    public AnomObject setObjectQuery(byte[] value);
+    public AtnaObject setObjectQuery(byte[] value);
 
-    public List<AnomObjectDetail> getObjectDetails();
+    public List<AtnaObjectDetail> getObjectDetails();
 
     /**
      * object details are not mapped uniquely to their type
@@ -49,29 +49,29 @@ public interface AnomObject {
      * @param type
      * @return
      */
-    public List<AnomObjectDetail> getObjectDetails(String type);
+    public List<AtnaObjectDetail> getObjectDetails(String type);
 
-    public AnomObject addObjectDetail(AnomObjectDetail detail);
+    public AtnaObject addObjectDetail(AtnaObjectDetail detail);
 
-    public AnomObject removeObjectDetail(AnomObjectDetail detail);
+    public AtnaObject removeObjectDetail(AtnaObjectDetail detail);
 
     public String getObjectID();
 
     public ObjectType getObjectTypeCode();
 
-    public AnomObject setObjectTypeCode(ObjectType value);
+    public AtnaObject setObjectTypeCode(ObjectType value);
 
     public ObjectTypeCodeRole getObjectTypeCodeRole();
 
-    public AnomObject setObjectTypeCodeRole(ObjectTypeCodeRole value);
+    public AtnaObject setObjectTypeCodeRole(ObjectTypeCodeRole value);
 
     public ObjectDataLifecycle getObjectDataLifeCycle();
 
-    public AnomObject setObjectDataLifeCycle(ObjectDataLifecycle value);
+    public AtnaObject setObjectDataLifeCycle(ObjectDataLifecycle value);
 
     public String getObjectSensitivity();
 
-    public AnomObject setObjectSensitivity(String value);
+    public AtnaObject setObjectSensitivity(String value);
 
 
 }

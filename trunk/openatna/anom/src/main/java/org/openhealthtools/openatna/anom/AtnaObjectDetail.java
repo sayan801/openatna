@@ -27,13 +27,13 @@ package org.openhealthtools.openatna.anom;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AnomObjectDetail {
+public interface AtnaObjectDetail {
 
     public String getType();
 
-    public AnomObjectDetail setType(String value);
+    public AtnaObjectDetail setType(String value);
 
     public byte[] getValue();
 
-    public AnomObjectDetail setValue(byte[] value);
+    public AtnaObjectDetail setValue(byte[] value);
 }

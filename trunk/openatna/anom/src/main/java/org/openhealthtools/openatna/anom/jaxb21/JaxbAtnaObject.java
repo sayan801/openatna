@@ -35,25 +35,25 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomObject implements AnomObject {
+public class JaxbAtnaObject implements AtnaObject {
 
     private ParticipantObjectIdentificationType object;
 
-    public JaxbAnomObject(ParticipantObjectIdentificationType object) {
+    public JaxbAtnaObject(ParticipantObjectIdentificationType object) {
         this.object = object;
     }
 
-    public JaxbAnomObject(AnomCode objectIdType, String id) {
+    public JaxbAtnaObject(AtnaCode objectIdType, String id) {
         this.object = new ParticipantObjectIdentificationType();
         object.setParticipantObjectID(id);
-        if (objectIdType instanceof JaxbAnomCode) {
-            object.setParticipantObjectIDTypeCode(((JaxbAnomCode) objectIdType).getCodedValueType());
+        if (objectIdType instanceof JaxbAtnaCode) {
+            object.setParticipantObjectIDTypeCode(((JaxbAtnaCode) objectIdType).getCodedValueType());
         }
     }
 
-    public AnomCode getObjectIDTypeCode() {
+    public AtnaCode getObjectIDTypeCode() {
         if (object.getParticipantObjectIDTypeCode() != null) {
-            return new JaxbAnomCode(object.getParticipantObjectIDTypeCode());
+            return new JaxbAtnaCode(object.getParticipantObjectIDTypeCode());
         }
         return null;
     }
@@ -62,7 +62,7 @@ public class JaxbAnomObject implements AnomObject {
         return object.getParticipantObjectName();
     }
 
-    public AnomObject setObjectName(String value) {
+    public AtnaObject setObjectName(String value) {
         object.setParticipantObjectName(value);
         return this;
     }
@@ -71,23 +71,23 @@ public class JaxbAnomObject implements AnomObject {
         return object.getParticipantObjectQuery();
     }
 
-    public AnomObject setObjectQuery(byte[] value) {
+    public AtnaObject setObjectQuery(byte[] value) {
         object.setParticipantObjectQuery(value);
         return this;
     }
 
-    public List<AnomObjectDetail> getObjectDetails() {
+    public List<AtnaObjectDetail> getObjectDetails() {
         List<TypeValuePairType> details = object.getParticipantObjectDetail();
-        List<AnomObjectDetail> ret = new ArrayList<AnomObjectDetail>();
+        List<AtnaObjectDetail> ret = new ArrayList<AtnaObjectDetail>();
         for (TypeValuePairType detail : details) {
             ret.add(new JaxbObjectDetail(detail));
         }
         return ret;
     }
 
-    public List<AnomObjectDetail> getObjectDetails(String type) {
+    public List<AtnaObjectDetail> getObjectDetails(String type) {
         List<TypeValuePairType> details = object.getParticipantObjectDetail();
-        List<AnomObjectDetail> ret = new ArrayList<AnomObjectDetail>();
+        List<AtnaObjectDetail> ret = new ArrayList<AtnaObjectDetail>();
         for (TypeValuePairType detail : details) {
             if (detail.getType().equals(type)) {
                 ret.add(new JaxbObjectDetail(detail));
@@ -96,14 +96,14 @@ public class JaxbAnomObject implements AnomObject {
         return ret;
     }
 
-    public AnomObject addObjectDetail(AnomObjectDetail detail) {
+    public AtnaObject addObjectDetail(AtnaObjectDetail detail) {
         if (detail instanceof JaxbObjectDetail) {
             object.getParticipantObjectDetail().add(((JaxbObjectDetail) detail).getPair());
         }
         return this;
     }
 
-    public AnomObject removeObjectDetail(AnomObjectDetail detail) {
+    public AtnaObject removeObjectDetail(AtnaObjectDetail detail) {
         if (detail instanceof JaxbObjectDetail) {
             object.getParticipantObjectDetail().remove(((JaxbObjectDetail) detail).getPair());
         }
@@ -118,7 +118,7 @@ public class JaxbAnomObject implements AnomObject {
         return ObjectType.getType(object.getParticipantObjectTypeCode());
     }
 
-    public AnomObject setObjectTypeCode(ObjectType value) {
+    public AtnaObject setObjectTypeCode(ObjectType value) {
         object.setParticipantObjectTypeCode((short) value.value());
         return this;
     }
@@ -127,7 +127,7 @@ public class JaxbAnomObject implements AnomObject {
         return ObjectTypeCodeRole.getRole(object.getParticipantObjectTypeCodeRole());
     }
 
-    public AnomObject setObjectTypeCodeRole(ObjectTypeCodeRole value) {
+    public AtnaObject setObjectTypeCodeRole(ObjectTypeCodeRole value) {
         object.setParticipantObjectTypeCodeRole((short) value.value());
         return this;
     }
@@ -136,7 +136,7 @@ public class JaxbAnomObject implements AnomObject {
         return ObjectDataLifecycle.getLifecycle(object.getParticipantObjectDataLifeCycle());
     }
 
-    public AnomObject setObjectDataLifeCycle(ObjectDataLifecycle value) {
+    public AtnaObject setObjectDataLifeCycle(ObjectDataLifecycle value) {
         object.setParticipantObjectDataLifeCycle((short) value.value());
         return this;
     }
@@ -145,7 +145,7 @@ public class JaxbAnomObject implements AnomObject {
         return object.getParticipantObjectSensitivity();
     }
 
-    public AnomObject setObjectSensitivity(String value) {
+    public AtnaObject setObjectSensitivity(String value) {
         object.setParticipantObjectSensitivity(value);
         return this;
     }

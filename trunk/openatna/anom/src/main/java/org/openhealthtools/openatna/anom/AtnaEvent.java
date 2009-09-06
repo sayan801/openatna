@@ -19,46 +19,37 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.util.Date;
 import java.util.List;
 
 /**
- * Active Participant
+ * Event Identification
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AnomParticipant {
+public interface AtnaEvent {
 
-    public List<AnomCode> getRoleIDCodes();
+    public AtnaCode getEventCode();
 
-    public AnomParticipant addRoleIDCode(AnomCode value);
+    public List<AtnaCode> getEventTypeCodes();
 
-    public AnomParticipant removeRoleIDCode(AnomCode value);
+    public AtnaEvent addEventTypeCode(AtnaCode value);
 
-    public String getUserID();
+    public AtnaEvent removeEventTypeCode(AtnaCode value);
 
-    public AnomParticipant setUserID(String value);
+    public EventAction getEventActionCode();
 
-    public String getAlternativeUserID();
+    public AtnaEvent setEventActionCode(EventAction value);
 
-    public AnomParticipant setAlternativeUserID(String value);
+    public Date getEventDateTime();
 
-    public String getUserName();
+    public AtnaEvent setEventDateTime(Date value);
 
-    public AnomParticipant setUserName(String value);
+    public EventOutcome getEventOutcome();
 
-    public boolean isUserIsRequestor();
-
-    public AnomParticipant setUserIsRequestor(Boolean value);
-
-    public String getNetworkAccessPointID();
-
-    public AnomParticipant setNetworkAccessPointID(String value);
-
-    public NetworkAccessPoint getNetworkAccessPointTypeCode();
-
-    public AnomParticipant setNetworkAccessPointTypeCode(NetworkAccessPoint value);
+    public AtnaEvent setEventOutcome(EventOutcome value);
 
 }

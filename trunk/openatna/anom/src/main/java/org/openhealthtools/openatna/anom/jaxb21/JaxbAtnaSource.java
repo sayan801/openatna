@@ -19,8 +19,8 @@
 
 package org.openhealthtools.openatna.anom.jaxb21;
 
-import org.openhealthtools.openatna.anom.AnomCode;
-import org.openhealthtools.openatna.anom.AnomSource;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaSource;
 import org.openhealthtools.openatna.anom.jaxb21.schema.AuditSourceIdentificationType;
 import org.openhealthtools.openatna.anom.jaxb21.schema.CodedValueType;
 
@@ -36,39 +36,39 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomSource implements AnomSource {
+public class JaxbAtnaSource implements AtnaSource {
 
     private AuditSourceIdentificationType source;
 
-    public JaxbAnomSource(AuditSourceIdentificationType source) {
+    public JaxbAtnaSource(AuditSourceIdentificationType source) {
         this.source = source;
     }
 
-    public JaxbAnomSource(String sourceId) {
+    public JaxbAtnaSource(String sourceId) {
         this.source = new AuditSourceIdentificationType();
         this.source.setAuditSourceID(sourceId);
     }
 
-    public List<AnomCode> getSourceTypeCodes() {
-        List<AnomCode> codes = new ArrayList<AnomCode>();
+    public List<AtnaCode> getSourceTypeCodes() {
+        List<AtnaCode> codes = new ArrayList<AtnaCode>();
         List<CodedValueType> l = source.getAuditSourceTypeCode();
         for (CodedValueType codedValueType : l) {
-            codes.add(new JaxbAnomCode(codedValueType));
+            codes.add(new JaxbAtnaCode(codedValueType));
         }
         return codes;
     }
 
-    public AnomSource addSourceTypeCode(AnomCode value) {
-        if (value instanceof JaxbAnomCode) {
-            JaxbAnomCode code = (JaxbAnomCode) value;
+    public AtnaSource addSourceTypeCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
             source.getAuditSourceTypeCode().add(code.getCodedValueType());
         }
         return this;
     }
 
-    public AnomSource removeSourceTypeCode(AnomCode value) {
-        if (value instanceof JaxbAnomCode) {
-            JaxbAnomCode code = (JaxbAnomCode) value;
+    public AtnaSource removeSourceTypeCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
             source.getAuditSourceTypeCode().remove(code.getCodedValueType());
         }
         return this;
@@ -78,7 +78,7 @@ public class JaxbAnomSource implements AnomSource {
         return source.getAuditEnterpriseSiteID();
     }
 
-    public AnomSource setEnterpriseSiteID(String value) {
+    public AtnaSource setEnterpriseSiteID(String value) {
         source.setAuditEnterpriseSiteID(value);
         return this;
     }
@@ -87,7 +87,7 @@ public class JaxbAnomSource implements AnomSource {
         return source.getAuditSourceID();
     }
 
-    public AnomSource setSourceID(String value) {
+    public AtnaSource setSourceID(String value) {
         source.setAuditSourceID(value);
         return this;
     }

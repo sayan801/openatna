@@ -29,25 +29,25 @@ package org.openhealthtools.openatna.anom;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AnomCode {
+public interface AtnaCode {
 
     public String getCode();
 
     public String getCodeSystem();
 
-    public AnomCode setCodeSystem(String value);
+    public AtnaCode setCodeSystem(String value);
 
     public String getCodeSystemName();
 
-    public AnomCode setCodeSystemName(String value);
+    public AtnaCode setCodeSystemName(String value);
 
     public String getDisplayName();
 
-    public AnomCode setDisplayName(String value);
+    public AtnaCode setDisplayName(String value);
 
     public String getOriginalText();
 
-    public AnomCode setOriginalText(String value);
+    public AtnaCode setOriginalText(String value);
 
 
 }

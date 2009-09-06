@@ -19,8 +19,8 @@
 
 package org.openhealthtools.openatna.anom.jaxb21;
 
-import org.openhealthtools.openatna.anom.AnomCode;
-import org.openhealthtools.openatna.anom.AnomParticipant;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaParticipant;
 import org.openhealthtools.openatna.anom.NetworkAccessPoint;
 import org.openhealthtools.openatna.anom.jaxb21.schema.ActiveParticipantType;
 import org.openhealthtools.openatna.anom.jaxb21.schema.CodedValueType;
@@ -37,39 +37,39 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomParticipant implements AnomParticipant {
+public class JaxbAtnaParticipant implements AtnaParticipant {
 
     private ActiveParticipantType participant;
 
-    public JaxbAnomParticipant(ActiveParticipantType participant) {
+    public JaxbAtnaParticipant(ActiveParticipantType participant) {
         this.participant = participant;
     }
 
-    public JaxbAnomParticipant(String userId) {
+    public JaxbAtnaParticipant(String userId) {
         this.participant = new ActiveParticipantType();
         participant.setUserID(userId);
     }
 
-    public List<AnomCode> getRoleIDCodes() {
-        List<AnomCode> codes = new ArrayList<AnomCode>();
+    public List<AtnaCode> getRoleIDCodes() {
+        List<AtnaCode> codes = new ArrayList<AtnaCode>();
         List<CodedValueType> l = participant.getRoleIDCode();
         for (CodedValueType codedValueType : l) {
-            codes.add(new JaxbAnomCode(codedValueType));
+            codes.add(new JaxbAtnaCode(codedValueType));
         }
         return codes;
     }
 
-    public AnomParticipant addRoleIDCode(AnomCode value) {
-        if (value instanceof JaxbAnomCode) {
-            JaxbAnomCode code = (JaxbAnomCode) value;
+    public AtnaParticipant addRoleIDCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
             participant.getRoleIDCode().add(code.getCodedValueType());
         }
         return this;
     }
 
-    public AnomParticipant removeRoleIDCode(AnomCode value) {
-        if (value instanceof JaxbAnomCode) {
-            JaxbAnomCode code = (JaxbAnomCode) value;
+    public AtnaParticipant removeRoleIDCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
             participant.getRoleIDCode().remove(code.getCodedValueType());
         }
         return this;
@@ -79,7 +79,7 @@ public class JaxbAnomParticipant implements AnomParticipant {
         return participant.getUserID();
     }
 
-    public AnomParticipant setUserID(String value) {
+    public AtnaParticipant setUserID(String value) {
         participant.setUserID(value);
         return this;
     }
@@ -88,7 +88,7 @@ public class JaxbAnomParticipant implements AnomParticipant {
         return participant.getAlternativeUserID();
     }
 
-    public AnomParticipant setAlternativeUserID(String value) {
+    public AtnaParticipant setAlternativeUserID(String value) {
         participant.setAlternativeUserID(value);
         return this;
     }
@@ -97,7 +97,7 @@ public class JaxbAnomParticipant implements AnomParticipant {
         return participant.getUserName();
     }
 
-    public AnomParticipant setUserName(String value) {
+    public AtnaParticipant setUserName(String value) {
         participant.setUserName(value);
         return this;
     }
@@ -106,7 +106,7 @@ public class JaxbAnomParticipant implements AnomParticipant {
         return participant.isUserIsRequestor();
     }
 
-    public AnomParticipant setUserIsRequestor(Boolean value) {
+    public AtnaParticipant setUserIsRequestor(Boolean value) {
         participant.setUserIsRequestor(value);
         return this;
     }
@@ -115,7 +115,7 @@ public class JaxbAnomParticipant implements AnomParticipant {
         return participant.getNetworkAccessPointID();
     }
 
-    public AnomParticipant setNetworkAccessPointID(String value) {
+    public AtnaParticipant setNetworkAccessPointID(String value) {
         participant.setNetworkAccessPointID(value);
         return this;
     }
@@ -124,7 +124,7 @@ public class JaxbAnomParticipant implements AnomParticipant {
         return NetworkAccessPoint.getAccessPoint(participant.getNetworkAccessPointTypeCode());
     }
 
-    public AnomParticipant setNetworkAccessPointTypeCode(NetworkAccessPoint value) {
+    public AtnaParticipant setNetworkAccessPointTypeCode(NetworkAccessPoint value) {
         participant.setNetworkAccessPointTypeCode((short) value.value());
         return this;
     }

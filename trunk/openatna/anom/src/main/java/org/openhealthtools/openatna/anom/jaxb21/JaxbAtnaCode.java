@@ -19,7 +19,7 @@
 
 package org.openhealthtools.openatna.anom.jaxb21;
 
-import org.openhealthtools.openatna.anom.AnomCode;
+import org.openhealthtools.openatna.anom.AtnaCode;
 import org.openhealthtools.openatna.anom.jaxb21.schema.CodedValueType;
 
 /**
@@ -31,15 +31,15 @@ import org.openhealthtools.openatna.anom.jaxb21.schema.CodedValueType;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomCode implements AnomCode {
+public class JaxbAtnaCode implements AtnaCode {
 
     private CodedValueType cvt;
 
-    public JaxbAnomCode(CodedValueType cvt) {
+    public JaxbAtnaCode(CodedValueType cvt) {
         this.cvt = cvt;
     }
 
-    public JaxbAnomCode(String code) {
+    public JaxbAtnaCode(String code) {
         cvt = new CodedValueType();
         cvt.setCode(code);
     }
@@ -52,7 +52,7 @@ public class JaxbAnomCode implements AnomCode {
         return cvt.getCodeSystem();
     }
 
-    public AnomCode setCodeSystem(String value) {
+    public AtnaCode setCodeSystem(String value) {
         cvt.setCodeSystem(value);
         return this;
     }
@@ -61,7 +61,7 @@ public class JaxbAnomCode implements AnomCode {
         return cvt.getCodeSystemName();
     }
 
-    public AnomCode setCodeSystemName(String value) {
+    public AtnaCode setCodeSystemName(String value) {
         cvt.setCodeSystemName(value);
         return this;
     }
@@ -70,7 +70,7 @@ public class JaxbAnomCode implements AnomCode {
         return cvt.getDisplayName();
     }
 
-    public AnomCode setDisplayName(String value) {
+    public AtnaCode setDisplayName(String value) {
         cvt.setDisplayName(value);
         return this;
     }
@@ -79,7 +79,7 @@ public class JaxbAnomCode implements AnomCode {
         return cvt.getOriginalText();
     }
 
-    public AnomCode setOriginalText(String value) {
+    public AtnaCode setOriginalText(String value) {
         cvt.setOriginalText(value);
         return this;
     }

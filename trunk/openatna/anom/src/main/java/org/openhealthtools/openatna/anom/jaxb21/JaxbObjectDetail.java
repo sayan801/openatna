@@ -19,7 +19,7 @@
 
 package org.openhealthtools.openatna.anom.jaxb21;
 
-import org.openhealthtools.openatna.anom.AnomObjectDetail;
+import org.openhealthtools.openatna.anom.AtnaObjectDetail;
 import org.openhealthtools.openatna.anom.jaxb21.schema.TypeValuePairType;
 
 /**
@@ -31,7 +31,7 @@ import org.openhealthtools.openatna.anom.jaxb21.schema.TypeValuePairType;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbObjectDetail implements AnomObjectDetail {
+public class JaxbObjectDetail implements AtnaObjectDetail {
 
     private TypeValuePairType pair;
 
@@ -47,7 +47,7 @@ public class JaxbObjectDetail implements AnomObjectDetail {
         return pair.getType();
     }
 
-    public AnomObjectDetail setType(String value) {
+    public AtnaObjectDetail setType(String value) {
         pair.setType(value);
         return this;
     }
@@ -56,7 +56,7 @@ public class JaxbObjectDetail implements AnomObjectDetail {
         return pair.getValue();
     }
 
-    public AnomObjectDetail setValue(byte[] value) {
+    public AtnaObjectDetail setValue(byte[] value) {
         pair.setValue(value);
         return this;
     }

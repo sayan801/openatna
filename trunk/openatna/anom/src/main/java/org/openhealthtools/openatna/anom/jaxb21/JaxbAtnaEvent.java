@@ -19,8 +19,8 @@
 
 package org.openhealthtools.openatna.anom.jaxb21;
 
-import org.openhealthtools.openatna.anom.AnomCode;
-import org.openhealthtools.openatna.anom.AnomEvent;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaEvent;
 import org.openhealthtools.openatna.anom.EventAction;
 import org.openhealthtools.openatna.anom.EventOutcome;
 import org.openhealthtools.openatna.anom.jaxb21.schema.CodedValueType;
@@ -39,44 +39,44 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomEvent implements AnomEvent {
+public class JaxbAtnaEvent implements AtnaEvent {
 
     private EventIdentificationType evt;
 
-    public JaxbAnomEvent(EventIdentificationType evt) {
+    public JaxbAtnaEvent(EventIdentificationType evt) {
         this.evt = evt;
     }
 
-    public JaxbAnomEvent(JaxbAnomCode code, EventOutcome outcome) {
+    public JaxbAtnaEvent(JaxbAtnaCode code, EventOutcome outcome) {
         evt = new EventIdentificationType();
         evt.setEventID(code.getCodedValueType());
         evt.setEventOutcome(outcome.value());
     }
 
-    public AnomCode getEventCode() {
-        return new JaxbAnomCode(evt.getEventID());
+    public AtnaCode getEventCode() {
+        return new JaxbAtnaCode(evt.getEventID());
     }
 
-    public List<AnomCode> getEventTypeCodes() {
-        List<AnomCode> codes = new ArrayList<AnomCode>();
+    public List<AtnaCode> getEventTypeCodes() {
+        List<AtnaCode> codes = new ArrayList<AtnaCode>();
         List<CodedValueType> l = evt.getEventTypeCode();
         for (CodedValueType codedValueType : l) {
-            codes.add(new JaxbAnomCode(codedValueType));
+            codes.add(new JaxbAtnaCode(codedValueType));
         }
         return codes;
     }
 
-    public AnomEvent addEventTypeCode(AnomCode value) {
-        if (value instanceof JaxbAnomCode) {
-            JaxbAnomCode code = (JaxbAnomCode) value;
+    public AtnaEvent addEventTypeCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
             evt.getEventTypeCode().add(code.getCodedValueType());
         }
         return this;
     }
 
-    public AnomEvent removeEventTypeCode(AnomCode value) {
-        if (value instanceof JaxbAnomCode) {
-            JaxbAnomCode code = (JaxbAnomCode) value;
+    public AtnaEvent removeEventTypeCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
             evt.getEventTypeCode().remove(code.getCodedValueType());
         }
         return this;
@@ -86,7 +86,7 @@ public class JaxbAnomEvent implements AnomEvent {
         return EventAction.getAction(evt.getEventActionCode());
     }
 
-    public AnomEvent setEventActionCode(EventAction value) {
+    public AtnaEvent setEventActionCode(EventAction value) {
         evt.setEventActionCode(value.value());
         return this;
     }
@@ -95,7 +95,7 @@ public class JaxbAnomEvent implements AnomEvent {
         return evt.getEventTime();
     }
 
-    public AnomEvent setEventDateTime(Date value) {
+    public AtnaEvent setEventDateTime(Date value) {
         evt.setEventTime(value);
         return this;
     }
@@ -104,7 +104,7 @@ public class JaxbAnomEvent implements AnomEvent {
         return EventOutcome.getOutcome(evt.getEventOutcome());
     }
 
-    public AnomEvent setEventOutcome(EventOutcome value) {
+    public AtnaEvent setEventOutcome(EventOutcome value) {
         evt.setEventOutcome(value.value());
         return this;
     }
