@@ -16,19 +16,14 @@
 
 package org.openhealthtools.openatna.syslog;
 
-import org.openhealthtools.openatna.syslog.protocol.ProtocolMessageFactory;
 import org.openhealthtools.openatna.syslog.message.StringLogMessage;
-import org.openhealthtools.openatna.syslog.Constants;
-import org.openhealthtools.openatna.syslog.LogMessage;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
 
-import java.io.InputStream;
-import java.io.PushbackInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
+import java.io.PushbackInputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The SyslogMessageFactory is the super class of message factories. It
@@ -71,7 +66,7 @@ public abstract class SyslogMessageFactory {
 
     public static Class<? extends LogMessage> defaultMessage = StringLogMessage.class;
 
-    private static SyslogMessageFactory currFactory = new ProtocolMessageFactory();
+    private static SyslogMessageFactory currFactory = new GenericMessageFactory();
 
     public static void registerLogMessage(String msgId, Class<? extends LogMessage> cls) {
         messages.put(msgId, cls);

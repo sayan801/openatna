@@ -21,13 +21,13 @@ package org.openhealthtools.openatna.syslog.bsd;
 
 import org.openhealthtools.openatna.syslog.*;
 
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -60,8 +60,8 @@ public class BsdMessageFactory extends SyslogMessageFactory {
     }
 
     /**
-     * reads the priority value and positions the stream at the space greater than sign.
-     * This reads up to 5 characters to read the priority and version and the following space.
+     * reads the priority value and positions the stream at the space after greater than sign.
+     * This reads up to 5 characters to read the priority and the following space.
      *
      * @param in
      * @return
@@ -179,7 +179,7 @@ public class BsdMessageFactory extends SyslogMessageFactory {
                 }
                 buff.put(c);
             }
-            if(buff.position() > 0) {
+            if (buff.position() > 0) {
                 tag = new String(buff.array(), 0, buff.position(), Constants.ENC_UTF8);
             }
 
