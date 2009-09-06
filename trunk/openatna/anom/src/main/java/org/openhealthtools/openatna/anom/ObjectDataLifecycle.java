@@ -71,4 +71,13 @@ public enum ObjectDataLifecycle {
         return value;
     }
 
+    public static ObjectDataLifecycle getLifecycle(int value) {
+        for (ObjectDataLifecycle o : values()) {
+            if (o.value() == value) {
+                return o;
+            }
+        }
+        return null;
+    }
+
 }

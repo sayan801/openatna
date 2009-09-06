@@ -50,4 +50,13 @@ public enum ObjectType {
         return value;
     }
 
+    public static ObjectType getType(int type) {
+        for (ObjectType o : values()) {
+            if (o.value() == type) {
+                return o;
+            }
+        }
+        return null;
+    }
+
 }

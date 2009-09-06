@@ -34,17 +34,15 @@ public interface AnomEvent {
 
     public AnomCode getEventCode();
 
-    public AnomEvent setEventCode(AnomCode value);
-
     public List<AnomCode> getEventTypeCodes();
 
     public AnomEvent addEventTypeCode(AnomCode value);
 
     public AnomEvent removeEventTypeCode(AnomCode value);
 
-    public String getEventActionCode();
+    public EventAction getEventActionCode();
 
-    public AnomEvent setEventActionCode(String value);
+    public AnomEvent setEventActionCode(EventAction value);
 
     public Date getEventDateTime();
 

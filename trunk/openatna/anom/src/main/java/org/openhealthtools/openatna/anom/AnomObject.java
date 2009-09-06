@@ -43,6 +43,14 @@ public interface AnomObject {
 
     public List<AnomObjectDetail> getObjectDetails();
 
+    /**
+     * object details are not mapped uniquely to their type
+     *
+     * @param type
+     * @return
+     */
+    public List<AnomObjectDetail> getObjectDetails(String type);
+
     public AnomObject addObjectDetail(AnomObjectDetail detail);
 
     public AnomObject removeObjectDetail(AnomObjectDetail detail);

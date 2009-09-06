@@ -32,7 +32,7 @@ package org.openhealthtools.openatna.anom;
  * @date $Date:$ modified by $Author:$
  */
 public enum NetworkAccessPoint {
-    
+
     MACHINE_NAME(1),
     IP_ADDRESS(2),
     TELEPHONE_NUMBER(3);
@@ -45,5 +45,14 @@ public enum NetworkAccessPoint {
 
     public int value() {
         return value;
+    }
+
+    public static NetworkAccessPoint getAccessPoint(int value) {
+        for (NetworkAccessPoint o : values()) {
+            if (o.value() == value) {
+                return o;
+            }
+        }
+        return null;
     }
 }
