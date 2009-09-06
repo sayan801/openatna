@@ -22,26 +22,43 @@ package org.openhealthtools.openatna.anom;
 import java.util.List;
 
 /**
- * Audit Source
+ * Active Participant
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AnomSource {
+public interface AtnaParticipant {
 
-    public List<AnomCode> getSourceTypeCodes();
+    public List<AtnaCode> getRoleIDCodes();
 
-    public AnomSource addSourceTypeCode(AnomCode value);
+    public AtnaParticipant addRoleIDCode(AtnaCode value);
 
-    public AnomSource removeSourceTypeCode(AnomCode value);
+    public AtnaParticipant removeRoleIDCode(AtnaCode value);
 
-    public String getEnterpriseSiteID();
+    public String getUserID();
 
-    public AnomSource setEnterpriseSiteID(String value);
+    public AtnaParticipant setUserID(String value);
 
-    public String getSourceID();
+    public String getAlternativeUserID();
 
-    public AnomSource setSourceID(String value);
+    public AtnaParticipant setAlternativeUserID(String value);
+
+    public String getUserName();
+
+    public AtnaParticipant setUserName(String value);
+
+    public boolean isUserIsRequestor();
+
+    public AtnaParticipant setUserIsRequestor(Boolean value);
+
+    public String getNetworkAccessPointID();
+
+    public AtnaParticipant setNetworkAccessPointID(String value);
+
+    public NetworkAccessPoint getNetworkAccessPointTypeCode();
+
+    public AtnaParticipant setNetworkAccessPointTypeCode(NetworkAccessPoint value);
+
 }

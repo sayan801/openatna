@@ -34,31 +34,31 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public interface AnomMessage {
+public interface AtnaMessage {
 
-    public AnomEvent getEvent();
+    public AtnaEvent getEvent();
 
-    public List<AnomParticipant> getParticipants();
+    public List<AtnaParticipant> getParticipants();
 
-    public AnomMessage addParticipant(AnomParticipant participant);
+    public AtnaMessage addParticipant(AtnaParticipant participant);
 
-    public AnomMessage removeParticipant(AnomParticipant participant);
+    public AtnaMessage removeParticipant(AtnaParticipant participant);
 
-    public AnomParticipant getParticipant(String id);
+    public AtnaParticipant getParticipant(String id);
 
-    public List<AnomSource> getSources();
+    public List<AtnaSource> getSources();
 
-    public AnomMessage addSource(AnomSource anomSource);
+    public AtnaMessage addSource(AtnaSource atnaSource);
 
-    public AnomMessage removeSource(AnomSource anomSource);
+    public AtnaMessage removeSource(AtnaSource atnaSource);
 
-    public AnomSource getSource(String id);
+    public AtnaSource getSource(String id);
 
-    public List<AnomObject> getObjects();
+    public List<AtnaObject> getObjects();
 
-    public AnomMessage addObject(AnomObject object);
+    public AtnaMessage addObject(AtnaObject object);
 
-    public AnomMessage removeObject(AnomObject object);
+    public AtnaMessage removeObject(AtnaObject object);
 
-    public AnomObject getObject(String id);
+    public AtnaObject getObject(String id);
 }

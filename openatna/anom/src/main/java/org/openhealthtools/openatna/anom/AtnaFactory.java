@@ -21,7 +21,7 @@ package org.openhealthtools.openatna.anom;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.anom.jaxb21.JaxbAnomFactory;
+import org.openhealthtools.openatna.anom.jaxb21.JaxbAtnaFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,11 +31,11 @@ import java.util.Properties;
 
 /**
  * factory for reading, writing, and creating anom objects.
- * Messages are created by first creating an AnomEvent, and then passing this in.
- * An AnomEvent is created using an AnomCode, which in turn requires a string code at least:
+ * Messages are created by first creating an AtnaEvent, and then passing this in.
+ * An AtnaEvent is created using an AtnaCode, which in turn requires a string code at least:
  * <p/>
- * AnomEvent evt = factory.newEvent(factory.newCode("xyz"), EventOutcome.SUCCESS);
- * AnomMessage msg = factory.newMessage(evt);
+ * AtnaEvent evt = factory.newEvent(factory.newCode("xyz"), EventOutcome.SUCCESS);
+ * AtnaMessage msg = factory.newMessage(evt);
  * msg.addSource(factory.newSource("localhost"))
  * .addParticipant(factory.newParticipant("me"));
  * <p/>
@@ -47,22 +47,22 @@ import java.util.Properties;
  * @date $Date:$ modified by $Author:$
  */
 
-public abstract class AnomFactory {
+public abstract class AtnaFactory {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.anom.AnomFactory");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.anom.AtnaFactory");
 
 
-    public static final String FACTORY_PROPERTY = "org.openhealthtools.openatna.anom.AnomFactory";
+    public static final String FACTORY_PROPERTY = "org.openhealthtools.openatna.anom.AtnaFactory";
     public static final String PROP_FILE = "openatna.properties";
-    private static volatile AnomFactory factory;
+    private static volatile AtnaFactory factory;
 
-    public static synchronized AnomFactory getFactory() {
+    public static synchronized AtnaFactory getFactory() {
         if (factory != null) {
             return factory;
         }
         String cls = System.getProperty(FACTORY_PROPERTY);
         if (cls == null) {
-            InputStream in = AnomFactory.class.getClassLoader().getResourceAsStream(PROP_FILE);
+            InputStream in = AtnaFactory.class.getClassLoader().getResourceAsStream(PROP_FILE);
             if (in != null) {
                 Properties props = new Properties();
                 try {
@@ -70,7 +70,7 @@ public abstract class AnomFactory {
                     cls = props.getProperty(FACTORY_PROPERTY);
                     if (cls != null) {
                         Class clazz = Class.forName(cls);
-                        factory = (AnomFactory) clazz.newInstance();
+                        factory = (AtnaFactory) clazz.newInstance();
                     }
                 } catch (Exception e) {
                     log.debug(" could not factory load class " + cls, e);
@@ -85,76 +85,76 @@ public abstract class AnomFactory {
         } else {
             try {
                 Class clazz = Class.forName(cls);
-                factory = (AnomFactory) clazz.newInstance();
+                factory = (AtnaFactory) clazz.newInstance();
             } catch (Exception e) {
                 log.debug(" could not factory load class " + cls, e);
             }
         }
         if (factory == null) {
-            factory = new JaxbAnomFactory();
+            factory = new JaxbAtnaFactory();
         }
         return factory;
     }
 
-    public abstract AnomMessage read(InputStream in) throws AnomException, IOException;
+    public abstract AtnaMessage read(InputStream in) throws AtnaException, IOException;
 
-    public abstract void write(AnomMessage message, OutputStream out) throws AnomException, IOException;
+    public abstract void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException;
 
-    public abstract AnomMessage newMessage(AnomEvent event);
+    public abstract AtnaMessage newMessage(AtnaEvent event);
 
-    public abstract AnomSource newSource(String sourceId);
+    public abstract AtnaSource newSource(String sourceId);
 
-    public abstract AnomEvent newEvent(AnomCode code, EventOutcome outcome);
+    public abstract AtnaEvent newEvent(AtnaCode code, EventOutcome outcome);
 
-    public abstract AnomParticipant newParticipant(String userId);
+    public abstract AtnaParticipant newParticipant(String userId);
 
-    public abstract AnomObject newObject(AnomCode objectIdType, String objectId);
+    public abstract AtnaObject newObject(AtnaCode objectIdType, String objectId);
 
-    public abstract AnomObjectDetail newObjectDetail();
+    public abstract AtnaObjectDetail newObjectDetail();
 
-    public abstract AnomCode newCode(String code);
+    public abstract AtnaCode newCode(String code);
 
-    public abstract AnomCode newCode(String code, String codeSystem, String codeSystemName);
+    public abstract AtnaCode newCode(String code, String codeSystem, String codeSystemName);
 
-    protected void validate(AnomMessage message) throws AnomException {
+    protected void validate(AtnaMessage message) throws AtnaException {
         if (message.getEvent() == null) {
-            throw new AnomException("no event identification defined");
+            throw new AtnaException("no event identification defined");
         }
-        AnomEvent evt = message.getEvent();
+        AtnaEvent evt = message.getEvent();
         if (evt.getEventCode() == null || evt.getEventCode().getCode() == null) {
-            throw new AnomException("invalid event code");
+            throw new AtnaException("invalid event code");
         }
         if (evt.getEventOutcome() == null) {
-            throw new AnomException("invalid event outcome");
+            throw new AtnaException("invalid event outcome");
         }
         if (evt.getEventDateTime() == null) {
-            throw new AnomException("invalid time stamp");
+            throw new AtnaException("invalid time stamp");
         }
-        List<AnomSource> sources = message.getSources();
+        List<AtnaSource> sources = message.getSources();
         if (sources.size() == 0) {
-            throw new AnomException("no audit source defined");
+            throw new AtnaException("no audit source defined");
         }
-        for (AnomSource source : sources) {
+        for (AtnaSource source : sources) {
             if (source.getSourceID() == null) {
-                throw new AnomException("no audit source id defined");
+                throw new AtnaException("no audit source id defined");
             }
         }
-        List<AnomParticipant> participants = message.getParticipants();
+        List<AtnaParticipant> participants = message.getParticipants();
         if (participants.size() == 0) {
-            throw new AnomException("no participants defined");
+            throw new AtnaException("no participants defined");
         }
-        for (AnomParticipant participant : participants) {
+        for (AtnaParticipant participant : participants) {
             if (participant.getUserID() == null) {
-                throw new AnomException("no active participant user id defined");
+                throw new AtnaException("no active participant user id defined");
             }
         }
-        List<AnomObject> objects = message.getObjects();
-        for (AnomObject object : objects) {
+        List<AtnaObject> objects = message.getObjects();
+        for (AtnaObject object : objects) {
             if (object.getObjectID() == null) {
-                throw new AnomException("no participant object id defined");
+                throw new AtnaException("no participant object id defined");
             }
             if (object.getObjectIDTypeCode() == null || object.getObjectIDTypeCode().getCode() == null) {
-                throw new AnomException("invalid object id type code");
+                throw new AtnaException("invalid object id type code");
             }
         }
     }

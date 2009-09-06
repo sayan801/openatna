@@ -19,30 +19,29 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.util.List;
+
 /**
- * Exception to be thrown if there are errors in the message format or
- * (de)serialization.
+ * Audit Source
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 5, 2009: 4:15:28 PM
+ * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
+public interface AtnaSource {
 
-public class AnomException extends Exception {
+    public List<AtnaCode> getSourceTypeCodes();
 
-    public AnomException() {
-    }
+    public AtnaSource addSourceTypeCode(AtnaCode value);
 
-    public AnomException(String s) {
-        super(s);
-    }
+    public AtnaSource removeSourceTypeCode(AtnaCode value);
 
-    public AnomException(String s, Throwable throwable) {
-        super(s, throwable);
-    }
+    public String getEnterpriseSiteID();
 
-    public AnomException(Throwable throwable) {
-        super(throwable);
-    }
+    public AtnaSource setEnterpriseSiteID(String value);
+
+    public String getSourceID();
+
+    public AtnaSource setSourceID(String value);
 }

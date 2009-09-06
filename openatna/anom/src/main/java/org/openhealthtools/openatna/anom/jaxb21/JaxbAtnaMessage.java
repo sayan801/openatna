@@ -37,126 +37,126 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAnomMessage implements AnomMessage {
+public class JaxbAtnaMessage implements AtnaMessage {
 
     private AuditMessage msg;
 
-    public JaxbAnomMessage(AuditMessage msg) {
+    public JaxbAtnaMessage(AuditMessage msg) {
         this.msg = msg;
     }
 
-    public JaxbAnomMessage(JaxbAnomEvent evt) {
+    public JaxbAtnaMessage(JaxbAtnaEvent evt) {
         this.msg = new AuditMessage();
         msg.setEventIdentification(evt.getEvt());
     }
 
-    public AnomEvent getEvent() {
+    public AtnaEvent getEvent() {
         if (msg.getEventIdentification() != null) {
-            return new JaxbAnomEvent(msg.getEventIdentification());
+            return new JaxbAtnaEvent(msg.getEventIdentification());
         }
         return null;
     }
 
-    public List<AnomParticipant> getParticipants() {
+    public List<AtnaParticipant> getParticipants() {
         List<ActiveParticipantType> l = msg.getActiveParticipant();
-        List<AnomParticipant> ret = new ArrayList<AnomParticipant>();
+        List<AtnaParticipant> ret = new ArrayList<AtnaParticipant>();
         for (ActiveParticipantType a : l) {
-            ret.add(new JaxbAnomParticipant(a));
+            ret.add(new JaxbAtnaParticipant(a));
         }
         return ret;
     }
 
-    public AnomMessage addParticipant(AnomParticipant participant) {
-        if (participant instanceof JaxbAnomParticipant) {
-            JaxbAnomParticipant jp = (JaxbAnomParticipant) participant;
+    public AtnaMessage addParticipant(AtnaParticipant participant) {
+        if (participant instanceof JaxbAtnaParticipant) {
+            JaxbAtnaParticipant jp = (JaxbAtnaParticipant) participant;
             msg.getActiveParticipant().add(jp.getParticipant());
         }
         return this;
     }
 
-    public AnomMessage removeParticipant(AnomParticipant participant) {
-        if (participant instanceof JaxbAnomParticipant) {
-            JaxbAnomParticipant jp = (JaxbAnomParticipant) participant;
+    public AtnaMessage removeParticipant(AtnaParticipant participant) {
+        if (participant instanceof JaxbAtnaParticipant) {
+            JaxbAtnaParticipant jp = (JaxbAtnaParticipant) participant;
             msg.getActiveParticipant().remove(jp.getParticipant());
         }
         return this;
     }
 
-    public AnomParticipant getParticipant(String id) {
+    public AtnaParticipant getParticipant(String id) {
         List<ActiveParticipantType> l = msg.getActiveParticipant();
         for (ActiveParticipantType type : l) {
             if (type.getUserID().equals(id)) {
-                return new JaxbAnomParticipant(type);
+                return new JaxbAtnaParticipant(type);
             }
         }
         return null;
     }
 
-    public List<AnomSource> getSources() {
+    public List<AtnaSource> getSources() {
         List<AuditSourceIdentificationType> l = msg.getAuditSourceIdentification();
-        List<AnomSource> ret = new ArrayList<AnomSource>();
+        List<AtnaSource> ret = new ArrayList<AtnaSource>();
         for (AuditSourceIdentificationType a : l) {
-            ret.add(new JaxbAnomSource(a));
+            ret.add(new JaxbAtnaSource(a));
         }
         return ret;
     }
 
-    public AnomMessage addSource(AnomSource anomSource) {
-        if (anomSource instanceof JaxbAnomSource) {
-            JaxbAnomSource js = (JaxbAnomSource) anomSource;
+    public AtnaMessage addSource(AtnaSource atnaSource) {
+        if (atnaSource instanceof JaxbAtnaSource) {
+            JaxbAtnaSource js = (JaxbAtnaSource) atnaSource;
             msg.getAuditSourceIdentification().add(js.getSource());
         }
         return this;
     }
 
-    public AnomMessage removeSource(AnomSource anomSource) {
-        if (anomSource instanceof JaxbAnomSource) {
-            JaxbAnomSource js = (JaxbAnomSource) anomSource;
+    public AtnaMessage removeSource(AtnaSource atnaSource) {
+        if (atnaSource instanceof JaxbAtnaSource) {
+            JaxbAtnaSource js = (JaxbAtnaSource) atnaSource;
             msg.getAuditSourceIdentification().remove(js.getSource());
         }
         return this;
     }
 
-    public AnomSource getSource(String id) {
+    public AtnaSource getSource(String id) {
         List<AuditSourceIdentificationType> l = msg.getAuditSourceIdentification();
         for (AuditSourceIdentificationType type : l) {
             if (type.getAuditSourceID().equals(id)) {
-                return new JaxbAnomSource(type);
+                return new JaxbAtnaSource(type);
             }
         }
         return null;
     }
 
-    public List<AnomObject> getObjects() {
+    public List<AtnaObject> getObjects() {
         List<ParticipantObjectIdentificationType> l = msg.getParticipantObjectIdentification();
-        List<AnomObject> ret = new ArrayList<AnomObject>();
+        List<AtnaObject> ret = new ArrayList<AtnaObject>();
         for (ParticipantObjectIdentificationType a : l) {
-            ret.add(new JaxbAnomObject(a));
+            ret.add(new JaxbAtnaObject(a));
         }
         return ret;
     }
 
-    public AnomMessage addObject(AnomObject object) {
-        if (object instanceof JaxbAnomObject) {
-            JaxbAnomObject jo = (JaxbAnomObject) object;
+    public AtnaMessage addObject(AtnaObject object) {
+        if (object instanceof JaxbAtnaObject) {
+            JaxbAtnaObject jo = (JaxbAtnaObject) object;
             msg.getParticipantObjectIdentification().add(jo.getObject());
         }
         return this;
     }
 
-    public AnomMessage removeObject(AnomObject object) {
-        if (object instanceof JaxbAnomObject) {
-            JaxbAnomObject jo = (JaxbAnomObject) object;
+    public AtnaMessage removeObject(AtnaObject object) {
+        if (object instanceof JaxbAtnaObject) {
+            JaxbAtnaObject jo = (JaxbAtnaObject) object;
             msg.getParticipantObjectIdentification().remove(jo.getObject());
         }
         return this;
     }
 
-    public AnomObject getObject(String id) {
+    public AtnaObject getObject(String id) {
         List<ParticipantObjectIdentificationType> l = msg.getParticipantObjectIdentification();
         for (ParticipantObjectIdentificationType type : l) {
             if (type.getParticipantObjectID().equals(id)) {
-                return new JaxbAnomObject(type);
+                return new JaxbAtnaObject(type);
             }
         }
         return null;

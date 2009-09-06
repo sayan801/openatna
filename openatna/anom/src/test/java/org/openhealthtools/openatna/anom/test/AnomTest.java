@@ -22,7 +22,7 @@ package org.openhealthtools.openatna.anom.test;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openhealthtools.openatna.anom.*;
-import org.openhealthtools.openatna.anom.jaxb21.JaxbAnomFactory;
+import org.openhealthtools.openatna.anom.jaxb21.JaxbAtnaFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,13 +41,13 @@ import java.io.IOException;
 public class AnomTest {
 
     @Test
-    public void testAnom() throws IOException, AnomException {
+    public void testAnom() throws IOException, AtnaException {
 
-        AnomFactory fac = new JaxbAnomFactory();
-        AnomCode evtCode = fac.newCode("abc", "SYS_CODE", "SYS_CODENAME");
-        AnomEvent evt = fac.newEvent(evtCode, EventOutcome.SUCCESS);
+        AtnaFactory fac = new JaxbAtnaFactory();
+        AtnaCode evtCode = fac.newCode("abc", "SYS_CODE", "SYS_CODENAME");
+        AtnaEvent evt = fac.newEvent(evtCode, EventOutcome.SUCCESS);
 
-        AnomMessage msg = fac.newMessage(evt);
+        AtnaMessage msg = fac.newMessage(evt);
         msg.addSource(fac.newSource("source").addSourceTypeCode(fac.newCode("4")))
                 .addParticipant(fac.newParticipant("participant"))
                 .addObject(fac.newObject(fac.newCode("obj-code"), "obj-id"));
