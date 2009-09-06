@@ -30,6 +30,7 @@ package org.openhealthtools.openatna.anom;
  * E   Execute               Perform a system or application function such as log-on, program
  * execution, or use of an object's method
  * </p>
+ *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
@@ -52,6 +53,15 @@ public enum EventAction {
 
     public String value() {
         return value;
+    }
+
+    public static EventAction getAction(String value) {
+        for (EventAction o : values()) {
+            if (o.value().equals(value)) {
+                return o;
+            }
+        }
+        return null;
     }
 
 }

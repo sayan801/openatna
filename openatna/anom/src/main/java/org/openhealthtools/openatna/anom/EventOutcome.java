@@ -50,4 +50,13 @@ public enum EventOutcome {
     public int value() {
         return value;
     }
+
+    public static EventOutcome getOutcome(int value) {
+        for (EventOutcome o : values()) {
+            if (o.value() == value) {
+                return o;
+            }
+        }
+        return null;
+    }
 }

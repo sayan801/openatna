@@ -27,23 +27,23 @@ package org.openhealthtools.openatna.anom;
  * 2   Location             3 - Organization
  * 3   Report               2 - System Object
  * 4   Resource             1 - Person
- *                          3 - Organization
+ * 3 - Organization
  * 5   Master file          2 - System Object
  * 6   User                 1 - Person
- *                          2 - System Object (non-human user)
+ * 2 - System Object (non-human user)
  * 7   List                 2 - System Object
  * 8   Doctor               1 - Person
  * 9   Subscriber           3 - Organization
  * 10  Guarantor            1 - Person
- *                          3 - Organization
+ * 3 - Organization
  * 11  Security User Entity 1 - Person
- *                          2 - System Object
+ * 2 - System Object
  * 12  Security User Group  2 - System Object
  * 13  Security Resource    2 - System Object
  * 14  Security Granularity 2 - System Object
- *              Definition
+ * Definition
  * 15  Provider             1 - Person
- *                          3 - Organization
+ * 3 - Organization
  * 16  Data Destination     2 - System Object
  * 17  Data Repository      2 - System Object
  * 18  Schedule             2 - System Object
@@ -61,7 +61,7 @@ package org.openhealthtools.openatna.anom;
  * @date $Date:$ modified by $Author:$
  */
 public enum ObjectTypeCodeRole {
-    
+
     PATIENT(1),
     LOCATION(2),
     REPORT(3),
@@ -95,5 +95,14 @@ public enum ObjectTypeCodeRole {
 
     public int value() {
         return value;
+    }
+
+    public static ObjectTypeCodeRole getRole(int role) {
+        for (ObjectTypeCodeRole o : values()) {
+            if (o.value() == role) {
+                return o;
+            }
+        }
+        return null;
     }
 }
