@@ -19,9 +19,13 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
-import org.apache.mina.common.*;
+import org.apache.mina.common.IdleStatus;
+import org.apache.mina.common.IoHandlerAdapter;
+import org.apache.mina.common.IoSession;
+import org.apache.mina.common.TransportType;
 import org.apache.mina.filter.SSLFilter;
 import org.apache.mina.transport.socket.nio.SocketSessionConfig;
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 
 import java.util.logging.Logger;
@@ -39,7 +43,7 @@ import java.util.logging.Logger;
 public class SyslogProtocolHandler extends IoHandlerAdapter {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.SyslogProtocolHandler");
-    
+
 
     private TlsServer server;
 
@@ -68,10 +72,13 @@ public class SyslogProtocolHandler extends IoHandlerAdapter {
 
     public void messageReceived(IoSession session, Object message)
             throws Exception {
-        if (!(message instanceof SyslogMessage)) {
-            return;
+        if (message instanceof SyslogMessage) {
+            SyslogMessage sl = (SyslogMessage) message;
+            server.notifyListeners(sl);
+        } else if (message instanceof SyslogException) {
+            SyslogException ex = (SyslogException) message;
+            server.notifyException(ex);
         }
-        SyslogMessage sl = (SyslogMessage) message;
-        server.notifyListeners(sl);
+
     }
 }

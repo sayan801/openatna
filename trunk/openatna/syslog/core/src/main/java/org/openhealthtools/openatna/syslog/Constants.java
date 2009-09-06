@@ -29,6 +29,9 @@ package org.openhealthtools.openatna.syslog;
  */
 
 public class Constants {
+
+
+    public static final char VERSION = '1';
     public static final String ENC_UTF8 = "UTF-8";
     public static final String ENC_UTF16LE = "UTF-16LE";
     public static final String ENC_UTF16BE = "UTF-16BE";

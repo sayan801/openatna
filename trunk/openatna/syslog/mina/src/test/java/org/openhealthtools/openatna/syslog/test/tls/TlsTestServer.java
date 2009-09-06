@@ -19,12 +19,13 @@
 
 package org.openhealthtools.openatna.syslog.test.tls;
 
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.mina.tls.TlsConfig;
 import org.openhealthtools.openatna.syslog.mina.tls.TlsServer;
-import org.openhealthtools.openatna.syslog.test.tls.ssl.KeystoreDetails;
 import org.openhealthtools.openatna.syslog.test.tls.ssl.AuthSSLSocketFactory;
+import org.openhealthtools.openatna.syslog.test.tls.ssl.KeystoreDetails;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -69,6 +70,10 @@ public class TlsTestServer {
             System.out.println(message.toString());
             System.out.println("application message:");
             System.out.println(message.getMessage().getMessageObject());
+        }
+
+        public void exceptionThrown(SyslogException exception) {
+            exception.printStackTrace();
         }
     }
 }

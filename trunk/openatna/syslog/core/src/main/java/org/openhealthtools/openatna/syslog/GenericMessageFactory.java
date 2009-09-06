@@ -43,6 +43,7 @@ public class GenericMessageFactory extends SyslogMessageFactory {
 
     /**
      * returns true if this is a BSD syslog message.
+     * Relies on the 5424 VERSION value being '1'
      * otherwise false
      *
      * @param bytes
@@ -51,14 +52,17 @@ public class GenericMessageFactory extends SyslogMessageFactory {
      *
      */
     private boolean isBSD(byte[] bytes) throws SyslogException {
-        boolean isBSD = false;
         try {
+            boolean isBSD = true;
             String s = new String(bytes);
             int close = s.indexOf('>');
-            if (close > 1 && close < bytes.length - 1) {
+            if (close > 1 && close < bytes.length - 2) {
                 char next = s.charAt(close + 1);
-                if (next == ' ') {
-                    isBSD = true;
+                if (next == Constants.VERSION) {
+                    next = s.charAt(close + 2);
+                    if (next == ' ') {
+                        isBSD = false;
+                    }
                 }
             }
             return isBSD;
@@ -69,8 +73,8 @@ public class GenericMessageFactory extends SyslogMessageFactory {
 
     public SyslogMessage read(InputStream in) throws SyslogException {
         try {
-            PushbackInputStream pin = new PushbackInputStream(in, 6);
-            byte[] bytes = new byte[6];
+            PushbackInputStream pin = new PushbackInputStream(in, 7);
+            byte[] bytes = new byte[7];
             pin.read(bytes);
 
             boolean bsd = isBSD(bytes);

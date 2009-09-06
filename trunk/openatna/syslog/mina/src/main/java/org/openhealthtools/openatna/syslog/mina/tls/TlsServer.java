@@ -19,25 +19,26 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.apache.mina.common.*;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 import org.apache.mina.filter.SSLFilter;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.transport.socket.nio.SocketAcceptor;
+import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.Set;
 import java.util.HashSet;
-import java.util.logging.Logger;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Class Description Here...
@@ -51,7 +52,7 @@ import java.util.concurrent.Executors;
 public class TlsServer implements SyslogServer<TlsConfig> {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.TlsServer");
-    
+
 
     private TlsConfig tlsconfig;
     private IoAcceptor acceptor;
@@ -87,14 +88,14 @@ public class TlsServer implements SyslogServer<TlsConfig> {
         acceptor.bind(new InetSocketAddress(host, tlsconfig.getPort()), new SyslogProtocolHandler(this));
         Set<SocketAddress> addr = acceptor.getManagedServiceAddresses();
         for (SocketAddress sa : addr) {
-            System.out.println("TlsServer.start " + sa.toString());    
+            System.out.println("TlsServer.start " + sa.toString());
         }
         log.info("server started on port " + tlsconfig.getPort());
 
     }
 
     public void stop() throws IOException {
-        if(acceptor != null) {
+        if (acceptor != null) {
             acceptor.unbindAll();
         }
     }
@@ -113,6 +114,18 @@ public class TlsServer implements SyslogServer<TlsConfig> {
                 for (SyslogListener listener : listeners) {
                     log.info("notifying listener...");
                     listener.messageArrived(msg);
+                }
+            }
+        });
+
+    }
+
+    protected void notifyException(final SyslogException ex) {
+        exec.execute(new Runnable() {
+            public void run() {
+                for (SyslogListener listener : listeners) {
+                    log.info("notifying listener...");
+                    listener.exceptionThrown(ex);
                 }
             }
         });
