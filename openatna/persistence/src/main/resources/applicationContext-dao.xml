@@ -80,6 +80,14 @@
                 <idref local="codeDao"/>
                 <idref local="participantDao"/>
                 <idref local="networkAccessPointDao"/>
+                <idref local="objectDao"/>
+                <idref local="sourceDao"/>
+                <idref local="objectDetailDao"/>
+                <idref local="atnaObjectDao"/>
+                <idref local="atnaParticipantDao"/>
+                <idref local="atnaSourceDao"/>
+                <idref local="atnaEventDao"/>
+                <idref local="atnaMessageDao"/>
             </list>
         </property>
     </bean>

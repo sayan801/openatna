@@ -17,9 +17,9 @@ import javax.persistence.*;
 
 /**
  * <p>Java class for ParticipantObjectIdentificationType complex type.
- *
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- *
+ * <p/>
  * <pre>
  * &lt;complexType name="ParticipantObjectIdentificationType">
  *   &lt;complexContent>
@@ -125,15 +125,13 @@ import javax.persistence.*;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @Entity
 @Table(name = "atna_objects")
 public class AtnaObjectEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
     private AtnaMessageEntity atnaMessage;
     private ObjectEntity object;
@@ -220,6 +218,20 @@ public class AtnaObjectEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", message=")
+                .append(getAtnaMessage().getId())
+                .append(", data life cycle=")
+                .append(getObjectDataLifeCycle())
+                .append(", object name=")
+                .append(getObjectName())
+                .append(", query=")
+                .append(getObjectQuery())
+                .append(", object=")
+                .append(getObject())
+                .append("]")
+                .toString();
     }
 }

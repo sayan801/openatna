@@ -30,11 +30,11 @@ import javax.persistence.*;
  * @date $Date:$ modified by $Author:$
  */
 @Entity
-@Table(name="network_access_points")
+@Table(name = "network_access_points")
 public class NetworkAccessPointEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
     private Integer version;
     private Integer type;
@@ -96,7 +96,17 @@ public class NetworkAccessPointEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", version=")
+                .append(getVersion())
+                .append(", identifier=")
+                .append(getIdentifier())
+                .append(", type=")
+                .append(getType())
+                .append("]")
+                .toString();
     }
 
 }

@@ -24,16 +24,20 @@ import org.openhealthtools.openatna.persistence.model.codes.EventIdCodeEntity;
 import org.openhealthtools.openatna.persistence.model.codes.EventTypeCodeEntity;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Date;
 
 @Entity
 @Table(name = "atna_events")
 public class AtnaEventEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
+    private static DateFormat format = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:SS");
+
     private Long id;
 
     private EventIdCodeEntity eventId;
@@ -127,7 +131,21 @@ public class AtnaEventEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", event id:")
+                .append(getEventId())
+                .append(", action=")
+                .append(getEventActionCode())
+                .append(", outcome=")
+                .append(getEventOutcome())
+                .append(", time stamp=")
+                .append(format.format(getEventDateTime()))
+                .append(", event types=")
+                .append(getEventTypeCodes())
+                .append("]")
+                .toString();
     }
 
 

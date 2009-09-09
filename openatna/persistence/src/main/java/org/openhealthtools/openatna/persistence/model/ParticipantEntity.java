@@ -35,11 +35,11 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name="participants")
+@Table(name = "participants")
 public class ParticipantEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
     private Integer version;
     private String userId;
@@ -129,6 +129,20 @@ public class ParticipantEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", version=")
+                .append(getVersion())
+                .append(", userID=")
+                .append(getUserId())
+                .append(", user name=")
+                .append(getUserName())
+                .append(", alternative user id=")
+                .append(getAlternativeUserId())
+                .append(", codes=")
+                .append(getCodes())
+                .append("]")
+                .toString();
     }
 }

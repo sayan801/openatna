@@ -20,7 +20,6 @@
 package org.openhealthtools.openatna.persistence;
 
 /**
- *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 6, 2009: 3:24:05 PM
@@ -30,6 +29,7 @@ package org.openhealthtools.openatna.persistence;
 public class AtnaPersistenceException extends Exception {
 
     public static enum PersistenceError {
+        // general DB errors
         UNDEFINED,
         CONNECTION_ERROR,
         DATA_ERROR,
@@ -38,23 +38,78 @@ public class AtnaPersistenceException extends Exception {
         GRAMMER_ERROR,
         DATA_ACCESS_ERROR,
         DATA_RETRIEVAL_ERROR,
+        // atna specific errors
+        /**
+         * no mathcing code in DB
+         */
         NON_EXISTENT_CODE,
+        /**
+         * no matching network access point in DB
+         */
         NON_EXISTENT_NETWORK_ACCESS_POINT,
+        /**
+         * no matching avtive participant in DB
+         */
         NON_EXISTENT_PARTICIPANT,
+        /**
+         * no matching participant Object in DB
+         */
         NON_EXISTENT_OBJECT,
+        /**
+         * no matching audit source in DB
+         */
         NON_EXISTENT_SOURCE,
+        /**
+         * attempt to insert a code that is already in DB
+         */
         DUPLICATE_CODE,
+        /**
+         * attempt to insert a network access point that is already in DB
+         */
         DUPLICATE_NETWORK_ACCESS_POINT,
+        /**
+         * attempt to insert a participant that is already in DB
+         */
         DUPLICATE_PARTICIPANT,
+        /**
+         * attempt to insert a participating object that is already in DB
+         */
         DUPLICATE_OBJECT,
+        /**
+         * attempt to insert an audit source that is already in DB
+         */
         DUPLICATE_SOURCE,
+        /**
+         * no participant in entity.
+         */
         NO_PARTICIPANT,
+        /**
+         * no object defined. This is not a message syntax error, but an entity error.
+         * If an AtnaObjectEntity is defined, it should contain an ObjectEntity
+         */
         NO_OBJECT,
+        /**
+         * no Event id code defined
+         */
         NO_EVENT_ID,
+        /**
+         * no audit source defined
+         */
         NO_SOURCE,
+        /**
+         * entity cannot be modified
+         */
         UNMODIFIABLE,
-        READ_ONLY
-        
+        /**
+         * entity is read only
+         */
+        READ_ONLY,
+        /**
+         * fields not used for comparison do not match
+         * representation in DB
+         */
+        INCONSISTENT_REPRESENTATION
+
     }
 
     private PersistenceError error = PersistenceError.UNDEFINED;

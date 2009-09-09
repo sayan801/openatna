@@ -28,11 +28,11 @@ import java.util.Set;
 
 
 @Entity
-@Table(name="sources")
+@Table(name = "sources")
 public class SourceEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
     private Integer version;
 
@@ -75,11 +75,9 @@ public class SourceEntity extends PersistentEntity {
 
     /**
      * Gets the value of the auditEnterpriseSiteID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getEnterpriseSiteId() {
         return enterpriseSiteId;
@@ -87,11 +85,9 @@ public class SourceEntity extends PersistentEntity {
 
     /**
      * Sets the value of the auditEnterpriseSiteID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEnterpriseSiteId(String value) {
         this.enterpriseSiteId = value;
@@ -99,11 +95,9 @@ public class SourceEntity extends PersistentEntity {
 
     /**
      * Gets the value of the auditSourceID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getSourceId() {
         return sourceId;
@@ -111,11 +105,9 @@ public class SourceEntity extends PersistentEntity {
 
     /**
      * Sets the value of the auditSourceID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSourceId(String value) {
         this.sourceId = value;
@@ -144,7 +136,19 @@ public class SourceEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", version=")
+                .append(getVersion())
+                .append(", sourceId=")
+                .append(getSourceId())
+                .append(", enterprise site ID=")
+                .append(getEnterpriseSiteId())
+                .append(", source type code=")
+                .append(getSourceTypeCodes())
+                .append("]")
+                .toString();
     }
 
 

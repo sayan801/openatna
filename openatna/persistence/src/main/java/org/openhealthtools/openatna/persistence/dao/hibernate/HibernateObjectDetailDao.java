@@ -19,10 +19,10 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.ObjectDetailEntity;
-import org.openhealthtools.openatna.persistence.dao.ObjectDetailDao;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.dao.ObjectDetailDao;
+import org.openhealthtools.openatna.persistence.model.ObjectDetailEntity;
 
 import java.util.List;
 
@@ -45,5 +45,13 @@ public class HibernateObjectDetailDao extends AbstractHibernateDao<ObjectDetailE
 
     public List<? extends ObjectDetailEntity> getByType(String type) {
         return list(criteria().add(Restrictions.eq("type", type)));
+    }
+
+    public void save(ObjectDetailEntity detail) {
+        currentSession().saveOrUpdate(detail);
+    }
+
+    public void delete(ObjectDetailEntity detail) {
+        currentSession().delete(detail);
     }
 }

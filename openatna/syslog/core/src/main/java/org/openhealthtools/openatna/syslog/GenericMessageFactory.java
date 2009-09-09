@@ -27,7 +27,8 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 
 /**
- * Reads in data and creates BSD style syslog messages
+ * Determies whether the message is BSD or RFC 5424 based on the first few bytes
+ * of the message, and calls the appropriate MessageFactory.
  *
  * @author Andrew Harrison
  * @version $Revision:$

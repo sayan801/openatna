@@ -23,11 +23,11 @@ package org.openhealthtools.openatna.persistence.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="atna_participants")
+@Table(name = "atna_participants")
 public class AtnaParticipantEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
 
     private AtnaMessageEntity atnaMessage;
@@ -104,6 +104,18 @@ public class AtnaParticipantEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", message=")
+                .append(getAtnaMessage().getId())
+                .append(", network access point=")
+                .append(getNetworkAccessPoint())
+                .append(", is user requestor=")
+                .append(isUserIsRequestor())
+                .append(", participant=")
+                .append(getParticipant())
+                .append("]")
+                .toString();
     }
 }
