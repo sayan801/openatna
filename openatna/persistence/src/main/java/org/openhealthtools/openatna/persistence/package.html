@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<title>org.openhealthtools.openatna.persistence</title>
+</head>
+<body>
+<p>
+    This package contains the persitence model and entities for ATNA.
+    The model divides the DB into two parts.
+    </p>
+<p>
+    The first are those
+    entities that are defined and loaded by the domain user of the DB. These
+    include the coded value types for event id, event types, source, participant
+    and object ids etc.
+    </p>
+<p>
+    The second part consists of entities that are added to the DB through the process
+    of auditing. These entities reference the domain defined values already in the DB.
+    Entities and DAOs of this sort all begin with "Atna" in the class name.
+    An AtnaPersistenceException is thrown if Atna entities reference domain objects
+    that are not in the DB already. In general, this test is done using the business
+    identifier for the domain objects. When this test occurs, the reference in the
+    entity is changed to the object already stored in the DB. This means some fields
+    in the object could be different from those received in a message, if they are
+    not used for comparison.
+</p>
+<p>
+    This package does not address user access to entities. Write access to domain
+    defined entities should be restricted to domain admins, and modification and deletion
+    of audit generated entities should also be restricted.
+</p>
+</body>
+</html>

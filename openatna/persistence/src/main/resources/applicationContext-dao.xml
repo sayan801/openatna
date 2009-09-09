@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+
+     Copyright(c) 2009 University of Cardiff and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+       default-lazy-init="true">
+
+    <!-- dataSource should be somewhere better and use properties -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost/atna"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="postgres"/>
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="10"/>
+    </bean>
+
+    <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+                hibernate.cache.use_second_level_cache=true
+                hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+                hibernate.hbm2ddl.auto=update
+            </value>
+            <!-- Turn batching off for better error messages under PostgreSQL -->
+            <!-- hibernate.jdbc.batch_size=0 -->
+        </property>
+    </bean>
+
+    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+    <bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+    <!-- transactions for beans. saves using spring annotations, i.e. string deps in classes-->
+    <!-- Transaction Interceptor matches ALL methods!!-->
+    <bean id="txAttributeSource"
+          class="org.springframework.transaction.interceptor.MatchAlwaysTransactionAttributeSource">
+    </bean>
+
+    <bean id="txInterceptor"
+          class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="txManager"/>
+        <property name="transactionAttributeSource" ref="txAttributeSource"/>
+    </bean>
+
+    <bean id="autoProxyCreator"
+          class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="interceptorNames">
+            <list>
+                <idref local="txInterceptor"/>
+            </list>
+        </property>
+        <property name="beanNames">
+            <list>
+                <idref local="codeDao"/>
+                <idref local="participantDao"/>
+                <idref local="networkAccessPointDao"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- DAO beans -->
+
+    <bean id="codeDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateCodeDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="participantDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateParticipantDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="networkAccessPointDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateNetworkAccessPointDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="objectDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateObjectDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="objectDetailDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateObjectDetailDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="sourceDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateSourceDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="atnaEventDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaEventDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="atnaMessageDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaMessageDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="atnaObjectDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaObjectDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="atnaParticipantDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaParticipantDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="atnaSourceDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaSourceDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+</beans>
