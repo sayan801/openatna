@@ -78,8 +78,9 @@
 
     <modules>
         <module>syslog</module>
-        <!--<module>audit</module>-->
-        <module>anom</module>
+        <!--><module>audit</module>-->
+        <module>persistence</module>
+		<module>anom</module>
     </modules>
 
 
