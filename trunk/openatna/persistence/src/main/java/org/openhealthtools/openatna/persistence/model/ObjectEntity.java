@@ -28,18 +28,19 @@ import java.util.Set;
 
 
 @Entity
-@Table(name="objects")
+@Table(name = "objects")
 public class ObjectEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
     private Integer version;
 
     private ObjectIdTypeCodeEntity objectIdTypeCode;
     private String objectName;
 
-    private Set<ObjectDetailEntity> objectDetails = new HashSet<ObjectDetailEntity>();;
+    private Set<ObjectDetailEntity> objectDetails = new HashSet<ObjectDetailEntity>();
+    ;
     private String objectId;
     private Short objectTypeCode;
     private Short objectTypeCodeRole;
@@ -83,6 +84,7 @@ public class ObjectEntity extends PersistentEntity {
     /**
      * NOTE: many to many relation. Type value pairs can be shared
      * between objects.
+     *
      * @return
      */
     @ManyToMany(fetch = FetchType.EAGER)
@@ -163,6 +165,26 @@ public class ObjectEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return null;
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", version=")
+                .append(getVersion())
+                .append(", object id=")
+                .append(getObjectId())
+                .append(", object name=")
+                .append(getObjectName())
+                .append(", object type code=")
+                .append(getObjectTypeCode())
+                .append(", object type code role=")
+                .append(getObjectTypeCodeRole())
+                .append(", object id type code=")
+                .append(getObjectIdTypeCode())
+                .append(", sensitivity=")
+                .append(getObjectSensitivity())
+                .append(", object details=")
+                .append(getObjectDetails())
+                .append("]")
+                .toString();
     }
 }

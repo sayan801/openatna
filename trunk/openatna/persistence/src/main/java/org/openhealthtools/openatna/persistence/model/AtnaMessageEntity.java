@@ -30,7 +30,7 @@ import java.util.Set;
 public class AtnaMessageEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
 
     private AtnaEventEntity event;
@@ -111,7 +111,19 @@ public class AtnaMessageEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", event id:")
+                .append(getEvent())
+                .append(", audit sources=")
+                .append(getAtnaSources())
+                .append(", active participants=")
+                .append(getAtnaParticipants())
+                .append(", participant objects=")
+                .append(getAtnaObjects())
+                .append("]")
+                .toString();
     }
 
 

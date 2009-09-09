@@ -34,4 +34,8 @@ public interface ObjectDetailDao {
     public ObjectDetailEntity getById(Long id);
 
     public List<? extends ObjectDetailEntity> getByType(String type);
+
+    public void save(ObjectDetailEntity detail);
+
+    public void delete(ObjectDetailEntity detail);
 }

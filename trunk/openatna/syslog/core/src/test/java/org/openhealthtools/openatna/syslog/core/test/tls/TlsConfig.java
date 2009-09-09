@@ -19,10 +19,9 @@
 
 package org.openhealthtools.openatna.syslog.core.test.tls;
 
-import org.openhealthtools.openatna.syslog.transport.TransportConfig;
 import org.openhealthtools.openatna.syslog.core.test.tls.ssl.AuthSSLSocketFactory;
+import org.openhealthtools.openatna.syslog.transport.TransportConfig;
 
-import javax.net.ssl.SSLContext;
 import java.util.Map;
 
 /**
@@ -57,10 +56,23 @@ public class TlsConfig extends TransportConfig {
 
     public int getPort() {
         Integer port = (Integer) getProperty("port");
-        if(port == null) {
-           port = 8443;
+        if (port == null) {
+            port = 8443;
         }
         return port;
+    }
+
+    public void setRequireClientAuth(boolean auth) {
+        if (auth) {
+            setProperty("client-auth", Boolean.TRUE);
+        } else {
+            setProperty("client-auth", Boolean.FALSE);
+        }
+    }
+
+    public boolean isRequireClientAuth() {
+        return getProperty("client-auth") != null &&
+                getProperty("client-auth") == Boolean.TRUE;
     }
 
     public void setPort(int port) {

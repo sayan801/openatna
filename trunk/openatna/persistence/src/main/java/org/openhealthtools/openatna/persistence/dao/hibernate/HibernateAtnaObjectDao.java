@@ -19,14 +19,14 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.AtnaObjectDao;
+import org.openhealthtools.openatna.persistence.dao.ObjectDao;
 import org.openhealthtools.openatna.persistence.model.AtnaObjectEntity;
 import org.openhealthtools.openatna.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.persistence.dao.AtnaObjectDao;
-import org.openhealthtools.openatna.persistence.dao.ObjectDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class HibernateAtnaObjectDao extends AbstractHibernateDao<AtnaObjectEntit
 
     public void normalize(AtnaObjectEntity ao) throws AtnaPersistenceException {
         if (ao.getObject() == null) {
-            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_OBJECT);
+            throw new AtnaPersistenceException("no participant object defined.", AtnaPersistenceException.PersistenceError.NO_OBJECT);
         }
         if (ao.getId() != null) {
             // hmm. Should not be able to modify audit messages?

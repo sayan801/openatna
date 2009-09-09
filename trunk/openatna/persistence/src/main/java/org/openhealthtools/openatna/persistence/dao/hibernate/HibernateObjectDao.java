@@ -19,13 +19,13 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.persistence.dao.ObjectDao;
-import org.openhealthtools.openatna.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.dao.ObjectDao;
+import org.openhealthtools.openatna.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
 
 import java.util.List;
 
@@ -72,6 +72,7 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
+    // TODO - check for INCONSISTENT_REPRESENTATION, e.g sensitivity
     public void save(ObjectEntity entity) throws AtnaPersistenceException {
 
         CodeDao cd = SpringDaoFactory.getFactory().codeDao();
@@ -91,7 +92,7 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
             // new one.
             ObjectEntity existing = getByObjectId(entity.getObjectId());
             if (existing != null) {
-                throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
+                throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_OBJECT);
             }
         } else {
             // from DB - update. All ok?

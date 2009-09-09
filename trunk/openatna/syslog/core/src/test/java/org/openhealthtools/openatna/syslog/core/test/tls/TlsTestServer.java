@@ -47,9 +47,11 @@ public class TlsTestServer {
         KeystoreDetails trust = new KeystoreDetails(uu.toString(), "clientStorePass", "myClientCert");
         try {
             AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
+
             TlsConfig c = new TlsConfig();
             c.setSocketFactory(f);
             c.setHost("localhost");
+            c.setRequireClientAuth(true);
             TlsServer server = new TlsServer();
             server.configure(c);
             server.addSyslogListener(new Listener());

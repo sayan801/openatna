@@ -71,8 +71,9 @@ public class TlsServer {
 
         AuthSSLSocketFactory f = tlsconfig.getSocketFactory();
         if (f != null) {
+            boolean auth = tlsconfig.isRequireClientAuth();
             log.info("USING TLS...");
-            serverSocket = f.createServerSocket(tlsconfig.getPort());
+            serverSocket = f.createServerSocket(tlsconfig.getPort(), auth);
         } else {
             serverSocket = new ServerSocket(tlsconfig.getPort());
         }

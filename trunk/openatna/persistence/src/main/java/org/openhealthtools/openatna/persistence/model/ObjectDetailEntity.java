@@ -24,11 +24,11 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name="object_details")
+@Table(name = "object_details")
 public class ObjectDetailEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
-    
+
     private Long id;
     private String type;
     private String value;
@@ -46,11 +46,9 @@ public class ObjectDetailEntity extends PersistentEntity {
 
     /**
      * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getType() {
         return type;
@@ -58,33 +56,23 @@ public class ObjectDetailEntity extends PersistentEntity {
 
     /**
      * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setType(String value) {
         this.type = value;
     }
 
-    /**
-     * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     byte[]
-     */
+    @Lob
     public String getValue() {
         return value;
     }
 
     /**
      * Sets the value of the value property.
-     * 
+     *
      * @param value
-     *     allowed object is
-     *     byte[]
      */
     public void setValue(String value) {
         this.value = value;
@@ -111,6 +99,14 @@ public class ObjectDetailEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return "null";
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", type=")
+                .append(getType())
+                .append(", value=")
+                .append(getValue())
+                .append("]")
+                .toString();
     }
 }

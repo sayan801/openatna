@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 public class AuthSSLSocketFactory {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.test.tls.ssl.AuthSSLSocketFactory");
-    
+
     private KeystoreDetails details = null;
     private KeystoreDetails truststore = null;
 
@@ -230,8 +230,12 @@ public class AuthSSLSocketFactory {
         return getSSLContext().getSocketFactory().createSocket(host, port);
     }
 
-    public ServerSocket createServerSocket(int port) throws IOException {
-        return getSSLContext().getServerSocketFactory().createServerSocket(port);
+    public ServerSocket createServerSocket(int port, boolean mutualAuth) throws IOException {
+        ServerSocket ss = getSSLContext().getServerSocketFactory().createServerSocket(port);
+        if (mutualAuth) {
+            ((SSLServerSocket) ss).setNeedClientAuth(true);
+        }
+        return ss;
     }
 
     public boolean isSecured() {
