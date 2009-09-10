@@ -48,10 +48,10 @@ public class TestMessage {
         AtnaMessageEntity msgEnt = createMessage();
 
         SourceEntity source = new SourceEntity();
-        source.setSourceId("localhost");
+        source.setSourceId("cat");
         SourceCodeEntity code = new SourceCodeEntity();
-        code.setCode("E");
-        code.setCodeSystem("101");
+        code.setCode("1");
+        code.setCodeSystemName("RFC-3881");
         source.getSourceTypeCodes().add(code);
         AtnaSourceEntity asource = new AtnaSourceEntity();
         asource.setSource(source);
@@ -62,31 +62,25 @@ public class TestMessage {
         part.setUserId("scmabh");
         part.setUserName("andrew");
         ParticipantCodeEntity pcode = new ParticipantCodeEntity();
-        pcode.setCode("D");
-        pcode.setCodeSystem("101");
+        pcode.setCode("110150");
+        pcode.setCodeSystemName("DCM");
         part.getCodes().add(pcode);
         AtnaParticipantEntity pentity = new AtnaParticipantEntity();
         pentity.setParticipant(part);
         NetworkAccessPointEntity net = new NetworkAccessPointEntity();
         net.setIdentifier("192.168.0.1");
-        net.setType(new Short("1"));
+        net.setType(new Short("2"));
         pentity.setNetworkAccessPoint(net);
         msgEnt.getAtnaParticipants().add(pentity);
 
         ObjectEntity obj = new ObjectEntity();
         obj.setObjectId("obj1");
         obj.setObjectName("machine");
-        obj.setObjectTypeCode(new Short("1"));
-        obj.setObjectTypeCodeRole(new Short("1"));
         obj.setObjectSensitivity("N");
         ObjectIdTypeCodeEntity ocode = new ObjectIdTypeCodeEntity();
-        ocode.setCode("C");
-        ocode.setCodeSystem("101");
+        ocode.setCode("110180");
+        ocode.setCodeSystemName("DCM");
         obj.setObjectIdTypeCode(ocode);
-        ObjectDetailEntity detail = new ObjectDetailEntity();
-        detail.setType("detail");
-        detail.setValue("SOME DETAIL");
-        obj.getObjectDetails().add(detail);
 
         AtnaObjectEntity objEnt = new AtnaObjectEntity();
         objEnt.setObject(obj);
@@ -94,19 +88,59 @@ public class TestMessage {
         msgEnt.getAtnaObjects().add(objEnt);
 
         dao.save(msgEnt);
+    }
 
+    @Test
+    public void testMinimalMessage() throws AtnaPersistenceException {
+        DaoFactory factory = SpringDaoFactory.getFactory();
+        AtnaMessageDao dao = factory.atnaMessageDao();
 
+        AtnaMessageEntity msgEnt = createMinimalMessage();
+
+        SourceEntity source = new SourceEntity();
+        source.setSourceId("cat");
+        AtnaSourceEntity asource = new AtnaSourceEntity();
+        asource.setSource(source);
+        msgEnt.getAtnaSources().add(asource);
+
+        ParticipantEntity part = new ParticipantEntity();
+        part.setUserId("scmabh");
+        AtnaParticipantEntity pentity = new AtnaParticipantEntity();
+        pentity.setParticipant(part);
+        msgEnt.getAtnaParticipants().add(pentity);
+
+        ObjectEntity obj = new ObjectEntity();
+        obj.setObjectId("obj1");
+        AtnaObjectEntity objEnt = new AtnaObjectEntity();
+        objEnt.setObject(obj);
+        msgEnt.getAtnaObjects().add(objEnt);
+
+        dao.save(msgEnt);
+    }
+
+    protected AtnaMessageEntity createMinimalMessage() {
+        AtnaEventEntity msgEvt = new AtnaEventEntity();
+        EventIdCodeEntity code = new EventIdCodeEntity();
+        code.setCode("110108");
+        code.setCodeSystemName("DCM");
+        msgEvt.setEventId(code);
+
+        msgEvt.setEventDateTime(new Date());
+        msgEvt.setEventOutcome(0);
+        AtnaMessageEntity msg = new AtnaMessageEntity();
+        msg.setEvent(msgEvt);
+        return msg;
     }
 
     protected AtnaMessageEntity createMessage() {
         AtnaEventEntity msgEvt = new AtnaEventEntity();
         EventIdCodeEntity code = new EventIdCodeEntity();
-        code.setCode("A");
-        code.setCodeSystem("101");
+        code.setCode("110108");
+        code.setCodeSystemName("DCM");
         msgEvt.setEventId(code);
         EventTypeCodeEntity evtType = new EventTypeCodeEntity();
-        evtType.setCode("B");
-        evtType.setCodeSystem("101");
+        evtType.setCode("110120");
+        evtType.setCodeSystemName("DCM");
         msgEvt.getEventTypeCodes().add(evtType);
         msgEvt.setEventDateTime(new Date());
         msgEvt.setEventActionCode("R");
