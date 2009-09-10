@@ -40,7 +40,7 @@ public class ObjectEntity extends PersistentEntity {
     private String objectName;
 
     private Set<ObjectDetailEntity> objectDetails = new HashSet<ObjectDetailEntity>();
-    ;
+
     private String objectId;
     private Short objectTypeCode;
     private Short objectTypeCodeRole;
@@ -65,6 +65,7 @@ public class ObjectEntity extends PersistentEntity {
         this.version = version;
     }
 
+    @ManyToOne
     public ObjectIdTypeCodeEntity getObjectIdTypeCode() {
         return objectIdTypeCode;
     }
