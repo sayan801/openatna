@@ -25,10 +25,7 @@ import org.openhealthtools.openatna.persistence.dao.AtnaMessageDao;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.*;
-import org.openhealthtools.openatna.persistence.model.codes.EventIdCodeEntity;
-import org.openhealthtools.openatna.persistence.model.codes.EventTypeCodeEntity;
-import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
+import org.openhealthtools.openatna.persistence.model.codes.*;
 
 import java.util.Date;
 
@@ -75,6 +72,26 @@ public class TestMessage {
         net.setType(new Short("1"));
         pentity.setNetworkAccessPoint(net);
         msgEnt.getAtnaParticipants().add(pentity);
+
+        ObjectEntity obj = new ObjectEntity();
+        obj.setObjectId("obj1");
+        obj.setObjectName("machine");
+        obj.setObjectTypeCode(new Short("1"));
+        obj.setObjectTypeCodeRole(new Short("1"));
+        obj.setObjectSensitivity("N");
+        ObjectIdTypeCodeEntity ocode = new ObjectIdTypeCodeEntity();
+        ocode.setCode("C");
+        ocode.setCodeSystem("101");
+        obj.setObjectIdTypeCode(ocode);
+        ObjectDetailEntity detail = new ObjectDetailEntity();
+        detail.setType("detail");
+        detail.setValue("SOME DETAIL");
+        obj.getObjectDetails().add(detail);
+
+        AtnaObjectEntity objEnt = new AtnaObjectEntity();
+        objEnt.setObject(obj);
+        objEnt.setObjectDataLifeCycle(new Short("1"));
+        msgEnt.getAtnaObjects().add(objEnt);
 
         dao.save(msgEnt);
 
