@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright(c) 2009 University of Cardiff and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+-->
+
+<!--
+
+=========================================================================================
+
+     TEMPLATE WITH ALL POSSIBLE VALUES. Empty attributes can be left there
+     or removed.
+
+     "id" attributes are used to reference other elements via the "ref" attribute.
+     These should be unique within the document.
+
+     Required fields:
+     codes all need a "code" attribute
+     netPoints need both "netId" and "type"
+     details need both "type" and some child content
+     sources require a "sourceId"
+     participants require a "userId"
+     objects require an "objectId" and a reference to an objectIdType code.
+
+<entities>
+    <codes>
+        <eventId id="" code="" system="" systemName="" displayName="" originalText=""/>
+        <eventType id="" code="" system="" systemName="" displayName="" originalText=""/>
+        <objectIdType id="" code="" system="" systemName="" displayName="" originalText=""/>
+        <participantType id="" code="" system="" systemName="" displayName="" originalText=""/>
+        <sourceType id="" code="" system="" systemName="" displayName="" originalText=""/>
+    </codes>
+
+    <netPoints>
+        <netPoint id="" netId="" type=""/>
+    </netPoints>
+
+    <objectDetails>
+        <objectDetail id="" type="detail">SOME DETAIL</objectDetail>
+    </objectDetails>
+
+    <sources>
+        <source id="" sourceId="" enterpriseSiteId="">
+            <sourceType ref=""/>
+        </source>
+    </sources>
+
+    <participants>
+        <participant id="" userId="" altUserId="" userName="">
+            <participantType ref=""/>
+        </participant>
+    </participants>
+
+    <objects>
+        <object id="" objectId="" objectTypeCode="" objectTypeCodeRole="" objectName="" sensitivity="">
+            <objectIdType ref=""/>
+            <objectDetail ref=""/>
+        </object>
+    </objects>
+</entities>
+
+=========================================================================================
+
+-->
+<entities>
+    <codes>
+        <eventId id="c1" code="A" system="101" systemName="" displayName="" originalText=""/>
+        <eventType id="c2" code="B" system="101" systemName="" displayName="" originalText=""/>
+        <objectIdType id="c3" code="C" system="101" systemName="" displayName="" originalText=""/>
+        <participantType id="c4" code="D" system="101" systemName="" displayName="" originalText=""/>
+        <sourceType id="c5" code="E" system="101" systemName="" displayName="" originalText=""/>
+    </codes>
+
+    <netPoints>
+        <netPoint id="n1" netId="192.168.0.1" type="1"/>
+    </netPoints>
+
+    <objectDetails>
+        <objectDetail id="d1" type="detail">SOME DETAIL</objectDetail>
+    </objectDetails>
+
+    <sources>
+        <source id="s1" sourceId="localhost" enterpriseSiteId="">
+            <sourceType ref="c5"/>
+        </source>
+    </sources>
+
+    <participants>
+        <participant id="p1" userId="scmabh" altUserId="" userName="andrew">
+            <participantType ref="c4"/>
+        </participant>
+    </participants>
+
+    <objects>
+        <object id="o1" objectId="obj1" objectTypeCode="1" objectTypeCodeRole="1" objectName="machine" sensitivity="N">
+            <objectIdType ref="c3"/>
+            <objectDetail ref="d1"/>
+        </object>
+    </objects>
+
+</entities>
