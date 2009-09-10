@@ -24,6 +24,14 @@ import org.openhealthtools.openatna.persistence.model.ObjectDetailEntity;
 import java.util.List;
 
 /**
+ * NOTE: how this is handled is still under consideration.
+ * Currently details are defined by the domain and must be matched
+ * by the audit message. This may be a wrong interpretation. It could
+ * be that details are a way for messages to add arbitrary context data
+ * to a message, and therefore these should not be mapped (and validated against)
+ * when storing the message.
+ * TBD...
+ *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 9, 2009: 12:38:00 PM

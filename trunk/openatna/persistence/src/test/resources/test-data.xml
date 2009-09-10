@@ -77,37 +77,121 @@
 -->
 <entities>
     <codes>
-        <eventId id="c1" code="A" system="101" systemName="" displayName="" originalText=""/>
-        <eventType id="c2" code="B" system="101" systemName="" displayName="" originalText=""/>
-        <objectIdType id="c3" code="C" system="101" systemName="" displayName="" originalText=""/>
-        <participantType id="c4" code="D" system="101" systemName="" displayName="" originalText=""/>
-        <sourceType id="c5" code="E" system="101" systemName="" displayName="" originalText=""/>
+        <eventId id="ITI-8" code="ITI-8" systemName="IHE Transactions" displayName="Patient Identity Feed"/>
+        <eventId id="ITI-9" code="ITI-9" systemName="IHE Transactions" displayName="PIX Query"/>
+        <eventId id="ITI-10" code="ITI-10" systemName="IHE Transactions" displayName="PIX Update Notification"/>
+        <eventId id="ITI-21" code="ITI-21" systemName="IHE Transactions" displayName="Patient Demographics Query"/>
+        <eventId id="ITI-22" code="ITI-22" systemName="IHE Transactions" displayName="Patient Demographics and Visit Query"/>
+        <eventId id="ITI-14" code="ITI-14" systemName="IHE Transactions" displayName="Register Document Set"/>
+        <eventId id="ITI-15" code="ITI-15" systemName="IHE Transactions" displayName="Provide and Register Document Set"/>
+        <eventId id="ITI-16" code="ITI-16" systemName="IHE Transactions" displayName="Registry SQL Query"/>
+        <eventId id="ITI-17" code="ITI-17" systemName="IHE Transactions" displayName="Retrieve Document"/>
+        <eventId id="ITI-18" code="ITI-18" systemName="IHE Transactions" displayName="Registry Stored Query"/>
+        <eventId id="ITI-32" code="ITI-32" systemName="IHE Transactions" displayName="Distribute Document Set on Media"/>
+        <eventId id="ITI-30" code="ITI-30" systemName="IHE Transactions" displayName="Patient Identity Management"/>
+        <eventId id="ITI-38" code="ITI-38" systemName="IHE Transactions" displayName="Cross Gateway Query"/>
+        <eventId id="ITI-39" code="ITI-39" systemName="IHE Transactions" displayName="Cross Gateway Retrieve"/>
+        <eventId id="ITI-41" code="ITI-41" systemName="IHE Transactions" displayName="Provide and Register Document Set-b"/>
+        <eventId id="ITI-42" code="ITI-42" systemName="IHE Transactions" displayName="Register Document Set-b"/>
+        <eventId id="ITI-43" code="ITI-43" systemName="IHE Transactions" displayName="Retrieve Document Set"/>
+        <eventId id="ITI-48" code="ITI-48" systemName="IHE Transactions" displayName="Retrieve Value Set"/>
+
+        <eventId id="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd" code="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd"
+                 systemName="IHE XDS Metadata" displayName="SubmissionSet ClassificationNode"/>
+
+        <sourceType id="RFC-3881-1" code="1" systemName="RFC-3881" displayName="End User Display Device"/>
+        <sourceType id="RFC-3881-2" code="2" systemName="RFC-3881" displayName="Data Acquisition Device"/>
+        <sourceType id="RFC-3881-3" code="3" systemName="RFC-3881" displayName="Web Server Process"/>
+        <sourceType id="RFC-3881-4" code="4" systemName="RFC-3881" displayName="Application Server Process"/>
+        <sourceType id="RFC-3881-5" code="5" systemName="RFC-3881" displayName="Database Server Process"/>
+        <sourceType id="RFC-3881-6" code="6" systemName="RFC-3881" displayName="Security Server"/>
+        <sourceType id="RFC-3881-7" code="7" systemName="RFC-3881" displayName="Network Component"/>
+        <sourceType id="RFC-3881-8" code="8" systemName="RFC-3881" displayName="Operating Software"/>
+        <sourceType id="RFC-3881-9" code="9" systemName="RFC-3881" displayName="External Source"/>
+
+        <objectIdType id="RFC-3881-10" code="1" systemName="RFC-3881" displayName="Medical Record Number"/>
+        <objectIdType id="RFC-3881-11" code="2" systemName="RFC-3881" displayName="Patient Number"/>
+        <objectIdType id="RFC-3881-13" code="3" systemName="RFC-3881" displayName="Encounter Number"/>
+        <objectIdType id="RFC-3881-14" code="4" systemName="RFC-3881" displayName="Enrollee Number"/>
+        <objectIdType id="RFC-3881-15" code="5" systemName="RFC-3881" displayName="Social Security Number"/>
+        <objectIdType id="RFC-3881-16" code="6" systemName="RFC-3881" displayName="Account Number"/>
+        <objectIdType id="RFC-3881-17" code="7" systemName="RFC-3881" displayName="Guarantor Number"/>
+        <objectIdType id="RFC-3881-18" code="8" systemName="RFC-3881" displayName="Report Name"/>
+        <objectIdType id="RFC-3881-19" code="9" systemName="RFC-3881" displayName="Report Number"/>
+        <objectIdType id="RFC-3881-110" code="10" systemName="RFC-3881" displayName="Search Criteria"/>
+        <objectIdType id="RFC-3881-111" code="11" systemName="RFC-3881" displayName="User Identifier"/>
+        <objectIdType id="RFC-3881-112" code="12" systemName="RFC-3881" displayName="URI"/>
+
+        <eventId id="DCM-110100" code="110100" systemName="DCM" displayName="Application Activity"/>
+        <eventId id="DCM-110101" code="110101" systemName="DCM" displayName="Audit Log Used"/>
+        <eventId id="DCM-110102" code="110102" systemName="DCM" displayName="Being Transfering DICOM Instances"/>
+        <eventId id="DCM-110103" code="110103" systemName="DCM" displayName="DICOM Instances Accessed"/>
+        <eventId id="DCM-110104" code="110104" systemName="DCM" displayName="DICOM Instances Transferred"/>
+        <eventId id="DCM-110105" code="110105" systemName="DCM" displayName="DICOM Study Deleted"/>
+        <eventId id="DCM-110106" code="110106" systemName="DCM" displayName="Export"/>
+        <eventId id="DCM-110107" code="110107" systemName="DCM" displayName="Import"/>
+        <eventId id="DCM-110108" code="110108" systemName="DCM" displayName="Network Entry"/>
+        <eventId id="DCM-110109" code="110109" systemName="DCM" displayName="Order Record"/>
+        <eventId id="DCM-110110" code="110110" systemName="DCM" displayName="Patient Record"/>
+        <eventId id="DCM-110111" code="110111" systemName="DCM" displayName="Proceedure Record"/>
+        <eventId id="DCM-110112" code="110112" systemName="DCM" displayName="Query"/>
+        <eventId id="DCM-110113" code="110113" systemName="DCM" displayName="Security Alert"/>
+        <eventId id="DCM-110114" code="110114" systemName="DCM" displayName="User Authentication"/>
+
+        <eventType id="DCM-110120" code="110120" systemName="DCM" displayName="Application Start"/>
+        <eventType id="DCM-110121" code="110121" systemName="DCM" displayName="Application Stop"/>
+        <eventType id="DCM-110122" code="110122" systemName="DCM" displayName="Login"/>
+        <eventType id="DCM-110123" code="110123" systemName="DCM" displayName="Logout"/>
+        <eventType id="DCM-110124" code="110124" systemName="DCM" displayName="Attach"/>
+        <eventType id="DCM-110125" code="110125" systemName="DCM" displayName="Detach"/>
+        <eventType id="DCM-110126" code="110126" systemName="DCM" displayName="Node Authentication"/>
+        <eventType id="DCM-110127" code="110127" systemName="DCM" displayName="Emergency Override"/>
+        <eventType id="DCM-110128" code="110128" systemName="DCM" displayName="Network Configuration"/>
+        <eventType id="DCM-110129" code="110129" systemName="DCM" displayName="Security Configuration"/>
+        <eventType id="DCM-110130" code="110130" systemName="DCM" displayName="Hardware Configuration"/>
+        <eventType id="DCM-110131" code="110131" systemName="DCM" displayName="Software Configuration"/>
+        <eventType id="DCM-110132" code="110132" systemName="DCM" displayName="Use of Restritcted Function"/>
+        <eventType id="DCM-110133" code="110133" systemName="DCM" displayName="Audit Recording Stopped"/>
+        <eventType id="DCM-110134" code="110134" systemName="DCM" displayName="Audit Recording Started"/>
+        <eventType id="DCM-110135" code="110135" systemName="DCM" displayName="Object Security Attributes Changed"/>
+        <eventType id="DCM-110136" code="110136" systemName="DCM" displayName="Security Roles Changed"/>
+        <eventType id="DCM-110137" code="110137" systemName="DCM" displayName="User Security Attributes Changed"/>
+
+
+        <participantType id="DCM-110150" code="110150" systemName="DCM" displayName="Application"/>
+        <participantType id="DCM-110151" code="110151" systemName="DCM" displayName="Application Launcher"/>
+        <participantType id="DCM-110152" code="110152" systemName="DCM" displayName="Destination"/>
+        <participantType id="DCM-110153" code="110153" systemName="DCM" displayName="Source"/>
+        <participantType id="DCM-110154" code="110154" systemName="DCM" displayName="Destination Media"/>
+        <participantType id="DCM-110155" code="110155" systemName="DCM" displayName="Source Media"/>
+
+        <objectIdType id="DCM-110180" code="110180" systemName="DCM" displayName="Study Instance UID"/>
+        <objectIdType id="DCM-110181" code="110181" systemName="DCM" displayName="SOP Class UID"/>
+        <objectIdType id="DCM-110182" code="110182" systemName="DCM" displayName="NodeID"/>
+
     </codes>
 
     <netPoints>
-        <netPoint id="n1" netId="192.168.0.1" type="1"/>
+        <netPoint id="nap1" netId="192.168.0.1" type="2"/>
+        <netPoint id="nap2" netId="voldemort" type="1"/>
+        <netPoint id="nap3" netId="192.168.0.2" type="2"/>
     </netPoints>
 
-    <objectDetails>
-        <objectDetail id="d1" type="detail">SOME DETAIL</objectDetail>
-    </objectDetails>
-
     <sources>
-        <source id="s1" sourceId="localhost" enterpriseSiteId="">
-            <sourceType ref="c5"/>
+        <source id="s1" sourceId="cat">
+            <sourceType ref="RFC-3881-8"/>
         </source>
     </sources>
 
     <participants>
-        <participant id="p1" userId="scmabh" altUserId="" userName="andrew">
-            <participantType ref="c4"/>
+        <participant id="p1" userId="scmabh" userName="andrew">
+            <participantType ref="DCM-110150"/>
         </participant>
     </participants>
 
     <objects>
-        <object id="o1" objectId="obj1" objectTypeCode="1" objectTypeCodeRole="1" objectName="machine" sensitivity="N">
-            <objectIdType ref="c3"/>
-            <objectDetail ref="d1"/>
+        <object id="o1" objectId="obj1" sensitivity="N" objectName="machine">
+            <objectIdType ref="DCM-110180"/>
         </object>
     </objects>
 </entities>
