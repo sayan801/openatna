@@ -33,6 +33,14 @@ public class ObjectDetailEntity extends PersistentEntity {
     private String type;
     private String value;
 
+    public ObjectDetailEntity() {
+    }
+
+    public ObjectDetailEntity(String type, String value) {
+        this.type = type;
+        this.value = value;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

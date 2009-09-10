@@ -40,6 +40,14 @@ public class NetworkAccessPointEntity extends PersistentEntity {
     private Short type;
     private String identifier;
 
+    public NetworkAccessPointEntity() {
+    }
+
+    public NetworkAccessPointEntity(Short type, String identifier) {
+        this.type = type;
+        this.identifier = identifier;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

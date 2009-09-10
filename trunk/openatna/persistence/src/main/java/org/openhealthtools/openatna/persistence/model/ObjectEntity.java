@@ -39,12 +39,21 @@ public class ObjectEntity extends PersistentEntity {
     private ObjectIdTypeCodeEntity objectIdTypeCode;
     private String objectName;
 
-    private Set<ObjectDetailEntity> objectDetails = new HashSet<ObjectDetailEntity>();
 
     private String objectId;
     private Short objectTypeCode;
     private Short objectTypeCodeRole;
     private String objectSensitivity;
+
+    private Set<ObjectDetailEntity> objectDetails = new HashSet<ObjectDetailEntity>();
+
+    public ObjectEntity() {
+    }
+
+    public ObjectEntity(String objectId, ObjectIdTypeCodeEntity objectIdTypeCode) {
+        this.objectIdTypeCode = objectIdTypeCode;
+        this.objectId = objectId;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

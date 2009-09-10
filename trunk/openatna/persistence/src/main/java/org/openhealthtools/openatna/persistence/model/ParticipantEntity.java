@@ -47,6 +47,13 @@ public class ParticipantEntity extends PersistentEntity {
     private String userName;
     private Set<ParticipantCodeEntity> codes = new HashSet<ParticipantCodeEntity>();
 
+    public ParticipantEntity() {
+    }
+
+    public ParticipantEntity(String userId) {
+        this.userId = userId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -102,6 +109,10 @@ public class ParticipantEntity extends PersistentEntity {
 
     public void setCodes(Set<ParticipantCodeEntity> codes) {
         this.codes = codes;
+    }
+
+    public void addCode(ParticipantCodeEntity entity) {
+        getCodes().add(entity);
     }
 
     @Override

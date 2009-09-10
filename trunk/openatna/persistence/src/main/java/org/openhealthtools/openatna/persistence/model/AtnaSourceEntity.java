@@ -30,8 +30,14 @@ public class AtnaSourceEntity extends PersistentEntity {
     private static final long serialVersionUID = -1L;
 
     private Long id;
-
     private SourceEntity source;
+
+    public AtnaSourceEntity() {
+    }
+
+    public AtnaSourceEntity(String sourceId) {
+        this.source = new SourceEntity(sourceId);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -67,6 +67,10 @@ public class AtnaEventEntity extends PersistentEntity {
         return eventTypeCodes;
     }
 
+    public void addEventTypeCode(EventTypeCodeEntity code) {
+        getEventTypeCodes().add(code);
+    }
+
     public void setEventTypeCodes(Set<EventTypeCodeEntity> eventTypeCodeEntities) {
         this.eventTypeCodes = eventTypeCodeEntities;
     }

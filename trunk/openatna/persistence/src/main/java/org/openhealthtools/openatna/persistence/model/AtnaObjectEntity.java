@@ -12,6 +12,8 @@
 
 package org.openhealthtools.openatna.persistence.model;
 
+import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
+
 import javax.persistence.*;
 
 
@@ -137,6 +139,13 @@ public class AtnaObjectEntity extends PersistentEntity {
     protected String objectName;
     protected String objectQuery;
     protected Short objectDataLifeCycle;
+
+    public AtnaObjectEntity() {
+    }
+
+    public AtnaObjectEntity(String objectId, ObjectIdTypeCodeEntity code) {
+        this.object = new ObjectEntity(objectId, code);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

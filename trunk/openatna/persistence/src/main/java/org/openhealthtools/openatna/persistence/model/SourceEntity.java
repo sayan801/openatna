@@ -40,6 +40,13 @@ public class SourceEntity extends PersistentEntity {
     private String enterpriseSiteId;
     private String sourceId;
 
+    public SourceEntity() {
+    }
+
+    public SourceEntity(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -71,6 +78,10 @@ public class SourceEntity extends PersistentEntity {
 
     public void setSourceTypeCodes(Set<SourceCodeEntity> sourceTypeCodeEntities) {
         this.sourceTypeCodes = sourceTypeCodeEntities;
+    }
+
+    public void addSourceTypeCode(SourceCodeEntity entity) {
+        getSourceTypeCodes().add(entity);
     }
 
     /**
