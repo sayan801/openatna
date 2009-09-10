@@ -19,12 +19,8 @@
 
 package org.openhealthtools.openatna.persistence.model.codes;
 
-import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * Class Description Here...
@@ -40,4 +36,27 @@ import javax.persistence.DiscriminatorValue;
 public class SourceCodeEntity extends CodeEntity {
 
     private static final long serialVersionUID = -1L;
+
+    public SourceCodeEntity() {
+    }
+
+    public SourceCodeEntity(String code) {
+        super(code);
+    }
+
+    public SourceCodeEntity(String code, String codeSystem) {
+        super(code, codeSystem);
+    }
+
+    public SourceCodeEntity(String code, String codeSystem, String codeSystemName) {
+        super(code, codeSystem, codeSystemName);
+    }
+
+    public SourceCodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
+        super(code, codeSystem, codeSystemName, displayName);
+    }
+
+    public SourceCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
+        super(code, codeSystem, codeSystemName, displayName, originalText);
+    }
 }

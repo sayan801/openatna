@@ -41,6 +41,14 @@ public class AtnaMessageEntity extends PersistentEntity {
 
     private Set<AtnaObjectEntity> atnaObjects = new HashSet<AtnaObjectEntity>();
 
+    public AtnaMessageEntity() {
+    }
+
+    public AtnaMessageEntity(AtnaEventEntity event) {
+        this.event = event;
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -69,6 +77,10 @@ public class AtnaMessageEntity extends PersistentEntity {
         this.atnaParticipants = atnaParticipants;
     }
 
+    public void addAtnaParticipant(AtnaParticipantEntity entity) {
+        getAtnaParticipants().add(entity);
+    }
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<AtnaSourceEntity> getAtnaSources() {
         return atnaSources;
@@ -78,6 +90,10 @@ public class AtnaMessageEntity extends PersistentEntity {
         this.atnaSources = atnaSources;
     }
 
+    public void addAtnaSource(AtnaSourceEntity entity) {
+        getAtnaSources().add(entity);
+    }
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<AtnaObjectEntity> getAtnaObjects() {
         return atnaObjects;
@@ -85,6 +101,10 @@ public class AtnaMessageEntity extends PersistentEntity {
 
     public void setAtnaObjects(Set<AtnaObjectEntity> atnaObjects) {
         this.atnaObjects = atnaObjects;
+    }
+
+    public void addAtnaObject(AtnaObjectEntity entity) {
+        getAtnaObjects().add(entity);
     }
 
     @Override

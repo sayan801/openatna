@@ -53,11 +53,43 @@ public abstract class CodeEntity extends PersistentEntity {
     private Integer version;
 
     private String code;
-    private String displayName;
-    private String originalText;
     private String codeSystem;
     private String codeSystemName;
+    private String displayName;
+    private String originalText;
 
+    protected CodeEntity() {
+    }
+
+    protected CodeEntity(String code) {
+        this.code = code;
+    }
+
+    protected CodeEntity(String code, String codeSystem) {
+        this.code = code;
+        this.codeSystem = codeSystem;
+    }
+
+    protected CodeEntity(String code, String codeSystem, String codeSystemName) {
+        this.code = code;
+        this.codeSystem = codeSystem;
+        this.codeSystemName = codeSystemName;
+    }
+
+    protected CodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
+        this.code = code;
+        this.codeSystem = codeSystem;
+        this.codeSystemName = codeSystemName;
+        this.displayName = displayName;
+    }
+
+    protected CodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
+        this.code = code;
+        this.codeSystem = codeSystem;
+        this.codeSystemName = codeSystemName;
+        this.displayName = displayName;
+        this.originalText = originalText;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -34,6 +34,13 @@ public class AtnaParticipantEntity extends PersistentEntity {
     private Boolean userIsRequestor;
     private NetworkAccessPointEntity networkAccessPoint;
 
+    public AtnaParticipantEntity() {
+    }
+
+    public AtnaParticipantEntity(String userId) {
+        this.participant = new ParticipantEntity(userId);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
