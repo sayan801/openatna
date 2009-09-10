@@ -53,7 +53,9 @@ public class AtnaException extends Exception {
         NO_ACTIVE_PARTICIPANT_ID,
 
         NO_PARTICIPANT_OBJECT_ID,
-        NO_PARTICIPANT_OBJECT_ID_TYPE_CODE
+        NO_PARTICIPANT_OBJECT_ID_TYPE_CODE,
+
+        INVALID_CODE
 
     }
 

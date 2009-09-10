@@ -122,9 +122,9 @@ public class JaxbAtnaFactory extends AtnaFactory {
         return new JaxbAtnaCode(code);
     }
 
-    public AtnaCode newCode(String code, String codeSystem, String codeSystemName) {
+    public AtnaCode newCode(String code, String displayName, String codeSystemName) {
         JaxbAtnaCode jcode = new JaxbAtnaCode(code);
-        jcode.setCodeSystem(codeSystem);
+        jcode.setDisplayName(displayName);
         jcode.setCodeSystemName(codeSystemName);
         return jcode;
     }

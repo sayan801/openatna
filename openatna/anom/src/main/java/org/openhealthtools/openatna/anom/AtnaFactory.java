@@ -114,47 +114,65 @@ public abstract class AtnaFactory {
 
     public abstract AtnaCode newCode(String code);
 
-    public abstract AtnaCode newCode(String code, String codeSystem, String codeSystemName);
+    public abstract AtnaCode newCode(String code, String displayName, String codeSystemName);
 
     protected void validate(AtnaMessage message) throws AtnaException {
         if (message.getEvent() == null) {
-            throw new AtnaException("no event identification defined");
+            throw new AtnaException("no event identification defined", AtnaException.AtnaError.NO_EVENT);
         }
         AtnaEvent evt = message.getEvent();
         if (evt.getEventCode() == null || evt.getEventCode().getCode() == null) {
-            throw new AtnaException("invalid event code");
+            throw new AtnaException("invalid event code", AtnaException.AtnaError.NO_EVENT_CODE);
         }
         if (evt.getEventOutcome() == null) {
-            throw new AtnaException("invalid event outcome");
+            throw new AtnaException("invalid event outcome", AtnaException.AtnaError.NO_EVENT_OUTCOME);
         }
         if (evt.getEventDateTime() == null) {
-            throw new AtnaException("invalid time stamp");
+            throw new AtnaException("invalid time stamp", AtnaException.AtnaError.INVALID_EVENT_TIMESTAMP);
+        }
+        List<AtnaCode> codes = evt.getEventTypeCodes();
+        for (AtnaCode code : codes) {
+            if (code.getCode() == null) {
+                throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.INVALID_CODE);
+            }
         }
         List<AtnaSource> sources = message.getSources();
         if (sources.size() == 0) {
-            throw new AtnaException("no audit source defined");
+            throw new AtnaException("no audit source defined", AtnaException.AtnaError.NO_AUDIT_SOURCE);
         }
         for (AtnaSource source : sources) {
             if (source.getSourceID() == null) {
-                throw new AtnaException("no audit source id defined");
+                throw new AtnaException("no audit source id defined", AtnaException.AtnaError.NO_AUDIT_SOURCE_ID);
+            }
+            codes = source.getSourceTypeCodes();
+            for (AtnaCode code : codes) {
+                if (code.getCode() == null) {
+                    throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.INVALID_CODE);
+                }
             }
         }
         List<AtnaParticipant> participants = message.getParticipants();
         if (participants.size() == 0) {
-            throw new AtnaException("no participants defined");
+            throw new AtnaException("no participants defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
         }
         for (AtnaParticipant participant : participants) {
             if (participant.getUserID() == null) {
-                throw new AtnaException("no active participant user id defined");
+                throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT_ID);
+            }
+            codes = participant.getRoleIDCodes();
+            for (AtnaCode code : codes) {
+                if (code.getCode() == null) {
+                    throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.INVALID_CODE);
+                }
             }
         }
         List<AtnaObject> objects = message.getObjects();
         for (AtnaObject object : objects) {
             if (object.getObjectID() == null) {
-                throw new AtnaException("no participant object id defined");
+                throw new AtnaException("no participant object id defined", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID);
             }
             if (object.getObjectIDTypeCode() == null || object.getObjectIDTypeCode().getCode() == null) {
-                throw new AtnaException("invalid object id type code");
+                throw new AtnaException("invalid object id type code", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
             }
         }
     }
