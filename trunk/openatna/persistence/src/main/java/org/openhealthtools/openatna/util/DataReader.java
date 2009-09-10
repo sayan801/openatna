@@ -98,7 +98,7 @@ public class DataReader {
     public static final String OBJECT_ID_TYPE = "objectIdType";
     public static final String OBJECT_NAME = "objectName";
 
-    public static final String OBJECT_DETAIL = "detail";
+    public static final String OBJECT_DETAIL = "objectDetail";
     public static final String TYPE = "type";
     public static final String VALUE = "value";
 
