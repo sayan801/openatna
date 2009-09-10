@@ -30,7 +30,6 @@ public class AtnaParticipantEntity extends PersistentEntity {
 
     private Long id;
 
-    private AtnaMessageEntity atnaMessage;
     private ParticipantEntity participant;
     private Boolean userIsRequestor;
     private NetworkAccessPointEntity networkAccessPoint;
@@ -46,15 +45,6 @@ public class AtnaParticipantEntity extends PersistentEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "msg_id")
-    public AtnaMessageEntity getAtnaMessage() {
-        return atnaMessage;
-    }
-
-    public void setAtnaMessage(AtnaMessageEntity atnaMessageEntity) {
-        this.atnaMessage = atnaMessageEntity;
-    }
-
     public ParticipantEntity getParticipant() {
         return participant;
     }
@@ -71,6 +61,7 @@ public class AtnaParticipantEntity extends PersistentEntity {
         this.userIsRequestor = userIsRequestor;
     }
 
+    @ManyToOne
     public NetworkAccessPointEntity getNetworkAccessPoint() {
         return networkAccessPoint;
     }
@@ -86,7 +77,7 @@ public class AtnaParticipantEntity extends PersistentEntity {
 
         AtnaParticipantEntity that = (AtnaParticipantEntity) o;
 
-        if (atnaMessage != null ? !atnaMessage.equals(that.atnaMessage) : that.atnaMessage != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (networkAccessPoint != null ? !networkAccessPoint.equals(that.networkAccessPoint) : that.networkAccessPoint != null) return false;
         if (participant != null ? !participant.equals(that.participant) : that.participant != null) return false;
         if (userIsRequestor != null ? !userIsRequestor.equals(that.userIsRequestor) : that.userIsRequestor != null) return false;
@@ -96,7 +87,7 @@ public class AtnaParticipantEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = atnaMessage != null ? atnaMessage.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (participant != null ? participant.hashCode() : 0);
         result = 31 * result + (userIsRequestor != null ? userIsRequestor.hashCode() : 0);
         result = 31 * result + (networkAccessPoint != null ? networkAccessPoint.hashCode() : 0);
@@ -107,8 +98,6 @@ public class AtnaParticipantEntity extends PersistentEntity {
         return new StringBuilder("[").append(getClass().getName())
                 .append(" id=")
                 .append(getId())
-                .append(", message=")
-                .append(getAtnaMessage().getId())
                 .append(", network access point=")
                 .append(getNetworkAccessPoint())
                 .append(", is user requestor=")

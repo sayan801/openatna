@@ -19,14 +19,16 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.AtnaParticipantEntity;
-import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.persistence.dao.AtnaParticipantDao;
-import org.openhealthtools.openatna.persistence.dao.ParticipantDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.AtnaParticipantDao;
+import org.openhealthtools.openatna.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.persistence.model.AtnaParticipantEntity;
+import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
 
 import java.util.List;
 
@@ -91,9 +93,19 @@ public class HibernateAtnaParticipantDao extends AbstractHibernateDao<AtnaPartic
         ParticipantDao dao = SpringDaoFactory.getFactory().participantDao();
         ParticipantEntity existing = dao.getByUserId(pe.getUserId());
         if (existing == null) {
-            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
+            throw new AtnaPersistenceException("unknown participant.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
         } else {
             ap.setParticipant(existing);
+        }
+        NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
+        if (net != null) {
+            NetworkAccessPointDao netdao = SpringDaoFactory.getFactory().networkAccessPointDao();
+            NetworkAccessPointEntity there = netdao.getByTypeAndIdentifier(net.getType(), net.getIdentifier());
+            if (there == null) {
+                throw new AtnaPersistenceException("unknown network access point.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_NETWORK_ACCESS_POINT);
+            } else {
+                ap.setNetworkAccessPoint(there);
+            }
         }
     }
 }

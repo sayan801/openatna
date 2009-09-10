@@ -19,13 +19,13 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.persistence.dao.ParticipantDao;
-import org.openhealthtools.openatna.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -73,20 +73,19 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
      * This checks for any codes that are NOT in the DB.
      * Codes that are considered to be in the DB should not be added again,
      * while those that are not, should not be in the participant.
-     *
+     * <p/>
      * For each code in the participant:
      * remove it.
      * find an existing code that maches it.
      * if one is found, add this to the list.
-     *
+     * <p/>
      * This means codes that have been modified (e.g. display name was changed)
      * will not be persisted in this call. To modify, one would have to call
      * the save on the code itself.
-     *
+     * <p/>
      * If the participant's version is null, then a matching participant based on the user id
      * is queried for. If one is found, this throws a DUPLICATE_PARTICIPANT
      * AtnaParticipantException. Otherwise, the save is allowed to proceed.
-     *
      *
      * @param pe
      */
@@ -97,7 +96,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
             for (ParticipantCodeEntity code : codes) {
                 codes.remove(code);
                 code = (ParticipantCodeEntity) cd.find(code);
-                if(code.getVersion() != null) {
+                if (code.getVersion() != null) {
                     codes.add(code);
                 } else {
                     throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
@@ -105,10 +104,11 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
             }
             pe.setCodes(codes);
         }
-        if(pe.getVersion() == null) {
+
+        if (pe.getVersion() == null) {
             // new one.
             ParticipantEntity existing = getByUserId(pe.getUserId());
-            if(existing != null) {
+            if (existing != null) {
                 throw new AtnaPersistenceException(pe.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_PARTICIPANT);
             }
         } else {

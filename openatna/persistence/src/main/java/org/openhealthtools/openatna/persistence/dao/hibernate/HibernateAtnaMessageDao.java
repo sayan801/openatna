@@ -19,18 +19,12 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.AtnaMessageEntity;
-import org.openhealthtools.openatna.persistence.model.AtnaParticipantEntity;
-import org.openhealthtools.openatna.persistence.model.AtnaSourceEntity;
-import org.openhealthtools.openatna.persistence.model.AtnaObjectEntity;
-import org.openhealthtools.openatna.persistence.model.codes.*;
-import org.openhealthtools.openatna.persistence.dao.AtnaMessageDao;
-import org.openhealthtools.openatna.persistence.dao.AtnaObjectDao;
-import org.openhealthtools.openatna.persistence.dao.AtnaParticipantDao;
-import org.openhealthtools.openatna.persistence.dao.AtnaSourceDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.*;
+import org.openhealthtools.openatna.persistence.model.*;
+import org.openhealthtools.openatna.persistence.model.codes.*;
 
 import java.util.List;
 import java.util.Set;
@@ -80,8 +74,8 @@ public class HibernateAtnaMessageDao extends AbstractHibernateDao<AtnaMessageEnt
         return list(criteria().createCriteria("atnaParticipants").createCriteria("participant")
                 .createCriteria("codes")
                 .add(Restrictions.eq("code", codeEntity.getCode()))
-                        .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
-                        .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
+                .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
+                .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
 
     }
 
@@ -131,6 +125,7 @@ public class HibernateAtnaMessageDao extends AbstractHibernateDao<AtnaMessageEnt
 
     /**
      * is this right?
+     *
      * @param messageEntity
      * @throws AtnaPersistenceException
      */
@@ -144,8 +139,14 @@ public class HibernateAtnaMessageDao extends AbstractHibernateDao<AtnaMessageEnt
     }
 
     public void normalize(AtnaMessageEntity messageEntity) throws AtnaPersistenceException {
+        AtnaEventEntity evt = messageEntity.getEvent();
+        if (evt == null) {
+            throw new AtnaPersistenceException("no event identifier defined", AtnaPersistenceException.PersistenceError.NO_EVENT_ID);
+        }
+        AtnaEventDao edao = SpringDaoFactory.getFactory().atnaEventDao();
+        edao.normalize(evt);
         Set<AtnaParticipantEntity> atnaParticipants = messageEntity.getAtnaParticipants();
-        if(atnaParticipants.size() == 0) {
+        if (atnaParticipants.size() == 0) {
             throw new AtnaPersistenceException("no participants defined", AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
         }
         AtnaParticipantDao pdao = SpringDaoFactory.getFactory().atnaParticipantDao();
@@ -153,7 +154,7 @@ public class HibernateAtnaMessageDao extends AbstractHibernateDao<AtnaMessageEnt
             pdao.normalize(entity);
         }
         Set<AtnaSourceEntity> atnaSources = messageEntity.getAtnaSources();
-        if(atnaSources.size() == 0) {
+        if (atnaSources.size() == 0) {
             throw new AtnaPersistenceException("no sources defined", AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }
         AtnaSourceDao sdao = SpringDaoFactory.getFactory().atnaSourceDao();
@@ -161,7 +162,7 @@ public class HibernateAtnaMessageDao extends AbstractHibernateDao<AtnaMessageEnt
             sdao.normalize(entity);
         }
         Set<AtnaObjectEntity> atnaObjects = messageEntity.getAtnaObjects();
-        if(atnaObjects.size() > 0) {
+        if (atnaObjects.size() > 0) {
             AtnaObjectDao odao = SpringDaoFactory.getFactory().atnaObjectDao();
             for (AtnaObjectEntity entity : atnaObjects) {
                 odao.normalize(entity);

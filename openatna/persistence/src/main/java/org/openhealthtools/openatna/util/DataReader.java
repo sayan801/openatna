@@ -292,7 +292,7 @@ public class DataReader {
         }
         NetworkAccessPointEntity e = new NetworkAccessPointEntity();
         e.setIdentifier(netId);
-        e.setType(Short.valueOf(type));
+        e.setType(new Short(type));
         naps.put(id(el), e);
     }
 

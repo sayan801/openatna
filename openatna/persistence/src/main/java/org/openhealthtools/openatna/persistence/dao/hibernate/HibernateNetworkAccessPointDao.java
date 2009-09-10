@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.persistence.dao.NetworkAccessPointDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
 
 import java.util.List;
 
@@ -44,11 +44,11 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
         return get(id);
     }
 
-    public NetworkAccessPointEntity getByTypeAndIdentifier(int type, String identifier) throws AtnaPersistenceException {
+    public NetworkAccessPointEntity getByTypeAndIdentifier(Short type, String identifier) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("type", type)).add(Restrictions.eq("identifier", identifier)));
     }
 
-    public List<? extends NetworkAccessPointEntity> getByType(int type) throws AtnaPersistenceException {
+    public List<? extends NetworkAccessPointEntity> getByType(Short type) throws AtnaPersistenceException {
         return list(criteria().add(Restrictions.eq("type", type)));
     }
 
@@ -61,7 +61,7 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
     }
 
     public void save(NetworkAccessPointEntity nap) throws AtnaPersistenceException {
-        if(worthSaving(nap) && !isDuplicate(nap)) {
+        if (worthSaving(nap) && !isDuplicate(nap)) {
             currentSession().saveOrUpdate(nap);
         }
     }
@@ -69,6 +69,7 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
     public void delete(NetworkAccessPointEntity nap) throws AtnaPersistenceException {
         currentSession().delete(nap);
     }
+
 
     private boolean worthSaving(NetworkAccessPointEntity nap) throws AtnaPersistenceException {
         // both are null - don't persist it

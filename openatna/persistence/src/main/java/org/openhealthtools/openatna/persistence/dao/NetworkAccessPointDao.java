@@ -19,8 +19,8 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
-import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
 
 import java.util.List;
 
@@ -36,9 +36,9 @@ public interface NetworkAccessPointDao extends Dao {
 
     public NetworkAccessPointEntity getById(Long id) throws AtnaPersistenceException;
 
-    public NetworkAccessPointEntity getByTypeAndIdentifier(int type, String identifier) throws AtnaPersistenceException;
+    public NetworkAccessPointEntity getByTypeAndIdentifier(Short type, String identifier) throws AtnaPersistenceException;
 
-    public List<? extends NetworkAccessPointEntity> getByType(int type) throws AtnaPersistenceException;
+    public List<? extends NetworkAccessPointEntity> getByType(Short type) throws AtnaPersistenceException;
 
     public List<? extends NetworkAccessPointEntity> getByIdentifier(String identifier) throws AtnaPersistenceException;
 
@@ -47,4 +47,6 @@ public interface NetworkAccessPointDao extends Dao {
     public void save(NetworkAccessPointEntity nap) throws AtnaPersistenceException;
 
     public void delete(NetworkAccessPointEntity nap) throws AtnaPersistenceException;
+
+
 }
