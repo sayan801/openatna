@@ -37,7 +37,7 @@ public class NetworkAccessPointEntity extends PersistentEntity {
 
     private Long id;
     private Integer version;
-    private Integer type;
+    private Short type;
     private String identifier;
 
     @Id
@@ -59,11 +59,11 @@ public class NetworkAccessPointEntity extends PersistentEntity {
         this.version = version;
     }
 
-    public int getType() {
+    public Short getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Short type) {
         this.type = type;
     }
 

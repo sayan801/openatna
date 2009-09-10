@@ -51,6 +51,7 @@ public class AtnaMessageEntity extends PersistentEntity {
         this.id = id;
     }
 
+    @OneToOne(cascade = CascadeType.ALL)
     public AtnaEventEntity getEvent() {
         return event;
     }
@@ -59,7 +60,7 @@ public class AtnaMessageEntity extends PersistentEntity {
         this.event = event;
     }
 
-    @OneToMany(mappedBy = "atnaMessage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<AtnaParticipantEntity> getAtnaParticipants() {
         return atnaParticipants;
     }
@@ -68,7 +69,7 @@ public class AtnaMessageEntity extends PersistentEntity {
         this.atnaParticipants = atnaParticipants;
     }
 
-    @OneToMany(mappedBy = "atnaMessage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<AtnaSourceEntity> getAtnaSources() {
         return atnaSources;
     }
@@ -77,7 +78,7 @@ public class AtnaMessageEntity extends PersistentEntity {
         this.atnaSources = atnaSources;
     }
 
-    @OneToMany(mappedBy = "atnaMessage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<AtnaObjectEntity> getAtnaObjects() {
         return atnaObjects;
     }

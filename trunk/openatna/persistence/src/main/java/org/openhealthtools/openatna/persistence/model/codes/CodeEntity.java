@@ -30,9 +30,6 @@ import javax.persistence.*;
  * Codes need to be unique, but both the code system and code system name are optional.
  * This makes determining equality slightly tricky. Added to this, two null values in the DB
  * do not equate, so two Codes with the same code, and null for the system and system name are not equal.
- * The workaround is to set the system and systemName with default values - "undefined".
- * This means that code extracting these codes into API objects, should check for this value and potentially
- * not use it, but keep the API object's field as a null.
  */
 
 @Entity
@@ -43,8 +40,6 @@ import javax.persistence.*;
         discriminatorType = DiscriminatorType.STRING
 )
 public abstract class CodeEntity extends PersistentEntity {
-
-    public static final String UNDEFINED = "undefined";
 
     public static enum CodeType {
         ACTIVE_PARTICIPANT,
@@ -60,8 +55,8 @@ public abstract class CodeEntity extends PersistentEntity {
     private String code;
     private String displayName;
     private String originalText;
-    private String codeSystem = UNDEFINED;
-    private String codeSystemName = UNDEFINED;
+    private String codeSystem;
+    private String codeSystemName;
 
 
     @Id

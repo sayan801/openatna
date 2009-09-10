@@ -71,6 +71,7 @@ public class AtnaEventEntity extends PersistentEntity {
         this.eventTypeCodes = eventTypeCodeEntities;
     }
 
+    @ManyToOne
     public EventIdCodeEntity getEventId() {
         return eventId;
     }

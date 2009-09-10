@@ -31,7 +31,6 @@ public class AtnaSourceEntity extends PersistentEntity {
 
     private Long id;
 
-    private AtnaMessageEntity atnaMessage;
     private SourceEntity source;
 
     @Id
@@ -45,15 +44,6 @@ public class AtnaSourceEntity extends PersistentEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "msg_id")
-    public AtnaMessageEntity getAtnaMessage() {
-        return atnaMessage;
-    }
-
-    public void setAtnaMessage(AtnaMessageEntity atnaMessageEntity) {
-        this.atnaMessage = atnaMessageEntity;
-    }
-
     public SourceEntity getSource() {
         return source;
     }
@@ -62,7 +52,6 @@ public class AtnaSourceEntity extends PersistentEntity {
         this.source = source;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,7 +59,7 @@ public class AtnaSourceEntity extends PersistentEntity {
 
         AtnaSourceEntity that = (AtnaSourceEntity) o;
 
-        if (atnaMessage != null ? !atnaMessage.equals(that.atnaMessage) : that.atnaMessage != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (source != null ? !source.equals(that.source) : that.source != null) return false;
 
         return true;
@@ -78,7 +67,7 @@ public class AtnaSourceEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = atnaMessage != null ? atnaMessage.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (source != null ? source.hashCode() : 0);
         return result;
     }
@@ -87,8 +76,6 @@ public class AtnaSourceEntity extends PersistentEntity {
         return new StringBuilder("[").append(getClass().getName())
                 .append(" id=")
                 .append(getId())
-                .append(", message=")
-                .append(getAtnaMessage().getId())
                 .append(", source=")
                 .append(getSource())
                 .append("]")

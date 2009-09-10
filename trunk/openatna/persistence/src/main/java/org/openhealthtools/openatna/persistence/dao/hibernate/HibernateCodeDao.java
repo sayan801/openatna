@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.persistence.model.codes.*;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.model.codes.*;
 
 import java.util.List;
 
@@ -31,6 +31,8 @@ import java.util.List;
  * NOTE: the fields that determine a code's uniqueness are its code, code system AND system name.
  * Two codes with the same code and code system but with different system names are NOT considered equal.
  * Is this right????
+ * <p/>
+ * Codes with only a code defined which have the same code, are not considered equal.
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -95,11 +97,12 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
      * this will only save new codes (based on on code, system and system name), or update codes that have
      * been drawn from the DB. Once a code is stored, it cannot have its code, system or system name changed.
      * Otherwise it will be considered a new code.
+     *
      * @param ce
      * @throws AtnaPersistenceException
      */
     public void save(CodeEntity ce) throws AtnaPersistenceException {
-        if(!isDuplicate(ce)) {
+        if (!isDuplicate(ce)) {
             currentSession().saveOrUpdate(ce);
         }
     }
@@ -109,7 +112,23 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
     }
 
     public CodeEntity get(CodeEntity code) throws AtnaPersistenceException {
-        return getByCodeAndSystemAndSystemName(code.getCode(), code.getCodeSystem(), code.getCodeSystemName());
+        String c = code.getCode();
+        String sys = code.getCodeSystem();
+        String name = code.getCodeSystemName();
+        if (c == null) {
+            throw new AtnaPersistenceException("no code in code entity", AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+        }
+        if (sys == null && name == null) {
+            return null;
+        }
+        if (sys != null && name != null) {
+            return getByCodeAndSystemAndSystemName(c, sys, name);
+        }
+        if (sys != null) {
+            return getByCodeAndSystem(c, sys);
+        } else {
+            return getByCodeAndSystemName(c, name);
+        }
     }
 
     private Class fromCodeType(CodeEntity.CodeType type) {
@@ -130,7 +149,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
     }
 
     private boolean isDuplicate(CodeEntity entity) throws AtnaPersistenceException {
-        CodeEntity ce = getByCodeAndSystemAndSystemName(entity.getCode(), entity.getCodeSystem(), entity.getCodeSystemName());
+        CodeEntity ce = get(entity);
         if (ce != null && !(ce.getId().equals(entity.getId()))) {
             return true;
         }
@@ -139,17 +158,17 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
 
     /**
      * returns a matching code in the DB if one is there.
+     *
      * @param entity
      * @return
      * @throws org.openhealthtools.openatna.persistence.AtnaPersistenceException
+     *
      */
     public CodeEntity find(CodeEntity entity) throws AtnaPersistenceException {
-        CodeEntity ce = getByCodeAndSystemAndSystemName(entity.getCode(), entity.getCodeSystem(), entity.getCodeSystemName());
+        CodeEntity ce = get(entity);
         if (ce != null) {
             return ce;
         }
         return entity;
     }
-
-
 }

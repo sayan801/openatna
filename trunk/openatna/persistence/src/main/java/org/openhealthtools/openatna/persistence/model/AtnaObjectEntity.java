@@ -133,7 +133,6 @@ public class AtnaObjectEntity extends PersistentEntity {
     private static final long serialVersionUID = -1L;
 
     private Long id;
-    private AtnaMessageEntity atnaMessage;
     private ObjectEntity object;
     protected String objectName;
     protected String objectQuery;
@@ -150,15 +149,6 @@ public class AtnaObjectEntity extends PersistentEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "msg_id")
-    public AtnaMessageEntity getAtnaMessage() {
-        return atnaMessage;
-    }
-
-    public void setAtnaMessage(AtnaMessageEntity atnaMessageEntity) {
-        this.atnaMessage = atnaMessageEntity;
-    }
-
     public ObjectEntity getObject() {
         return object;
     }
@@ -198,7 +188,7 @@ public class AtnaObjectEntity extends PersistentEntity {
 
         AtnaObjectEntity that = (AtnaObjectEntity) o;
 
-        if (atnaMessage != null ? !atnaMessage.equals(that.atnaMessage) : that.atnaMessage != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (object != null ? !object.equals(that.object) : that.object != null) return false;
         if (objectDataLifeCycle != null ? !objectDataLifeCycle.equals(that.objectDataLifeCycle) : that.objectDataLifeCycle != null) return false;
         if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
@@ -209,7 +199,7 @@ public class AtnaObjectEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = atnaMessage != null ? atnaMessage.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (object != null ? object.hashCode() : 0);
         result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
         result = 31 * result + (objectQuery != null ? objectQuery.hashCode() : 0);
@@ -221,8 +211,6 @@ public class AtnaObjectEntity extends PersistentEntity {
         return new StringBuilder("[").append(getClass().getName())
                 .append(" id=")
                 .append(getId())
-                .append(", message=")
-                .append(getAtnaMessage().getId())
                 .append(", data life cycle=")
                 .append(getObjectDataLifeCycle())
                 .append(", object name=")
