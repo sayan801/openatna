@@ -48,10 +48,6 @@
         <netPoint id="" netId="" type=""/>
     </netPoints>
 
-    <objectDetails>
-        <objectDetail id="" type="detail">SOME DETAIL</objectDetail>
-    </objectDetails>
-
     <sources>
         <source id="" sourceId="" enterpriseSiteId="">
             <sourceType ref=""/>
@@ -67,7 +63,7 @@
     <objects>
         <object id="" objectId="" objectTypeCode="" objectTypeCodeRole="" objectName="" sensitivity="">
             <objectIdType ref=""/>
-            <objectDetail ref=""/>
+            <objectDetailKey key=""/>
         </object>
     </objects>
 </entities>
@@ -192,6 +188,7 @@
     <objects>
         <object id="o1" objectId="obj1" sensitivity="N" objectName="machine">
             <objectIdType ref="DCM-110180"/>
+            <objectDetailKey key="version"/>
         </object>
     </objects>
 </entities>

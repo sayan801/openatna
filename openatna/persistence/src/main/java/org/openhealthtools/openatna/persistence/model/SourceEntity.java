@@ -47,6 +47,11 @@ public class SourceEntity extends PersistentEntity {
         this.sourceId = sourceId;
     }
 
+    public SourceEntity(String sourceId, SourceCodeEntity code) {
+        this.sourceId = sourceId;
+        addSourceTypeCode(code);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

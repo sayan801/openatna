@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.util;
+package org.openhealthtools.openatna.persistence.util;
 
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.*;
@@ -56,7 +56,6 @@ public class DataReader {
     public static final String SOURCES = "sources";
     public static final String PARTICIPANTS = "participants";
     public static final String OBJECTS = "objects";
-    public static final String OBJECT_DETAILS = "objectDetails";
     public static final String NETWORK_ACCESS_POINTS = "netPoints";
 
     public static final String ID = "id";
@@ -97,8 +96,9 @@ public class DataReader {
     public static final String OBJECT_SENSITIVITY = "sensitivity";
     public static final String OBJECT_ID_TYPE = "objectIdType";
     public static final String OBJECT_NAME = "objectName";
+    public static final String OBJECT_DETAIL_KEY = "objectDetailKey";
+    public static final String KEY = "key";
 
-    public static final String OBJECT_DETAIL = "objectDetail";
     public static final String TYPE = "type";
     public static final String VALUE = "value";
 
@@ -182,8 +182,6 @@ public class DataReader {
                         readCodes(e);
                     } else if (name.equals(NETWORK_ACCESS_POINTS)) {
                         readNaps(e);
-                    } else if (name.equals(OBJECT_DETAILS)) {
-                        readDetails(e);
                     }
                 }
             }
@@ -250,28 +248,6 @@ public class DataReader {
         codes.put(id(el), entity);
     }
 
-    private void readDetails(Element codes) {
-        NodeList children = codes.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(OBJECT_DETAIL)) {
-                readDetail((Element) n);
-            }
-        }
-    }
-
-    private void readDetail(Element el) {
-        ObjectDetailEntity ent = new ObjectDetailEntity();
-        String type = el.getAttribute(TYPE);
-        String value = el.getTextContent();
-        if (nill(type) || nill(value)) {
-            System.out.println("no value or type defined in detail. Not loading...");
-            return;
-        }
-        ent.setType(type);
-        ent.setValue(Base64.encode(value.getBytes()));
-        details.put(id(el), ent);
-    }
 
     private void readNaps(Element codes) {
         NodeList children = codes.getChildNodes();
@@ -416,14 +392,10 @@ public class DataReader {
                         System.out.println("no object id type defined. Not loading...");
                         return;
                     }
-                } else if (ele.getLocalName().equals(OBJECT_DETAIL)) {
-                    String ref = ele.getAttribute(REF);
-                    if (ref == null) {
-                        continue;
-                    }
-                    ObjectDetailEntity det = details.get(ref);
-                    if (det != null) {
-                        e.getObjectDetails().add(det);
+                } else if (ele.getLocalName().equals(OBJECT_DETAIL_KEY)) {
+                    String key = ele.getAttribute(KEY);
+                    if (key != null) {
+                        e.addObjectDetailType(key);
                     }
                 }
             }

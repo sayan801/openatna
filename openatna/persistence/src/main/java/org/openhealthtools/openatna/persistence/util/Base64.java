@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.openhealthtools.openatna.util;
+package org.openhealthtools.openatna.persistence.util;
 
 /**
  * Class Description Here...

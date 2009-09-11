@@ -39,13 +39,12 @@ public class ObjectEntity extends PersistentEntity {
     private ObjectIdTypeCodeEntity objectIdTypeCode;
     private String objectName;
 
-
     private String objectId;
     private Short objectTypeCode;
     private Short objectTypeCodeRole;
     private String objectSensitivity;
 
-    private Set<ObjectDetailEntity> objectDetails = new HashSet<ObjectDetailEntity>();
+    private Set<TypeEntity> objectDetailTypes = new HashSet<TypeEntity>();
 
     public ObjectEntity() {
     }
@@ -91,24 +90,22 @@ public class ObjectEntity extends PersistentEntity {
         this.objectName = objectName;
     }
 
-    /**
-     * NOTE: many to many relation. Type value pairs can be shared
-     * between objects.
-     *
-     * @return
-     */
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "objects_to_details",
-            joinColumns = {@JoinColumn(name = "object")},
-            inverseJoinColumns = @JoinColumn(name = "detail")
-    )
-    public Set<ObjectDetailEntity> getObjectDetails() {
-        return objectDetails;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<TypeEntity> getObjectDetailTypes() {
+        return objectDetailTypes;
     }
 
-    public void setObjectDetails(Set<ObjectDetailEntity> objectDetails) {
-        this.objectDetails = objectDetails;
+    public void setObjectDetailTypes(Set<TypeEntity> objectDetailTypes) {
+        this.objectDetailTypes = objectDetailTypes;
+    }
+
+    public void addObjectDetailType(String key) {
+        getObjectDetailTypes().add(new TypeEntity(key));
+    }
+
+    public boolean containsDetailType(String key) {
+        TypeEntity te = new TypeEntity(key);
+        return getObjectDetailTypes().contains(te);
     }
 
     public String getObjectId() {
@@ -143,7 +140,6 @@ public class ObjectEntity extends PersistentEntity {
         this.objectSensitivity = objectSensitivity;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -151,7 +147,7 @@ public class ObjectEntity extends PersistentEntity {
 
         ObjectEntity that = (ObjectEntity) o;
 
-        if (objectDetails != null ? !objectDetails.equals(that.objectDetails) : that.objectDetails != null) return false;
+        if (objectDetailTypes != null ? !objectDetailTypes.equals(that.objectDetailTypes) : that.objectDetailTypes != null) return false;
         if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) return false;
         if (objectIdTypeCode != null ? !objectIdTypeCode.equals(that.objectIdTypeCode) : that.objectIdTypeCode != null) return false;
         if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
@@ -166,11 +162,11 @@ public class ObjectEntity extends PersistentEntity {
     public int hashCode() {
         int result = objectIdTypeCode != null ? objectIdTypeCode.hashCode() : 0;
         result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
-        result = 31 * result + (objectDetails != null ? objectDetails.hashCode() : 0);
         result = 31 * result + (objectId != null ? objectId.hashCode() : 0);
         result = 31 * result + (objectTypeCode != null ? objectTypeCode.hashCode() : 0);
         result = 31 * result + (objectTypeCodeRole != null ? objectTypeCodeRole.hashCode() : 0);
         result = 31 * result + (objectSensitivity != null ? objectSensitivity.hashCode() : 0);
+        result = 31 * result + (objectDetailTypes != null ? objectDetailTypes.hashCode() : 0);
         return result;
     }
 
@@ -192,8 +188,8 @@ public class ObjectEntity extends PersistentEntity {
                 .append(getObjectIdTypeCode())
                 .append(", sensitivity=")
                 .append(getObjectSensitivity())
-                .append(", object details=")
-                .append(getObjectDetails())
+                .append(", object detail keys=")
+                .append(getObjectDetailTypes())
                 .append("]")
                 .toString();
     }

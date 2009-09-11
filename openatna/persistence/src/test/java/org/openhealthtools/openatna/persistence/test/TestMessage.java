@@ -44,48 +44,34 @@ public class TestMessage {
     public void testMessage() throws AtnaPersistenceException {
         DaoFactory factory = SpringDaoFactory.getFactory();
         AtnaMessageDao dao = factory.atnaMessageDao();
-
         AtnaMessageEntity msgEnt = createMessage();
 
-        SourceEntity source = new SourceEntity();
-        source.setSourceId("cat");
-        SourceCodeEntity code = new SourceCodeEntity();
-        code.setCode("1");
+        SourceCodeEntity code = new SourceCodeEntity("1");
         code.setCodeSystemName("RFC-3881");
-        source.getSourceTypeCodes().add(code);
-        AtnaSourceEntity asource = new AtnaSourceEntity();
-        asource.setSource(source);
-        msgEnt.getAtnaSources().add(asource);
+        AtnaSourceEntity asource = new AtnaSourceEntity(new SourceEntity("cat", code));
+        msgEnt.addAtnaSource(asource);
 
-
-        ParticipantEntity part = new ParticipantEntity();
-        part.setUserId("scmabh");
-        part.setUserName("andrew");
-        ParticipantCodeEntity pcode = new ParticipantCodeEntity();
-        pcode.setCode("110150");
+        ParticipantCodeEntity pcode = new ParticipantCodeEntity("110150");
         pcode.setCodeSystemName("DCM");
-        part.getCodes().add(pcode);
-        AtnaParticipantEntity pentity = new AtnaParticipantEntity();
-        pentity.setParticipant(part);
-        NetworkAccessPointEntity net = new NetworkAccessPointEntity();
-        net.setIdentifier("192.168.0.1");
-        net.setType(new Short("2"));
-        pentity.setNetworkAccessPoint(net);
-        msgEnt.getAtnaParticipants().add(pentity);
+        ParticipantEntity part = new ParticipantEntity("scmabh");
+        part.setUserName("andrew");
 
-        ObjectEntity obj = new ObjectEntity();
-        obj.setObjectId("obj1");
+        AtnaParticipantEntity pentity = new AtnaParticipantEntity(part);
+        NetworkAccessPointEntity net = new NetworkAccessPointEntity(new Short("2"), "192.168.0.1");
+        pentity.setNetworkAccessPoint(net);
+        msgEnt.addAtnaParticipant(pentity);
+
+        ObjectIdTypeCodeEntity ocode = new ObjectIdTypeCodeEntity("110180");
+        ocode.setCodeSystemName("DCM");
+
+        ObjectEntity obj = new ObjectEntity("obj1", ocode);
         obj.setObjectName("machine");
         obj.setObjectSensitivity("N");
-        ObjectIdTypeCodeEntity ocode = new ObjectIdTypeCodeEntity();
-        ocode.setCode("110180");
-        ocode.setCodeSystemName("DCM");
-        obj.setObjectIdTypeCode(ocode);
 
-        AtnaObjectEntity objEnt = new AtnaObjectEntity();
-        objEnt.setObject(obj);
+        AtnaObjectEntity objEnt = new AtnaObjectEntity(obj);
         objEnt.setObjectDataLifeCycle(new Short("1"));
-        msgEnt.getAtnaObjects().add(objEnt);
+        objEnt.addObjectDetail(new ObjectDetailEntity("version", "1.2"));
+        msgEnt.addAtnaObject(objEnt);
 
         dao.save(msgEnt);
     }

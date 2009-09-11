@@ -37,8 +37,8 @@ public class AtnaParticipantEntity extends PersistentEntity {
     public AtnaParticipantEntity() {
     }
 
-    public AtnaParticipantEntity(String userId) {
-        this.participant = new ParticipantEntity(userId);
+    public AtnaParticipantEntity(ParticipantEntity participant) {
+        this.participant = participant;
     }
 
     @Id
@@ -84,7 +84,6 @@ public class AtnaParticipantEntity extends PersistentEntity {
 
         AtnaParticipantEntity that = (AtnaParticipantEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (networkAccessPoint != null ? !networkAccessPoint.equals(that.networkAccessPoint) : that.networkAccessPoint != null) return false;
         if (participant != null ? !participant.equals(that.participant) : that.participant != null) return false;
         if (userIsRequestor != null ? !userIsRequestor.equals(that.userIsRequestor) : that.userIsRequestor != null) return false;
@@ -94,8 +93,7 @@ public class AtnaParticipantEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (participant != null ? participant.hashCode() : 0);
+        int result = participant != null ? participant.hashCode() : 0;
         result = 31 * result + (userIsRequestor != null ? userIsRequestor.hashCode() : 0);
         result = 31 * result + (networkAccessPoint != null ? networkAccessPoint.hashCode() : 0);
         return result;
