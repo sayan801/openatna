@@ -1,133 +1,28 @@
-/*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/*
+ * Copyright (c) 2009 University of Cardiff and others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-
+ * Cardiff University - intial API and implementation
+ */
 
 package org.openhealthtools.openatna.persistence.model;
 
-import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
-
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-
-/**
- * <p>Java class for ParticipantObjectIdentificationType complex type.
- * <p/>
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
- * <pre>
- * &lt;complexType name="ParticipantObjectIdentificationType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="ParticipantObjectIDTypeCode">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{}CodedValueType">
- *                 &lt;attribute name="code" use="required">
- *                   &lt;simpleType>
- *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *                       &lt;enumeration value="1"/>
- *                       &lt;enumeration value="2"/>
- *                       &lt;enumeration value="3"/>
- *                       &lt;enumeration value="4"/>
- *                       &lt;enumeration value="5"/>
- *                       &lt;enumeration value="6"/>
- *                       &lt;enumeration value="7"/>
- *                       &lt;enumeration value="8"/>
- *                       &lt;enumeration value="9"/>
- *                       &lt;enumeration value="10"/>
- *                       &lt;enumeration value="11"/>
- *                       &lt;enumeration value="12"/>
- *                       &lt;enumeration value=""/>
- *                     &lt;/restriction>
- *                   &lt;/simpleType>
- *                 &lt;/attribute>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;choice minOccurs="0">
- *           &lt;element name="ParticipantObjectName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *           &lt;element name="ParticipantObjectQuery" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0"/>
- *         &lt;/choice>
- *         &lt;element name="ParticipantObjectDetail" type="{}TypeValuePairType" maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;attribute name="ParticipantObjectID" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ParticipantObjectTypeCode">
- *         &lt;simpleType>
- *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}unsignedByte">
- *             &lt;enumeration value="1"/>
- *             &lt;enumeration value="2"/>
- *             &lt;enumeration value="3"/>
- *             &lt;enumeration value="4"/>
- *           &lt;/restriction>
- *         &lt;/simpleType>
- *       &lt;/attribute>
- *       &lt;attribute name="ParticipantObjectTypeCodeRole">
- *         &lt;simpleType>
- *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}unsignedByte">
- *             &lt;enumeration value="1"/>
- *             &lt;enumeration value="2"/>
- *             &lt;enumeration value="3"/>
- *             &lt;enumeration value="4"/>
- *             &lt;enumeration value="5"/>
- *             &lt;enumeration value="6"/>
- *             &lt;enumeration value="7"/>
- *             &lt;enumeration value="8"/>
- *             &lt;enumeration value="9"/>
- *             &lt;enumeration value="10"/>
- *             &lt;enumeration value="11"/>
- *             &lt;enumeration value="12"/>
- *             &lt;enumeration value="13"/>
- *             &lt;enumeration value="14"/>
- *             &lt;enumeration value="15"/>
- *             &lt;enumeration value="16"/>
- *             &lt;enumeration value="17"/>
- *             &lt;enumeration value="18"/>
- *             &lt;enumeration value="19"/>
- *             &lt;enumeration value="20"/>
- *             &lt;enumeration value="21"/>
- *             &lt;enumeration value="22"/>
- *             &lt;enumeration value="23"/>
- *             &lt;enumeration value="24"/>
- *           &lt;/restriction>
- *         &lt;/simpleType>
- *       &lt;/attribute>
- *       &lt;attribute name="ParticipantObjectDataLifeCycle">
- *         &lt;simpleType>
- *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}unsignedByte">
- *             &lt;enumeration value="1"/>
- *             &lt;enumeration value="2"/>
- *             &lt;enumeration value="3"/>
- *             &lt;enumeration value="4"/>
- *             &lt;enumeration value="5"/>
- *             &lt;enumeration value="6"/>
- *             &lt;enumeration value="7"/>
- *             &lt;enumeration value="8"/>
- *             &lt;enumeration value="9"/>
- *             &lt;enumeration value="10"/>
- *             &lt;enumeration value="11"/>
- *             &lt;enumeration value="12"/>
- *             &lt;enumeration value="13"/>
- *             &lt;enumeration value="14"/>
- *             &lt;enumeration value="15"/>
- *           &lt;/restriction>
- *         &lt;/simpleType>
- *       &lt;/attribute>
- *       &lt;attribute name="ParticipantObjectSensitivity" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- */
 @Entity
 @Table(name = "atna_objects")
 public class AtnaObjectEntity extends PersistentEntity {
@@ -136,15 +31,17 @@ public class AtnaObjectEntity extends PersistentEntity {
 
     private Long id;
     private ObjectEntity object;
-    protected String objectName;
-    protected String objectQuery;
-    protected Short objectDataLifeCycle;
+    private String objectName;
+    private String objectQuery;
+    private Short objectDataLifeCycle;
+
+    private Set<ObjectDetailEntity> details = new HashSet<ObjectDetailEntity>();
 
     public AtnaObjectEntity() {
     }
 
-    public AtnaObjectEntity(String objectId, ObjectIdTypeCodeEntity code) {
-        this.object = new ObjectEntity(objectId, code);
+    public AtnaObjectEntity(ObjectEntity object) {
+        this.object = object;
     }
 
     @Id
@@ -190,6 +87,19 @@ public class AtnaObjectEntity extends PersistentEntity {
         this.objectDataLifeCycle = objectDataLifeCycle;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<ObjectDetailEntity> getDetails() {
+        return details;
+    }
+
+    public void setDetails(Set<ObjectDetailEntity> details) {
+        this.details = details;
+    }
+
+    public void addObjectDetail(ObjectDetailEntity detail) {
+        getDetails().add(detail);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -197,7 +107,7 @@ public class AtnaObjectEntity extends PersistentEntity {
 
         AtnaObjectEntity that = (AtnaObjectEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (details != null ? !details.equals(that.details) : that.details != null) return false;
         if (object != null ? !object.equals(that.object) : that.object != null) return false;
         if (objectDataLifeCycle != null ? !objectDataLifeCycle.equals(that.objectDataLifeCycle) : that.objectDataLifeCycle != null) return false;
         if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
@@ -208,11 +118,11 @@ public class AtnaObjectEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (object != null ? object.hashCode() : 0);
+        int result = object != null ? object.hashCode() : 0;
         result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
         result = 31 * result + (objectQuery != null ? objectQuery.hashCode() : 0);
         result = 31 * result + (objectDataLifeCycle != null ? objectDataLifeCycle.hashCode() : 0);
+        result = 31 * result + (details != null ? details.hashCode() : 0);
         return result;
     }
 
@@ -228,6 +138,8 @@ public class AtnaObjectEntity extends PersistentEntity {
                 .append(getObjectQuery())
                 .append(", object=")
                 .append(getObject())
+                .append(", details=")
+                .append(getDetails())
                 .append("]")
                 .toString();
     }

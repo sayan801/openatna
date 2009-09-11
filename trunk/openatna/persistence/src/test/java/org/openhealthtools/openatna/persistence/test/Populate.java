@@ -20,7 +20,7 @@
 package org.openhealthtools.openatna.persistence.test;
 
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.util.DataReader;
+import org.openhealthtools.openatna.persistence.util.DataReader;
 
 import java.io.InputStream;
 

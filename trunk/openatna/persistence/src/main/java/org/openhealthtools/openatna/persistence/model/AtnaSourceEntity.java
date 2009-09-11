@@ -39,6 +39,10 @@ public class AtnaSourceEntity extends PersistentEntity {
         this.source = new SourceEntity(sourceId);
     }
 
+    public AtnaSourceEntity(SourceEntity source) {
+        this.source = source;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -65,7 +69,6 @@ public class AtnaSourceEntity extends PersistentEntity {
 
         AtnaSourceEntity that = (AtnaSourceEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (source != null ? !source.equals(that.source) : that.source != null) return false;
 
         return true;
@@ -73,10 +76,9 @@ public class AtnaSourceEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (source != null ? source.hashCode() : 0);
-        return result;
+        return source != null ? source.hashCode() : 0;
     }
+
 
     public String toString() {
         return new StringBuilder("[").append(getClass().getName())

@@ -25,10 +25,12 @@ import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.AtnaObjectDao;
 import org.openhealthtools.openatna.persistence.dao.ObjectDao;
 import org.openhealthtools.openatna.persistence.model.AtnaObjectEntity;
+import org.openhealthtools.openatna.persistence.model.ObjectDetailEntity;
 import org.openhealthtools.openatna.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Andrew Harrison
@@ -87,12 +89,21 @@ public class HibernateAtnaObjectDao extends AbstractHibernateDao<AtnaObjectEntit
 
         }
         ObjectEntity oe = ao.getObject();
+
         ObjectDao dao = SpringDaoFactory.getFactory().objectDao();
         ObjectEntity existing = dao.getByObjectId(oe.getObjectId());
         if (existing == null) {
             throw new AtnaPersistenceException("no object defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
         } else {
             ao.setObject(existing);
+        }
+        Set<ObjectDetailEntity> details = ao.getDetails();
+        if (details.size() > 0) {
+            for (ObjectDetailEntity detail : details) {
+                if (!existing.containsDetailType(detail.getType())) {
+                    throw new AtnaPersistenceException("bad object detail key.", AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
+                }
+            }
         }
     }
 }

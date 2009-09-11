@@ -54,6 +54,11 @@ public class ParticipantEntity extends PersistentEntity {
         this.userId = userId;
     }
 
+    public ParticipantEntity(String userId, ParticipantCodeEntity code) {
+        this.userId = userId;
+        addCode(code);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

@@ -108,7 +108,12 @@ public class AtnaPersistenceException extends Exception {
          * fields not used for comparison do not match
          * representation in DB
          */
-        INCONSISTENT_REPRESENTATION
+        INCONSISTENT_REPRESENTATION,
+
+        /**
+         * if an object contains a detail that it does not know about.
+         */
+        UNKNOWN_DETAIL_TYPE
 
     }
 
