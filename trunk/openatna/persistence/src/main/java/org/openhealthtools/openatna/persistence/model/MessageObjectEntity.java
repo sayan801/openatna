@@ -78,7 +78,7 @@ public class MessageObjectEntity extends PersistentEntity {
         this.objectDataLifeCycle = objectDataLifeCycle;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     public Set<ObjectDetailEntity> getDetails() {
         return details;
     }

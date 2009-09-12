@@ -71,7 +71,7 @@ public class SourceEntity extends PersistentEntity {
         this.version = version;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "sources_to_codes",
             joinColumns = {@JoinColumn(name = "source")},
@@ -138,14 +138,14 @@ public class SourceEntity extends PersistentEntity {
 
         if (enterpriseSiteId != null ? !enterpriseSiteId.equals(that.enterpriseSiteId) : that.enterpriseSiteId != null) return false;
         if (sourceId != null ? !sourceId.equals(that.sourceId) : that.sourceId != null) return false;
-        if (sourceTypeCodes != null ? !sourceTypeCodes.equals(that.sourceTypeCodes) : that.sourceTypeCodes != null) return false;
+        if (getSourceTypeCodes() != null ? !getSourceTypeCodes().equals(that.getSourceTypeCodes()) : that.getSourceTypeCodes() != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = sourceTypeCodes != null ? sourceTypeCodes.hashCode() : 0;
+        int result = getSourceTypeCodes() != null ? getSourceTypeCodes().hashCode() : 0;
         result = 31 * result + (enterpriseSiteId != null ? enterpriseSiteId.hashCode() : 0);
         result = 31 * result + (sourceId != null ? sourceId.hashCode() : 0);
         return result;

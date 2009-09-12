@@ -102,7 +102,7 @@ public class ParticipantEntity extends PersistentEntity {
         this.userName = userName;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "participants_to_codes",
             joinColumns = {@JoinColumn(name = "participant")},
@@ -128,7 +128,8 @@ public class ParticipantEntity extends PersistentEntity {
         ParticipantEntity that = (ParticipantEntity) o;
 
         if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId) : that.alternativeUserId != null) return false;
-        if (participantTypeCodes != null ? !participantTypeCodes.equals(that.participantTypeCodes) : that.participantTypeCodes != null) return false;
+        if (getParticipantTypeCodes() != null ? !getParticipantTypeCodes().equals(that.getParticipantTypeCodes()) : that.getParticipantTypeCodes() != null)
+            return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
 
@@ -140,7 +141,7 @@ public class ParticipantEntity extends PersistentEntity {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (alternativeUserId != null ? alternativeUserId.hashCode() : 0);
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        result = 31 * result + (participantTypeCodes != null ? participantTypeCodes.hashCode() : 0);
+        result = 31 * result + (getParticipantTypeCodes() != null ? getParticipantTypeCodes().hashCode() : 0);
         return result;
     }
 

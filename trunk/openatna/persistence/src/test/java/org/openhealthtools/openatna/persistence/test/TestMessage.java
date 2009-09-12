@@ -28,6 +28,7 @@ import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.*;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -106,6 +107,17 @@ public class TestMessage {
 
     @Test
     public void testQuery0() {
+        try {
+            DaoFactory factory = SpringDaoFactory.getFactory();
+            MessageDao dao = factory.messageDao();
+            List<? extends MessageEntity> l = dao.getAll();
+            for (MessageEntity entity : l) {
+                System.out.println(entity);
+                System.out.println("=========================");
+            }
+        } catch (AtnaPersistenceException e) {
+            e.printStackTrace();
+        }
 
 
     }
