@@ -90,7 +90,7 @@ public class ObjectEntity extends PersistentEntity {
         this.objectName = objectName;
     }
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     public Set<DetailTypeEntity> getObjectDetailTypes() {
         return objectDetailTypes;
     }
