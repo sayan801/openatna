@@ -82,7 +82,7 @@ public class HibernateMessageParticipantDao extends AbstractHibernateDao<Message
 
     public void normalize(MessageParticipantEntity ap) throws AtnaPersistenceException {
         if (ap.getParticipant() == null) {
-            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_SOURCE);
+            throw new AtnaPersistenceException("no active participant defined.", AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
         }
         if (ap.getId() != null) {
             // hmm. Should not be able to modify audit messages?

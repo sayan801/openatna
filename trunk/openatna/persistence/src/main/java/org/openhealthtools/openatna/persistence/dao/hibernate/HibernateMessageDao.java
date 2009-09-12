@@ -65,6 +65,14 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
+    public List<? extends MessageEntity> getByEventOutcome(Integer outcome) throws AtnaPersistenceException {
+        return list(criteria().add(Restrictions.eq("eventOutcome", outcome)));
+    }
+
+    public List<? extends MessageEntity> getByEventAction(String action) throws AtnaPersistenceException {
+        return list(criteria().add(Restrictions.eq("eventActionCode", action)));
+    }
+
     public List<? extends MessageEntity> getByParticipantUserId(String id) throws AtnaPersistenceException {
         return list(criteria().createCriteria("messageParticipants").createCriteria("participant").add(Restrictions.eq("userId", id)));
     }
