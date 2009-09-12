@@ -19,13 +19,13 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.SourceEntity;
-import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
-import org.openhealthtools.openatna.persistence.dao.SourceDao;
-import org.openhealthtools.openatna.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.dao.SourceDao;
+import org.openhealthtools.openatna.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -90,5 +90,8 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
     }
 
     public void delete(SourceEntity entity) throws AtnaPersistenceException {
+        currentSession().delete(entity);
     }
+
+
 }

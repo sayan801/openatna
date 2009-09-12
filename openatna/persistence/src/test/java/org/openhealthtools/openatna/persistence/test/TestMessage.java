@@ -21,8 +21,8 @@ package org.openhealthtools.openatna.persistence.test;
 
 import org.junit.Test;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.persistence.dao.AtnaMessageDao;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.*;
@@ -43,23 +43,23 @@ public class TestMessage {
     @Test
     public void testMessage() throws AtnaPersistenceException {
         DaoFactory factory = SpringDaoFactory.getFactory();
-        AtnaMessageDao dao = factory.atnaMessageDao();
-        AtnaMessageEntity msgEnt = createMessage();
+        MessageDao dao = factory.messageDao();
+        MessageEntity msgEnt = createMessage();
 
         SourceCodeEntity code = new SourceCodeEntity("1");
         code.setCodeSystemName("RFC-3881");
-        AtnaSourceEntity asource = new AtnaSourceEntity(new SourceEntity("cat", code));
-        msgEnt.addAtnaSource(asource);
+        MessageSourceEntity asource = new MessageSourceEntity(new SourceEntity("cat", code));
+        msgEnt.addMessageSource(asource);
 
         ParticipantCodeEntity pcode = new ParticipantCodeEntity("110150");
         pcode.setCodeSystemName("DCM");
         ParticipantEntity part = new ParticipantEntity("scmabh");
         part.setUserName("andrew");
 
-        AtnaParticipantEntity pentity = new AtnaParticipantEntity(part);
+        MessageParticipantEntity pentity = new MessageParticipantEntity(part);
         NetworkAccessPointEntity net = new NetworkAccessPointEntity(new Short("2"), "192.168.0.1");
         pentity.setNetworkAccessPoint(net);
-        msgEnt.addAtnaParticipant(pentity);
+        msgEnt.addMessageParticipant(pentity);
 
         ObjectIdTypeCodeEntity ocode = new ObjectIdTypeCodeEntity("110180");
         ocode.setCodeSystemName("DCM");
@@ -68,10 +68,10 @@ public class TestMessage {
         obj.setObjectName("machine");
         obj.setObjectSensitivity("N");
 
-        AtnaObjectEntity objEnt = new AtnaObjectEntity(obj);
+        MessageObjectEntity objEnt = new MessageObjectEntity(obj);
         objEnt.setObjectDataLifeCycle(new Short("1"));
         objEnt.addObjectDetail(new ObjectDetailEntity("version", "1.2"));
-        msgEnt.addAtnaObject(objEnt);
+        msgEnt.addMessageObject(objEnt);
 
         dao.save(msgEnt);
     }
@@ -79,60 +79,57 @@ public class TestMessage {
     @Test
     public void testMinimalMessage() throws AtnaPersistenceException {
         DaoFactory factory = SpringDaoFactory.getFactory();
-        AtnaMessageDao dao = factory.atnaMessageDao();
+        MessageDao dao = factory.messageDao();
 
-        AtnaMessageEntity msgEnt = createMinimalMessage();
+        MessageEntity msgEnt = createMinimalMessage();
 
         SourceEntity source = new SourceEntity();
         source.setSourceId("cat");
-        AtnaSourceEntity asource = new AtnaSourceEntity();
+        MessageSourceEntity asource = new MessageSourceEntity();
         asource.setSource(source);
-        msgEnt.getAtnaSources().add(asource);
+        msgEnt.getMessageSources().add(asource);
 
         ParticipantEntity part = new ParticipantEntity();
         part.setUserId("scmabh");
-        AtnaParticipantEntity pentity = new AtnaParticipantEntity();
+        MessageParticipantEntity pentity = new MessageParticipantEntity();
         pentity.setParticipant(part);
-        msgEnt.getAtnaParticipants().add(pentity);
+        msgEnt.getMessageParticipants().add(pentity);
 
         ObjectEntity obj = new ObjectEntity();
         obj.setObjectId("obj1");
-        AtnaObjectEntity objEnt = new AtnaObjectEntity();
+        MessageObjectEntity objEnt = new MessageObjectEntity();
         objEnt.setObject(obj);
-        msgEnt.getAtnaObjects().add(objEnt);
+        msgEnt.getMessageObjects().add(objEnt);
 
         dao.save(msgEnt);
     }
 
-    protected AtnaMessageEntity createMinimalMessage() {
-        AtnaEventEntity msgEvt = new AtnaEventEntity();
+    protected MessageEntity createMinimalMessage() {
+        MessageEntity msg = new MessageEntity();
+
         EventIdCodeEntity code = new EventIdCodeEntity();
         code.setCode("110108");
         code.setCodeSystemName("DCM");
-        msgEvt.setEventId(code);
+        msg.setEventId(code);
 
-        msgEvt.setEventDateTime(new Date());
-        msgEvt.setEventOutcome(0);
-        AtnaMessageEntity msg = new AtnaMessageEntity();
-        msg.setEvent(msgEvt);
+        msg.setEventDateTime(new Date());
+        msg.setEventOutcome(0);
         return msg;
     }
 
-    protected AtnaMessageEntity createMessage() {
-        AtnaEventEntity msgEvt = new AtnaEventEntity();
+    protected MessageEntity createMessage() {
+        MessageEntity msg = new MessageEntity();
         EventIdCodeEntity code = new EventIdCodeEntity();
         code.setCode("110108");
         code.setCodeSystemName("DCM");
-        msgEvt.setEventId(code);
+        msg.setEventId(code);
         EventTypeCodeEntity evtType = new EventTypeCodeEntity();
         evtType.setCode("110120");
         evtType.setCodeSystemName("DCM");
-        msgEvt.getEventTypeCodes().add(evtType);
-        msgEvt.setEventDateTime(new Date());
-        msgEvt.setEventActionCode("R");
-        msgEvt.setEventOutcome(0);
-        AtnaMessageEntity msg = new AtnaMessageEntity();
-        msg.setEvent(msgEvt);
+        msg.getEventTypeCodes().add(evtType);
+        msg.setEventDateTime(new Date());
+        msg.setEventActionCode("R");
+        msg.setEventOutcome(0);
         return msg;
     }
 

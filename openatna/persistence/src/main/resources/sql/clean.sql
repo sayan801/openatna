@@ -12,11 +12,14 @@ DROP TABLE codes CASCADE;
 
 DROP TABLE network_access_points CASCADE;
 DROP TABLE object_details CASCADE;
+DROP TABLE detail_types CASCADE;
+DROP TABLE objects_detail_types CASCADE;
+DROP TABLE atna_objects_object_details CASCADE;
+
 
 DROP TABLE participants_to_codes CASCADE;
 DROP TABLE sources_to_codes CASCADE;
 DROP TABLE event_types_to_codes CASCADE;
-DROP TABLE objects_to_details CASCADE;
 DROP TABLE atna_messages_atna_objects CASCADE;
 DROP TABLE atna_messages_atna_participants CASCADE;
 DROP TABLE atna_messages_atna_sources CASCADE;

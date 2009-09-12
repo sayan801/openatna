@@ -19,6 +19,7 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,15 +37,33 @@ import java.util.List;
 
 public interface AtnaMessage {
 
-    public AtnaEvent getEvent();
+    public AtnaCode getEventCode();
 
-    public List<AtnaParticipant> getParticipants();
+    public List<AtnaCode> getEventTypeCodes();
 
-    public AtnaMessage addParticipant(AtnaParticipant participant);
+    public AtnaMessage addEventTypeCode(AtnaCode value);
 
-    public AtnaMessage removeParticipant(AtnaParticipant participant);
+    public AtnaMessage removeEventTypeCode(AtnaCode value);
 
-    public AtnaParticipant getParticipant(String id);
+    public EventAction getEventActionCode();
+
+    public AtnaMessage setEventActionCode(EventAction value);
+
+    public Date getEventDateTime();
+
+    public AtnaMessage setEventDateTime(Date value);
+
+    public EventOutcome getEventOutcome();
+
+    public AtnaMessage setEventOutcome(EventOutcome value);
+
+    public List<AtnaMessageParticipant> getParticipants();
+
+    public AtnaMessage addParticipant(AtnaMessageParticipant participant);
+
+    public AtnaMessage removeParticipant(AtnaMessageParticipant participant);
+
+    public AtnaMessageParticipant getParticipant(String id);
 
     public List<AtnaSource> getSources();
 
@@ -54,11 +73,11 @@ public interface AtnaMessage {
 
     public AtnaSource getSource(String id);
 
-    public List<AtnaObject> getObjects();
+    public List<AtnaMessageObject> getObjects();
 
-    public AtnaMessage addObject(AtnaObject object);
+    public AtnaMessage addObject(AtnaMessageObject object);
 
-    public AtnaMessage removeObject(AtnaObject object);
+    public AtnaMessage removeObject(AtnaMessageObject object);
 
-    public AtnaObject getObject(String id);
+    public AtnaMessageObject getObject(String id);
 }

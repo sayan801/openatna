@@ -22,9 +22,9 @@ package org.openhealthtools.openatna.persistence.dao.hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.persistence.dao.AtnaObjectDao;
+import org.openhealthtools.openatna.persistence.dao.MessageObjectDao;
 import org.openhealthtools.openatna.persistence.dao.ObjectDao;
-import org.openhealthtools.openatna.persistence.model.AtnaObjectEntity;
+import org.openhealthtools.openatna.persistence.model.MessageObjectEntity;
 import org.openhealthtools.openatna.persistence.model.ObjectDetailEntity;
 import org.openhealthtools.openatna.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
@@ -39,46 +39,46 @@ import java.util.Set;
  * @date $Date:$ modified by $Author:$
  */
 
-public class HibernateAtnaObjectDao extends AbstractHibernateDao<AtnaObjectEntity> implements AtnaObjectDao {
-    public HibernateAtnaObjectDao(SessionFactory sessionFactory) {
-        super(AtnaObjectEntity.class, sessionFactory);
+public class HibernateMessageObjectDao extends AbstractHibernateDao<MessageObjectEntity> implements MessageObjectDao {
+    public HibernateMessageObjectDao(SessionFactory sessionFactory) {
+        super(MessageObjectEntity.class, sessionFactory);
     }
 
 
-    public AtnaObjectEntity getById(Long id) throws AtnaPersistenceException {
+    public MessageObjectEntity getById(Long id) throws AtnaPersistenceException {
         return get(id);
     }
 
-    public List<? extends AtnaObjectEntity> getByIdTypeCode(ObjectIdTypeCodeEntity idEntity) throws AtnaPersistenceException {
+    public List<? extends MessageObjectEntity> getByIdTypeCode(ObjectIdTypeCodeEntity idEntity) throws AtnaPersistenceException {
         return list(criteria().createCriteria("object").add(Restrictions.eq("objectIdTypeCode", idEntity)));
     }
 
-    public List<? extends AtnaObjectEntity> getByTypeCode(Short code) throws AtnaPersistenceException {
+    public List<? extends MessageObjectEntity> getByTypeCode(Short code) throws AtnaPersistenceException {
         return list(criteria().createCriteria("object").add(Restrictions.eq("objectTypeCode", code)));
     }
 
-    public List<? extends AtnaObjectEntity> getByTypeCodeRole(Short code) throws AtnaPersistenceException {
+    public List<? extends MessageObjectEntity> getByTypeCodeRole(Short code) throws AtnaPersistenceException {
         return list(criteria().createCriteria("object").add(Restrictions.eq("objectTypeCodeRole", code)));
     }
 
-    public List<? extends AtnaObjectEntity> getBySensitivity(String code) throws AtnaPersistenceException {
+    public List<? extends MessageObjectEntity> getBySensitivity(String code) throws AtnaPersistenceException {
         return list(criteria().createCriteria("object").add(Restrictions.eq("objectSensitivity", code)));
     }
 
-    public List<? extends AtnaObjectEntity> getAll() throws AtnaPersistenceException {
+    public List<? extends MessageObjectEntity> getAll() throws AtnaPersistenceException {
         return all();
     }
 
-    public void save(AtnaObjectEntity ao) throws AtnaPersistenceException {
+    public void save(MessageObjectEntity ao) throws AtnaPersistenceException {
         normalize(ao);
         currentSession().saveOrUpdate(ao);
     }
 
-    public void delete(AtnaObjectEntity ap) throws AtnaPersistenceException {
+    public void delete(MessageObjectEntity ap) throws AtnaPersistenceException {
         currentSession().delete(ap);
     }
 
-    public void normalize(AtnaObjectEntity ao) throws AtnaPersistenceException {
+    public void normalize(MessageObjectEntity ao) throws AtnaPersistenceException {
         if (ao.getObject() == null) {
             throw new AtnaPersistenceException("no participant object defined.", AtnaPersistenceException.PersistenceError.NO_OBJECT);
         }

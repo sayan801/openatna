@@ -20,6 +20,7 @@
 package org.openhealthtools.openatna.anom.jaxb21;
 
 import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaMessageParticipant;
 import org.openhealthtools.openatna.anom.AtnaParticipant;
 import org.openhealthtools.openatna.anom.NetworkAccessPoint;
 import org.openhealthtools.openatna.anom.jaxb21.schema.ActiveParticipantType;
@@ -37,7 +38,7 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAtnaParticipant implements AtnaParticipant {
+public class JaxbAtnaParticipant implements AtnaParticipant, AtnaMessageParticipant {
 
     private ActiveParticipantType participant;
 
@@ -120,16 +121,20 @@ public class JaxbAtnaParticipant implements AtnaParticipant {
         return this;
     }
 
-    public NetworkAccessPoint getNetworkAccessPointTypeCode() {
+    public NetworkAccessPoint getNetworkAccessPointType() {
         return NetworkAccessPoint.getAccessPoint(participant.getNetworkAccessPointTypeCode());
     }
 
-    public AtnaParticipant setNetworkAccessPointTypeCode(NetworkAccessPoint value) {
+    public AtnaParticipant setNetworkAccessPointType(NetworkAccessPoint value) {
         participant.setNetworkAccessPointTypeCode((short) value.value());
         return this;
     }
 
-    public ActiveParticipantType getParticipant() {
+    public AtnaParticipant getParticipant() {
+        return this;
+    }
+
+    public ActiveParticipantType getActiveParticipant() {
         return participant;
     }
 }

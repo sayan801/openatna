@@ -44,7 +44,7 @@ public class ObjectEntity extends PersistentEntity {
     private Short objectTypeCodeRole;
     private String objectSensitivity;
 
-    private Set<TypeEntity> objectDetailTypes = new HashSet<TypeEntity>();
+    private Set<DetailTypeEntity> objectDetailTypes = new HashSet<DetailTypeEntity>();
 
     public ObjectEntity() {
     }
@@ -91,20 +91,20 @@ public class ObjectEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public Set<TypeEntity> getObjectDetailTypes() {
+    public Set<DetailTypeEntity> getObjectDetailTypes() {
         return objectDetailTypes;
     }
 
-    public void setObjectDetailTypes(Set<TypeEntity> objectDetailTypes) {
+    public void setObjectDetailTypes(Set<DetailTypeEntity> objectDetailTypes) {
         this.objectDetailTypes = objectDetailTypes;
     }
 
     public void addObjectDetailType(String key) {
-        getObjectDetailTypes().add(new TypeEntity(key));
+        getObjectDetailTypes().add(new DetailTypeEntity(key));
     }
 
     public boolean containsDetailType(String key) {
-        TypeEntity te = new TypeEntity(key);
+        DetailTypeEntity te = new DetailTypeEntity(key);
         return getObjectDetailTypes().contains(te);
     }
 

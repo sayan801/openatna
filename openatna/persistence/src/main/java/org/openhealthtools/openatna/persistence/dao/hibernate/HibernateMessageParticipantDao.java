@@ -22,10 +22,10 @@ package org.openhealthtools.openatna.persistence.dao.hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.persistence.dao.AtnaParticipantDao;
+import org.openhealthtools.openatna.persistence.dao.MessageParticipantDao;
 import org.openhealthtools.openatna.persistence.dao.NetworkAccessPointDao;
 import org.openhealthtools.openatna.persistence.dao.ParticipantDao;
-import org.openhealthtools.openatna.persistence.model.AtnaParticipantEntity;
+import org.openhealthtools.openatna.persistence.model.MessageParticipantEntity;
 import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
 import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
@@ -39,48 +39,48 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class HibernateAtnaParticipantDao extends AbstractHibernateDao<AtnaParticipantEntity> implements AtnaParticipantDao {
+public class HibernateMessageParticipantDao extends AbstractHibernateDao<MessageParticipantEntity> implements MessageParticipantDao {
 
-    public HibernateAtnaParticipantDao(SessionFactory sessionFactory) {
-        super(AtnaParticipantEntity.class, sessionFactory);
+    public HibernateMessageParticipantDao(SessionFactory sessionFactory) {
+        super(MessageParticipantEntity.class, sessionFactory);
     }
 
-    public AtnaParticipantEntity getById(Long id) throws AtnaPersistenceException {
+    public MessageParticipantEntity getById(Long id) throws AtnaPersistenceException {
         return get(id);
     }
 
-    public AtnaParticipantEntity getByUserId(String userId) throws AtnaPersistenceException {
+    public MessageParticipantEntity getByUserId(String userId) throws AtnaPersistenceException {
         return uniqueResult(criteria().createCriteria("participant").add(Restrictions.eq("userId", userId)));
     }
 
-    public AtnaParticipantEntity getByAltUserId(String altUserId) throws AtnaPersistenceException {
+    public MessageParticipantEntity getByAltUserId(String altUserId) throws AtnaPersistenceException {
         return uniqueResult(criteria().createCriteria("participant").add(Restrictions.eq("alternativeUserId", altUserId)));
     }
 
-    public List<? extends AtnaParticipantEntity> getByCode(ParticipantCodeEntity codeEntity) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("participant").createCriteria("codes").add(Restrictions.eq("code", codeEntity.getCode()))
+    public List<? extends MessageParticipantEntity> getByCode(ParticipantCodeEntity codeEntity) throws AtnaPersistenceException {
+        return list(criteria().createCriteria("participant").createCriteria("participantTypeCodes").add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
-    public List<? extends AtnaParticipantEntity> getByUserName(String userName) throws AtnaPersistenceException {
+    public List<? extends MessageParticipantEntity> getByUserName(String userName) throws AtnaPersistenceException {
         return list(criteria().createCriteria("participant").add(Restrictions.eq("userName", userName)));
     }
 
-    public List<? extends AtnaParticipantEntity> getAll() throws AtnaPersistenceException {
+    public List<? extends MessageParticipantEntity> getAll() throws AtnaPersistenceException {
         return all();
     }
 
-    public void save(AtnaParticipantEntity ap) throws AtnaPersistenceException {
+    public void save(MessageParticipantEntity ap) throws AtnaPersistenceException {
         normalize(ap);
         currentSession().saveOrUpdate(ap);
     }
 
-    public void delete(AtnaParticipantEntity ap) throws AtnaPersistenceException {
+    public void delete(MessageParticipantEntity ap) throws AtnaPersistenceException {
         currentSession().delete(ap);
     }
 
-    public void normalize(AtnaParticipantEntity ap) throws AtnaPersistenceException {
+    public void normalize(MessageParticipantEntity ap) throws AtnaPersistenceException {
         if (ap.getParticipant() == null) {
             throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }

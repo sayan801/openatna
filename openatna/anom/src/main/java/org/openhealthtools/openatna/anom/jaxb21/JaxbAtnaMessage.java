@@ -20,12 +20,10 @@
 package org.openhealthtools.openatna.anom.jaxb21;
 
 import org.openhealthtools.openatna.anom.*;
-import org.openhealthtools.openatna.anom.jaxb21.schema.ActiveParticipantType;
-import org.openhealthtools.openatna.anom.jaxb21.schema.AuditMessage;
-import org.openhealthtools.openatna.anom.jaxb21.schema.AuditSourceIdentificationType;
-import org.openhealthtools.openatna.anom.jaxb21.schema.ParticipantObjectIdentificationType;
+import org.openhealthtools.openatna.anom.jaxb21.schema.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,47 +40,103 @@ public class JaxbAtnaMessage implements AtnaMessage {
     private AuditMessage msg;
 
     public JaxbAtnaMessage(AuditMessage msg) {
+        if (msg.getEventIdentification() == null) {
+            throw new IllegalArgumentException("message has no Event Identification");
+        }
         this.msg = msg;
     }
 
-    public JaxbAtnaMessage(JaxbAtnaEvent evt) {
-        this.msg = new AuditMessage();
-        msg.setEventIdentification(evt.getEvt());
+    public JaxbAtnaMessage(JaxbAtnaCode code, EventOutcome outcome) {
+        EventIdentificationType evt = new EventIdentificationType();
+        evt.setEventID(code.getCodedValueType());
+        evt.setEventOutcome(outcome.value());
+        msg = new AuditMessage();
+        msg.setEventIdentification(evt);
     }
 
-    public AtnaEvent getEvent() {
-        if (msg.getEventIdentification() != null) {
-            return new JaxbAtnaEvent(msg.getEventIdentification());
+
+    public AtnaCode getEventCode() {
+        return new JaxbAtnaCode(msg.getEventIdentification().getEventID());
+    }
+
+    public List<AtnaCode> getEventTypeCodes() {
+        List<AtnaCode> codes = new ArrayList<AtnaCode>();
+        List<CodedValueType> l = msg.getEventIdentification().getEventTypeCode();
+        for (CodedValueType codedValueType : l) {
+            codes.add(new JaxbAtnaCode(codedValueType));
         }
-        return null;
+        return codes;
     }
 
-    public List<AtnaParticipant> getParticipants() {
+    public AtnaMessage addEventTypeCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
+            msg.getEventIdentification().getEventTypeCode().add(code.getCodedValueType());
+        }
+        return this;
+    }
+
+    public AtnaMessage removeEventTypeCode(AtnaCode value) {
+        if (value instanceof JaxbAtnaCode) {
+            JaxbAtnaCode code = (JaxbAtnaCode) value;
+            msg.getEventIdentification().getEventTypeCode().remove(code.getCodedValueType());
+        }
+        return this;
+    }
+
+    public EventAction getEventActionCode() {
+        return EventAction.getAction(msg.getEventIdentification().getEventActionCode());
+    }
+
+    public AtnaMessage setEventActionCode(EventAction value) {
+        msg.getEventIdentification().setEventActionCode(value.value());
+        return this;
+    }
+
+    public Date getEventDateTime() {
+        return msg.getEventIdentification().getEventTime();
+    }
+
+    public AtnaMessage setEventDateTime(Date value) {
+        msg.getEventIdentification().setEventTime(value);
+        return this;
+    }
+
+    public EventOutcome getEventOutcome() {
+        return EventOutcome.getOutcome(msg.getEventIdentification().getEventOutcome());
+    }
+
+    public AtnaMessage setEventOutcome(EventOutcome value) {
+        msg.getEventIdentification().setEventOutcome(value.value());
+        return this;
+    }
+
+    public List<AtnaMessageParticipant> getParticipants() {
         List<ActiveParticipantType> l = msg.getActiveParticipant();
-        List<AtnaParticipant> ret = new ArrayList<AtnaParticipant>();
+        List<AtnaMessageParticipant> ret = new ArrayList<AtnaMessageParticipant>();
         for (ActiveParticipantType a : l) {
             ret.add(new JaxbAtnaParticipant(a));
         }
         return ret;
     }
 
-    public AtnaMessage addParticipant(AtnaParticipant participant) {
+    public AtnaMessage addParticipant(AtnaMessageParticipant participant) {
         if (participant instanceof JaxbAtnaParticipant) {
             JaxbAtnaParticipant jp = (JaxbAtnaParticipant) participant;
-            msg.getActiveParticipant().add(jp.getParticipant());
+            msg.getActiveParticipant().add(jp.getActiveParticipant());
         }
         return this;
     }
 
-    public AtnaMessage removeParticipant(AtnaParticipant participant) {
+    public AtnaMessage removeParticipant(AtnaMessageParticipant participant) {
         if (participant instanceof JaxbAtnaParticipant) {
             JaxbAtnaParticipant jp = (JaxbAtnaParticipant) participant;
-            msg.getActiveParticipant().remove(jp.getParticipant());
+            msg.getActiveParticipant().remove(jp.getActiveParticipant());
         }
         return this;
     }
 
-    public AtnaParticipant getParticipant(String id) {
+    public AtnaMessageParticipant getParticipant(String id) {
         List<ActiveParticipantType> l = msg.getActiveParticipant();
         for (ActiveParticipantType type : l) {
             if (type.getUserID().equals(id)) {
@@ -127,32 +181,32 @@ public class JaxbAtnaMessage implements AtnaMessage {
         return null;
     }
 
-    public List<AtnaObject> getObjects() {
+    public List<AtnaMessageObject> getObjects() {
         List<ParticipantObjectIdentificationType> l = msg.getParticipantObjectIdentification();
-        List<AtnaObject> ret = new ArrayList<AtnaObject>();
+        List<AtnaMessageObject> ret = new ArrayList<AtnaMessageObject>();
         for (ParticipantObjectIdentificationType a : l) {
             ret.add(new JaxbAtnaObject(a));
         }
         return ret;
     }
 
-    public AtnaMessage addObject(AtnaObject object) {
+    public AtnaMessage addObject(AtnaMessageObject object) {
         if (object instanceof JaxbAtnaObject) {
             JaxbAtnaObject jo = (JaxbAtnaObject) object;
-            msg.getParticipantObjectIdentification().add(jo.getObject());
+            msg.getParticipantObjectIdentification().add(jo.getParticipantObject());
         }
         return this;
     }
 
-    public AtnaMessage removeObject(AtnaObject object) {
+    public AtnaMessage removeObject(AtnaMessageObject object) {
         if (object instanceof JaxbAtnaObject) {
             JaxbAtnaObject jo = (JaxbAtnaObject) object;
-            msg.getParticipantObjectIdentification().remove(jo.getObject());
+            msg.getParticipantObjectIdentification().remove(jo.getParticipantObject());
         }
         return this;
     }
 
-    public AtnaObject getObject(String id) {
+    public AtnaMessageObject getObject(String id) {
         List<ParticipantObjectIdentificationType> l = msg.getParticipantObjectIdentification();
         for (ParticipantObjectIdentificationType type : l) {
             if (type.getParticipantObjectID().equals(id)) {

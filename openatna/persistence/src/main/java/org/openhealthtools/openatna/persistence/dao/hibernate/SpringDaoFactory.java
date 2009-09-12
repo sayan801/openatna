@@ -20,7 +20,6 @@
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
 import org.openhealthtools.openatna.persistence.dao.*;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -44,7 +43,7 @@ public class SpringDaoFactory implements DaoFactory {
     private SpringDaoFactory() {
         context = new ClassPathXmlApplicationContext(
                 new String[]{"applicationContext-dao.xml"});
-        if(context == null) {
+        if (context == null) {
             throw new RuntimeException("FATAL: Could not create Spring Application Context.");
         }
     }
@@ -61,24 +60,20 @@ public class SpringDaoFactory implements DaoFactory {
         return (NetworkAccessPointDao) context.getBean("networkAccessPointDao");
     }
 
-    public AtnaSourceDao atnaSourceDao() {
-        return (AtnaSourceDao) context.getBean("atnaSourceDao");
+    public MessageDao messageDao() {
+        return (MessageDao) context.getBean("messageDao");
     }
 
-    public AtnaMessageDao atnaMessageDao() {
-        return (AtnaMessageDao) context.getBean("atnaMessageDao");
+    public MessageObjectDao messageObjectDao() {
+        return (MessageObjectDao) context.getBean("messageObjectDao");
     }
 
-    public AtnaObjectDao atnaObjectDao() {
-        return (AtnaObjectDao) context.getBean("atnaObjectDao");
+    public MessageParticipantDao messageParticipantDao() {
+        return (MessageParticipantDao) context.getBean("messageParticipantDao");
     }
 
-    public AtnaParticipantDao atnaParticipantDao() {
-        return (AtnaParticipantDao) context.getBean("atnaParticipantDao");
-    }
-
-    public AtnaEventDao atnaEventDao() {
-        return (AtnaEventDao) context.getBean("atnaEventDao");
+    public MessageSourceDao messageSourceDao() {
+        return (MessageSourceDao) context.getBean("messageSourceDao");
     }
 
     public SourceDao sourceDao() {

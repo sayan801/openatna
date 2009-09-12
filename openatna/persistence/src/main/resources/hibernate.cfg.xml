@@ -22,11 +22,10 @@
 
 <hibernate-configuration>
     <session-factory>
-        <mapping class="org.openhealthtools.openatna.persistence.model.AtnaEventEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.AtnaMessageEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.AtnaSourceEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.AtnaObjectEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.AtnaParticipantEntity"/>
+        <mapping class="org.openhealthtools.openatna.persistence.model.MessageEntity"/>
+        <mapping class="org.openhealthtools.openatna.persistence.model.MessageSourceEntity"/>
+        <mapping class="org.openhealthtools.openatna.persistence.model.MessageObjectEntity"/>
+        <mapping class="org.openhealthtools.openatna.persistence.model.MessageParticipantEntity"/>
         <mapping class="org.openhealthtools.openatna.persistence.model.SourceEntity"/>
         <mapping class="org.openhealthtools.openatna.persistence.model.ObjectEntity"/>
         <mapping class="org.openhealthtools.openatna.persistence.model.ParticipantEntity"/>
@@ -37,7 +36,7 @@
         <mapping class="org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity"/>
         <mapping class="org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity"/>
         <mapping class="org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.TypeEntity"/>
+        <mapping class="org.openhealthtools.openatna.persistence.model.DetailTypeEntity"/>
 
     </session-factory>
 </hibernate-configuration>

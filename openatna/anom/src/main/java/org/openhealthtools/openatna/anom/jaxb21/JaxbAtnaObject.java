@@ -24,7 +24,9 @@ import org.openhealthtools.openatna.anom.jaxb21.schema.ParticipantObjectIdentifi
 import org.openhealthtools.openatna.anom.jaxb21.schema.TypeValuePairType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class Description Here...
@@ -35,9 +37,10 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbAtnaObject implements AtnaObject {
+public class JaxbAtnaObject implements AtnaObject, AtnaMessageObject {
 
     private ParticipantObjectIdentificationType object;
+    private Set<String> detailTypes = new HashSet<String>();
 
     public JaxbAtnaObject(ParticipantObjectIdentificationType object) {
         this.object = object;
@@ -64,6 +67,24 @@ public class JaxbAtnaObject implements AtnaObject {
 
     public AtnaObject setObjectName(String value) {
         object.setParticipantObjectName(value);
+        return this;
+    }
+
+    public List<String> getObjectDetailTypes() {
+        return new ArrayList<String>(detailTypes);
+    }
+
+    public AtnaObject addObjectDetailType(String type) {
+        detailTypes.add(type);
+        return this;
+    }
+
+    public AtnaObject removeObjectDetailType(String type) {
+        detailTypes.remove(type);
+        return this;
+    }
+
+    public AtnaObject getObject() {
         return this;
     }
 
@@ -150,7 +171,7 @@ public class JaxbAtnaObject implements AtnaObject {
         return this;
     }
 
-    public ParticipantObjectIdentificationType getObject() {
+    public ParticipantObjectIdentificationType getParticipantObject() {
         return object;
     }
 }

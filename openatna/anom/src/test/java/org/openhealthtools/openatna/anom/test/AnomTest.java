@@ -44,20 +44,20 @@ public class AnomTest {
 
         AtnaFactory fac = AtnaFactory.getFactory();
         AtnaCode evtCode = fac.newCode("abc", "SYS_CODE", "SYS_CODENAME");
-        AtnaEvent evt = fac.newEvent(evtCode, EventOutcome.SUCCESS);
 
-        AtnaMessage msg = fac.newMessage(evt);
+        AtnaMessage msg = fac.newMessage(evtCode, EventOutcome.SUCCESS);
         msg.addSource(fac.newSource("source").addSourceTypeCode(fac.newCode("4")))
-                .addParticipant(fac.newParticipant("participant"))
-                .addObject(fac.newObject(fac.newCode("obj-code"), "obj-id"));
+                .addParticipant(fac.newMessageParticipant(fac.newParticipant("participant")))
+                .addObject(fac.newMessageObject(fac.newObject(fac.newCode("obj-code"), "obj-id")));
         msg.getObject("obj-id").addObjectDetail(fac.newObjectDetail().setType("detail").setValue("THIS IS DETAIL".getBytes()));
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         fac.write(msg, bout);
+        fac.write(msg, System.out);
 
         ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
         msg = fac.read(bin);
-        assertEquals(msg.getEvent().getEventOutcome(), EventOutcome.SUCCESS);
+        assertEquals(msg.getEventOutcome(), EventOutcome.SUCCESS);
         assertEquals(msg.getSource("source").getSourceTypeCodes().get(0).getCode(), "4");
         assertEquals(new String(msg.getObject("obj-id").getObjectDetails().get(0).getValue()), "THIS IS DETAIL");
 

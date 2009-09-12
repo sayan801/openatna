@@ -30,21 +30,39 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
-@Table(name = "atna_events")
-public class AtnaEventEntity extends PersistentEntity {
+@Table(name = "messages")
+public class MessageEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
 
     private static DateFormat format = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:SS");
 
+
     private Long id;
+
+    private Set<MessageParticipantEntity> messageParticipants = new HashSet<MessageParticipantEntity>();
+
+    private Set<MessageSourceEntity> messageSources = new HashSet<MessageSourceEntity>();
+
+    private Set<MessageObjectEntity> messageObjects = new HashSet<MessageObjectEntity>();
+
 
     private EventIdCodeEntity eventId;
     private Set<EventTypeCodeEntity> eventTypeCodes = new HashSet<EventTypeCodeEntity>();
     private String eventActionCode;
     private Date eventDateTime;
     private Integer eventOutcome;
+
+    public MessageEntity() {
+    }
+
+    public MessageEntity(EventIdCodeEntity code, Integer eventOutcome) {
+        this.eventId = code;
+        this.eventOutcome = eventOutcome;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -109,25 +127,70 @@ public class AtnaEventEntity extends PersistentEntity {
         this.eventOutcome = eventOutcome;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<MessageParticipantEntity> getMessageParticipants() {
+        return messageParticipants;
+    }
+
+    public void setMessageParticipants(Set<MessageParticipantEntity> messageParticipants) {
+        this.messageParticipants = messageParticipants;
+    }
+
+    public void addMessageParticipant(MessageParticipantEntity entity) {
+        getMessageParticipants().add(entity);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<MessageSourceEntity> getMessageSources() {
+        return messageSources;
+    }
+
+    public void setMessageSources(Set<MessageSourceEntity> messageSources) {
+        this.messageSources = messageSources;
+    }
+
+    public void addMessageSource(MessageSourceEntity entity) {
+        getMessageSources().add(entity);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<MessageObjectEntity> getMessageObjects() {
+        return messageObjects;
+    }
+
+    public void setMessageObjects(Set<MessageObjectEntity> messageObjects) {
+        this.messageObjects = messageObjects;
+    }
+
+    public void addMessageObject(MessageObjectEntity entity) {
+        getMessageObjects().add(entity);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AtnaEventEntity)) return false;
+        if (!(o instanceof MessageEntity)) return false;
 
-        AtnaEventEntity that = (AtnaEventEntity) o;
+        MessageEntity that = (MessageEntity) o;
 
         if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) return false;
         if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) return false;
         if (eventId != null ? !eventId.equals(that.eventId) : that.eventId != null) return false;
         if (eventOutcome != null ? !eventOutcome.equals(that.eventOutcome) : that.eventOutcome != null) return false;
         if (eventTypeCodes != null ? !eventTypeCodes.equals(that.eventTypeCodes) : that.eventTypeCodes != null) return false;
+        if (messageObjects != null ? !messageObjects.equals(that.messageObjects) : that.messageObjects != null) return false;
+        if (messageParticipants != null ? !messageParticipants.equals(that.messageParticipants) : that.messageParticipants != null) return false;
+        if (messageSources != null ? !messageSources.equals(that.messageSources) : that.messageSources != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = eventId != null ? eventId.hashCode() : 0;
+        int result = messageParticipants != null ? messageParticipants.hashCode() : 0;
+        result = 31 * result + (messageSources != null ? messageSources.hashCode() : 0);
+        result = 31 * result + (messageObjects != null ? messageObjects.hashCode() : 0);
+        result = 31 * result + (eventId != null ? eventId.hashCode() : 0);
         result = 31 * result + (eventTypeCodes != null ? eventTypeCodes.hashCode() : 0);
         result = 31 * result + (eventActionCode != null ? eventActionCode.hashCode() : 0);
         result = 31 * result + (eventDateTime != null ? eventDateTime.hashCode() : 0);
@@ -149,6 +212,12 @@ public class AtnaEventEntity extends PersistentEntity {
                 .append(format.format(getEventDateTime()))
                 .append(", event types=")
                 .append(getEventTypeCodes())
+                .append(", audit sources=")
+                .append(getMessageSources())
+                .append(", active participants=")
+                .append(getMessageParticipants())
+                .append(", participant objects=")
+                .append(getMessageObjects())
                 .append("]")
                 .toString();
     }

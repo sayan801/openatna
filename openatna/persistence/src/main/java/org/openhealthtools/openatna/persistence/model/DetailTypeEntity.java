@@ -30,16 +30,16 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "detail_types")
-public class TypeEntity extends PersistentEntity {
+public class DetailTypeEntity extends PersistentEntity {
 
     private Long id;
     private Integer version;
     private String type;
 
-    public TypeEntity() {
+    public DetailTypeEntity() {
     }
 
-    public TypeEntity(String type) {
+    public DetailTypeEntity(String type) {
         this.type = type;
     }
 
@@ -73,9 +73,9 @@ public class TypeEntity extends PersistentEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TypeEntity)) return false;
+        if (!(o instanceof DetailTypeEntity)) return false;
 
-        TypeEntity that = (TypeEntity) o;
+        DetailTypeEntity that = (DetailTypeEntity) o;
 
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
 
@@ -88,6 +88,15 @@ public class TypeEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return null;
+        return new StringBuilder(getClass().getName())
+                .append("[")
+                .append("id=")
+                .append(getId())
+                .append(", version=")
+                .append(getVersion())
+                .append(", type=")
+                .append(getType())
+                .append("]")
+                .toString();
     }
 }

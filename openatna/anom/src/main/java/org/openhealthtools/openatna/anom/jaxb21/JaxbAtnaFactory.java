@@ -72,8 +72,8 @@ public class JaxbAtnaFactory extends AtnaFactory {
         if (jc == null) {
             throw new AtnaException("Could not create Jaxb Context");
         }
-        if (message.getEvent().getEventDateTime() == null) {
-            message.getEvent().setEventDateTime(new Date());
+        if (message.getEventDateTime() == null) {
+            message.setEventDateTime(new Date());
         }
         validate(message);
         try {
@@ -88,9 +88,9 @@ public class JaxbAtnaFactory extends AtnaFactory {
         }
     }
 
-    public AtnaMessage newMessage(AtnaEvent event) {
-        if (event instanceof JaxbAtnaEvent) {
-            return new JaxbAtnaMessage((JaxbAtnaEvent) event);
+    public AtnaMessage newMessage(AtnaCode code, EventOutcome outcome) {
+        if (code instanceof JaxbAtnaCode) {
+            return new JaxbAtnaMessage((JaxbAtnaCode) code, outcome);
         }
         return null;
     }
@@ -99,19 +99,28 @@ public class JaxbAtnaFactory extends AtnaFactory {
         return new JaxbAtnaSource(sourceId);
     }
 
-    public AtnaEvent newEvent(AtnaCode code, EventOutcome outcome) {
-        if (code instanceof JaxbAtnaCode) {
-            return new JaxbAtnaEvent((JaxbAtnaCode) code, outcome);
-        }
-        return null;
-    }
-
     public AtnaParticipant newParticipant(String userId) {
         return new JaxbAtnaParticipant(userId);
     }
 
+    @Override
+    public AtnaMessageParticipant newMessageParticipant(AtnaParticipant participant) {
+        if (participant instanceof JaxbAtnaParticipant) {
+            return (AtnaMessageParticipant) participant;
+        }
+        return null;
+    }
+
     public AtnaObject newObject(AtnaCode objectIdType, String objectId) {
         return new JaxbAtnaObject(objectIdType, objectId);
+    }
+
+    @Override
+    public AtnaMessageObject newMessageObject(AtnaObject object) {
+        if (object instanceof JaxbAtnaObject) {
+            return (AtnaMessageObject) object;
+        }
+        return null;
     }
 
     public AtnaObjectDetail newObjectDetail() {

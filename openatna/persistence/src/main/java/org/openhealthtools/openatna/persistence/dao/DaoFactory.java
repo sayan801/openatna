@@ -33,15 +33,13 @@ public interface DaoFactory {
 
     public NetworkAccessPointDao networkAccessPointDao();
 
-    public AtnaSourceDao atnaSourceDao();
+    public MessageDao messageDao();
 
-    public AtnaMessageDao atnaMessageDao();
+    public MessageObjectDao messageObjectDao();
 
-    public AtnaObjectDao atnaObjectDao();
+    public MessageParticipantDao messageParticipantDao();
 
-    public AtnaParticipantDao atnaParticipantDao();
-
-    public AtnaEventDao atnaEventDao();
+    public MessageSourceDao messageSourceDao();
 
     public SourceDao sourceDao();
 
