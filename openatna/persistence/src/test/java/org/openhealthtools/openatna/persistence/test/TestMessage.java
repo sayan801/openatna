@@ -104,6 +104,12 @@ public class TestMessage {
         dao.save(msgEnt);
     }
 
+    @Test
+    public void testQuery0() {
+
+
+    }
+
     protected MessageEntity createMinimalMessage() {
         MessageEntity msg = new MessageEntity();
 
@@ -111,7 +117,6 @@ public class TestMessage {
         code.setCode("110108");
         code.setCodeSystemName("DCM");
         msg.setEventId(code);
-
         msg.setEventDateTime(new Date());
         msg.setEventOutcome(0);
         return msg;
