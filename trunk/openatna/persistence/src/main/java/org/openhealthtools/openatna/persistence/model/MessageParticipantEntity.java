@@ -23,8 +23,8 @@ package org.openhealthtools.openatna.persistence.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "atna_participants")
-public class AtnaParticipantEntity extends PersistentEntity {
+@Table(name = "message_participants")
+public class MessageParticipantEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
 
@@ -34,10 +34,10 @@ public class AtnaParticipantEntity extends PersistentEntity {
     private Boolean userIsRequestor;
     private NetworkAccessPointEntity networkAccessPoint;
 
-    public AtnaParticipantEntity() {
+    public MessageParticipantEntity() {
     }
 
-    public AtnaParticipantEntity(ParticipantEntity participant) {
+    public MessageParticipantEntity(ParticipantEntity participant) {
         this.participant = participant;
     }
 
@@ -80,9 +80,9 @@ public class AtnaParticipantEntity extends PersistentEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AtnaParticipantEntity)) return false;
+        if (!(o instanceof MessageParticipantEntity)) return false;
 
-        AtnaParticipantEntity that = (AtnaParticipantEntity) o;
+        MessageParticipantEntity that = (MessageParticipantEntity) o;
 
         if (networkAccessPoint != null ? !networkAccessPoint.equals(that.networkAccessPoint) : that.networkAccessPoint != null) return false;
         if (participant != null ? !participant.equals(that.participant) : that.participant != null) return false;

@@ -88,11 +88,10 @@
                 <idref local="objectDao"/>
                 <idref local="sourceDao"/>
                 <idref local="objectDetailDao"/>
-                <idref local="atnaObjectDao"/>
-                <idref local="atnaParticipantDao"/>
-                <idref local="atnaSourceDao"/>
-                <idref local="atnaEventDao"/>
-                <idref local="atnaMessageDao"/>
+                <idref local="messageObjectDao"/>
+                <idref local="messageParticipantDao"/>
+                <idref local="messageSourceDao"/>
+                <idref local="messageDao"/>
             </list>
         </property>
     </bean>
@@ -123,23 +122,19 @@
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="atnaEventDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaEventDao">
+    <bean id="messageDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="atnaMessageDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaMessageDao">
+    <bean id="messageObjectDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageObjectDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="atnaObjectDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaObjectDao">
+    <bean id="messageParticipantDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageParticipantDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="atnaParticipantDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaParticipantDao">
-        <constructor-arg ref="sessionFactory"/>
-    </bean>
-
-    <bean id="atnaSourceDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateAtnaSourceDao">
+    <bean id="messageSourceDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageSourceDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 

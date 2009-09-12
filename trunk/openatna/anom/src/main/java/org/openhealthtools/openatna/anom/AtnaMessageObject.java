@@ -22,32 +22,38 @@ package org.openhealthtools.openatna.anom;
 import java.util.List;
 
 /**
- * Active Participant
+ * This class wraps an AtnaObject and provides message specific
+ * details, specifically an object query, lifecycle, and a list of object details
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 5, 2009: 2:37:18 PM
+ * @created Sep 11, 2009: 11:32:22 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AtnaParticipant {
+public interface AtnaMessageObject {
 
-    public List<AtnaCode> getRoleIDCodes();
+    public AtnaObject getObject();
 
-    public AtnaParticipant addRoleIDCode(AtnaCode value);
+    public byte[] getObjectQuery();
 
-    public AtnaParticipant removeRoleIDCode(AtnaCode value);
+    public AtnaObject setObjectQuery(byte[] value);
 
-    public String getUserID();
+    public List<AtnaObjectDetail> getObjectDetails();
 
-    public AtnaParticipant setUserID(String value);
+    /**
+     * object details are not mapped uniquely to their type
+     *
+     * @param type
+     * @return
+     */
+    public List<AtnaObjectDetail> getObjectDetails(String type);
 
-    public String getAlternativeUserID();
+    public AtnaObject addObjectDetail(AtnaObjectDetail detail);
 
-    public AtnaParticipant setAlternativeUserID(String value);
+    public AtnaObject removeObjectDetail(AtnaObjectDetail detail);
 
-    public String getUserName();
+    public ObjectDataLifecycle getObjectDataLifeCycle();
 
-    public AtnaParticipant setUserName(String value);
-
+    public AtnaObject setObjectDataLifeCycle(ObjectDataLifecycle value);
 
 }

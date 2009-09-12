@@ -30,12 +30,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * factory for reading, writing, and creating anom objects.
- * Messages are created by first creating an AtnaEvent, and then passing this in.
- * An AtnaEvent is created using an AtnaCode, which in turn requires a string code at least:
  * <p/>
- * AtnaEvent evt = factory.newEvent(factory.newCode("xyz"), EventOutcome.SUCCESS);
- * AtnaMessage msg = factory.newMessage(evt);
+ * AtnaMessage msg = factory.newMessage(factory.newCode("xyz"), EventOutcome.SUCCESS);
  * msg.addSource(factory.newSource("localhost"))
  * .addParticipant(factory.newParticipant("me"));
  * <p/>
@@ -100,15 +96,18 @@ public abstract class AtnaFactory {
 
     public abstract void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException;
 
-    public abstract AtnaMessage newMessage(AtnaEvent event);
+    public abstract AtnaMessage newMessage(AtnaCode code, EventOutcome outcome);
 
     public abstract AtnaSource newSource(String sourceId);
 
-    public abstract AtnaEvent newEvent(AtnaCode code, EventOutcome outcome);
-
     public abstract AtnaParticipant newParticipant(String userId);
 
+    public abstract AtnaMessageParticipant newMessageParticipant(AtnaParticipant participant);
+
     public abstract AtnaObject newObject(AtnaCode objectIdType, String objectId);
+
+    public abstract AtnaMessageObject newMessageObject(AtnaObject object);
+
 
     public abstract AtnaObjectDetail newObjectDetail();
 
@@ -117,20 +116,18 @@ public abstract class AtnaFactory {
     public abstract AtnaCode newCode(String code, String displayName, String codeSystemName);
 
     protected void validate(AtnaMessage message) throws AtnaException {
-        if (message.getEvent() == null) {
-            throw new AtnaException("no event identification defined", AtnaException.AtnaError.NO_EVENT);
-        }
-        AtnaEvent evt = message.getEvent();
-        if (evt.getEventCode() == null || evt.getEventCode().getCode() == null) {
+
+        AtnaCode evt = message.getEventCode();
+        if (evt.getCode() == null) {
             throw new AtnaException("invalid event code", AtnaException.AtnaError.NO_EVENT_CODE);
         }
-        if (evt.getEventOutcome() == null) {
+        if (message.getEventOutcome() == null) {
             throw new AtnaException("invalid event outcome", AtnaException.AtnaError.NO_EVENT_OUTCOME);
         }
-        if (evt.getEventDateTime() == null) {
+        if (message.getEventDateTime() == null) {
             throw new AtnaException("invalid time stamp", AtnaException.AtnaError.INVALID_EVENT_TIMESTAMP);
         }
-        List<AtnaCode> codes = evt.getEventTypeCodes();
+        List<AtnaCode> codes = message.getEventTypeCodes();
         for (AtnaCode code : codes) {
             if (code.getCode() == null) {
                 throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.INVALID_CODE);
@@ -151,27 +148,27 @@ public abstract class AtnaFactory {
                 }
             }
         }
-        List<AtnaParticipant> participants = message.getParticipants();
+        List<AtnaMessageParticipant> participants = message.getParticipants();
         if (participants.size() == 0) {
             throw new AtnaException("no participants defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
         }
-        for (AtnaParticipant participant : participants) {
-            if (participant.getUserID() == null) {
+        for (AtnaMessageParticipant participant : participants) {
+            if (participant.getParticipant().getUserID() == null) {
                 throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT_ID);
             }
-            codes = participant.getRoleIDCodes();
+            codes = participant.getParticipant().getRoleIDCodes();
             for (AtnaCode code : codes) {
                 if (code.getCode() == null) {
                     throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.INVALID_CODE);
                 }
             }
         }
-        List<AtnaObject> objects = message.getObjects();
-        for (AtnaObject object : objects) {
-            if (object.getObjectID() == null) {
+        List<AtnaMessageObject> objects = message.getObjects();
+        for (AtnaMessageObject object : objects) {
+            if (object.getObject().getObjectID() == null) {
                 throw new AtnaException("no participant object id defined", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID);
             }
-            if (object.getObjectIDTypeCode() == null || object.getObjectIDTypeCode().getCode() == null) {
+            if (object.getObject().getObjectIDTypeCode() == null || object.getObject().getObjectIDTypeCode().getCode() == null) {
                 throw new AtnaException("invalid object id type code", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
             }
         }

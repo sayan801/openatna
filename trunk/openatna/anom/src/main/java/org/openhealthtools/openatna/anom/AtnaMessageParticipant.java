@@ -19,37 +19,31 @@
 
 package org.openhealthtools.openatna.anom;
 
-import java.util.Date;
-import java.util.List;
-
 /**
- * Event Identification
+ * This class eraps an AtnaParticipant and provides message (Event)
+ * specifics such as whether the user is a requestor and the network access
+ * point being used by the participant.
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 5, 2009: 2:37:18 PM
+ * @created Sep 11, 2009: 11:32:37 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AtnaEvent {
+public interface AtnaMessageParticipant {
 
-    public AtnaCode getEventCode();
+    public AtnaParticipant getParticipant();
 
-    public List<AtnaCode> getEventTypeCodes();
+    public boolean isUserIsRequestor();
 
-    public AtnaEvent addEventTypeCode(AtnaCode value);
+    public AtnaParticipant setUserIsRequestor(Boolean value);
 
-    public AtnaEvent removeEventTypeCode(AtnaCode value);
+    public String getNetworkAccessPointID();
 
-    public EventAction getEventActionCode();
+    public AtnaParticipant setNetworkAccessPointID(String value);
 
-    public AtnaEvent setEventActionCode(EventAction value);
+    public NetworkAccessPoint getNetworkAccessPointType();
 
-    public Date getEventDateTime();
+    public AtnaParticipant setNetworkAccessPointType(NetworkAccessPoint value);
 
-    public AtnaEvent setEventDateTime(Date value);
-
-    public EventOutcome getEventOutcome();
-
-    public AtnaEvent setEventOutcome(EventOutcome value);
 
 }

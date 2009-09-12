@@ -56,7 +56,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
     }
 
     public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("codes").add(Restrictions.eq("code", codeEntity.getCode()))
+        return list(criteria().createCriteria("participantTypeCodes").add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
@@ -90,7 +90,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
      * @param pe
      */
     public void save(ParticipantEntity pe) throws AtnaPersistenceException {
-        Set<ParticipantCodeEntity> codes = pe.getCodes();
+        Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
         if (codes.size() > 0) {
             CodeDao cd = SpringDaoFactory.getFactory().codeDao();
             for (ParticipantCodeEntity code : codes) {
@@ -102,7 +102,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
                     throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                 }
             }
-            pe.setCodes(codes);
+            pe.setParticipantTypeCodes(codes);
         }
 
         if (pe.getVersion() == null) {

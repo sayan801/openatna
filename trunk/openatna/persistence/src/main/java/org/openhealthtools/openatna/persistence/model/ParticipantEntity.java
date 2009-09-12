@@ -45,7 +45,7 @@ public class ParticipantEntity extends PersistentEntity {
     private String userId;
     private String alternativeUserId;
     private String userName;
-    private Set<ParticipantCodeEntity> codes = new HashSet<ParticipantCodeEntity>();
+    private Set<ParticipantCodeEntity> participantTypeCodes = new HashSet<ParticipantCodeEntity>();
 
     public ParticipantEntity() {
     }
@@ -108,16 +108,16 @@ public class ParticipantEntity extends PersistentEntity {
             joinColumns = {@JoinColumn(name = "participant")},
             inverseJoinColumns = @JoinColumn(name = "code")
     )
-    public Set<ParticipantCodeEntity> getCodes() {
-        return codes;
+    public Set<ParticipantCodeEntity> getParticipantTypeCodes() {
+        return participantTypeCodes;
     }
 
-    public void setCodes(Set<ParticipantCodeEntity> codes) {
-        this.codes = codes;
+    public void setParticipantTypeCodes(Set<ParticipantCodeEntity> participantTypeCodes) {
+        this.participantTypeCodes = participantTypeCodes;
     }
 
     public void addCode(ParticipantCodeEntity entity) {
-        getCodes().add(entity);
+        getParticipantTypeCodes().add(entity);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ParticipantEntity extends PersistentEntity {
         ParticipantEntity that = (ParticipantEntity) o;
 
         if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId) : that.alternativeUserId != null) return false;
-        if (codes != null ? !codes.equals(that.codes) : that.codes != null) return false;
+        if (participantTypeCodes != null ? !participantTypeCodes.equals(that.participantTypeCodes) : that.participantTypeCodes != null) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
 
@@ -140,7 +140,7 @@ public class ParticipantEntity extends PersistentEntity {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (alternativeUserId != null ? alternativeUserId.hashCode() : 0);
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        result = 31 * result + (codes != null ? codes.hashCode() : 0);
+        result = 31 * result + (participantTypeCodes != null ? participantTypeCodes.hashCode() : 0);
         return result;
     }
 
@@ -157,7 +157,7 @@ public class ParticipantEntity extends PersistentEntity {
                 .append(", alternative user id=")
                 .append(getAlternativeUserId())
                 .append(", codes=")
-                .append(getCodes())
+                .append(getParticipantTypeCodes())
                 .append("]")
                 .toString();
     }

@@ -19,14 +19,14 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.persistence.model.AtnaSourceEntity;
-import org.openhealthtools.openatna.persistence.model.SourceEntity;
-import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
-import org.openhealthtools.openatna.persistence.dao.AtnaSourceDao;
-import org.openhealthtools.openatna.persistence.dao.SourceDao;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.MessageSourceDao;
+import org.openhealthtools.openatna.persistence.dao.SourceDao;
+import org.openhealthtools.openatna.persistence.model.MessageSourceEntity;
+import org.openhealthtools.openatna.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
 
 import java.util.List;
 
@@ -37,49 +37,50 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public class HibernateAtnaSourceDao extends AbstractHibernateDao<AtnaSourceEntity> implements AtnaSourceDao {
+public class HibernateMessageSourceDao extends AbstractHibernateDao<MessageSourceEntity> implements MessageSourceDao {
 
-    public HibernateAtnaSourceDao(SessionFactory sessionFactory) {
-        super(AtnaSourceEntity.class, sessionFactory);
+    public HibernateMessageSourceDao(SessionFactory sessionFactory) {
+        super(MessageSourceEntity.class, sessionFactory);
     }
 
-    public AtnaSourceEntity getById(Long id) throws AtnaPersistenceException {
+    public MessageSourceEntity getById(Long id) throws AtnaPersistenceException {
         return get(id);
     }
 
-    public AtnaSourceEntity getBySourceId(String sourceId) throws AtnaPersistenceException {
+    public MessageSourceEntity getBySourceId(String sourceId) throws AtnaPersistenceException {
         return uniqueResult(criteria().createCriteria("source").add(Restrictions.eq("sourceId", sourceId)));
     }
 
-    public AtnaSourceEntity getByEnterpriseSiteId(String enterpriseSiteId) throws AtnaPersistenceException {
+    public MessageSourceEntity getByEnterpriseSiteId(String enterpriseSiteId) throws AtnaPersistenceException {
         return uniqueResult(criteria().createCriteria("source").add(Restrictions.eq("enterpriseSiteId", enterpriseSiteId)));
     }
 
-    public List<? extends AtnaSourceEntity> getByCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends MessageSourceEntity> getByCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException {
         return list(criteria().createCriteria("source").createCriteria("sourceTypeCodes").add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
-    public List<? extends AtnaSourceEntity> getAll() throws AtnaPersistenceException {
+    public List<? extends MessageSourceEntity> getAll() throws AtnaPersistenceException {
         return all();
     }
 
-    public void save(AtnaSourceEntity as) throws AtnaPersistenceException {
+    public void save(MessageSourceEntity as) throws AtnaPersistenceException {
         normalize(as);
         currentSession().saveOrUpdate(as);
     }
 
     /**
      * it is here, but in general audit messages should not be deleted
+     *
      * @param as
      * @throws AtnaPersistenceException
      */
-    public void delete(AtnaSourceEntity as) throws AtnaPersistenceException {
+    public void delete(MessageSourceEntity as) throws AtnaPersistenceException {
         currentSession().delete(as);
     }
 
-    public void normalize(AtnaSourceEntity as) throws AtnaPersistenceException {
+    public void normalize(MessageSourceEntity as) throws AtnaPersistenceException {
         if (as.getSource() == null) {
             throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }

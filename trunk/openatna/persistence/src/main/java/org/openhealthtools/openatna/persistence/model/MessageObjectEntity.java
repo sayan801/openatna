@@ -24,23 +24,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "atna_objects")
-public class AtnaObjectEntity extends PersistentEntity {
+@Table(name = "message_objects")
+public class MessageObjectEntity extends PersistentEntity {
 
     private static final long serialVersionUID = -1L;
 
     private Long id;
     private ObjectEntity object;
-    private String objectName;
     private String objectQuery;
     private Short objectDataLifeCycle;
 
     private Set<ObjectDetailEntity> details = new HashSet<ObjectDetailEntity>();
 
-    public AtnaObjectEntity() {
+    public MessageObjectEntity() {
     }
 
-    public AtnaObjectEntity(ObjectEntity object) {
+    public MessageObjectEntity(ObjectEntity object) {
         this.object = object;
     }
 
@@ -61,14 +60,6 @@ public class AtnaObjectEntity extends PersistentEntity {
 
     public void setObject(ObjectEntity object) {
         this.object = object;
-    }
-
-    public String getObjectName() {
-        return objectName;
-    }
-
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
     }
 
     public String getObjectQuery() {
@@ -103,14 +94,13 @@ public class AtnaObjectEntity extends PersistentEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AtnaObjectEntity)) return false;
+        if (!(o instanceof MessageObjectEntity)) return false;
 
-        AtnaObjectEntity that = (AtnaObjectEntity) o;
+        MessageObjectEntity that = (MessageObjectEntity) o;
 
         if (details != null ? !details.equals(that.details) : that.details != null) return false;
         if (object != null ? !object.equals(that.object) : that.object != null) return false;
         if (objectDataLifeCycle != null ? !objectDataLifeCycle.equals(that.objectDataLifeCycle) : that.objectDataLifeCycle != null) return false;
-        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
         if (objectQuery != null ? !objectQuery.equals(that.objectQuery) : that.objectQuery != null) return false;
 
         return true;
@@ -119,7 +109,6 @@ public class AtnaObjectEntity extends PersistentEntity {
     @Override
     public int hashCode() {
         int result = object != null ? object.hashCode() : 0;
-        result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
         result = 31 * result + (objectQuery != null ? objectQuery.hashCode() : 0);
         result = 31 * result + (objectDataLifeCycle != null ? objectDataLifeCycle.hashCode() : 0);
         result = 31 * result + (details != null ? details.hashCode() : 0);
@@ -132,8 +121,6 @@ public class AtnaObjectEntity extends PersistentEntity {
                 .append(getId())
                 .append(", data life cycle=")
                 .append(getObjectDataLifeCycle())
-                .append(", object name=")
-                .append(getObjectName())
                 .append(", query=")
                 .append(getObjectQuery())
                 .append(", object=")

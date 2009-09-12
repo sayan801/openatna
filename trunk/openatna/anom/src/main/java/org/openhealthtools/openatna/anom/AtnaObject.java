@@ -37,23 +37,11 @@ public interface AtnaObject {
 
     public AtnaObject setObjectName(String value);
 
-    public byte[] getObjectQuery();
+    public List<String> getObjectDetailTypes();
 
-    public AtnaObject setObjectQuery(byte[] value);
+    public AtnaObject addObjectDetailType(String type);
 
-    public List<AtnaObjectDetail> getObjectDetails();
-
-    /**
-     * object details are not mapped uniquely to their type
-     *
-     * @param type
-     * @return
-     */
-    public List<AtnaObjectDetail> getObjectDetails(String type);
-
-    public AtnaObject addObjectDetail(AtnaObjectDetail detail);
-
-    public AtnaObject removeObjectDetail(AtnaObjectDetail detail);
+    public AtnaObject removeObjectDetailType(String type);
 
     public String getObjectID();
 
@@ -64,10 +52,6 @@ public interface AtnaObject {
     public ObjectTypeCodeRole getObjectTypeCodeRole();
 
     public AtnaObject setObjectTypeCodeRole(ObjectTypeCodeRole value);
-
-    public ObjectDataLifecycle getObjectDataLifeCycle();
-
-    public AtnaObject setObjectDataLifeCycle(ObjectDataLifecycle value);
 
     public String getObjectSensitivity();
 

@@ -19,7 +19,7 @@
 <p>
     The second part consists of entities that are added to the DB through the process
     of auditing. These entities reference the domain defined values already in the DB.
-    Entities and DAOs of this sort all begin with "Atna" in the class name.
+    Entities and DAOs of this sort all begin with "Message" in the class name.
     An AtnaPersistenceException is thrown if Atna entities reference domain objects
     that are not in the DB already. In general, this test is done using the business
     identifier for the domain objects. When this test occurs, the reference in the
@@ -42,13 +42,12 @@
     or removed.
 
     The "id" attributes are used to reference other elements via the "ref" attribute.
-    These should be unique within the document.
+    These should be unique within the document but have no meaning beyond the XML.
 
     Required fields:
 <ul>
     <li>codes all need a "code" attribute</li>
     <li>netPoints need both "netId" and "type"</li>
-    <li>details need both "type" and some child content</li>
     <li>sources require a "sourceId"</li>
     <li>participants require a "userId"</li>
     <li>objects require an "objectId" and a reference to an objectIdType code.</li>
@@ -56,6 +55,7 @@
     
        <pre>
 &lt;entities>
+    &lt;!-- codes defined by the domain or referenced vocabularies -->
     &lt;codes>
         &lt;eventId id="" code="" system="" systemName="" displayName="" originalText=""/>
         &lt;eventType id="" code="" system="" systemName="" displayName="" originalText=""/>
@@ -64,25 +64,36 @@
         &lt;sourceType id="" code="" system="" systemName="" displayName="" originalText=""/>
     &lt;/codes>
 
+    &lt;!-- network endpoints known to the system. The type should be either
+           1, 2 or 3 (see RFC 3881 for details) -->
     &lt;netPoints>
         &lt;netPoint id="" netId="" type=""/>
     &lt;/netPoints>
 
+    &lt;!-- audit sources. This is the entity from which the audit message emanates -->
     &lt;sources>
         &lt;source id="" sourceId="" enterpriseSiteId="">
             &lt;sourceType ref=""/>
         &lt;/source>
     &lt;/sources>
 
+    &lt;!-- participants. These are users that are known to the system -->
     &lt;participants>
         &lt;participant id="" userId="" altUserId="" userName="">
             &lt;participantType ref=""/>
         &lt;/participant>
     &lt;/participants>
 
+    &lt;!-- objects that are accesed or mutated as the result of auditing.
+           These are components within the affinity domain that are known
+           to the system. -->
     &lt;objects>
         &lt;object id="" objectId="" objectTypeCode="" objectTypeCodeRole="" objectName="" sensitivity="">
             &lt;objectIdType ref=""/>
+            &lt;!-- there can be many of these. These are keys to properties
+                that are relevant to the component. A configuration may disallow
+                Object detail key/value pairs in a message pertaining to a particular object
+                if the detail key does not match one defined here. -->
             &lt;objectDetailKey key=""/>
         &lt;/object>
     &lt;/objects>

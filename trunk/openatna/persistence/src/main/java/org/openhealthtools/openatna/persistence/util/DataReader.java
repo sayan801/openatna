@@ -342,7 +342,7 @@ public class DataReader {
                 }
                 CodeEntity code = codes.get(ref);
                 if (code != null && code instanceof ParticipantCodeEntity) {
-                    e.getCodes().add((ParticipantCodeEntity) code);
+                    e.getParticipantTypeCodes().add((ParticipantCodeEntity) code);
                 }
             }
         }
