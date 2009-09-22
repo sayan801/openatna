@@ -39,11 +39,11 @@ public interface AtnaMessageParticipant {
 
     public String getNetworkAccessPointID();
 
-    public AtnaParticipant setNetworkAccessPointID(String value);
+    public AtnaMessageParticipant setNetworkAccessPointID(String value);
 
     public NetworkAccessPoint getNetworkAccessPointType();
 
-    public AtnaParticipant setNetworkAccessPointType(NetworkAccessPoint value);
+    public AtnaMessageParticipant setNetworkAccessPointType(NetworkAccessPoint value);
 
 
 }
