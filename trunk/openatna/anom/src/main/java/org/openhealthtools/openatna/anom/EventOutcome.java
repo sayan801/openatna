@@ -38,7 +38,7 @@ public enum EventOutcome {
 
     SUCCESS(0),
     MINOR_FAILURE(4),
-    SERIOUS_FAILUER(8),
+    SERIOUS_FAILURE(8),
     MAJOR_FAILURE(12);
 
     private int value;
