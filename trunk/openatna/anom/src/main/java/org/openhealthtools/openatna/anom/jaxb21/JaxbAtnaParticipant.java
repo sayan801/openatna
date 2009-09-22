@@ -116,7 +116,7 @@ public class JaxbAtnaParticipant implements AtnaParticipant, AtnaMessageParticip
         return participant.getNetworkAccessPointID();
     }
 
-    public AtnaParticipant setNetworkAccessPointID(String value) {
+    public AtnaMessageParticipant setNetworkAccessPointID(String value) {
         participant.setNetworkAccessPointID(value);
         return this;
     }
@@ -125,7 +125,7 @@ public class JaxbAtnaParticipant implements AtnaParticipant, AtnaMessageParticip
         return NetworkAccessPoint.getAccessPoint(participant.getNetworkAccessPointTypeCode());
     }
 
-    public AtnaParticipant setNetworkAccessPointType(NetworkAccessPoint value) {
+    public AtnaMessageParticipant setNetworkAccessPointType(NetworkAccessPoint value) {
         participant.setNetworkAccessPointTypeCode((short) value.value());
         return this;
     }
