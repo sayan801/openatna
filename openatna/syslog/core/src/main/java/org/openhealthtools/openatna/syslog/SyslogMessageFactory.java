@@ -44,8 +44,9 @@ import java.util.Map;
  * <p/>
  * LogMessage objects are registered using the registerLogMessage(String msgId, Class<? extends LogMessage> cls)
  * method. NOTE this means that LogMessage implementations must have a default constructor because they are
- * instantiated using Class.newInstance().
+ * instantiated using Class.newInstance(). The SyslogListener
  * <p/>
+ *
  * <p/>
  * To set the type of message the server expects, use the setFactory(SyslogMessageFactory factory) method which
  * defines the SyslogMessageFactory that will be used to parse incoming data and generate a SyslogMessage.

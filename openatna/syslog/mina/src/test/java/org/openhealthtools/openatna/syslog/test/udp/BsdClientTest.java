@@ -51,7 +51,6 @@ public class BsdClientTest {
         DatagramSocket socket = new DatagramSocket();
         socket.send(packet);
 
-
     }
 
 

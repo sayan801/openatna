@@ -37,12 +37,17 @@ import org.openhealthtools.openatna.audit.log.AtnaErrorLogger;
  * @date $Date:$ modified by $Author:$
  */
 
-public class AtnaLogMessage implements LogMessage<AtnaMessage> {
+public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
 
     private AtnaMessage message;
     private AtnaIOFactory factory;
 
     public AtnaLogMessage(AtnaIOFactory factory) {
+        this.factory = factory;
+    }
+
+    public AtnaLogMessage(AtnaMessage message, AtnaIOFactory factory) {
+        this.message = message;
         this.factory = factory;
     }
 

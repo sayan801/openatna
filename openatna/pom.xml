@@ -90,6 +90,7 @@
         <module>persistence</module>
         <module>anom</module>
         <module>jaxb</module>
+		<module>atnatest</module>
     </modules>
 
 
