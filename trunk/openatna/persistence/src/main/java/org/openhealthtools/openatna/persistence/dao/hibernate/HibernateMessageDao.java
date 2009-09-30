@@ -45,6 +45,10 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         super(MessageEntity.class, sessionFactory);
     }
 
+    public Query newQuery() {
+        return new HibernateQuery(criteria());
+    }
+
     public MessageEntity getById(Long id) throws AtnaPersistenceException {
         return get(id);
     }

@@ -24,10 +24,7 @@ import java.util.List;
 
 /**
  * Audit message interface
- * <p/>
- * This contains modifiers for everything bar the event.
- * A message should always have an event, i.e. be constructed with one.
- * The event itself is still mutable.
+
  *
  * @author Andrew Harrison
  * @version $Revision:$
