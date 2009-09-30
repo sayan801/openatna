@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
+import java.util.List;
+
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.persistence.model.codes.*;
-
-import java.util.List;
 
 /**
  * Class Description Here...
@@ -35,7 +35,7 @@ import java.util.List;
  */
 public interface MessageDao extends Dao {
 
-    public Query newQuery();
+    //public Query newQuery();
 
     public MessageEntity getById(Long id) throws AtnaPersistenceException;
 
