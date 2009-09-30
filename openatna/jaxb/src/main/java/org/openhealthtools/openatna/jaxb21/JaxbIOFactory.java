@@ -40,7 +40,6 @@ import org.openhealthtools.openatna.anom.*;
 
 public class JaxbIOFactory extends AtnaIOFactory {
 
-
     static JAXBContext jc;
 
     static {

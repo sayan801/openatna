@@ -68,12 +68,12 @@ public class AtnaObject implements Serializable {
         return new ArrayList<String>(objectDetailTypes);
     }
 
-    public AtnaObject addObjectDetailTypes(String objectDetailType) {
+    public AtnaObject addObjectDetailType(String objectDetailType) {
         this.objectDetailTypes.add(objectDetailType);
         return this;
     }
 
-    public AtnaObject removeObjectDetailTypes(String objectDetailType) {
+    public AtnaObject removeObjectDetailType(String objectDetailType) {
         this.objectDetailTypes.remove(objectDetailType);
         return this;
     }

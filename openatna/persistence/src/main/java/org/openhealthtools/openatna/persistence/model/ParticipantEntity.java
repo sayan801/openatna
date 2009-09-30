@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.model;
 
-import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
+import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
 
 /**
  * Class Description Here...
@@ -56,7 +56,7 @@ public class ParticipantEntity extends PersistentEntity {
 
     public ParticipantEntity(String userId, ParticipantCodeEntity code) {
         this.userId = userId;
-        addCode(code);
+        addParticipantTypeCode(code);
     }
 
     @Id
@@ -116,7 +116,7 @@ public class ParticipantEntity extends PersistentEntity {
         this.participantTypeCodes = participantTypeCodes;
     }
 
-    public void addCode(ParticipantCodeEntity entity) {
+    public void addParticipantTypeCode(ParticipantCodeEntity entity) {
         getParticipantTypeCodes().add(entity);
     }
 

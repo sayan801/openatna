@@ -86,7 +86,7 @@
 
     <modules>
         <module>syslog</module>
-        <!--<module>audit</module>-->
+        <module>audit</module>
         <module>persistence</module>
         <module>anom</module>
         <module>jaxb</module>

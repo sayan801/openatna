@@ -20,9 +20,9 @@
 package org.openhealthtools.openatna.syslog;
 
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.IOException;
 
 /**
  * Super class for SyslogMessage implementations
@@ -33,15 +33,15 @@ import java.io.IOException;
  * @date $Date:$ modified by $Author:$
  */
 
-public abstract class SyslogMessage implements Serializable {
+public abstract class SyslogMessage<M> implements Serializable {
 
     private int facility = 0;
     private int severity = 0;
     private String timestamp = "";
     private String hostName = "";
-    private LogMessage message;
+    private LogMessage<M> message;
 
-    protected SyslogMessage(int facility, int severity, String timestamp, String hostName, LogMessage message) {
+    protected SyslogMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message) {
         this.facility = facility;
         this.severity = severity;
         this.timestamp = timestamp;
@@ -65,7 +65,7 @@ public abstract class SyslogMessage implements Serializable {
         return timestamp;
     }
 
-    public LogMessage getMessage() {
+    public LogMessage<M> getMessage() {
         return message;
     }
 
