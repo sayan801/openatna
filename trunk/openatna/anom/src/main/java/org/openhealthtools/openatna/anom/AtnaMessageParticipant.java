@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.io.Serializable;
+
 /**
  * This class eraps an AtnaParticipant and provides message (Event)
  * specifics such as whether the user is a requestor and the network access
@@ -29,21 +31,74 @@ package org.openhealthtools.openatna.anom;
  * @created Sep 11, 2009: 11:32:37 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AtnaMessageParticipant {
+public class AtnaMessageParticipant implements Serializable {
 
-    public AtnaParticipant getParticipant();
+    private AtnaParticipant participant;
+    private boolean userIsRequestor;
+    private String networkAccessPointId;
+    private NetworkAccessPoint networkAccessPointType;
 
-    public boolean isUserIsRequestor();
+    public AtnaMessageParticipant(AtnaParticipant participant) {
+        this.participant = participant;
+    }
 
-    public AtnaParticipant setUserIsRequestor(Boolean value);
+    public AtnaParticipant getParticipant() {
+        return participant;
+    }
 
-    public String getNetworkAccessPointID();
+    public AtnaMessageParticipant setParticipant(AtnaParticipant participant) {
+        this.participant = participant;
+        return this;
+    }
 
-    public AtnaMessageParticipant setNetworkAccessPointID(String value);
+    public boolean isUserIsRequestor() {
+        return userIsRequestor;
+    }
 
-    public NetworkAccessPoint getNetworkAccessPointType();
+    public AtnaMessageParticipant setUserIsRequestor(boolean userIsRequestor) {
+        this.userIsRequestor = userIsRequestor;
+        return this;
+    }
 
-    public AtnaMessageParticipant setNetworkAccessPointType(NetworkAccessPoint value);
+    public String getNetworkAccessPointId() {
+        return networkAccessPointId;
+    }
 
+    public AtnaMessageParticipant setNetworkAccessPointId(String networkAccessPointId) {
+        this.networkAccessPointId = networkAccessPointId;
+        return this;
+    }
 
+    public NetworkAccessPoint getNetworkAccessPointType() {
+        return networkAccessPointType;
+    }
+
+    public AtnaMessageParticipant setNetworkAccessPointType(NetworkAccessPoint networkAccessPointType) {
+        this.networkAccessPointType = networkAccessPointType;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AtnaMessageParticipant)) return false;
+
+        AtnaMessageParticipant that = (AtnaMessageParticipant) o;
+
+        if (userIsRequestor != that.userIsRequestor) return false;
+        if (networkAccessPointId != null ? !networkAccessPointId.equals(that.networkAccessPointId) : that.networkAccessPointId != null) return false;
+        if (networkAccessPointType != that.networkAccessPointType) return false;
+        if (participant != null ? !participant.equals(that.participant) : that.participant != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = participant != null ? participant.hashCode() : 0;
+        result = 31 * result + (userIsRequestor ? 1 : 0);
+        result = 31 * result + (networkAccessPointId != null ? networkAccessPointId.hashCode() : 0);
+        result = 31 * result + (networkAccessPointType != null ? networkAccessPointType.hashCode() : 0);
+        return result;
+    }
 }

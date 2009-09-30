@@ -32,10 +32,8 @@ package org.openhealthtools.openatna.anom;
 
 public class AtnaCodes {
 
-    private static AtnaFactory factory = AtnaFactory.getFactory();
-
     private static AtnaCode newCode(String code, String displayName) {
-        return factory.newCode(code, displayName, "RFC-3881");
+        return new AtnaCode(code, null, "RFC-3881", displayName);
     }
 
     /**

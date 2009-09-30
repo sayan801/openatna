@@ -19,7 +19,11 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Audit Source
@@ -29,19 +33,67 @@ import java.util.List;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AtnaSource {
+public class AtnaSource implements Serializable {
 
-    public List<AtnaCode> getSourceTypeCodes();
+    private Set<AtnaCode> sourceTypeCodes = new HashSet<AtnaCode>();
+    private String sourceId;
+    private String enterpriseSiteId;
 
-    public AtnaSource addSourceTypeCode(AtnaCode value);
+    public AtnaSource(String sourceId) {
+        this.sourceId = sourceId;
+    }
 
-    public AtnaSource removeSourceTypeCode(AtnaCode value);
+    public List<AtnaCode> getSourceTypeCodes() {
+        return new ArrayList<AtnaCode>(sourceTypeCodes);
+    }
 
-    public String getEnterpriseSiteID();
+    public AtnaSource addSourceTypeCode(AtnaCode value) {
+        sourceTypeCodes.add(value);
+        return this;
+    }
 
-    public AtnaSource setEnterpriseSiteID(String value);
+    public AtnaSource removeSourceTypeCode(AtnaCode value) {
+        sourceTypeCodes.remove(value);
+        return this;
+    }
 
-    public String getSourceID();
+    public String getSourceId() {
+        return sourceId;
+    }
 
-    public AtnaSource setSourceID(String value);
+    public AtnaSource setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+        return this;
+    }
+
+    public String getEnterpriseSiteId() {
+        return enterpriseSiteId;
+    }
+
+    public AtnaSource setEnterpriseSiteId(String enterpriseSiteId) {
+        this.enterpriseSiteId = enterpriseSiteId;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AtnaSource)) return false;
+
+        AtnaSource that = (AtnaSource) o;
+
+        if (enterpriseSiteId != null ? !enterpriseSiteId.equals(that.enterpriseSiteId) : that.enterpriseSiteId != null) return false;
+        if (sourceId != null ? !sourceId.equals(that.sourceId) : that.sourceId != null) return false;
+        if (sourceTypeCodes != null ? !sourceTypeCodes.equals(that.sourceTypeCodes) : that.sourceTypeCodes != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sourceTypeCodes != null ? sourceTypeCodes.hashCode() : 0;
+        result = 31 * result + (sourceId != null ? sourceId.hashCode() : 0);
+        result = 31 * result + (enterpriseSiteId != null ? enterpriseSiteId.hashCode() : 0);
+        return result;
+    }
 }

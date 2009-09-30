@@ -6,7 +6,7 @@
 //
 
 
-package org.openhealthtools.openatna.anom.jaxb21.schema;
+package org.openhealthtools.openatna.jaxb21;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

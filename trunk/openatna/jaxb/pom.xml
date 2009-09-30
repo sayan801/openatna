@@ -8,16 +8,16 @@
         <artifactId>openatna</artifactId>
         <version>0.1</version>
     </parent>
-    <artifactId>openatna-io</artifactId>
+    <artifactId>openatna-jaxb</artifactId>
 
     <packaging>jar</packaging>
     <version>0.1</version>
-    <name>OpenATNA IO</name>
+    <name>OpenATNA JAXB</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
 
     <dependencies>
-	    <dependency>
+        <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-anom</artifactId>
             <version>0.1</version>

@@ -32,14 +32,13 @@ package org.openhealthtools.openatna.anom;
 
 public class IheCodes {
 
-    private static AtnaFactory factory = AtnaFactory.getFactory();
 
     private static AtnaCode newCode(String code, String displayName, String codeSystemName) {
-        return factory.newCode(code, displayName, codeSystemName);
+        return new AtnaCode(code, null, codeSystemName, displayName);
     }
 
     private static AtnaCode newCode(String code, String displayName) {
-        return factory.newCode(code, displayName, "IHE Transactions");
+        return new AtnaCode(code, null, "IHE Transactions", displayName);
     }
 
     /**

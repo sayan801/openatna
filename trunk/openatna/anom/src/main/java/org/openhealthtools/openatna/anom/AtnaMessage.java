@@ -19,12 +19,11 @@
 
 package org.openhealthtools.openatna.anom;
 
-import java.util.Date;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Audit message interface
-
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -32,49 +31,171 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
-public interface AtnaMessage {
+public class AtnaMessage implements Serializable {
 
-    public AtnaCode getEventCode();
+    private AtnaCode eventCode;
+    private Set<AtnaCode> eventTypeCodes = new HashSet<AtnaCode>();
+    private EventAction eventActionCode;
+    private EventOutcome eventOutcome;
+    private Date eventDateTime;
 
-    public List<AtnaCode> getEventTypeCodes();
+    private Set<AtnaMessageParticipant> participants = new HashSet<AtnaMessageParticipant>();
+    private Set<AtnaSource> sources = new HashSet<AtnaSource>();
+    private Set<AtnaMessageObject> objects = new HashSet<AtnaMessageObject>();
 
-    public AtnaMessage addEventTypeCode(AtnaCode value);
+    public AtnaMessage(AtnaCode eventCode, EventOutcome eventOutcome) {
+        this.eventCode = eventCode;
+        this.eventOutcome = eventOutcome;
+    }
 
-    public AtnaMessage removeEventTypeCode(AtnaCode value);
+    public List<AtnaCode> getEventTypeCodes() {
+        return new ArrayList<AtnaCode>(eventTypeCodes);
+    }
 
-    public EventAction getEventActionCode();
+    public AtnaMessage addEventTypeCode(AtnaCode value) {
+        this.eventTypeCodes.add(value);
+        return this;
+    }
 
-    public AtnaMessage setEventActionCode(EventAction value);
+    public AtnaMessage removeEventTypeCode(AtnaCode value) {
+        this.eventTypeCodes.remove(value);
+        return this;
+    }
 
-    public Date getEventDateTime();
+    public AtnaCode getEventCode() {
+        return eventCode;
+    }
 
-    public AtnaMessage setEventDateTime(Date value);
+    public AtnaMessage setEventCode(AtnaCode eventCode) {
+        this.eventCode = eventCode;
+        return this;
+    }
 
-    public EventOutcome getEventOutcome();
+    public EventAction getEventActionCode() {
+        return eventActionCode;
+    }
 
-    public AtnaMessage setEventOutcome(EventOutcome value);
+    public AtnaMessage setEventActionCode(EventAction eventActionCode) {
+        this.eventActionCode = eventActionCode;
+        return this;
+    }
 
-    public List<AtnaMessageParticipant> getParticipants();
+    public EventOutcome getEventOutcome() {
+        return eventOutcome;
+    }
 
-    public AtnaMessage addParticipant(AtnaMessageParticipant participant);
+    public AtnaMessage setEventOutcome(EventOutcome eventOutcome) {
+        this.eventOutcome = eventOutcome;
+        return this;
+    }
 
-    public AtnaMessage removeParticipant(AtnaMessageParticipant participant);
+    public Date getEventDateTime() {
+        return eventDateTime;
+    }
 
-    public AtnaMessageParticipant getParticipant(String id);
+    public AtnaMessage setEventDateTime(Date eventDateTime) {
+        this.eventDateTime = eventDateTime;
+        return this;
+    }
 
-    public List<AtnaSource> getSources();
+    public List<AtnaMessageParticipant> getParticipants() {
+        return new ArrayList<AtnaMessageParticipant>(participants);
+    }
 
-    public AtnaMessage addSource(AtnaSource atnaSource);
+    public AtnaMessage addParticipant(AtnaMessageParticipant participant) {
+        this.participants.add(participant);
+        return this;
+    }
 
-    public AtnaMessage removeSource(AtnaSource atnaSource);
+    public AtnaMessage removeParticipant(AtnaMessageParticipant participant) {
+        this.participants.remove(participant);
+        return this;
+    }
 
-    public AtnaSource getSource(String id);
+    public AtnaMessageParticipant getParticipant(String id) {
+        for (AtnaMessageParticipant participant : participants) {
+            if (participant.getParticipant().getUserId().equals(id)) {
+                return participant;
+            }
+        }
+        return null;
+    }
 
-    public List<AtnaMessageObject> getObjects();
+    public List<AtnaSource> getSources() {
+        return new ArrayList<AtnaSource>(sources);
+    }
 
-    public AtnaMessage addObject(AtnaMessageObject object);
+    public AtnaMessage addSource(AtnaSource atnaSource) {
+        this.sources.add(atnaSource);
+        return this;
+    }
 
-    public AtnaMessage removeObject(AtnaMessageObject object);
+    public AtnaMessage removeSource(AtnaSource atnaSource) {
+        this.sources.remove(atnaSource);
+        return this;
+    }
 
-    public AtnaMessageObject getObject(String id);
+    public AtnaSource getSource(String id) {
+        for (AtnaSource source : sources) {
+            if (source.getSourceId().equals(id)) {
+                return source;
+            }
+        }
+        return null;
+    }
+
+    public List<AtnaMessageObject> getObjects() {
+        return new ArrayList<AtnaMessageObject>(objects);
+    }
+
+    public AtnaMessage addObject(AtnaMessageObject object) {
+        this.objects.add(object);
+        return this;
+    }
+
+    public AtnaMessage removeObject(AtnaMessageObject object) {
+        this.objects.remove(object);
+        return this;
+    }
+
+    public AtnaMessageObject getObject(String id) {
+        for (AtnaMessageObject object : objects) {
+            if (object.getObject().getObjectId().equals(id)) {
+                return object;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AtnaMessage)) return false;
+
+        AtnaMessage that = (AtnaMessage) o;
+
+        if (eventActionCode != that.eventActionCode) return false;
+        if (eventCode != null ? !eventCode.equals(that.eventCode) : that.eventCode != null) return false;
+        if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) return false;
+        if (eventOutcome != that.eventOutcome) return false;
+        if (eventTypeCodes != null ? !eventTypeCodes.equals(that.eventTypeCodes) : that.eventTypeCodes != null) return false;
+        if (objects != null ? !objects.equals(that.objects) : that.objects != null) return false;
+        if (participants != null ? !participants.equals(that.participants) : that.participants != null) return false;
+        if (sources != null ? !sources.equals(that.sources) : that.sources != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = eventCode != null ? eventCode.hashCode() : 0;
+        result = 31 * result + (eventTypeCodes != null ? eventTypeCodes.hashCode() : 0);
+        result = 31 * result + (eventActionCode != null ? eventActionCode.hashCode() : 0);
+        result = 31 * result + (eventOutcome != null ? eventOutcome.hashCode() : 0);
+        result = 31 * result + (eventDateTime != null ? eventDateTime.hashCode() : 0);
+        result = 31 * result + (participants != null ? participants.hashCode() : 0);
+        result = 31 * result + (sources != null ? sources.hashCode() : 0);
+        result = 31 * result + (objects != null ? objects.hashCode() : 0);
+        return result;
+    }
 }
