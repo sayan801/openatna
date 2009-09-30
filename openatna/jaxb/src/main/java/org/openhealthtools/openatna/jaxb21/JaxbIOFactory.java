@@ -38,7 +38,7 @@ import org.openhealthtools.openatna.anom.*;
  * @date $Date:$ modified by $Author:$
  */
 
-public class JaxbIOFactory extends AtnaIOFactory {
+public class JaxbIOFactory implements AtnaIOFactory {
 
     static JAXBContext jc;
 
@@ -59,7 +59,6 @@ public class JaxbIOFactory extends AtnaIOFactory {
             Unmarshaller u = jc.createUnmarshaller();
             AuditMessage a = (AuditMessage) u.unmarshal(in);
             AtnaMessage jm = createMessage(a);
-            validate(jm);
             return jm;
         } catch (JAXBException e) {
             throw new AtnaException(e);
@@ -73,7 +72,6 @@ public class JaxbIOFactory extends AtnaIOFactory {
         if (message.getEventDateTime() == null) {
             message.setEventDateTime(new Date());
         }
-        validate(message);
         try {
             AuditMessage jmessage = createMessage(message);
             Marshaller marshaller = jc.createMarshaller();

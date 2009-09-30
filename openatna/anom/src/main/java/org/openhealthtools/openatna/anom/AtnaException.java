@@ -39,7 +39,7 @@ public class AtnaException extends Exception {
     public static enum AtnaError {
 
         UNDEFINED,
-
+        NO_MESSAGE,
         NO_EVENT,
         NO_EVENT_CODE,
         NO_EVENT_OUTCOME,
@@ -51,9 +51,13 @@ public class AtnaException extends Exception {
 
         NO_ACTIVE_PARTICIPANT,
         NO_ACTIVE_PARTICIPANT_ID,
+        NO_NETWORK_ACCESS_POINT_ID,
+        NO_NETWORK_ACCESS_POINT_TYPE,
 
+        NO_PARTICIPANT_OBJECT,
         NO_PARTICIPANT_OBJECT_ID,
         NO_PARTICIPANT_OBJECT_ID_TYPE_CODE,
+        INVALID_OBJECT_DETAIL,
 
         INVALID_CODE
 
