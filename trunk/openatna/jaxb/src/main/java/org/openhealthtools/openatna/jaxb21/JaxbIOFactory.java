@@ -124,8 +124,12 @@ public class JaxbIOFactory extends AtnaIOFactory {
         }
         AuditMessage ret = new AuditMessage();
         EventIdentificationType evt = new EventIdentificationType();
-        evt.setEventActionCode(msg.getEventActionCode().value());
-        evt.setEventTime(msg.getEventDateTime());
+        if (msg.getEventActionCode() != null) {
+            evt.setEventActionCode(msg.getEventActionCode().value());
+        }
+        if (msg.getEventDateTime() != null) {
+            evt.setEventTime(msg.getEventDateTime());
+        }
         evt.setEventID(createCode(msg.getEventCode()));
         evt.setEventOutcome(msg.getEventOutcome().value());
         ret.setEventIdentification(evt);
