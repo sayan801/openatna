@@ -53,12 +53,10 @@ public class UdpServer implements SyslogServer<UdpConfig> {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.udp.UdpServer");
 
-
     private Executor exec = Executors.newFixedThreadPool(5);
     private UdpConfig udpconfig;
     private Set<SyslogListener> listeners = new HashSet<SyslogListener>();
     private DatagramAcceptor acceptor;
-
 
     public void configure(UdpConfig config) {
         this.udpconfig = config;
@@ -77,12 +75,7 @@ public class UdpServer implements SyslogServer<UdpConfig> {
 
         acceptor.setFilterChainBuilder(chain);
         acceptor.bind(new InetSocketAddress(host, udpconfig.getPort()), new UdpProtocolHandler(this, udpconfig));
-        Set<SocketAddress> addr = acceptor.getManagedServiceAddresses();
-        for (SocketAddress sa : addr) {
-            System.out.println("UDP Server.start " + sa.toString());
-        }
         log.info("server started on port " + udpconfig.getPort());
-
     }
 
     public void stop() throws IOException {
@@ -108,7 +101,6 @@ public class UdpServer implements SyslogServer<UdpConfig> {
                 }
             }
         });
-
     }
 
     protected void notifyException(final SyslogException ex) {
@@ -119,6 +111,5 @@ public class UdpServer implements SyslogServer<UdpConfig> {
                 }
             }
         });
-
     }
 }
