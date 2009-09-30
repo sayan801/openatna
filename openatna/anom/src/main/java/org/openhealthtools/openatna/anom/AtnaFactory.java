@@ -52,6 +52,7 @@ public abstract class AtnaFactory {
     public static final String PROP_FILE = "openatna.properties";
     private static volatile AtnaFactory factory;
 
+    // this is probably temporary. A factory should be set in configuration somewhere.
     public static synchronized AtnaFactory getFactory() {
         if (factory != null) {
             return factory;
@@ -108,13 +109,13 @@ public abstract class AtnaFactory {
 
     public abstract AtnaMessageObject newMessageObject(AtnaObject object);
 
-
     public abstract AtnaObjectDetail newObjectDetail();
 
     public abstract AtnaCode newCode(String code);
 
     public abstract AtnaCode newCode(String code, String displayName, String codeSystemName);
 
+    // this should move to a higher level.
     protected void validate(AtnaMessage message) throws AtnaException {
 
         AtnaCode evt = message.getEventCode();
