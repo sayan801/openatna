@@ -19,25 +19,27 @@
 
 package org.openhealthtools.openatna.audit.process;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openhealthtools.openatna.audit.AuditException;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
- *
  * A chain for processors.
- *
+ * <p/>
  * The addNext() method is relative to the previous call to one of the add* methods.
  * addFirst() resets the "next" counter to 1.
  * addLastLast() resets the "next" counter to the size of the list of processors.
  * addNext() increments the "next" counter.
- *
+ * <p/>
  * The "next" counter starts off with a value of 0.
- *
+ * <p/>
  * The chain will persists the atna message, if no previous processors have set the
  * state of the context to PERSISTED. This means only domain/business processors
  * need to be added manually.
+ * <p/>
+ * It will also validate the message before passing it to any other processors.
+ * To not use the built-in validator, use the constructor with the boolean set to false.
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -49,7 +51,17 @@ public class ProcessorChain {
 
     private List<AtnaProcessor> processors = new ArrayList<AtnaProcessor>();
     private int next = 0;
+    private ValidationProcessor validator = new ValidationProcessor();
     private PersistenceProcessor persist = new PersistenceProcessor();
+    private boolean validate;
+
+    public ProcessorChain(boolean validate) {
+        this.validate = validate;
+    }
+
+    public ProcessorChain() {
+        this(true);
+    }
 
     public ProcessorChain addFirst(AtnaProcessor processor) {
         processors.add(0, processor);
@@ -70,10 +82,13 @@ public class ProcessorChain {
     }
 
     public void process(ProcessContext context) throws AuditException {
+        if (validate) {
+            validator.process(context);
+        }
         for (AtnaProcessor processor : processors) {
             processor.process(context);
         }
-        if(context.getState() != ProcessContext.State.PERSISTED) {
+        if (context.getState() != ProcessContext.State.PERSISTED) {
             persist.process(context);
         }
     }
