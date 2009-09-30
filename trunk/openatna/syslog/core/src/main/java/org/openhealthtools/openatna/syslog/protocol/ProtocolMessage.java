@@ -20,13 +20,15 @@
 package org.openhealthtools.openatna.syslog.protocol;
 
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
-
-import java.util.*;
-import java.io.*;
 
 /**
  * RFC 5424 Syslog message format implementation.
@@ -37,7 +39,7 @@ import java.io.*;
  * @date $Date:$ modified by $Author:$
  */
 
-public class ProtocolMessage extends SyslogMessage {
+public class ProtocolMessage<M> extends SyslogMessage {
 
     private String appName = "-";
     private String messageId = "-";
@@ -45,7 +47,7 @@ public class ProtocolMessage extends SyslogMessage {
     private List<StructuredElement> structuredElement = new ArrayList<StructuredElement>();
 
 
-    public ProtocolMessage(int facility, int severity, String timestamp, String hostName, LogMessage message, String appName, String messageId, String procId) throws SyslogException {
+    public ProtocolMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message, String appName, String messageId, String procId) throws SyslogException {
         super(facility, severity, timestamp, hostName, message);
         if (timestamp == null) {
             timestamp = "-";
@@ -58,11 +60,11 @@ public class ProtocolMessage extends SyslogMessage {
         this.procId = procId;
     }
 
-    public ProtocolMessage(int facility, int severity, String hostName, LogMessage message, String appName, String messageId, String procId) throws SyslogException {
+    public ProtocolMessage(int facility, int severity, String hostName, LogMessage<M> message, String appName, String messageId, String procId) throws SyslogException {
         this(facility, severity, ProtocolMessageFactory.formatDate(new Date()), hostName, message, appName, messageId, procId);
     }
 
-    public ProtocolMessage(int priority, String hostName, LogMessage message, String appName, String messageId) throws SyslogException {
+    public ProtocolMessage(int priority, String hostName, LogMessage<M> message, String appName, String messageId) throws SyslogException {
         this(priority / 8, priority % 8, ProtocolMessageFactory.formatDate(new Date()), hostName, message, appName, messageId, "-");
     }
 

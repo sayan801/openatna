@@ -19,13 +19,13 @@
 
 package org.openhealthtools.openatna.syslog.bsd;
 
-import org.openhealthtools.openatna.syslog.message.*;
+import java.io.*;
+
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-
-import java.io.*;
+import org.openhealthtools.openatna.syslog.message.StringLogMessage;
 
 /**
  * Class Description Here...
@@ -36,19 +36,19 @@ import java.io.*;
  * @date $Date:$ modified by $Author:$
  */
 
-public class BsdMessage extends SyslogMessage {
+public class BsdMessage<M> extends SyslogMessage {
 
     private String tag;
 
-    public BsdMessage(int facility, int severity, String timestamp, String hostName, LogMessage message, String tag) {
+    public BsdMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message, String tag) {
         super(facility, severity, timestamp, hostName, message);
-        if(tag != null && tag.length() == 0) {
+        if (tag != null && tag.length() == 0) {
             tag = null;
         }
         this.tag = tag;
     }
 
-    public BsdMessage(int facility, int severity, String timestamp, String hostName, LogMessage message) {
+    public BsdMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message) {
         this(facility, severity, timestamp, hostName, message, null);
     }
 
@@ -57,7 +57,7 @@ public class BsdMessage extends SyslogMessage {
         sb.append("<").append(getFacility() * 8 + getSeverity()).append(">")
                 .append(getTimestamp()).append(" ")
                 .append(getHostName()).append(" ");
-        if(tag != null) {
+        if (tag != null) {
             sb.append(tag);
         }
         return sb.toString();

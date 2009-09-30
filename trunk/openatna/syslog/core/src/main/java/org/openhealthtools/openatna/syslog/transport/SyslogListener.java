@@ -30,9 +30,9 @@ import org.openhealthtools.openatna.syslog.SyslogMessage;
  * @created Aug 18, 2009: 12:32:57 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface SyslogListener {
+public interface SyslogListener<M> {
 
-    public void messageArrived(SyslogMessage message);
+    public void messageArrived(SyslogMessage<M> message);
 
     public void exceptionThrown(SyslogException exception);
 }
