@@ -19,6 +19,9 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,15 +33,37 @@ import java.util.List;
  * @created Sep 11, 2009: 11:32:22 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AtnaMessageObject {
+public class AtnaMessageObject implements Serializable {
 
-    public AtnaObject getObject();
+    private AtnaObject object;
+    private byte[] objectQuery;
+    private List<AtnaObjectDetail> objectDetails = new ArrayList<AtnaObjectDetail>();
+    private ObjectDataLifecycle objectDataLifeCycle;
 
-    public byte[] getObjectQuery();
+    public AtnaMessageObject(AtnaObject object) {
+        this.object = object;
+    }
 
-    public AtnaObject setObjectQuery(byte[] value);
+    public AtnaObject getObject() {
+        return object;
+    }
 
-    public List<AtnaObjectDetail> getObjectDetails();
+    public void setObject(AtnaObject object) {
+        this.object = object;
+    }
+
+    public byte[] getObjectQuery() {
+        return objectQuery;
+    }
+
+    public AtnaMessageObject setObjectQuery(byte[] value) {
+        this.objectQuery = value;
+        return this;
+    }
+
+    public List<AtnaObjectDetail> getObjectDetails() {
+        return new ArrayList<AtnaObjectDetail>(objectDetails);
+    }
 
     /**
      * object details are not mapped uniquely to their type
@@ -46,14 +71,57 @@ public interface AtnaMessageObject {
      * @param type
      * @return
      */
-    public List<AtnaObjectDetail> getObjectDetails(String type);
+    public List<AtnaObjectDetail> getObjectDetails(String type) {
+        ArrayList<AtnaObjectDetail> ret = new ArrayList<AtnaObjectDetail>();
+        for (AtnaObjectDetail objectDetail : objectDetails) {
+            if (objectDetail.getType().equals(type)) {
+                ret.add(objectDetail);
+            }
+        }
+        return ret;
+    }
 
-    public AtnaObject addObjectDetail(AtnaObjectDetail detail);
+    public AtnaMessageObject addObjectDetail(AtnaObjectDetail detail) {
+        objectDetails.add(detail);
+        return this;
+    }
 
-    public AtnaObject removeObjectDetail(AtnaObjectDetail detail);
+    public AtnaMessageObject removeObjectDetail(AtnaObjectDetail detail) {
+        objectDetails.remove(detail);
+        return this;
 
-    public ObjectDataLifecycle getObjectDataLifeCycle();
+    }
 
-    public AtnaObject setObjectDataLifeCycle(ObjectDataLifecycle value);
+    public ObjectDataLifecycle getObjectDataLifeCycle() {
+        return objectDataLifeCycle;
+    }
 
+    public AtnaMessageObject setObjectDataLifeCycle(ObjectDataLifecycle value) {
+        this.objectDataLifeCycle = value;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AtnaMessageObject)) return false;
+
+        AtnaMessageObject that = (AtnaMessageObject) o;
+
+        if (object != null ? !object.equals(that.object) : that.object != null) return false;
+        if (objectDataLifeCycle != that.objectDataLifeCycle) return false;
+        if (objectDetails != null ? !objectDetails.equals(that.objectDetails) : that.objectDetails != null) return false;
+        if (!Arrays.equals(objectQuery, that.objectQuery)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = object != null ? object.hashCode() : 0;
+        result = 31 * result + (objectQuery != null ? Arrays.hashCode(objectQuery) : 0);
+        result = 31 * result + (objectDetails != null ? objectDetails.hashCode() : 0);
+        result = 31 * result + (objectDataLifeCycle != null ? objectDataLifeCycle.hashCode() : 0);
+        return result;
+    }
 }

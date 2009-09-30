@@ -6,17 +6,18 @@
 //
 
 
-package org.openhealthtools.openatna.anom.jaxb21.schema;
+package org.openhealthtools.openatna.jaxb21;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.xml.bind.annotation.*;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**

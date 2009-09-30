@@ -19,13 +19,11 @@
 
 package org.openhealthtools.openatna.anom.test;
 
+import java.io.IOException;
+
+import org.openhealthtools.openatna.anom.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.openhealthtools.openatna.anom.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 
 /**
@@ -42,21 +40,15 @@ public class AnomTest {
     @Test
     public void testAnom() throws IOException, AtnaException {
 
-        AtnaFactory fac = AtnaFactory.getFactory();
-        AtnaCode evtCode = fac.newCode("abc", "SYS_CODE", "SYS_CODENAME");
+        AtnaCode evtCode = new AtnaCode("abc", "SYS_CODE", "SYS_CODENAME");
 
-        AtnaMessage msg = fac.newMessage(evtCode, EventOutcome.SUCCESS);
-        msg.addSource(fac.newSource("source").addSourceTypeCode(fac.newCode("4")))
-                .addParticipant(fac.newMessageParticipant(fac.newParticipant("participant")))
-                .addObject(fac.newMessageObject(fac.newObject(fac.newCode("obj-code"), "obj-id")));
-        msg.getObject("obj-id").addObjectDetail(fac.newObjectDetail().setType("detail").setValue("THIS IS DETAIL".getBytes()));
+        AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
+        msg.addSource(new AtnaSource("source").addSourceTypeCode(new AtnaCode("4")))
+                .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("participant")))
+                .addObject(new AtnaMessageObject(new AtnaObject("obj-id", new AtnaCode("obj-code"))));
+        msg.getObject("obj-id").addObjectDetail(new AtnaObjectDetail().setType("detail").setValue("THIS IS DETAIL".getBytes()));
 
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        fac.write(msg, bout);
-        fac.write(msg, System.out);
 
-        ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-        msg = fac.read(bin);
         assertEquals(msg.getEventOutcome(), EventOutcome.SUCCESS);
         assertEquals(msg.getSource("source").getSourceTypeCodes().get(0).getCode(), "4");
         assertEquals(new String(msg.getObject("obj-id").getObjectDetails().get(0).getValue()), "THIS IS DETAIL");

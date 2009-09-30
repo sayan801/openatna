@@ -19,7 +19,11 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Active Participant
@@ -29,25 +33,79 @@ import java.util.List;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface AtnaParticipant {
+public class AtnaParticipant implements Serializable {
 
-    public List<AtnaCode> getRoleIDCodes();
+    private Set<AtnaCode> roleIdCodes = new HashSet<AtnaCode>();
+    private String userId;
+    private String alternativeUserId;
+    private String userName;
 
-    public AtnaParticipant addRoleIDCode(AtnaCode value);
+    public AtnaParticipant(String userId) {
+        this.userId = userId;
+    }
 
-    public AtnaParticipant removeRoleIDCode(AtnaCode value);
+    public List<AtnaCode> getRoleIDCodes() {
+        return new ArrayList<AtnaCode>(roleIdCodes);
+    }
 
-    public String getUserID();
+    public AtnaParticipant addRoleIDCode(AtnaCode value) {
+        roleIdCodes.add(value);
+        return this;
+    }
 
-    public AtnaParticipant setUserID(String value);
+    public AtnaParticipant removeRoleIDCode(AtnaCode value) {
+        roleIdCodes.remove(value);
+        return this;
+    }
 
-    public String getAlternativeUserID();
+    public String getUserId() {
+        return userId;
+    }
 
-    public AtnaParticipant setAlternativeUserID(String value);
+    public AtnaParticipant setUserId(String value) {
+        this.userId = value;
+        return this;
+    }
 
-    public String getUserName();
+    public String getAlternativeUserId() {
+        return alternativeUserId;
+    }
 
-    public AtnaParticipant setUserName(String value);
+    public AtnaParticipant setAlternativeUserId(String value) {
+        this.alternativeUserId = value;
+        return this;
+    }
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public AtnaParticipant setUserName(String value) {
+        this.userName = value;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AtnaParticipant)) return false;
+
+        AtnaParticipant that = (AtnaParticipant) o;
+
+        if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId) : that.alternativeUserId != null) return false;
+        if (roleIdCodes != null ? !roleIdCodes.equals(that.roleIdCodes) : that.roleIdCodes != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = roleIdCodes != null ? roleIdCodes.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (alternativeUserId != null ? alternativeUserId.hashCode() : 0);
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        return result;
+    }
 }

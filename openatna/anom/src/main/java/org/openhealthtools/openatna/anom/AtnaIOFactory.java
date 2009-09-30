@@ -19,101 +19,25 @@
 
 package org.openhealthtools.openatna.anom;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.anom.jaxb21.JaxbAtnaFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Properties;
 
 /**
- * <p/>
- * AtnaMessage msg = factory.newMessage(factory.newCode("xyz"), EventOutcome.SUCCESS);
- * msg.addSource(factory.newSource("localhost"))
- * .addParticipant(factory.newParticipant("me"));
- * <p/>
- * confused? :-)
- *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 5, 2009: 4:02:28 PM
+ * @created Sep 30, 2009: 1:51:10 PM
  * @date $Date:$ modified by $Author:$
  */
 
-public abstract class AtnaFactory {
+public abstract class AtnaIOFactory {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.anom.AtnaFactory");
-
-
-    public static final String FACTORY_PROPERTY = "org.openhealthtools.openatna.anom.AtnaFactory";
-    public static final String PROP_FILE = "openatna.properties";
-    private static volatile AtnaFactory factory;
-
-    // this is probably temporary. A factory should be set in configuration somewhere.
-    public static synchronized AtnaFactory getFactory() {
-        if (factory != null) {
-            return factory;
-        }
-        String cls = System.getProperty(FACTORY_PROPERTY);
-        if (cls == null) {
-            InputStream in = AtnaFactory.class.getClassLoader().getResourceAsStream(PROP_FILE);
-            if (in != null) {
-                Properties props = new Properties();
-                try {
-                    props.load(in);
-                    cls = props.getProperty(FACTORY_PROPERTY);
-                    if (cls != null) {
-                        Class clazz = Class.forName(cls);
-                        factory = (AtnaFactory) clazz.newInstance();
-                    }
-                } catch (Exception e) {
-                    log.debug(" could not factory load class " + cls, e);
-                } finally {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        log.debug("error closing stream.", e);
-                    }
-                }
-            }
-        } else {
-            try {
-                Class clazz = Class.forName(cls);
-                factory = (AtnaFactory) clazz.newInstance();
-            } catch (Exception e) {
-                log.debug(" could not factory load class " + cls, e);
-            }
-        }
-        if (factory == null) {
-            factory = new JaxbAtnaFactory();
-        }
-        return factory;
-    }
 
     public abstract AtnaMessage read(InputStream in) throws AtnaException, IOException;
 
     public abstract void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException;
 
-    public abstract AtnaMessage newMessage(AtnaCode code, EventOutcome outcome);
-
-    public abstract AtnaSource newSource(String sourceId);
-
-    public abstract AtnaParticipant newParticipant(String userId);
-
-    public abstract AtnaMessageParticipant newMessageParticipant(AtnaParticipant participant);
-
-    public abstract AtnaObject newObject(AtnaCode objectIdType, String objectId);
-
-    public abstract AtnaMessageObject newMessageObject(AtnaObject object);
-
-    public abstract AtnaObjectDetail newObjectDetail();
-
-    public abstract AtnaCode newCode(String code);
-
-    public abstract AtnaCode newCode(String code, String displayName, String codeSystemName);
 
     // this should move to a higher level.
     protected void validate(AtnaMessage message) throws AtnaException {
@@ -139,7 +63,7 @@ public abstract class AtnaFactory {
             throw new AtnaException("no audit source defined", AtnaException.AtnaError.NO_AUDIT_SOURCE);
         }
         for (AtnaSource source : sources) {
-            if (source.getSourceID() == null) {
+            if (source.getSourceId() == null) {
                 throw new AtnaException("no audit source id defined", AtnaException.AtnaError.NO_AUDIT_SOURCE_ID);
             }
             codes = source.getSourceTypeCodes();
@@ -154,7 +78,7 @@ public abstract class AtnaFactory {
             throw new AtnaException("no participants defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
         }
         for (AtnaMessageParticipant participant : participants) {
-            if (participant.getParticipant().getUserID() == null) {
+            if (participant.getParticipant().getUserId() == null) {
                 throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT_ID);
             }
             codes = participant.getParticipant().getRoleIDCodes();
@@ -166,14 +90,12 @@ public abstract class AtnaFactory {
         }
         List<AtnaMessageObject> objects = message.getObjects();
         for (AtnaMessageObject object : objects) {
-            if (object.getObject().getObjectID() == null) {
+            if (object.getObject().getObjectId() == null) {
                 throw new AtnaException("no participant object id defined", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID);
             }
-            if (object.getObject().getObjectIDTypeCode() == null || object.getObject().getObjectIDTypeCode().getCode() == null) {
+            if (object.getObject().getObjectIdTypeCode() == null || object.getObject().getObjectIdTypeCode().getCode() == null) {
                 throw new AtnaException("invalid object id type code", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
             }
         }
     }
-
-
 }
