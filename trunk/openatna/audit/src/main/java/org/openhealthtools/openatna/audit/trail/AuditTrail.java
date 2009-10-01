@@ -55,7 +55,6 @@ public class AuditTrail {
             msgs.add(EntityConverter.createMessage(ent));
         }
         return msgs;
-
     }
 
 

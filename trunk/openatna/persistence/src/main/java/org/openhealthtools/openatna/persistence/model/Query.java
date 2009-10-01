@@ -38,6 +38,8 @@ import java.util.*;
 public class Query {
 
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
+    private Target orderBy = null;
+    private boolean asc = true;
 
     public static enum Target {
         MESSAGE,
@@ -149,6 +151,32 @@ public class Query {
 
     public Map<Target, Set<ConditionalValue>> getConditionals() {
         return Collections.unmodifiableMap(map);
+    }
+
+    public Query orderBy(Target target, boolean ascending) {
+        this.orderBy = target;
+        this.asc = ascending;
+        return this;
+    }
+
+    public Query orderAscending(Target target) {
+        return orderBy(target, true);
+    }
+
+    public Query orderDescending(Target target) {
+        return orderBy(target, false);
+    }
+
+    public Target getOrderedBy() {
+        return orderBy;
+    }
+
+    public boolean isOrderedAscending() {
+        return orderBy != null && asc;
+    }
+
+    public boolean isOrderedDescending() {
+        return orderBy != null && !asc;
     }
 
     public static class ConditionalValue {

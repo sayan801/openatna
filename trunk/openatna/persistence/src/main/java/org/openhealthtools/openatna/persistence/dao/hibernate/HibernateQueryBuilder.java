@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.model.Query;
 
@@ -176,6 +177,7 @@ public class HibernateQueryBuilder {
         Criteria c = node.getCriteria();
         Query.Conditional con = value.getConditional();
         Object val = value.getValue();
+
         switch (con) {
             case AFTER:
                 c.add(Restrictions.ge(name, val));
@@ -213,16 +215,37 @@ public class HibernateQueryBuilder {
             default:
                 break;
         }
+        if (node.getOrder() != null) {
+            c.addOrder(node.getOrder());
+        }
     }
 
 
     public Criteria build(Query query) {
         Map<Query.Target, Set<Query.ConditionalValue>> map = query.getConditionals();
         CriteriaNode root = new CriteriaNode(messageCriteria, "MESSAGE");
+        Order order = null;
+        TargetPath ordered = null;
+        boolean asc = query.isOrderedAscending();
+        if (asc) {
+            ordered = createPath(query.getOrderedBy());
+            order = Order.asc(ordered.getTarget());
+        } else {
+            asc = query.isOrderedDescending();
+            if (asc) {
+                ordered = createPath(query.getOrderedBy());
+                order = Order.desc(ordered.getTarget());
+            }
+        }
         Set<Query.Target> targets = map.keySet();
         for (Query.Target target : targets) {
+
             TargetPath tp = createPath(target);
             CriteriaNode node = getNode(root, tp);
+            if (ordered != null && tp.getPaths().equals(ordered.getPaths()) && order != null) {
+                node.setOrder(order);
+                ordered = null;
+            }
             Set<Query.ConditionalValue> values = map.get(target);
             for (Query.ConditionalValue value : values) {
                 createConditional(node, value, tp.getTarget());
@@ -281,10 +304,20 @@ public class HibernateQueryBuilder {
         private Criteria criteria;
         private String criteriaName;
         private List<CriteriaNode> children = new ArrayList<CriteriaNode>();
+        private Order order = null;
+
 
         private CriteriaNode(Criteria criteria, String criteriaName) {
             this.criteria = criteria;
             this.criteriaName = criteriaName;
+        }
+
+        public Order getOrder() {
+            return order;
+        }
+
+        public void setOrder(Order order) {
+            this.order = order;
         }
 
         public Criteria getCriteria() {
