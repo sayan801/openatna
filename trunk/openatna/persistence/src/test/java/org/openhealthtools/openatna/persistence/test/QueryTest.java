@@ -17,46 +17,45 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.trail;
+package org.openhealthtools.openatna.persistence.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.persistence.model.Query;
-import org.openhealthtools.openatna.persistence.util.EntityConverter;
+import org.junit.Test;
 
 /**
- * Provides access to the trail of messages in the DB
- *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 30, 2009: 11:27:42 PM
+ * @created Oct 1, 2009: 12:08:02 PM
  * @date $Date:$ modified by $Author:$
  */
 
-public class AuditTrail {
+public class QueryTest {
 
-    private DaoFactory factory;
+    @Test
+    public void testQuery() {
 
-    public AuditTrail(DaoFactory factory) {
-        this.factory = factory;
-    }
-
-    public List<AtnaMessage> getTrail(Query query) throws AtnaPersistenceException {
-        List<AtnaMessage> msgs = new ArrayList<AtnaMessage>();
-        MessageDao dao = factory.messageDao();
-        List<? extends MessageEntity> ents = dao.getByQuery(query);
-        for (MessageEntity ent : ents) {
-            msgs.add(EntityConverter.createMessage(ent));
+        Query query = new Query();
+        query.notNull(Query.Target.EVENT_OUTCOME)
+                .equals("ITI-8", Query.Target.EVENT_ID_CODE)
+                .equals("IHE Transactions", Query.Target.EVENT_ID_CODE_SYSTEM_NAME)
+                .equals(0, Query.Target.EVENT_OUTCOME)
+                .equals("scmabh", Query.Target.PARTICIPANT_ID);
+        SpringDaoFactory fac = SpringDaoFactory.getFactory();
+        MessageDao dao = fac.messageDao();
+        try {
+            List<? extends MessageEntity> ents = dao.getByQuery(query);
+            for (MessageEntity ent : ents) {
+                System.out.println(ent);
+            }
+        } catch (AtnaPersistenceException e) {
+            e.printStackTrace();
         }
-        return msgs;
 
     }
-
-
 }
