@@ -23,8 +23,8 @@ package org.openhealthtools.openatna.anom;
  * Exception to be thrown if there are errors in the message format or
  * (de)serialization.
  * <p/>
- * This may contain a message, but this is not guarranteed, as the exception may have
- * benn thrown before a message was available.
+ * This may contain a message, but this is not guaranteed, as the exception may have
+ * been thrown before a message was available.
  * <p/>
  * Therefore, the message may be null
  *
@@ -36,7 +36,9 @@ package org.openhealthtools.openatna.anom;
 
 public class AtnaException extends Exception {
 
-    public static enum AtnaError {
+	private static final long serialVersionUID = -8359738447751397693L;
+
+	public static enum AtnaError {
 
         UNDEFINED,
         NO_MESSAGE,

@@ -35,7 +35,9 @@ import java.util.Set;
  */
 public class AtnaSource implements Serializable {
 
-    private Set<AtnaCode> sourceTypeCodes = new HashSet<AtnaCode>();
+	private static final long serialVersionUID = -5837184418641690005L;
+
+	private Set<AtnaCode> sourceTypeCodes = new HashSet<AtnaCode>();
     private String sourceId;
     private String enterpriseSiteId;
 

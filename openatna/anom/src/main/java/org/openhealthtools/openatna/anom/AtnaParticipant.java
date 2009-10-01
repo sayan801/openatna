@@ -35,7 +35,9 @@ import java.util.Set;
  */
 public class AtnaParticipant implements Serializable {
 
-    private Set<AtnaCode> roleIdCodes = new HashSet<AtnaCode>();
+	private static final long serialVersionUID = -3946094452860332441L;
+
+	private Set<AtnaCode> roleIdCodes = new HashSet<AtnaCode>();
     private String userId;
     private String alternativeUserId;
     private String userName;

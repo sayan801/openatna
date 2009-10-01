@@ -33,7 +33,9 @@ import java.io.Serializable;
  */
 public class AtnaCode implements Serializable {
 
-    private String code;
+	private static final long serialVersionUID = 7278092235426844272L;
+
+	private String code;
     private String codeSystem;
     private String codeSystemName;
     private String displayName;

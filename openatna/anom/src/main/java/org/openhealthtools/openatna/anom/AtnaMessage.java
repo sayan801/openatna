@@ -33,7 +33,9 @@ import java.util.*;
 
 public class AtnaMessage implements Serializable {
 
-    private AtnaCode eventCode;
+	private static final long serialVersionUID = -5502378798460439820L;
+
+	private AtnaCode eventCode;
     private Set<AtnaCode> eventTypeCodes = new HashSet<AtnaCode>();
     private EventAction eventActionCode;
     private EventOutcome eventOutcome;
