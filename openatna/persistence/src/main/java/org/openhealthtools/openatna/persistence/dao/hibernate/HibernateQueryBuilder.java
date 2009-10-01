@@ -50,8 +50,6 @@ public class HibernateQueryBuilder {
         List<String> path = new ArrayList<String>();
         String s = null;
         switch (target) {
-            case MESSAGE:
-                break;
             case EVENT_ACTION:
                 s = "eventActionCode";
                 break;
@@ -118,6 +116,17 @@ public class HibernateQueryBuilder {
                 path.add("objectIdTypeCode");
                 s = "codeSystemName";
                 break;
+            case OBJECT_TYPE_ROLE:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectTypeCodeRole";
+                break;
+            case OBJECT_TYPE:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectTypeCode";
+                break;
+
             case PARTICIPANT_ID:
                 path.add("messageParticipants");
                 path.add("participant");
@@ -185,7 +194,7 @@ public class HibernateQueryBuilder {
             case BEFORE:
                 c.add(Restrictions.le(name, val));
                 break;
-            case CASE_SENSITIVE_LIKE:
+            case CASE_INSENSITIVE_LIKE:
                 c.add(Restrictions.ilike(name, val));
                 break;
             case EQUALS:

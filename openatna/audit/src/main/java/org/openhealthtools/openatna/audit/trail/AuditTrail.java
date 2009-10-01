@@ -20,9 +20,10 @@
 package org.openhealthtools.openatna.audit.trail;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.*;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.MessageDao;
@@ -55,6 +56,37 @@ public class AuditTrail {
             msgs.add(EntityConverter.createMessage(ent));
         }
         return msgs;
+    }
+
+
+    public Query between(Date start, Date end, Query query) {
+        return query.between(start, end);
+    }
+
+    public Query eventIdCode(String code, Query query) {
+        return query.equals(code, Query.Target.EVENT_ID_CODE);
+    }
+
+    public Query eventIdCodeSystem(String codeSystem, Query query) {
+        return query.equals(codeSystem, Query.Target.EVENT_ID_CODE_SYSTEM);
+    }
+
+    public Query eventIdCodeSystemName(String codeSystemName, Query query) {
+        return query.equals(codeSystemName, Query.Target.EVENT_ID_CODE_SYSTEM_NAME);
+    }
+
+    public Query eventOutcome(EventOutcome outcome, Query query) {
+        return query.equals(outcome.value(), Query.Target.EVENT_OUTCOME);
+    }
+
+    public Query eventAction(EventAction action, Query query) {
+        return query.equals(action.value(), Query.Target.EVENT_ACTION);
+    }
+
+    public Query patient(String id, Query query) {
+        return query.equals(ObjectType.PERSON.value(), Query.Target.OBJECT_TYPE)
+                .equals(ObjectTypeCodeRole.PATIENT.value(), Query.Target.OBJECT_TYPE_ROLE)
+                .equals(id, Query.Target.OBJECT_ID);
     }
 
 
