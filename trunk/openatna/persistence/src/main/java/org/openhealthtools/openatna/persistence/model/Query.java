@@ -40,6 +40,7 @@ public class Query {
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
 
     public static enum Target {
+        MESSAGE,
         EVENT_TIME,
         EVENT_ID,
         EVENT_TYPE,
@@ -124,8 +125,11 @@ public class Query {
         addConditional(Conditional.NOT_NULL, new Object(), target);
     }
 
+    public Map<Target, Set<ConditionalValue>> getConditionals() {
+        return Collections.unmodifiableMap(map);
+    }
 
-    private static class ConditionalValue {
+    public static class ConditionalValue {
         private Conditional conditional;
         private Object value;
 
