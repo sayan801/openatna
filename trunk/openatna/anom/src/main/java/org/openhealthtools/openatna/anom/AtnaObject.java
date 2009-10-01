@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ParticipantObject
+ * The resource to which the message refers; the resource being acted upon.
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -33,7 +33,9 @@ import java.util.List;
  */
 public class AtnaObject implements Serializable {
 
-    private AtnaCode objectIdTypeCode;
+	private static final long serialVersionUID = 7352385693414253878L;
+
+	private AtnaCode objectIdTypeCode;
     private String objectName;
     private List<String> objectDetailTypes = new ArrayList<String>();
     private ObjectType objectTypeCode;

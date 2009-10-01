@@ -33,7 +33,9 @@ import java.io.Serializable;
  */
 public class AtnaMessageParticipant implements Serializable {
 
-    private AtnaParticipant participant;
+	private static final long serialVersionUID = -4687928894634995258L;
+
+	private AtnaParticipant participant;
     private boolean userIsRequestor;
     private String networkAccessPointId;
     private NetworkAccessPoint networkAccessPointType;

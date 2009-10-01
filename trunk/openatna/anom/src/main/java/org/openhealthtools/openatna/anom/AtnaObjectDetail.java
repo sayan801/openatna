@@ -32,7 +32,9 @@ import java.util.Arrays;
  */
 public class AtnaObjectDetail implements Serializable {
 
-    private String type;
+	private static final long serialVersionUID = -4400971126353837669L;
+
+	private String type;
     private byte[] value;
 
     public String getType() {
