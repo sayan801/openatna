@@ -42,16 +42,26 @@ public class Query {
     public static enum Target {
         MESSAGE,
         EVENT_TIME,
-        EVENT_ID,
-        EVENT_TYPE,
+        EVENT_ID_CODE,
+        EVENT_ID_CODE_SYSTEM,
+        EVENT_ID_CODE_SYSTEM_NAME,
+        EVENT_TYPE_CODE,
+        EVENT_TYPE_CODE_SYSTEM,
+        EVENT_TYPE_CODE_SYSTEM_NAME,
         EVENT_ACTION,
         EVENT_OUTCOME,
         SOURCE_ID,
-        SOURCE_TYPE,
+        SOURCE_TYPE_CODE,
+        SOURCE_TYPE_CODE_SYSTEM,
+        SOURCE_TYPE_CODE_SYSTEM_NAME,
         PARTICIPANT_ID,
-        PARTICIPANT_TYPE,
+        PARTICIPANT_TYPE_CODE,
+        PARTICIPANT_TYPE_CODE_SYSTEM,
+        PARTICIPANT_TYPE_CODE_SYSTEM_NAME,
         OBJECT_ID,
-        OBJECT_TYPE,
+        OBJECT_TYPE_CODE,
+        OBJECT_TYPE_CODE_SYSTEM,
+        OBJECT_TYPE_CODE_SYSTEM_NAME,
         NETWORK_ACCESS_POINT_ID,
         NETWORK_ACCESS_POINT_TYPE;
     }
@@ -70,59 +80,71 @@ public class Query {
         NOT_NULL
     }
 
-    public void addConditional(Conditional c, Object value, Target target) {
+    public Query addConditional(Conditional c, Object value, Target target) {
         Set<ConditionalValue> existing = map.get(target);
         if (existing == null) {
             existing = new HashSet<ConditionalValue>();
         }
         existing.add(new ConditionalValue(c, value));
         map.put(target, existing);
+        return this;
     }
 
-    public void between(Date start, Date end) {
+    public Query between(Date start, Date end) {
         addConditional(Conditional.AFTER, start, Target.EVENT_TIME);
         addConditional(Conditional.BEFORE, end, Target.EVENT_TIME);
+        return this;
     }
 
-    public void before(Date end) {
+    public Query before(Date end) {
         addConditional(Conditional.BEFORE, end, Target.EVENT_TIME);
+        return this;
     }
 
-    public void after(Date start) {
+    public Query after(Date start) {
         addConditional(Conditional.AFTER, start, Target.EVENT_TIME);
+        return this;
     }
 
-    public void like(Object value, Target target, boolean caseSensitive) {
+    public Query like(Object value, Target target, boolean caseSensitive) {
         Conditional c = caseSensitive ? Conditional.CASE_SENSITIVE_LIKE : Conditional.LIKE;
         addConditional(c, value, target);
+        return this;
     }
 
-    public void equals(Object value, Target target) {
+    public Query equals(Object value, Target target) {
         addConditional(Conditional.EQUALS, value, target);
+        return this;
     }
 
-    public void greaterThan(Object value, Target target) {
+    public Query greaterThan(Object value, Target target) {
         addConditional(Conditional.GREATER_THAN, value, target);
+        return this;
     }
 
-    public void lessThan(Object value, Target target) {
+    public Query lessThan(Object value, Target target) {
         addConditional(Conditional.LESS_THAN, value, target);
+        return this;
     }
 
-    public void greaterThanOrEqual(Object value, Target target) {
+    public Query greaterThanOrEqual(Object value, Target target) {
         addConditional(Conditional.GREATER_THAN_OR_EQUAL, value, target);
+        return this;
     }
 
-    public void lessThanOrEqual(Object value, Target target) {
+    public Query lessThanOrEqual(Object value, Target target) {
         addConditional(Conditional.LESS_THAN_OR_EQUAL, value, target);
+        return this;
     }
 
-    public void notEquals(Object value, Target target) {
+    public Query notEquals(Object value, Target target) {
         addConditional(Conditional.NOT_EQUAL, value, target);
+        return this;
     }
 
-    public void notNull(Target target) {
+    public Query notNull(Target target) {
         addConditional(Conditional.NOT_NULL, new Object(), target);
+        return this;
     }
 
     public Map<Target, Set<ConditionalValue>> getConditionals() {

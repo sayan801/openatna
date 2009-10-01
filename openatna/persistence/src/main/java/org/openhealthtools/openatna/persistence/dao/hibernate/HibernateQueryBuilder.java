@@ -60,11 +60,29 @@ public class HibernateQueryBuilder {
             case EVENT_TIME:
                 s = "eventDateTime";
                 break;
-            case EVENT_ID:
-                s = "eventId";
+            case EVENT_ID_CODE:
+                path.add("eventId");
+                s = "code";
                 break;
-            case EVENT_TYPE:
-                s = "eventTypeCodes";
+            case EVENT_ID_CODE_SYSTEM:
+                path.add("eventId");
+                s = "codeSystem";
+                break;
+            case EVENT_ID_CODE_SYSTEM_NAME:
+                path.add("eventId");
+                s = "codeSystemName";
+                break;
+            case EVENT_TYPE_CODE:
+                path.add("eventTypeCodes");
+                s = "code";
+                break;
+            case EVENT_TYPE_CODE_SYSTEM:
+                path.add("eventTypeCodes");
+                s = "codeSystem";
+                break;
+            case EVENT_TYPE_CODE_SYSTEM_NAME:
+                path.add("eventTypeCodes");
+                s = "codeSystemName";
                 break;
             case NETWORK_ACCESS_POINT_ID:
                 path.add("messageParticipants");
@@ -81,30 +99,69 @@ public class HibernateQueryBuilder {
                 path.add("object");
                 s = "objectId";
                 break;
-            case OBJECT_TYPE:
+            case OBJECT_TYPE_CODE:
                 path.add("messageObjects");
                 path.add("object");
-                s = "objectIdTypeCode";
+                path.add("objectIdTypeCode");
+                s = "code";
+                break;
+            case OBJECT_TYPE_CODE_SYSTEM:
+                path.add("messageObjects");
+                path.add("object");
+                path.add("objectIdTypeCode");
+                s = "codeSystem";
+                break;
+            case OBJECT_TYPE_CODE_SYSTEM_NAME:
+                path.add("messageObjects");
+                path.add("object");
+                path.add("objectIdTypeCode");
+                s = "codeSystemName";
                 break;
             case PARTICIPANT_ID:
                 path.add("messageParticipants");
                 path.add("participant");
                 s = "userId";
                 break;
-            case PARTICIPANT_TYPE:
+            case PARTICIPANT_TYPE_CODE:
                 path.add("messageParticipants");
                 path.add("participant");
-                s = "participantTypeCodes";
+                path.add("participantTypeCodes");
+                s = "code";
+                break;
+            case PARTICIPANT_TYPE_CODE_SYSTEM:
+                path.add("messageParticipants");
+                path.add("participant");
+                path.add("participantTypeCodes");
+                s = "codeSystem";
+                break;
+            case PARTICIPANT_TYPE_CODE_SYSTEM_NAME:
+                path.add("messageParticipants");
+                path.add("participant");
+                path.add("participantTypeCodes");
+                s = "codeSystemName";
                 break;
             case SOURCE_ID:
                 path.add("messageSources");
                 path.add("source");
                 s = "sourceId";
                 break;
-            case SOURCE_TYPE:
+            case SOURCE_TYPE_CODE:
                 path.add("messageSources");
                 path.add("source");
-                s = "sourceTypeCodes";
+                path.add("sourceTypeCodes");
+                s = "code";
+                break;
+            case SOURCE_TYPE_CODE_SYSTEM:
+                path.add("messageSources");
+                path.add("source");
+                path.add("sourceTypeCodes");
+                s = "codeSystem";
+                break;
+            case SOURCE_TYPE_CODE_SYSTEM_NAME:
+                path.add("messageSources");
+                path.add("source");
+                path.add("sourceTypeCodes");
+                s = "codeSystemName";
                 break;
             default:
                 break;
