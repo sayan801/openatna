@@ -19,8 +19,11 @@
 
 package org.openhealthtools.openatna.audit.log;
 
-import org.apache.commons.logging.LogFactory;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.syslog.SyslogException;
 
 /**
@@ -36,12 +39,25 @@ public class SyslogErrorLogger {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.SyslogErrorLogger");
 
+    private static List<ErrorHandler<SyslogException>> handlers = new ArrayList<ErrorHandler<SyslogException>>();
+
+    public static void addErrorHandler(ErrorHandler<SyslogException> handler) {
+        handlers.add(handler);
+    }
+
+    private static void invokeHandlers(SyslogException e) {
+        for (ErrorHandler<SyslogException> handler : handlers) {
+            handler.handle(e);
+        }
+    }
+
     public static void log(SyslogException e) {
+        invokeHandlers(e);
         StringBuilder sb = new StringBuilder("===> SYSLOG EXCEPTION THROWN\n");
         byte[] bytes = e.getBytes();
-        if(bytes.length == 0) {
+        if (bytes.length == 0) {
             sb.append("no bytes available.\n");
-        } else if(bytes.length > 8096) {
+        } else if (bytes.length > 8096) {
             sb.append("too many bytes (" + bytes.length + ") to report.\n");
         } else {
             sb.append("bytes are:\n")

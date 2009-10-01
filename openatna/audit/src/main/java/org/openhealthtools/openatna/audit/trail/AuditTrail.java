@@ -17,25 +17,36 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.process;
+package org.openhealthtools.openatna.audit.trail;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.persistence.model.Query;
 
 /**
- * A processor of an AtnaMessage. Processors sit between
- * the message successfully being parsed, and being persisted.
- * processing can involve any activity, typically verification
- * and triggering events based on message content.
+ * Provides access to the trail of messages in the DB
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 13, 2009: 9:06:12 PM
+ * @created Sep 30, 2009: 11:27:42 PM
  * @date $Date:$ modified by $Author:$
  */
 
-public interface AtnaProcessor {
+public class AuditTrail {
 
-    public void process(ProcessContext context) throws Exception;
+    private DaoFactory factory;
 
-    public void error(ProcessContext context);
+    public AuditTrail(DaoFactory factory) {
+        this.factory = factory;
+    }
+
+    public List<AtnaMessage> getTrail(Query query) {
+
+        return new ArrayList<AtnaMessage>();
+    }
 
 
 }

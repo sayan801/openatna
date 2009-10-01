@@ -131,4 +131,15 @@ public class AtnaCode implements Serializable {
         result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
         return result;
     }
+
+    public String toString() {
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" code=").append(getCode())
+                .append(" code system=").append(getCodeSystem())
+                .append(" code system name=").append(getCodeSystemName())
+                .append(" display name=").append(getDisplayName())
+                .append(" original text=").append(getOriginalText())
+                .append("]")
+                .toString();
+    }
 }

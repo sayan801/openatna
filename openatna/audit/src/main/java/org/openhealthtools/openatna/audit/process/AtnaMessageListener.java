@@ -19,16 +19,12 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.audit.process.ProcessorChain;
-import org.openhealthtools.openatna.audit.process.ProcessContext;
-import org.openhealthtools.openatna.audit.AuditException;
-import org.openhealthtools.openatna.audit.log.AuditErrorLogger;
 import org.openhealthtools.openatna.audit.log.SyslogErrorLogger;
+import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 
 /**
  * @author Andrew Harrison
@@ -49,11 +45,7 @@ public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
         LogMessage<AtnaMessage> msg = message.getMessage();
         AtnaMessage atnaMessage = msg.getMessageObject();
         ProcessContext context = new ProcessContext(atnaMessage);
-        try {
-            chain.process(context);
-        } catch (AuditException e) {
-            AuditErrorLogger.log(e);
-        }
+        chain.process(context);
     }
 
     public void exceptionThrown(SyslogException exception) {

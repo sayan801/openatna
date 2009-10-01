@@ -17,25 +17,18 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.process;
+package org.openhealthtools.openatna.audit.log;
 
 /**
- * A processor of an AtnaMessage. Processors sit between
- * the message successfully being parsed, and being persisted.
- * processing can involve any activity, typically verification
- * and triggering events based on message content.
+ * Addded to a Logger, these get called when the log() method of the logger gets called.
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 13, 2009: 9:06:12 PM
+ * @created Oct 1, 2009: 9:30:31 AM
  * @date $Date:$ modified by $Author:$
  */
+public interface ErrorHandler<T extends Throwable> {
 
-public interface AtnaProcessor {
-
-    public void process(ProcessContext context) throws Exception;
-
-    public void error(ProcessContext context);
-
+    public void handle(T t);
 
 }

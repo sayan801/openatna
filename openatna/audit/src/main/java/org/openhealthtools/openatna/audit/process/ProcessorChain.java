@@ -22,8 +22,6 @@ package org.openhealthtools.openatna.audit.process;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openhealthtools.openatna.audit.AuditException;
-
 /**
  * A chain for processors.
  * <p/>
@@ -40,6 +38,10 @@ import org.openhealthtools.openatna.audit.AuditException;
  * <p/>
  * It will also validate the message before passing it to any other processors.
  * To not use the built-in validator, use the constructor with the boolean set to false.
+ * <p/>
+ * If a processor throws an exception during processing, then the chain is unwound (shameless
+ * copy of CXF). The exception is set on the context and each
+ * processor that has been called gets its error(context) method called in reverse order.
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -51,6 +53,7 @@ public class ProcessorChain {
 
     private List<AtnaProcessor> processors = new ArrayList<AtnaProcessor>();
     private int next = 0;
+    private ExceptionProcessor except = new ExceptionProcessor();
     private ValidationProcessor validator = new ValidationProcessor();
     private PersistenceProcessor persist = new PersistenceProcessor();
     private boolean validate;
@@ -81,15 +84,34 @@ public class ProcessorChain {
         return this;
     }
 
-    public void process(ProcessContext context) throws AuditException {
-        if (validate) {
-            validator.process(context);
+    public void process(ProcessContext context) {
+        List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
+        try {
+            except.process(context);
+            done.add(except);
+            if (validate) {
+                validator.process(context);
+                done.add(validator);
+            }
+            for (AtnaProcessor processor : processors) {
+                processor.process(context);
+                done.add(processor);
+            }
+            if (context.getState() != ProcessContext.State.PERSISTED) {
+                persist.process(context);
+                done.add(persist);
+            }
+        } catch (Exception e) {
+            context.setState(ProcessContext.State.ERROR);
+            context.setThrowable(e);
+            rewind(done, context);
         }
-        for (AtnaProcessor processor : processors) {
-            processor.process(context);
-        }
-        if (context.getState() != ProcessContext.State.PERSISTED) {
-            persist.process(context);
+    }
+
+    private void rewind(List<AtnaProcessor> completed, ProcessContext context) {
+        for (int i = completed.size() - 1; i >= 0; i--) {
+            AtnaProcessor ap = completed.get(i);
+            ap.error(context);
         }
     }
 

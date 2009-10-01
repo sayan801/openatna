@@ -19,13 +19,12 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import org.openhealthtools.openatna.audit.AuditException;
 import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.AuditException;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.persistence.util.EntityConverter;
 
 /**
@@ -39,27 +38,22 @@ public class PersistenceProcessor implements AtnaProcessor {
 
     public static final String PROPERTY_DAO_FACTORY = "dao-factory";
 
-    public void process(ProcessContext context) throws AuditException {
+    public void process(ProcessContext context) throws Exception {
         AtnaMessage msg = context.getMessage();
-        if(msg == null) {
+        if (msg == null) {
             throw new AuditException("no message", null, AuditException.AuditError.NULL_MESSAGE);
         }
         MessageEntity entity = EntityConverter.createMessage(msg);
-        if(entity != null) {
+        if (entity != null) {
             DaoFactory fac = context.getProperty(PROPERTY_DAO_FACTORY, DaoFactory.class);
-            if(fac == null) {
+            if (fac == null) {
                 fac = SpringDaoFactory.getFactory();
                 context.putProperty(PROPERTY_DAO_FACTORY, fac);
             }
             MessageDao dao = fac.messageDao();
-            if(dao != null) {
-                try {
-                    dao.save(entity);
-                    context.setState(ProcessContext.State.PERSISTED);
-                } catch (AtnaPersistenceException e) {
-                    throw new AuditException("Error saving entity",
-                            e, msg, AuditException.AuditError.INVALID_MESSAGE);
-                }
+            if (dao != null) {
+                dao.save(entity);
+                context.setState(ProcessContext.State.PERSISTED);
             } else {
                 throw new AuditException("Message Data Access Object could not be created",
                         msg, AuditException.AuditError.INVALID_MESSAGE);
@@ -68,5 +62,8 @@ public class PersistenceProcessor implements AtnaProcessor {
             throw new AuditException("Message Entity could not be created",
                     msg, AuditException.AuditError.INVALID_MESSAGE);
         }
+    }
+
+    public void error(ProcessContext context) {
     }
 }

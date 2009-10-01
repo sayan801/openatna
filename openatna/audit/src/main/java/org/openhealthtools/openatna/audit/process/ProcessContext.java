@@ -19,8 +19,8 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
 
@@ -36,12 +36,14 @@ public class ProcessContext {
     public static enum State {
         INITIALIZED,
         VALIDATED,
-        PERSISTED
+        PERSISTED,
+        ERROR
     }
 
     private AtnaMessage message;
     private State state;
     private Map<String, Object> properties = new HashMap<String, Object>();
+    private Throwable throwable;
 
     public ProcessContext(AtnaMessage message) {
         this.message = message;
@@ -60,6 +62,14 @@ public class ProcessContext {
         this.state = state;
     }
 
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
+    }
+
     public void putProperty(String key, Object value) {
         properties.put(key, value);
     }
@@ -70,8 +80,8 @@ public class ProcessContext {
 
     public <T> T getProperty(String key, Class<? extends T> cls) {
         Object val = properties.get(key);
-        if(val != null && cls.isAssignableFrom(val.getClass())) {
-            return (T)val;
+        if (val != null && cls.isAssignableFrom(val.getClass())) {
+            return (T) val;
         }
         return null;
     }
