@@ -28,13 +28,18 @@ import java.util.*;
  * is the value required by the conditional (not needed for NOT_NULL)
  * and the target represents an element in an AtnaMessage.
  * <p/>
- * Two conditionals of the same type cannot be applied to the same query.
+ * Two conditionals of the same type cannot be applied to the same target.
+ * <p/>
+ * The Object values required to query the targets are all pretty simple types:
+ * basically strings, ints and dates, so this will work over the wire as well (i.e. in XmlSchema
+ * or something similar)
  *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 13, 2009: 1:17:54 PM
  * @date $Date:$ modified by $Author:$
  */
+
 public class Query {
 
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
@@ -42,7 +47,6 @@ public class Query {
     private boolean asc = true;
 
     public static enum Target {
-        MESSAGE,
         EVENT_TIME,
         EVENT_ID_CODE,
         EVENT_ID_CODE_SYSTEM,
@@ -61,9 +65,11 @@ public class Query {
         PARTICIPANT_TYPE_CODE_SYSTEM,
         PARTICIPANT_TYPE_CODE_SYSTEM_NAME,
         OBJECT_ID,
+        OBJECT_TYPE,
         OBJECT_TYPE_CODE,
         OBJECT_TYPE_CODE_SYSTEM,
         OBJECT_TYPE_CODE_SYSTEM_NAME,
+        OBJECT_TYPE_ROLE,
         NETWORK_ACCESS_POINT_ID,
         NETWORK_ACCESS_POINT_TYPE;
     }
@@ -72,7 +78,7 @@ public class Query {
         BEFORE,
         AFTER,
         LIKE,
-        CASE_SENSITIVE_LIKE,
+        CASE_INSENSITIVE_LIKE,
         EQUALS,
         GREATER_THAN,
         LESS_THAN,
@@ -109,7 +115,7 @@ public class Query {
     }
 
     public Query like(Object value, Target target, boolean caseSensitive) {
-        Conditional c = caseSensitive ? Conditional.CASE_SENSITIVE_LIKE : Conditional.LIKE;
+        Conditional c = caseSensitive ? Conditional.CASE_INSENSITIVE_LIKE : Conditional.LIKE;
         addConditional(c, value, target);
         return this;
     }
