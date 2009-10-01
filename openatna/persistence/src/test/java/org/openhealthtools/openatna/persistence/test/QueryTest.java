@@ -45,7 +45,8 @@ public class QueryTest {
                 .equals("ITI-8", Query.Target.EVENT_ID_CODE)
                 .equals("IHE Transactions", Query.Target.EVENT_ID_CODE_SYSTEM_NAME)
                 .equals(0, Query.Target.EVENT_OUTCOME)
-                .equals("scmabh", Query.Target.PARTICIPANT_ID);
+                .equals("scmabh", Query.Target.PARTICIPANT_ID)
+                .orderDescending(Query.Target.EVENT_TIME);
         SpringDaoFactory fac = SpringDaoFactory.getFactory();
         MessageDao dao = fac.messageDao();
         try {
