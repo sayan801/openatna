@@ -26,10 +26,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.*;
-import org.openhealthtools.openatna.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.persistence.model.MessageObjectEntity;
-import org.openhealthtools.openatna.persistence.model.MessageParticipantEntity;
-import org.openhealthtools.openatna.persistence.model.MessageSourceEntity;
+import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.*;
 
 /**
@@ -45,9 +42,9 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         super(MessageEntity.class, sessionFactory);
     }
 
-    /*public Query newQuery() {
-        return new HibernateQuery(criteria());
-    }*/
+    public List<? extends MessageEntity> getByQuery(Query query) throws AtnaPersistenceException {
+        return null;
+    }
 
     public MessageEntity getById(Long id) throws AtnaPersistenceException {
         return get(id);

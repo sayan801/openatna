@@ -24,46 +24,37 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.audit.AuditException;
 
 /**
- * Class Description Here...
+ * This class logs errors that are not specific to ATNA
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 6, 2009: 11:26:56 AM
+ * @created Sep 6, 2009: 11:26:36 AM
  * @date $Date:$ modified by $Author:$
  */
 
-public class AuditErrorLogger {
+public class ErrorLogger {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.AuditErrorLogger");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.ErrorLogger");
 
-    private static List<ErrorHandler<AuditException>> handlers = new ArrayList<ErrorHandler<AuditException>>();
+    private static List<ErrorHandler<Throwable>> handlers = new ArrayList<ErrorHandler<Throwable>>();
 
-    public static void addErrorHandler(ErrorHandler<AuditException> handler) {
+    public static void addErrorHandler(ErrorHandler<Throwable> handler) {
         handlers.add(handler);
     }
 
-    private static void invokeHandlers(AuditException e) {
-        for (ErrorHandler<AuditException> handler : handlers) {
+    private static void invokeHandlers(Throwable e) {
+        for (ErrorHandler<Throwable> handler : handlers) {
             handler.handle(e);
         }
     }
 
-    public static void log(AuditException e) {
+    public static void log(Throwable e) {
         invokeHandlers(e);
-        StringBuilder sb = new StringBuilder("===> ATNA EXCEPTION THROWN\n");
-        AuditException.AuditError error = e.getError();
-        sb.append("** AUDIT ERROR:").append(error).append("**\n");
-        AtnaMessage msg = e.getAtnaMessage();
-        if (msg == null) {
-            sb.append("no message available.\n");
-        } else {
-            sb.append("message is:\n")
-                    .append(msg);
-        }
+        StringBuilder sb = new StringBuilder("===> EXCEPTION THROWN\n");
+        sb.append("** ERROR:").append(e.getClass().getName()).append("**\n");
         log.error(sb.toString(), e);
     }
+
 }

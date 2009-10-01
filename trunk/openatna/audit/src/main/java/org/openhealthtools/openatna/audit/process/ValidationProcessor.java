@@ -22,7 +22,6 @@ package org.openhealthtools.openatna.audit.process;
 import java.util.List;
 
 import org.openhealthtools.openatna.anom.*;
-import org.openhealthtools.openatna.audit.AuditException;
 
 /**
  * Does some basic validation on message contents.
@@ -36,13 +35,12 @@ import org.openhealthtools.openatna.audit.AuditException;
 public class ValidationProcessor implements AtnaProcessor {
 
 
-    public void process(ProcessContext context) throws AuditException {
-        try {
-            validate(context.getMessage());
-            context.setState(ProcessContext.State.VALIDATED);
-        } catch (AtnaException e) {
-            throw new AuditException(e, context.getMessage(), AuditException.AuditError.INVALID_MESSAGE);
-        }
+    public void process(ProcessContext context) throws Exception {
+        validate(context.getMessage());
+        context.setState(ProcessContext.State.VALIDATED);
+    }
+
+    public void error(ProcessContext context) {
     }
 
 

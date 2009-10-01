@@ -19,18 +19,36 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.openhealthtools.openatna.syslog.LogMessage;
-import org.openhealthtools.openatna.syslog.Constants;
-import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.anom.AtnaIOFactory;
 import org.openhealthtools.openatna.anom.AtnaException;
+import org.openhealthtools.openatna.anom.AtnaIOFactory;
+import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.log.AtnaErrorLogger;
+import org.openhealthtools.openatna.syslog.Constants;
+import org.openhealthtools.openatna.syslog.LogMessage;
 
 /**
+ * A wrapper for an AtnaIOFactory that ties in with Syslog.
+ * Designed for subclasses to specify a Factory meaning the log message
+ * can have a default constructor, and one taking just an AtnaMessage:
+ * <p/>
+ * e.g.:
+ * <p/>
+ * class MyLogMessage extends AtnaLogMessage {
+ * public MyLogMessage() {
+ * super(new MyIOFactory());
+ * }
+ * }
+ * <p/>
+ * class MyLogMessage extends AtnaLogMessage {
+ * public MyLogMessage(AtnaMEssage msg) {
+ * super(msg, new MyIOFactory());
+ * }
+ * }
+ *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Sep 30, 2009: 3:04:53 PM
@@ -64,7 +82,7 @@ public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
     }
 
     public void write(OutputStream out) throws IOException {
-        if(getMessageObject() == null) {
+        if (getMessageObject() == null) {
             throw new IOException("no AtnaMessage to write out.");
         }
         try {

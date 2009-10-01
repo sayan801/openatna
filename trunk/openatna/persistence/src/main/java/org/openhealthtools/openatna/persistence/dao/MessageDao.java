@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.persistence.model.Query;
 import org.openhealthtools.openatna.persistence.model.codes.*;
 
 /**
@@ -35,7 +36,7 @@ import org.openhealthtools.openatna.persistence.model.codes.*;
  */
 public interface MessageDao extends Dao {
 
-    //public Query newQuery();
+    public List<? extends MessageEntity> getByQuery(Query query) throws AtnaPersistenceException;
 
     public MessageEntity getById(Long id) throws AtnaPersistenceException;
 

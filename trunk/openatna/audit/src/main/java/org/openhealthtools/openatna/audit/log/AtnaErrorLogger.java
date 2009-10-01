@@ -19,14 +19,16 @@
 
 package org.openhealthtools.openatna.audit.log;
 
-import org.apache.commons.logging.LogFactory;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.anom.AtnaMessage;
 
 /**
  * This class logs errors at the ATNA message parsing layer.
- *
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -38,7 +40,20 @@ public class AtnaErrorLogger {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.AtnaErrorLogger");
 
+    private static List<ErrorHandler<AtnaException>> handlers = new ArrayList<ErrorHandler<AtnaException>>();
+
+    public static void addErrorHandler(ErrorHandler<AtnaException> handler) {
+        handlers.add(handler);
+    }
+
+    private static void invokeHandlers(AtnaException e) {
+        for (ErrorHandler<AtnaException> handler : handlers) {
+            handler.handle(e);
+        }
+    }
+
     public static void log(AtnaException e) {
+        invokeHandlers(e);
         StringBuilder sb = new StringBuilder("===> ATNA EXCEPTION THROWN\n");
         AtnaException.AtnaError error = e.getError();
         sb.append("** ATNA ERROR:").append(error).append("**\n");

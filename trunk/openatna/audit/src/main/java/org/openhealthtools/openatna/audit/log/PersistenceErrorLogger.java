@@ -19,6 +19,9 @@
 
 package org.openhealthtools.openatna.audit.log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
@@ -36,7 +39,20 @@ public class PersistenceErrorLogger {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.PersistenceErrorLogger");
 
+    private static List<ErrorHandler<AtnaPersistenceException>> handlers = new ArrayList<ErrorHandler<AtnaPersistenceException>>();
+
+    public static void addErrorHandler(ErrorHandler<AtnaPersistenceException> handler) {
+        handlers.add(handler);
+    }
+
+    private static void invokeHandlers(AtnaPersistenceException e) {
+        for (ErrorHandler<AtnaPersistenceException> handler : handlers) {
+            handler.handle(e);
+        }
+    }
+
     public static void log(AtnaPersistenceException e) {
+        invokeHandlers(e);
         StringBuilder sb = new StringBuilder("===> ATNA PERSISTENCE EXCEPTION THROWN\n");
         AtnaPersistenceException.PersistenceError error = e.getError();
         sb.append("** PERSISTENCE ERROR:").append(error).append("**\n");
