@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.persistence.dao.hibernate;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
@@ -43,7 +44,9 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
     }
 
     public List<? extends MessageEntity> getByQuery(Query query) throws AtnaPersistenceException {
-        return null;
+        HibernateQueryBuilder builder = new HibernateQueryBuilder(criteria());
+        Criteria c = builder.build(query);
+        return list(c);
     }
 
     public MessageEntity getById(Long id) throws AtnaPersistenceException {
