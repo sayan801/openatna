@@ -43,8 +43,7 @@ import java.util.*;
 public class Query {
 
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
-    private Target orderBy = null;
-    private boolean asc = true;
+    private Ordering ordering = null;
 
     public static enum Target {
         EVENT_TIME,
@@ -160,8 +159,7 @@ public class Query {
     }
 
     public Query orderBy(Target target, boolean ascending) {
-        this.orderBy = target;
-        this.asc = ascending;
+        this.ordering = new Ordering(target, ascending);
         return this;
     }
 
@@ -173,16 +171,26 @@ public class Query {
         return orderBy(target, false);
     }
 
-    public Target getOrderedBy() {
-        return orderBy;
+    public Ordering getOrdering() {
+        return ordering;
     }
 
-    public boolean isOrderedAscending() {
-        return orderBy != null && asc;
-    }
+    public static class Ordering {
+        private Target target;
+        private boolean ascending;
 
-    public boolean isOrderedDescending() {
-        return orderBy != null && !asc;
+        public Ordering(Target target, boolean ascending) {
+            this.target = target;
+            this.ascending = ascending;
+        }
+
+        public Target getTarget() {
+            return target;
+        }
+
+        public boolean isAscending() {
+            return ascending;
+        }
     }
 
     public static class ConditionalValue {

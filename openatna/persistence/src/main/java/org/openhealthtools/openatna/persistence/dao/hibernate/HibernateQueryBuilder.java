@@ -126,7 +126,6 @@ public class HibernateQueryBuilder {
                 path.add("object");
                 s = "objectTypeCode";
                 break;
-
             case PARTICIPANT_ID:
                 path.add("messageParticipants");
                 path.add("participant");
@@ -229,31 +228,32 @@ public class HibernateQueryBuilder {
         }
     }
 
+    private Order createOrder(Query.Ordering ordering, String prop) {
+        if (ordering.isAscending()) {
+            return Order.asc(prop);
+        }
+        return Order.desc(prop);
+    }
+
 
     public Criteria build(Query query) {
         Map<Query.Target, Set<Query.ConditionalValue>> map = query.getConditionals();
         CriteriaNode root = new CriteriaNode(messageCriteria, "MESSAGE");
         Order order = null;
         TargetPath ordered = null;
-        boolean asc = query.isOrderedAscending();
-        if (asc) {
-            ordered = createPath(query.getOrderedBy());
-            order = Order.asc(ordered.getTarget());
-        } else {
-            asc = query.isOrderedDescending();
-            if (asc) {
-                ordered = createPath(query.getOrderedBy());
-                order = Order.desc(ordered.getTarget());
-            }
+        Query.Ordering ordering = query.getOrdering();
+        if (ordering != null) {
+            ordered = createPath(ordering.getTarget());
+            order = createOrder(ordering, ordered.getTarget());
         }
         Set<Query.Target> targets = map.keySet();
         for (Query.Target target : targets) {
 
             TargetPath tp = createPath(target);
             CriteriaNode node = getNode(root, tp);
-            if (ordered != null && tp.getPaths().equals(ordered.getPaths()) && order != null) {
+            if (ordering != null && tp.getPaths().equals(ordered.getPaths())) {
                 node.setOrder(order);
-                ordered = null;
+                ordering = null;
             }
             Set<Query.ConditionalValue> values = map.get(target);
             for (Query.ConditionalValue value : values) {
