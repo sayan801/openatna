@@ -61,7 +61,7 @@ public class ActiveParticipantType {
     @XmlAttribute(name = "UserName")
     protected String userName;
     @XmlAttribute(name = "UserIsRequestor")
-    protected Boolean userIsRequestor;
+    protected Boolean userIsRequestor = Boolean.TRUE;
     @XmlAttribute(name = "NetworkAccessPointID")
     protected String networkAccessPointID;
     @XmlAttribute(name = "NetworkAccessPointTypeCode")

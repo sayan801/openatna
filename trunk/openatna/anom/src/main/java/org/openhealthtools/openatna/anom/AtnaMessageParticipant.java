@@ -33,10 +33,10 @@ import java.io.Serializable;
  */
 public class AtnaMessageParticipant implements Serializable {
 
-	private static final long serialVersionUID = -4687928894634995258L;
+    private static final long serialVersionUID = -4687928894634995258L;
 
-	private AtnaParticipant participant;
-    private boolean userIsRequestor;
+    private AtnaParticipant participant;
+    private boolean userIsRequestor = true;
     private String networkAccessPointId;
     private NetworkAccessPoint networkAccessPointType;
 
@@ -102,5 +102,20 @@ public class AtnaMessageParticipant implements Serializable {
         result = 31 * result + (networkAccessPointId != null ? networkAccessPointId.hashCode() : 0);
         result = 31 * result + (networkAccessPointType != null ? networkAccessPointType.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" participant=")
+                .append(getParticipant())
+                .append(" network access point id=")
+                .append(getNetworkAccessPointId())
+                .append(" network access point type=")
+                .append(getNetworkAccessPointType())
+                .append(" user is requestor=")
+                .append(isUserIsRequestor())
+                .append("]")
+                .toString();
     }
 }

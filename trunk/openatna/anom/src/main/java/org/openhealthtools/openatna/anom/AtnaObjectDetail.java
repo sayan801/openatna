@@ -32,9 +32,9 @@ import java.util.Arrays;
  */
 public class AtnaObjectDetail implements Serializable {
 
-	private static final long serialVersionUID = -4400971126353837669L;
+    private static final long serialVersionUID = -4400971126353837669L;
 
-	private String type;
+    private String type;
     private byte[] value;
 
     public String getType() {
@@ -73,5 +73,20 @@ public class AtnaObjectDetail implements Serializable {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (value != null ? Arrays.hashCode(value) : 0);
         return result;
+    }
+
+    public String toString() {
+        byte[] bytes = getValue();
+        if (bytes == null) {
+            bytes = new byte[0];
+        }
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" type=")
+                .append(getType())
+                .append(" value=")
+                .append(new String(bytes))
+                .append("]")
+                .toString();
     }
 }

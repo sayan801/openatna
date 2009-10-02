@@ -35,9 +35,9 @@ import java.util.List;
  */
 public class AtnaMessageObject implements Serializable {
 
-	private static final long serialVersionUID = -7234777344592455537L;
+    private static final long serialVersionUID = -7234777344592455537L;
 
-	private AtnaObject object;
+    private AtnaObject object;
     private byte[] objectQuery;
     private List<AtnaObjectDetail> objectDetails = new ArrayList<AtnaObjectDetail>();
     private ObjectDataLifecycle objectDataLifeCycle;
@@ -125,5 +125,24 @@ public class AtnaMessageObject implements Serializable {
         result = 31 * result + (objectDetails != null ? objectDetails.hashCode() : 0);
         result = 31 * result + (objectDataLifeCycle != null ? objectDataLifeCycle.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        byte[] bytes = getObjectQuery();
+        if (bytes == null) {
+            bytes = new byte[0];
+        }
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" object=")
+                .append(getObject())
+                .append(" data life cycle=")
+                .append(getObjectDataLifeCycle())
+                .append(" query=")
+                .append(new String(bytes))
+                .append(" details=")
+                .append(getObjectDetails())
+                .append("]")
+                .toString();
     }
 }

@@ -33,9 +33,9 @@ import java.util.*;
 
 public class AtnaMessage implements Serializable {
 
-	private static final long serialVersionUID = -5502378798460439820L;
+    private static final long serialVersionUID = -5502378798460439820L;
 
-	private AtnaCode eventCode;
+    private AtnaCode eventCode;
     private Set<AtnaCode> eventTypeCodes = new HashSet<AtnaCode>();
     private EventAction eventActionCode;
     private EventOutcome eventOutcome;
@@ -175,8 +175,7 @@ public class AtnaMessage implements Serializable {
         if (!(o instanceof AtnaMessage)) return false;
 
         AtnaMessage that = (AtnaMessage) o;
-
-        if (eventActionCode != that.eventActionCode) return false;
+        if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) return false;
         if (eventCode != null ? !eventCode.equals(that.eventCode) : that.eventCode != null) return false;
         if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) return false;
         if (eventOutcome != that.eventOutcome) return false;
@@ -199,5 +198,28 @@ public class AtnaMessage implements Serializable {
         result = 31 * result + (sources != null ? sources.hashCode() : 0);
         result = 31 * result + (objects != null ? objects.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" event code=")
+                .append(getEventCode())
+                .append(" event action=")
+                .append(getEventActionCode())
+                .append(" event outcome=")
+                .append(getEventOutcome())
+                .append(" timestamp=")
+                .append(getEventDateTime())
+                .append(" event type codes=")
+                .append(getEventTypeCodes())
+                .append(" sources=")
+                .append(getSources())
+                .append(" participants=")
+                .append(getParticipants())
+                .append(" objects=")
+                .append(getObjects())
+                .append("]")
+                .toString();
     }
 }

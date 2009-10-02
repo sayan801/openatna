@@ -112,7 +112,9 @@ public class EntityConverter {
     public static AtnaMessageParticipant createMessageParticipant(MessageParticipantEntity entity) {
         AtnaParticipant ap = createParticipant(entity.getParticipant());
         AtnaMessageParticipant p = new AtnaMessageParticipant(ap);
-        p.setUserIsRequestor(entity.isUserIsRequestor());
+        if (entity.isUserIsRequestor() != null) {
+            p.setUserIsRequestor(entity.isUserIsRequestor());
+        }
         if (entity.getNetworkAccessPoint() != null) {
             p.setNetworkAccessPointId(entity.getNetworkAccessPoint().getIdentifier());
             p.setNetworkAccessPointType(NetworkAccessPoint.getAccessPoint(
@@ -152,6 +154,7 @@ public class EntityConverter {
             AtnaObjectDetail detail = new AtnaObjectDetail();
             detail.setType(pair.getType());
             detail.setValue(Base64.decode(pair.getValue()));
+            o.addObjectDetail(detail);
         }
         return o;
     }
@@ -238,7 +241,7 @@ public class EntityConverter {
         List<AtnaCode> codes = participant.getRoleIDCodes();
         for (AtnaCode code : codes) {
             ParticipantCodeEntity ent = (ParticipantCodeEntity) createCode(code,
-                    CodeEntity.CodeType.PARTICIPANT_OBJECT_ID_TYPE);
+                    CodeEntity.CodeType.ACTIVE_PARTICIPANT);
             e.addParticipantTypeCode(ent);
         }
         return e;
