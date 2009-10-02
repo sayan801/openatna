@@ -35,9 +35,9 @@ import java.util.Set;
  */
 public class AtnaSource implements Serializable {
 
-	private static final long serialVersionUID = -5837184418641690005L;
+    private static final long serialVersionUID = -5837184418641690005L;
 
-	private Set<AtnaCode> sourceTypeCodes = new HashSet<AtnaCode>();
+    private Set<AtnaCode> sourceTypeCodes = new HashSet<AtnaCode>();
     private String sourceId;
     private String enterpriseSiteId;
 
@@ -97,5 +97,18 @@ public class AtnaSource implements Serializable {
         result = 31 * result + (sourceId != null ? sourceId.hashCode() : 0);
         result = 31 * result + (enterpriseSiteId != null ? enterpriseSiteId.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" source id=")
+                .append(getSourceId())
+                .append(" enterprise site id=")
+                .append(getEnterpriseSiteId())
+                .append(" source type codes=")
+                .append(getSourceTypeCodes())
+                .append("]")
+                .toString();
     }
 }

@@ -33,9 +33,9 @@ import java.util.List;
  */
 public class AtnaObject implements Serializable {
 
-	private static final long serialVersionUID = 7352385693414253878L;
+    private static final long serialVersionUID = 7352385693414253878L;
 
-	private AtnaCode objectIdTypeCode;
+    private AtnaCode objectIdTypeCode;
     private String objectName;
     private List<String> objectDetailTypes = new ArrayList<String>();
     private ObjectType objectTypeCode;
@@ -144,5 +144,26 @@ public class AtnaObject implements Serializable {
         result = 31 * result + (objectTypeCodeRole != null ? objectTypeCodeRole.hashCode() : 0);
         result = 31 * result + (objectSensitivity != null ? objectSensitivity.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" object id=")
+                .append(getObjectId())
+                .append(" object name=")
+                .append(getObjectName())
+                .append(" object type=")
+                .append(getObjectTypeCode())
+                .append(" object type role=")
+                .append(getObjectTypeCodeRole())
+                .append(" object id type=")
+                .append(getObjectIdTypeCode())
+                .append(" object sensitivity=")
+                .append(getObjectSensitivity())
+                .append(" object detail types=")
+                .append(getObjectDetailTypes())
+                .append("]")
+                .toString();
     }
 }

@@ -35,9 +35,9 @@ import java.util.Set;
  */
 public class AtnaParticipant implements Serializable {
 
-	private static final long serialVersionUID = -3946094452860332441L;
+    private static final long serialVersionUID = -3946094452860332441L;
 
-	private Set<AtnaCode> roleIdCodes = new HashSet<AtnaCode>();
+    private Set<AtnaCode> roleIdCodes = new HashSet<AtnaCode>();
     private String userId;
     private String alternativeUserId;
     private String userName;
@@ -109,5 +109,20 @@ public class AtnaParticipant implements Serializable {
         result = 31 * result + (alternativeUserId != null ? alternativeUserId.hashCode() : 0);
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return new StringBuilder().append("[")
+                .append(getClass().getName())
+                .append(" user id=")
+                .append(getUserId())
+                .append(" user name=")
+                .append(getUserName())
+                .append(" alt user id=")
+                .append(getAlternativeUserId())
+                .append(" role id codes=")
+                .append(getRoleIDCodes())
+                .append("]")
+                .toString();
     }
 }

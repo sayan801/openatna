@@ -53,12 +53,15 @@ public class JaxbTest {
 
         JaxbIOFactory fac = new JaxbIOFactory();
         fac.write(msg, bout);
-        fac.write(msg, System.out);
-        msg = fac.read(new ByteArrayInputStream(bout.toByteArray()));
-
-        assertEquals(msg.getEventOutcome(), EventOutcome.SUCCESS);
-        assertEquals(msg.getSource("source").getSourceTypeCodes().get(0).getCode(), "4");
-        assertEquals(new String(msg.getObject("obj-id").getObjectDetails().get(0).getValue()), "THIS IS DETAIL");
-
+        AtnaMessage other = fac.read(new ByteArrayInputStream(bout.toByteArray()));
+        assertEquals(other.getSources().size(), 1);
+        AtnaSource as = other.getSource("source");
+        assertEquals(as.getSourceId(), "source");
+        AtnaCode code = as.getSourceTypeCodes().get(0);
+        assertEquals(code.getCode(), "4");
+        assertEquals(other.getEventOutcome(), EventOutcome.SUCCESS);
+        assertEquals(other.getSource("source").getSourceTypeCodes().get(0).getCode(), "4");
+        assertEquals(new String(other.getObject("obj-id").getObjectDetails().get(0).getValue()), "THIS IS DETAIL");
+        assertEquals(other, msg);
     }
 }

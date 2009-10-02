@@ -31,7 +31,7 @@ public class MessageParticipantEntity extends PersistentEntity {
     private Long id;
 
     private ParticipantEntity participant;
-    private Boolean userIsRequestor;
+    private Boolean userIsRequestor = Boolean.TRUE;
     private NetworkAccessPointEntity networkAccessPoint;
 
     public MessageParticipantEntity() {
