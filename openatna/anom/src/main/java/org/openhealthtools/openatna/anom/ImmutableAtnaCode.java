@@ -41,11 +41,6 @@ public class ImmutableAtnaCode implements Serializable {
 	protected String displayName;
 	protected String originalText;
 
-	protected ImmutableAtnaCode(String code) {
-		super();
-		this.code = code;
-	}
-
 	/**
 	 * @param code
 	 * @param codeSystem
@@ -55,7 +50,8 @@ public class ImmutableAtnaCode implements Serializable {
 	 */
 	public ImmutableAtnaCode(String code, String codeSystem,
 			String codeSystemName, String displayName, String originalText) {
-		this(code);
+		super();
+		this.code = code;
 		this.codeSystem = codeSystem;
 		this.codeSystemName = codeSystemName;
 		this.displayName = displayName;
