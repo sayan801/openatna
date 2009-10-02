@@ -35,7 +35,7 @@ public class AtnaCode extends ImmutableAtnaCode {
 	private static final long serialVersionUID = -2436873338756275488L;
 
 	public AtnaCode(String code) {
-        super(code);
+        super(code, null, null, null, null);
     }
 
     public AtnaCode(String code, String codeSystem) {
