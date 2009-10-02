@@ -19,7 +19,6 @@
 
 package org.openhealthtools.openatna.anom;
 
-import java.io.Serializable;
 
 /**
  * Coded Value
@@ -31,40 +30,24 @@ import java.io.Serializable;
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public class AtnaCode implements Serializable {
+public class AtnaCode extends ImmutableAtnaCode {
 
-	private static final long serialVersionUID = 7278092235426844272L;
+	private static final long serialVersionUID = -2436873338756275488L;
 
-	private String code;
-    private String codeSystem;
-    private String codeSystemName;
-    private String displayName;
-    private String originalText;
-
-    public AtnaCode(String code) {
-        this.code = code;
+	public AtnaCode(String code) {
+        super(code);
     }
 
     public AtnaCode(String code, String codeSystem) {
-        this.code = code;
-        this.codeSystem = codeSystem;
+    	super(code, codeSystem, null, null, null);
     }
 
     public AtnaCode(String code, String codeSystem, String codeSystemName) {
-        this.code = code;
-        this.codeSystem = codeSystem;
-        this.codeSystemName = codeSystemName;
+        super(code, codeSystem, codeSystemName, null, null);
     }
 
     public AtnaCode(String code, String codeSystem, String codeSystemName, String displayName) {
-        this.code = code;
-        this.codeSystem = codeSystem;
-        this.codeSystemName = codeSystemName;
-        this.displayName = displayName;
-    }
-
-    public String getCode() {
-        return code;
+        super(code, codeSystem, codeSystemName, displayName, null);
     }
 
     public AtnaCode setCode(String code) {
@@ -72,17 +55,9 @@ public class AtnaCode implements Serializable {
         return this;
     }
 
-    public String getCodeSystem() {
-        return codeSystem;
-    }
-
     public AtnaCode setCodeSystem(String codeSystem) {
         this.codeSystem = codeSystem;
         return this;
-    }
-
-    public String getCodeSystemName() {
-        return codeSystemName;
     }
 
     public AtnaCode setCodeSystemName(String codeSystemName) {
@@ -90,58 +65,13 @@ public class AtnaCode implements Serializable {
         return this;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
     public AtnaCode setDisplayName(String displayName) {
         this.displayName = displayName;
         return this;
     }
 
-    public String getOriginalText() {
-        return originalText;
-    }
-
     public AtnaCode setOriginalText(String originalText) {
         this.originalText = originalText;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaCode)) return false;
-
-        AtnaCode atnaCode = (AtnaCode) o;
-
-        if (code != null ? !code.equals(atnaCode.code) : atnaCode.code != null) return false;
-        if (codeSystem != null ? !codeSystem.equals(atnaCode.codeSystem) : atnaCode.codeSystem != null) return false;
-        if (codeSystemName != null ? !codeSystemName.equals(atnaCode.codeSystemName) : atnaCode.codeSystemName != null) return false;
-        if (displayName != null ? !displayName.equals(atnaCode.displayName) : atnaCode.displayName != null) return false;
-        if (originalText != null ? !originalText.equals(atnaCode.originalText) : atnaCode.originalText != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = code != null ? code.hashCode() : 0;
-        result = 31 * result + (codeSystem != null ? codeSystem.hashCode() : 0);
-        result = 31 * result + (codeSystemName != null ? codeSystemName.hashCode() : 0);
-        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
-        result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
-        return result;
-    }
-
-    public String toString() {
-        return new StringBuilder("[").append(getClass().getName())
-                .append(" code=").append(getCode())
-                .append(" code system=").append(getCodeSystem())
-                .append(" code system name=").append(getCodeSystemName())
-                .append(" display name=").append(getDisplayName())
-                .append(" original text=").append(getOriginalText())
-                .append("]")
-                .toString();
     }
 }
