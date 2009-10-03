@@ -126,6 +126,11 @@ public class HibernateQueryBuilder {
                 path.add("object");
                 s = "objectTypeCode";
                 break;
+            case OBJECT_SENSITIVITY:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectSensitivity";
+                break;
             case PARTICIPANT_ID:
                 path.add("messageParticipants");
                 path.add("participant");
@@ -217,44 +222,39 @@ public class HibernateQueryBuilder {
             case NOT_EQUAL:
                 c.add(Restrictions.ne(name, val));
                 break;
-            case NOT_NULL:
-                c.add(Restrictions.isNotNull(name));
+            case NULLITY:
+                Boolean b = (Boolean) val;
+                if (b) {
+                    c.add(Restrictions.isNull(name));
+                } else {
+                    c.add(Restrictions.isNotNull(name));
+                }
+                break;
+            case ORDER:
+                b = (Boolean) val;
+                if (b) {
+                    c.addOrder(Order.asc(name));
+                } else {
+                    c.addOrder(Order.desc(name));
+                }
                 break;
             default:
                 break;
         }
-        if (node.getOrder() != null) {
-            c.addOrder(node.getOrder());
-        }
-    }
 
-    private Order createOrder(Query.Ordering ordering, String prop) {
-        if (ordering.isAscending()) {
-            return Order.asc(prop);
-        }
-        return Order.desc(prop);
     }
 
 
     public Criteria build(Query query) {
         Map<Query.Target, Set<Query.ConditionalValue>> map = query.getConditionals();
         CriteriaNode root = new CriteriaNode(messageCriteria, "MESSAGE");
-        Order order = null;
-        TargetPath ordered = null;
-        Query.Ordering ordering = query.getOrdering();
-        if (ordering != null) {
-            ordered = createPath(ordering.getTarget());
-            order = createOrder(ordering, ordered.getTarget());
-        }
+
         Set<Query.Target> targets = map.keySet();
         for (Query.Target target : targets) {
 
             TargetPath tp = createPath(target);
             CriteriaNode node = getNode(root, tp);
-            if (ordering != null && tp.getPaths().equals(ordered.getPaths())) {
-                node.setOrder(order);
-                ordering = null;
-            }
+
             Set<Query.ConditionalValue> values = map.get(target);
             for (Query.ConditionalValue value : values) {
                 createConditional(node, value, tp.getTarget());
@@ -313,20 +313,11 @@ public class HibernateQueryBuilder {
         private Criteria criteria;
         private String criteriaName;
         private List<CriteriaNode> children = new ArrayList<CriteriaNode>();
-        private Order order = null;
 
 
         private CriteriaNode(Criteria criteria, String criteriaName) {
             this.criteria = criteria;
             this.criteriaName = criteriaName;
-        }
-
-        public Order getOrder() {
-            return order;
-        }
-
-        public void setOrder(Order order) {
-            this.order = order;
         }
 
         public Criteria getCriteria() {
