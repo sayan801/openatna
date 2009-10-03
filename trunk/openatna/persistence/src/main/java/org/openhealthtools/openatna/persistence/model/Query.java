@@ -25,7 +25,13 @@ import java.util.*;
 /**
  * Allows construction of queries based on a few operators.
  * Conditionals are restrictions of some sort. The object value
- * is the value required by the conditional (not needed for NOT_NULL)
+ * is the value required by the conditional.
+ * <p/>
+ * NULLITY takes a Boolean value.
+ * true = the value must be null and false = the value must not be null.
+ * <p/>
+ * ORDER takes a boolean value. True = ordering will be ascending, false = descending.
+ * <p/>
  * and the target represents an element in an AtnaMessage.
  * <p/>
  * Two conditionals of the same type cannot be applied to the same target.
@@ -43,7 +49,6 @@ import java.util.*;
 public class Query {
 
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
-    private Ordering ordering = null;
 
     public static enum Target {
         EVENT_TIME,
@@ -69,6 +74,7 @@ public class Query {
         OBJECT_TYPE_CODE_SYSTEM,
         OBJECT_TYPE_CODE_SYSTEM_NAME,
         OBJECT_TYPE_ROLE,
+        OBJECT_SENSITIVITY,
         NETWORK_ACCESS_POINT_ID,
         NETWORK_ACCESS_POINT_TYPE;
     }
@@ -84,10 +90,14 @@ public class Query {
         GREATER_THAN_OR_EQUAL,
         LESS_THAN_OR_EQUAL,
         NOT_EQUAL,
-        NOT_NULL
+        NULLITY,
+        ORDER
     }
 
     public Query addConditional(Conditional c, Object value, Target target) {
+        if (c == null || value == null || target == null) {
+            throw new IllegalArgumentException("parameters cannot be null");
+        }
         Set<ConditionalValue> existing = map.get(target);
         if (existing == null) {
             existing = new HashSet<ConditionalValue>();
@@ -150,7 +160,7 @@ public class Query {
     }
 
     public Query notNull(Target target) {
-        addConditional(Conditional.NOT_NULL, new Object(), target);
+        addConditional(Conditional.NULLITY, Boolean.FALSE, target);
         return this;
     }
 
@@ -158,39 +168,14 @@ public class Query {
         return Collections.unmodifiableMap(map);
     }
 
-    public Query orderBy(Target target, boolean ascending) {
-        this.ordering = new Ordering(target, ascending);
+    public Query orderAscending(Target target) {
+        addConditional(Conditional.ORDER, Boolean.TRUE, target);
         return this;
     }
 
-    public Query orderAscending(Target target) {
-        return orderBy(target, true);
-    }
-
     public Query orderDescending(Target target) {
-        return orderBy(target, false);
-    }
-
-    public Ordering getOrdering() {
-        return ordering;
-    }
-
-    public static class Ordering {
-        private Target target;
-        private boolean ascending;
-
-        public Ordering(Target target, boolean ascending) {
-            this.target = target;
-            this.ascending = ascending;
-        }
-
-        public Target getTarget() {
-            return target;
-        }
-
-        public boolean isAscending() {
-            return ascending;
-        }
+        addConditional(Conditional.ORDER, Boolean.FALSE, target);
+        return this;
     }
 
     public static class ConditionalValue {
@@ -226,6 +211,24 @@ public class Query {
         public int hashCode() {
             return conditional != null ? conditional.hashCode() : 0;
         }
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(getClass().getName());
+        for (Target target : map.keySet()) {
+            sb.append("[target=").append(target.toString());
+            Set<ConditionalValue> l = map.get(target);
+            for (ConditionalValue value : l) {
+                sb.append(" conditional=")
+                        .append(value.getConditional())
+                        .append(" value=")
+                        .append(value.getValue().toString());
+            }
+            sb.append("]");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
 
