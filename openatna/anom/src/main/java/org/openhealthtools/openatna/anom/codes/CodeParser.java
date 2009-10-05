@@ -69,7 +69,6 @@ public class CodeParser {
                 String systemName = atts.getValue("", "codingScheme");
                 String system = atts.getValue("", "codeSystem");
                 AtnaCode ac = new AtnaCode(currType, code, system, systemName, display, null);
-                System.out.println(ac);
                 CodeRegistry.addCode(ac);
             }
 
