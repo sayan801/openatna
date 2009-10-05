@@ -49,7 +49,6 @@ public class CodeRegistry {
             return new ArrayList<AtnaCode>(l);
         }
         return new ArrayList<AtnaCode>();
-
     }
 
     public static AtnaCode getCode(String type, String code, String system, String systemName) {
