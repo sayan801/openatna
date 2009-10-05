@@ -95,7 +95,7 @@
         <Code code="2" codingScheme="RFC-3881" display="Patient Number"/>
         <Code code="3" codingScheme="RFC-3881" display="Encounter Number"/>
         <Code code="4" codingScheme="RFC-3881" display="Enrollee Number"/>
-        <Code code="5" codingScheme="RFC-3881" display="Social Security Number "/>
+        <Code code="5" codingScheme="RFC-3881" display="Social Security Number"/>
         <Code code="6" codingScheme="RFC-3881" display="Account Number"/>
         <Code code="7" codingScheme="RFC-3881" display="Guarantor Number"/>
         <Code code="8" codingScheme="RFC-3881" display="Report Name"/>

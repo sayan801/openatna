@@ -19,11 +19,8 @@
 
 package org.openhealthtools.openatna.anom.codes;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.net.URL;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -38,28 +35,25 @@ import org.openhealthtools.openatna.anom.AtnaCode;
  * @date $Date:$ modified by $Author:$
  */
 
-public class Parser {
+public class CodeParser {
 
-    private String[] codes;
-
-    public Parser(String... codes) {
-        this.codes = codes;
-    }
-
-    public void parse() throws ParserConfigurationException, SAXException, IOException {
-        javax.xml.parsers.SAXParserFactory spf = SAXParserFactory.newInstance();
-        spf.setValidating(false);
-        javax.xml.parsers.SAXParser sp = spf.newSAXParser();
-        Handler handler = new Handler();
-        for (String code : codes) {
-            File f = new File(code);
-            org.xml.sax.InputSource input = new InputSource(new FileReader(f));
-            input.setSystemId("file://" + f.getAbsolutePath());
-            sp.parse(input, handler);
+    public static void parse(URL... codes) {
+        try {
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            spf.setValidating(false);
+            javax.xml.parsers.SAXParser sp = spf.newSAXParser();
+            Handler handler = new Handler();
+            for (URL code : codes) {
+                InputSource input = new InputSource(code.openStream());
+                input.setSystemId(code.toString());
+                sp.parse(input, handler);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error loading system codes", e);
         }
     }
 
-    private class Handler extends DefaultHandler {
+    private static class Handler extends DefaultHandler {
 
         private String currType = null;
 
