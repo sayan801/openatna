@@ -34,27 +34,40 @@ public class AtnaCode implements Serializable {
 
     private static final long serialVersionUID = -6551206900480914431L;
 
-    protected String code;
-    protected String codeSystem;
-    protected String codeSystemName;
-    protected String displayName;
-    protected String originalText;
+    public static final String EVENT_ID = "EventId";
+    public static final String EVENT_TYPE = "EventType";
+    public static final String OBJECT_ID_TYPE = "ObjectIdType";
+    public static final String SOURCE_TYPE = "SourceType";
+    public static final String PARTICIPANT_ROLE_TYPE = "ParticipantRoleType";
+
+
+    private String code;
+    private String codeSystem;
+    private String codeSystemName;
+    private String displayName;
+    private String originalText;
+    private String codeType;
 
     /**
+     * @param codeType
      * @param code
      * @param codeSystem
      * @param codeSystemName
      * @param displayName
      * @param originalText
      */
-    public AtnaCode(String code, String codeSystem,
+    public AtnaCode(String codeType, String code, String codeSystem,
                     String codeSystemName, String displayName, String originalText) {
-        super();
+        this.codeType = codeType;
         this.code = code;
         this.codeSystem = codeSystem;
         this.codeSystemName = codeSystemName;
         this.displayName = displayName;
         this.originalText = originalText;
+    }
+
+    public String getCodeType() {
+        return codeType;
     }
 
     public String getCode() {
@@ -84,9 +97,10 @@ public class AtnaCode implements Serializable {
 
         AtnaCode atnaCode = (AtnaCode) o;
 
-        if (code != null ? !code.equals(atnaCode.code) : atnaCode.code != null) return false;
+        if (!code.equals(atnaCode.code)) return false;
         if (codeSystem != null ? !codeSystem.equals(atnaCode.codeSystem) : atnaCode.codeSystem != null) return false;
         if (codeSystemName != null ? !codeSystemName.equals(atnaCode.codeSystemName) : atnaCode.codeSystemName != null) return false;
+        if (!codeType.equals(atnaCode.codeType)) return false;
         if (displayName != null ? !displayName.equals(atnaCode.displayName) : atnaCode.displayName != null) return false;
         if (originalText != null ? !originalText.equals(atnaCode.originalText) : atnaCode.originalText != null) return false;
 
@@ -95,16 +109,18 @@ public class AtnaCode implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = code != null ? code.hashCode() : 0;
+        int result = code.hashCode();
         result = 31 * result + (codeSystem != null ? codeSystem.hashCode() : 0);
         result = 31 * result + (codeSystemName != null ? codeSystemName.hashCode() : 0);
         result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
         result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
+        result = 31 * result + codeType.hashCode();
         return result;
     }
 
     public String toString() {
         return new StringBuilder("[").append(getClass().getName())
+                .append(" code type=").append(getCodeType())
                 .append(" code=").append(getCode())
                 .append(" code system=").append(getCodeSystem())
                 .append(" code system name=").append(getCodeSystemName())
@@ -112,5 +128,45 @@ public class AtnaCode implements Serializable {
                 .append(" original text=").append(getOriginalText())
                 .append("]")
                 .toString();
+    }
+
+    public static AtnaCode eventIdCode(String code,
+                                       String codeSystem,
+                                       String codeSystemName,
+                                       String displayName,
+                                       String originalText) {
+        return new AtnaCode(EVENT_ID, code, codeSystem, codeSystemName, displayName, originalText);
+    }
+
+    public static AtnaCode eventTypeCode(String code,
+                                         String codeSystem,
+                                         String codeSystemName,
+                                         String displayName,
+                                         String originalText) {
+        return new AtnaCode(EVENT_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
+    }
+
+    public static AtnaCode objectIdTypeCode(String code,
+                                            String codeSystem,
+                                            String codeSystemName,
+                                            String displayName,
+                                            String originalText) {
+        return new AtnaCode(OBJECT_ID_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
+    }
+
+    public static AtnaCode sourceTypeCode(String code,
+                                          String codeSystem,
+                                          String codeSystemName,
+                                          String displayName,
+                                          String originalText) {
+        return new AtnaCode(SOURCE_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
+    }
+
+    public static AtnaCode participantRoleTypeCode(String code,
+                                                   String codeSystem,
+                                                   String codeSystemName,
+                                                   String displayName,
+                                                   String originalText) {
+        return new AtnaCode(PARTICIPANT_ROLE_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
     }
 }

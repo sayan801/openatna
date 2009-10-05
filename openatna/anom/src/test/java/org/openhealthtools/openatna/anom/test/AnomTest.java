@@ -40,12 +40,12 @@ public class AnomTest {
     @Test
     public void testAnom() throws IOException, AtnaException {
 
-        AtnaCode evtCode = new AtnaCode("abc", "SYS_CODE", "SYS_CODENAME", null, null);
+        AtnaCode evtCode = AtnaCode.eventIdCode("abc", "SYS_CODE", "SYS_CODENAME", null, null);
 
         AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
-        msg.addSource(new AtnaSource("source").addSourceTypeCode(new AtnaCode("4", null, null, null, null)))
+        msg.addSource(new AtnaSource("source").addSourceTypeCode(AtnaCode.sourceTypeCode("4", null, null, null, null)))
                 .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("participant")))
-                .addObject(new AtnaMessageObject(new AtnaObject("obj-id", new AtnaCode("obj-code", null, null, null, null))));
+                .addObject(new AtnaMessageObject(new AtnaObject("obj-id", AtnaCode.objectIdTypeCode("obj-code", null, null, null, null))));
         msg.getObject("obj-id").addObjectDetail(new AtnaObjectDetail().setType("detail").setValue("THIS IS DETAIL".getBytes()));
 
 

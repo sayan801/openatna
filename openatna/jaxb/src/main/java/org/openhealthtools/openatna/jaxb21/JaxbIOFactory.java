@@ -94,9 +94,13 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (evt.getEventID() == null) {
             throw new AtnaException("Message has no event id");
         }
-        AtnaMessage ret = new AtnaMessage(createCode(evt.getEventID()), EventOutcome.getOutcome(evt.getEventOutcome()));
+        AtnaMessage ret = new AtnaMessage(createCode(AtnaCode.EVENT_ID, evt.getEventID()), EventOutcome.getOutcome(evt.getEventOutcome()));
         ret.setEventActionCode(EventAction.getAction(evt.getEventActionCode()));
         ret.setEventDateTime(evt.getEventTime());
+        List<CodedValueType> eventTypes = msg.getEventIdentification().getEventTypeCode();
+        for (CodedValueType type : eventTypes) {
+            ret.addEventTypeCode(createCode(AtnaCode.EVENT_TYPE, type));
+        }
         List<ActiveParticipantType> ps = msg.getActiveParticipant();
         for (ActiveParticipantType p : ps) {
             ret.addParticipant(createParticipant(p));
@@ -129,7 +133,13 @@ public class JaxbIOFactory implements AtnaIOFactory {
         }
         evt.setEventID(createCode(msg.getEventCode()));
         evt.setEventOutcome(msg.getEventOutcome().value());
+        List<AtnaCode> eventTypes = msg.getEventTypeCodes();
+
+        for (AtnaCode eventType : eventTypes) {
+            evt.getEventTypeCode().add(createCode(eventType));
+        }
         ret.setEventIdentification(evt);
+
         List<AtnaMessageObject> objs = msg.getObjects();
         for (AtnaMessageObject obj : objs) {
             ret.getParticipantObjectIdentification().add(createObject(obj));
@@ -152,7 +162,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (obj.getParticipantObjectIDTypeCode() == null) {
             throw new AtnaException("object has no Id type code");
         }
-        AtnaObject ao = new AtnaObject(obj.getParticipantObjectID(), createCode(obj.getParticipantObjectIDTypeCode()));
+        AtnaObject ao = new AtnaObject(obj.getParticipantObjectID(), createCode(AtnaCode.OBJECT_ID_TYPE, obj.getParticipantObjectIDTypeCode()));
         ao.setObjectName(obj.getParticipantObjectName());
         ao.setObjectSensitivity(obj.getParticipantObjectSensitivity());
         if (obj.getParticipantObjectTypeCode() != null) {
@@ -233,7 +243,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         ret.setEnterpriseSiteId(source.getAuditEnterpriseSiteID());
         List<CodedValueType> code = source.getAuditSourceTypeCode();
         for (CodedValueType type : code) {
-            ret.addSourceTypeCode(createCode(type));
+            ret.addSourceTypeCode(createCode(AtnaCode.SOURCE_TYPE, type));
         }
         return ret;
     }
@@ -270,7 +280,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         ap.setAlternativeUserId(participant.getAlternativeUserID());
         List<CodedValueType> codes = participant.getRoleIDCode();
         for (CodedValueType code : codes) {
-            ap.addRoleIDCode(createCode(code));
+            ap.addRoleIDCode(createCode(AtnaCode.PARTICIPANT_ROLE_TYPE, code));
         }
         AtnaMessageParticipant ret = new AtnaMessageParticipant(ap);
         ret.setNetworkAccessPointId(participant.getNetworkAccessPointID());
@@ -281,11 +291,11 @@ public class JaxbIOFactory implements AtnaIOFactory {
         return ret;
     }
 
-    private AtnaCode createCode(CodedValueType code) throws AtnaException {
+    private AtnaCode createCode(String type, CodedValueType code) throws AtnaException {
         if (code.getCode() == null) {
             throw new AtnaException("Code has no code");
         }
-        AtnaCode ac = new AtnaCode(code.getCode(),
+        AtnaCode ac = new AtnaCode(type, code.getCode(),
                 code.getCodeSystem(),
                 code.getCodeSystemName(),
                 code.getDisplayName(),
