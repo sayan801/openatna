@@ -33,7 +33,7 @@ package org.openhealthtools.openatna.anom;
 public class AtnaCodes {
 
     private static AtnaCode newCode(String code, String displayName) {
-        return new AtnaCode(code, null, "RFC-3881", displayName);
+        return new AtnaCode(code, null, "RFC-3881", displayName, null);
     }
 
     /**

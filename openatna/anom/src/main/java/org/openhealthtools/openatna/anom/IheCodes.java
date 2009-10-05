@@ -34,11 +34,11 @@ public class IheCodes {
 
 
     private static AtnaCode newCode(String code, String displayName, String codeSystemName) {
-        return new AtnaCode(code, null, codeSystemName, displayName);
+        return new AtnaCode(code, null, codeSystemName, displayName, null);
     }
 
     private static AtnaCode newCode(String code, String displayName) {
-        return new AtnaCode(code, null, "IHE Transactions", displayName);
+        return new AtnaCode(code, null, "IHE Transactions", displayName, null);
     }
 
     /**

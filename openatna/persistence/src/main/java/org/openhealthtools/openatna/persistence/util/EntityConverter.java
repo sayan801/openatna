@@ -281,8 +281,11 @@ public class EntityConverter {
     }
 
     public static AtnaCode createCode(CodeEntity code) {
-        AtnaCode ac = new AtnaCode(code.getCode(), code.getCodeSystem(), code.getCodeSystemName(), code.getDisplayName());
-        ac.setOriginalText(code.getOriginalText());
+        AtnaCode ac = new AtnaCode(code.getCode(),
+                code.getCodeSystem(),
+                code.getCodeSystemName(),
+                code.getDisplayName(),
+                code.getOriginalText());
         return ac;
     }
 }

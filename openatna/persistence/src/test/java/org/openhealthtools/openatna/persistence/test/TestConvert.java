@@ -113,7 +113,7 @@ public class TestConvert {
         assertEquals(ac.getCode(), "110150");
         assertEquals(ac.getCodeSystemName(), "DCM");
         assertEquals(ac.getCodeSystem(), null);
-        AtnaCode other = new AtnaCode("110150", null, "DCM", null);
+        AtnaCode other = new AtnaCode("110150", null, "DCM", null, null);
         assertEquals(ac, other);
         String napid = amp.getNetworkAccessPointId();
         assertEquals(napid, "192.168.0.1");
