@@ -20,14 +20,14 @@
 package org.openhealthtools.openatna.atnatest;
 
 import java.io.IOException;
+import java.net.URL;
 
-import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
-import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-import org.openhealthtools.openatna.syslog.message.StringLogMessage;
-import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
+import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.audit.process.AtnaMessageListener;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
+import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
 
 /**
  * @author Andrew Harrison
@@ -39,6 +39,9 @@ import org.openhealthtools.openatna.audit.process.ProcessorChain;
 public class BsdServerTest0 {
 
     public static void main(String[] args) {
+
+        URL url = BsdServerTest0.class.getResource("/atnacodes.xml");
+        CodeParser.parse(url);
         UdpServer server = new UdpServer();
         SyslogMessageFactory.registerLogMessage("ATNALOG", JaxbLogMessage.class);
         server.addSyslogListener(new AtnaMessageListener(new ProcessorChain()));
