@@ -73,13 +73,14 @@ public class Parser {
                 }
                 String display = atts.getValue("", "display");
                 String systemName = atts.getValue("", "codingScheme");
-                //String system = atts.getValue("", "codingSystem");
-                AtnaCode ac = new AtnaCode(currType, code, null, systemName, display, null);
+                String system = atts.getValue("", "codeSystem");
+                AtnaCode ac = new AtnaCode(currType, code, system, systemName, display, null);
                 System.out.println(ac);
                 CodeRegistry.addCode(ac);
             }
 
         }
     }
+
 
 }
