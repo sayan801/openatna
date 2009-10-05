@@ -19,17 +19,13 @@
 
 package org.openhealthtools.openatna.atnatest;
 
-import java.net.DatagramPacket;
-import java.net.InetSocketAddress;
-import java.net.DatagramSocket;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 
-import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
-import org.openhealthtools.openatna.syslog.bsd.BsdMessageFactory;
-import org.openhealthtools.openatna.syslog.message.StringLogMessage;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.anom.*;
-import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
+import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
 
 /**
  * @author Andrew Harrison
@@ -57,6 +53,7 @@ public class BsdClientTest0 {
     /**
      * this is taken from test-data.xml in the resource/ dir of persistence module
      * To load these sources, objects etc into the db, run Populate.java in the test/ dir of the persistence module
+     *
      * @return
      */
     protected static AtnaMessage createMessage() {
@@ -64,7 +61,7 @@ public class BsdClientTest0 {
         AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
         msg.addSource(new AtnaSource("cat").addSourceTypeCode(AtnaCodes.sourceTypeIsoOperatingSoftware()))
                 .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("scmabh")))
-                .addObject(new AtnaMessageObject(new AtnaObject("obj1", new AtnaCode("110180", null, "DCM"))));
+                .addObject(new AtnaMessageObject(new AtnaObject("obj1", new AtnaCode(AtnaCode.OBJECT_ID_TYPE, "110180", null, "DCM", null, null))));
         msg.getObject("obj1").addObjectDetail(new AtnaObjectDetail().setType("version").setValue("THIS IS DETAIL".getBytes()));
         return msg;
     }
