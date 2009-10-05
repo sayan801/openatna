@@ -29,17 +29,19 @@ import org.openhealthtools.openatna.persistence.model.Query;
  * <p/>
  * The query string takes the format:
  * <p/>
- * target:condition=value
+ * target condition "value"
  * <p/>
  * e.g.:
  * <p/>
- * EVENT_ACTION EQ="CREATE"
+ * EVENT_ACTION EQUALS "CREATE"
  * <p/>
  * meaning the constraint is on the event action which should equal the CREATE event action.
  * <p/>
  * Constraints are separated by space or nothing.
  * double quotes within a value must be escaped using a backslash.
  * Backslashes must be escaped using a double backslash.
+ * <p/>
+ * Dates should be in ISO8601 format
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -157,13 +159,11 @@ public class QueryString {
      * states:
      * 0 = starting
      * 1 = in target
-     * 2 = after target, before condition ("=" or space char)
+     * 2 = after target, before condition (space char)
      * 3 = in condition
-     * 4 - after condition, before value (":" or space char)
+     * 4 - after condition, before value (""" or space char)
      * 5 - in value
-     * 6 - after value (""" or space char)
      * <p/>
-     * EVENT_ACTION EQ "CREATE"
      *
      * @param queryString
      * @return
@@ -300,6 +300,5 @@ public class QueryString {
 
     }
 
-    private static String q = "EVENT_ID_CODE EQUALS=\"ITI-8\"EVENT_OUTCOME NULLITY=\"false\"EVENT_TIME EQUALS=\"2009-10-03T18:57:33.150+01:00\"EVENT_ID_CODE_SYSTEM_NAME EQUALS=\"IHE Transactions\"OBJECT_SENSITIVITY EQUALS=\"bla \\\",,,^^^^  ble\"PARTICIPANT_ID EQUALS=\"scmabh\"EVENT_ACTION EQUALS=\"CREATE\"";
 
 }
