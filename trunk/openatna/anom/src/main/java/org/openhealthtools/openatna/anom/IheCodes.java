@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.anom;
 
+import org.openhealthtools.openatna.anom.codes.CodeRegistry;
+
 /**
  * org.openhealthtools.openatna.anom.IheCodes
  * <p/>
@@ -33,87 +35,87 @@ package org.openhealthtools.openatna.anom;
 public class IheCodes {
 
 
-    private static AtnaCode newCode(String code, String displayName, String codeSystemName) {
-        return AtnaCode.eventTypeCode(code, null, codeSystemName, displayName, null);
+    private static AtnaCode newCode(String type, String code, String codeSystemName) {
+        return CodeRegistry.getCode(type, code, null, codeSystemName);
     }
 
-    private static AtnaCode newCode(String code, String displayName) {
-        return AtnaCode.eventTypeCode(code, null, "IHE Transactions", displayName, null);
+    private static AtnaCode newCode(String code) {
+        return newCode(AtnaCode.EVENT_TYPE, code, "IHE Transactions");
     }
 
     /**
      * transaction Event type codes
      */
     public static AtnaCode eventTypePatientIdFeed() {
-        return newCode("ITI-8", "Patient Identity Feed");
+        return newCode("ITI-8");
     }
 
     public static AtnaCode eventTypePixUpdateNotification() {
-        return newCode("ITI-10", "PIX Update Notification");
+        return newCode("ITI-10");
     }
 
     public static AtnaCode eventTypePatientDemographicsQuery() {
-        return newCode("ITI-21", "Patient Demographics Query");
+        return newCode("ITI-21");
     }
 
     public static AtnaCode eventTypePatientDemographicsAndVisitQuery() {
-        return newCode("ITI-22", "Patient Demographics and Visit Query");
+        return newCode("ITI-22");
     }
 
     public static AtnaCode eventTypeRegisterDocumentSet() {
-        return newCode("ITI-14", "Register Document Set");
+        return newCode("ITI-14");
     }
 
     public static AtnaCode eventTypeProvideAndRegisterDocumentSet() {
-        return newCode("ITI-15", "Provide and Register Document Set");
+        return newCode("ITI-15");
     }
 
     public static AtnaCode eventTypeRegistrySQLQuery() {
-        return newCode("ITI-16", "Registry SQL Query");
+        return newCode("ITI-16");
     }
 
     public static AtnaCode eventTypeRetrieveDocument() {
-        return newCode("ITI-17", "Retrieve Document");
+        return newCode("ITI-17");
     }
 
     public static AtnaCode eventTypeRegistryStoredQuery() {
-        return newCode("ITI-18", "Registry Stored Query");
+        return newCode("ITI-18");
     }
 
     public static AtnaCode eventTypeDistributeDocumentSetOnMedia() {
-        return newCode("ITI-32", "Distribute Document Set on Media");
+        return newCode("ITI-32");
     }
 
     public static AtnaCode eventTypePatientDemographicsSupplier() {
-        return newCode("ITI-30", "Patient Identity Management");
+        return newCode("ITI-30");
     }
 
     public static AtnaCode eventTypeCrossGatewayQuery() {
-        return newCode("ITI-38", "Cross Gateway Query");
+        return newCode("ITI-38");
     }
 
     public static AtnaCode eventTypeCrossGatewayRetrieve() {
-        return newCode("ITI-39", "Cross Gateway Retrieve");
+        return newCode("ITI-39");
     }
 
     public static AtnaCode eventTypeProvideAndRegisterDocumentSetB() {
-        return newCode("ITI-41", "Provide and Register Document Set-b");
+        return newCode("ITI-41");
     }
 
     public static AtnaCode eventTypeRegisterDocumentSetB() {
-        return newCode("ITI-42", "Register Document Set-b");
+        return newCode("ITI-42");
     }
 
     public static AtnaCode eventTypeRetrieveDocumentSet() {
-        return newCode("ITI-43", "Retrieve Document Set");
+        return newCode("ITI-43");
     }
 
     public static AtnaCode eventTypeRetrieveValueSet() {
-        return newCode("ITI-48", "Retrieve Value Set");
+        return newCode("ITI-48");
     }
 
     public static AtnaCode objectIdTypeSubmissionSet() {
-        return newCode("urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd", "SubmissionSet ClassificationNode", "IHE XDS Metadata");
+        return newCode(AtnaCode.OBJECT_ID_TYPE, "urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd", "IHE XDS Metadata");
     }
 
 
