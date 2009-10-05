@@ -19,59 +19,98 @@
 
 package org.openhealthtools.openatna.anom;
 
+import java.io.Serializable;
 
 /**
- * Coded Value
- * <p/>
- * provides setters for everything bar the code which is required
+ * Immutable Coded Value
  *
  * @author Andrew Harrison
+ * @author Toby Sarver
  * @version $Revision:$
  * @created Sep 5, 2009: 2:37:18 PM
  * @date $Date:$ modified by $Author:$
  */
-public class AtnaCode extends ImmutableAtnaCode {
+public class AtnaCode implements Serializable {
 
-	private static final long serialVersionUID = -2436873338756275488L;
+    private static final long serialVersionUID = -6551206900480914431L;
 
-	public AtnaCode(String code) {
-        super(code, null, null, null, null);
-    }
+    protected String code;
+    protected String codeSystem;
+    protected String codeSystemName;
+    protected String displayName;
+    protected String originalText;
 
-    public AtnaCode(String code, String codeSystem) {
-    	super(code, codeSystem, null, null, null);
-    }
-
-    public AtnaCode(String code, String codeSystem, String codeSystemName) {
-        super(code, codeSystem, codeSystemName, null, null);
-    }
-
-    public AtnaCode(String code, String codeSystem, String codeSystemName, String displayName) {
-        super(code, codeSystem, codeSystemName, displayName, null);
-    }
-
-    public AtnaCode setCode(String code) {
+    /**
+     * @param code
+     * @param codeSystem
+     * @param codeSystemName
+     * @param displayName
+     * @param originalText
+     */
+    public AtnaCode(String code, String codeSystem,
+                    String codeSystemName, String displayName, String originalText) {
+        super();
         this.code = code;
-        return this;
-    }
-
-    public AtnaCode setCodeSystem(String codeSystem) {
         this.codeSystem = codeSystem;
-        return this;
-    }
-
-    public AtnaCode setCodeSystemName(String codeSystemName) {
         this.codeSystemName = codeSystemName;
-        return this;
-    }
-
-    public AtnaCode setDisplayName(String displayName) {
         this.displayName = displayName;
-        return this;
+        this.originalText = originalText;
     }
 
-    public AtnaCode setOriginalText(String originalText) {
-        this.originalText = originalText;
-        return this;
+    public String getCode() {
+        return code;
+    }
+
+    public String getCodeSystem() {
+        return codeSystem;
+    }
+
+    public String getCodeSystemName() {
+        return codeSystemName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getOriginalText() {
+        return originalText;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AtnaCode)) return false;
+
+        AtnaCode atnaCode = (AtnaCode) o;
+
+        if (code != null ? !code.equals(atnaCode.code) : atnaCode.code != null) return false;
+        if (codeSystem != null ? !codeSystem.equals(atnaCode.codeSystem) : atnaCode.codeSystem != null) return false;
+        if (codeSystemName != null ? !codeSystemName.equals(atnaCode.codeSystemName) : atnaCode.codeSystemName != null) return false;
+        if (displayName != null ? !displayName.equals(atnaCode.displayName) : atnaCode.displayName != null) return false;
+        if (originalText != null ? !originalText.equals(atnaCode.originalText) : atnaCode.originalText != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = code != null ? code.hashCode() : 0;
+        result = 31 * result + (codeSystem != null ? codeSystem.hashCode() : 0);
+        result = 31 * result + (codeSystemName != null ? codeSystemName.hashCode() : 0);
+        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
+        result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
+        return result;
+    }
+
+    public String toString() {
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" code=").append(getCode())
+                .append(" code system=").append(getCodeSystem())
+                .append(" code system name=").append(getCodeSystemName())
+                .append(" display name=").append(getDisplayName())
+                .append(" original text=").append(getOriginalText())
+                .append("]")
+                .toString();
     }
 }

@@ -285,9 +285,11 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (code.getCode() == null) {
             throw new AtnaException("Code has no code");
         }
-        AtnaCode ac = new AtnaCode(code.getCode(), code.getCodeSystem(), code.getCodeSystemName());
-        ac.setDisplayName(code.getDisplayName());
-        ac.setOriginalText(code.getOriginalText());
+        AtnaCode ac = new AtnaCode(code.getCode(),
+                code.getCodeSystem(),
+                code.getCodeSystemName(),
+                code.getDisplayName(),
+                code.getOriginalText());
         return ac;
     }
 

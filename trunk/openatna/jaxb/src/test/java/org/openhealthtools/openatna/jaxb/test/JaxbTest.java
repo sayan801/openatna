@@ -41,12 +41,12 @@ public class JaxbTest {
     @Test
     public void testAnom() throws IOException, AtnaException {
 
-        AtnaCode evtCode = new AtnaCode("abc", "SYS_CODE", "SYS_CODENAME");
+        AtnaCode evtCode = new ImmutableAtnaCode("abc", "SYS_CODE", "SYS_CODENAME");
 
         AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
-        msg.addSource(new AtnaSource("source").addSourceTypeCode(new AtnaCode("4")))
+        msg.addSource(new AtnaSource("source").addSourceTypeCode(new ImmutableAtnaCode("4")))
                 .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("participant")))
-                .addObject(new AtnaMessageObject(new AtnaObject("obj-id", new AtnaCode("obj-code"))));
+                .addObject(new AtnaMessageObject(new AtnaObject("obj-id", new ImmutableAtnaCode("obj-code"))));
         msg.getObject("obj-id").addObjectDetail(new AtnaObjectDetail().setType("detail").setValue("THIS IS DETAIL".getBytes()));
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
