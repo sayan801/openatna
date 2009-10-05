@@ -281,7 +281,17 @@ public class EntityConverter {
     }
 
     public static AtnaCode createCode(CodeEntity code) {
-        AtnaCode ac = new AtnaCode(code.getCode(),
+        String type = AtnaCode.EVENT_ID;
+        if (code instanceof EventTypeCodeEntity) {
+            type = AtnaCode.EVENT_TYPE;
+        } else if (code instanceof ParticipantCodeEntity) {
+            type = AtnaCode.PARTICIPANT_ROLE_TYPE;
+        } else if (code instanceof SourceCodeEntity) {
+            type = AtnaCode.SOURCE_TYPE;
+        } else if (code instanceof ObjectIdTypeCodeEntity) {
+            type = AtnaCode.OBJECT_ID_TYPE;
+        }
+        AtnaCode ac = new AtnaCode(type, code.getCode(),
                 code.getCodeSystem(),
                 code.getCodeSystemName(),
                 code.getDisplayName(),

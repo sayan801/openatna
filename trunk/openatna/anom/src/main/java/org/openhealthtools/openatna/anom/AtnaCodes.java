@@ -32,8 +32,12 @@ package org.openhealthtools.openatna.anom;
 
 public class AtnaCodes {
 
-    private static AtnaCode newCode(String code, String displayName) {
-        return new AtnaCode(code, null, "RFC-3881", displayName, null);
+    private static AtnaCode newSourceTypeCode(String code, String displayName) {
+        return AtnaCode.sourceTypeCode(code, null, "RFC-3881", displayName, null);
+    }
+
+    private static AtnaCode newParticipantCode(String code, String displayName) {
+        return AtnaCode.participantRoleTypeCode(code, null, "RFC-3881", displayName, null);
     }
 
     /**
@@ -55,39 +59,39 @@ public class AtnaCodes {
 
 
     public static AtnaCode sourceTypeEndUserInterface() {
-        return newCode("1", "End User Display Device");
+        return newSourceTypeCode("1", "End User Display Device");
     }
 
     public static AtnaCode sourceTypeInstrument() {
-        return newCode("2", "Data Acquisition Device");
+        return newSourceTypeCode("2", "Data Acquisition Device");
     }
 
     public static AtnaCode sourceTypeWebServerProcess() {
-        return newCode("3", "Web Server Process");
+        return newSourceTypeCode("3", "Web Server Process");
     }
 
     public static AtnaCode sourceTypeAppServerProcess() {
-        return newCode("4", "Application Server Process");
+        return newSourceTypeCode("4", "Application Server Process");
     }
 
     public static AtnaCode sourceTypeDatabaseServerProcess() {
-        return newCode("5", "Database Server Process");
+        return newSourceTypeCode("5", "Database Server Process");
     }
 
     public static AtnaCode sourceTypeSecurityServer() {
-        return newCode("6", "Security Server");
+        return newSourceTypeCode("6", "Security Server");
     }
 
     public static AtnaCode sourceTypeIsoNetworkComponent() {
-        return newCode("7", "Network Component");
+        return newSourceTypeCode("7", "Network Component");
     }
 
     public static AtnaCode sourceTypeIsoOperatingSoftware() {
-        return newCode("8", "Operating Software");
+        return newSourceTypeCode("8", "Operating Software");
     }
 
     public static AtnaCode sourceTypeUnknown() {
-        return newCode("9", "External Source");
+        return newSourceTypeCode("9", "External Source");
     }
 
     /**
@@ -113,50 +117,50 @@ public class AtnaCodes {
      */
 
     public static AtnaCode objectIdTypeMedicalRecordNumber() {
-        return newCode("1", "Medical Record Number");
+        return newParticipantCode("1", "Medical Record Number");
     }
 
     public static AtnaCode objectIdTypePatientNumber() {
-        return newCode("2", "Patient Number");
+        return newParticipantCode("2", "Patient Number");
     }
 
     public static AtnaCode objectIdTypeEncounterNumber() {
-        return newCode("3", "Encounter Number");
+        return newParticipantCode("3", "Encounter Number");
     }
 
     public static AtnaCode objectIdTypeEnrolleeNumber() {
-        return newCode("4", "Enrollee Number");
+        return newParticipantCode("4", "Enrollee Number");
     }
 
     public static AtnaCode objectIdTypeSSNumber() {
-        return newCode("5", "Social Security Number ");
+        return newParticipantCode("5", "Social Security Number ");
     }
 
     public static AtnaCode objectIdTypeAccountNumber() {
-        return newCode("6", "Account Number");
+        return newParticipantCode("6", "Account Number");
     }
 
     public static AtnaCode objectIdTypeGuarantorNumber() {
-        return newCode("7", "Guarantor Number");
+        return newParticipantCode("7", "Guarantor Number");
     }
 
     public static AtnaCode objectIdTypeReportName() {
-        return newCode("8", "Report Name");
+        return newParticipantCode("8", "Report Name");
     }
 
     public static AtnaCode objectIdTypeReportNumber() {
-        return newCode("9", "Report Nunber");
+        return newParticipantCode("9", "Report Nunber");
     }
 
     public static AtnaCode objectIdTypeSearchCriteria() {
-        return newCode("10", "Search Criteria");
+        return newParticipantCode("10", "Search Criteria");
     }
 
     public static AtnaCode objectIdTypeUserId() {
-        return newCode("11", "User Identifier");
+        return newParticipantCode("11", "User Identifier");
     }
 
     public static AtnaCode objectIdUri() {
-        return newCode("12", "URI");
+        return newParticipantCode("12", "URI");
     }
 }
