@@ -19,8 +19,7 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A chain for processors.
@@ -57,6 +56,7 @@ public class ProcessorChain {
     private ValidationProcessor validator = new ValidationProcessor();
     private PersistenceProcessor persist = new PersistenceProcessor();
     private boolean validate;
+    private Map<String, Object> contextProperties = new HashMap<String, Object>();
 
     public ProcessorChain(boolean validate) {
         this.validate = validate;
@@ -85,6 +85,7 @@ public class ProcessorChain {
     }
 
     public void process(ProcessContext context) {
+        context.addProperties(Collections.unmodifiableMap(contextProperties));
         List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
         try {
             except.process(context);
@@ -113,6 +114,27 @@ public class ProcessorChain {
             AtnaProcessor ap = completed.get(i);
             ap.error(context);
         }
+    }
+
+    public void putProperty(String key, Object value) {
+        contextProperties.put(key, value);
+    }
+
+    public void putProperties(Map<String, Object> props) {
+        contextProperties.putAll(props);
+    }
+
+    public Object getProperty(String key) {
+        return contextProperties.get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(String key, Class<? extends T> cls) {
+        Object val = contextProperties.get(key);
+        if (val != null && cls.isAssignableFrom(val.getClass())) {
+            return (T) val;
+        }
+        return null;
     }
 
 }

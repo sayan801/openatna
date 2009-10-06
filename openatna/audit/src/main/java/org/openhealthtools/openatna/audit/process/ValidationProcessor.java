@@ -25,6 +25,8 @@ import org.openhealthtools.openatna.anom.*;
 
 /**
  * Does some basic validation on message contents.
+ * <p/>
+ * TODO - validate relationships between
  *
  * @author Andrew Harrison
  * @version $Revision:$

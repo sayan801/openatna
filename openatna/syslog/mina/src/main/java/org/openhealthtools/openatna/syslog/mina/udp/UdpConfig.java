@@ -19,9 +19,9 @@
 
 package org.openhealthtools.openatna.syslog.mina.udp;
 
-import org.openhealthtools.openatna.syslog.transport.TransportConfig;
-
 import java.util.Map;
+
+import org.openhealthtools.openatna.syslog.transport.TransportConfig;
 
 /**
  * Class Description Here...
@@ -46,7 +46,7 @@ public class UdpConfig extends TransportConfig {
     public int getPort() {
         Integer port = (Integer) getProperty("port");
         if (port == null) {
-            port = 8443;
+            port = 1741;
         }
         return port;
     }

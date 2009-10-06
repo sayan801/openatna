@@ -177,9 +177,6 @@
         <source id="s1" sourceId="cat">
             <sourceType ref="RFC-3881-8"/>
         </source>
-        <source id="s2" sourceId="ls">
-            <sourceType ref="RFC-3881-8"/>
-        </source>
     </sources>
 
     <participants>

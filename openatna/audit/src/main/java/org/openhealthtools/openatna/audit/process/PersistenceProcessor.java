@@ -21,6 +21,7 @@ package org.openhealthtools.openatna.audit.process;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.AuditException;
+import org.openhealthtools.openatna.audit.AuditService;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
@@ -36,8 +37,6 @@ import org.openhealthtools.openatna.persistence.util.EntityConverter;
 
 public class PersistenceProcessor implements AtnaProcessor {
 
-    public static final String PROPERTY_DAO_FACTORY = "dao-factory";
-
     public void process(ProcessContext context) throws Exception {
         AtnaMessage msg = context.getMessage();
         if (msg == null) {
@@ -45,10 +44,10 @@ public class PersistenceProcessor implements AtnaProcessor {
         }
         MessageEntity entity = EntityConverter.createMessage(msg);
         if (entity != null) {
-            DaoFactory fac = context.getProperty(PROPERTY_DAO_FACTORY, DaoFactory.class);
+            DaoFactory fac = context.getProperty(AuditService.PROPERTY_DAO_FACTORY, DaoFactory.class);
             if (fac == null) {
                 fac = SpringDaoFactory.getFactory();
-                context.putProperty(PROPERTY_DAO_FACTORY, fac);
+                context.putProperty(AuditService.PROPERTY_DAO_FACTORY, fac);
             }
             MessageDao dao = fac.messageDao();
             if (dao != null) {

@@ -77,7 +77,7 @@ public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
         try {
             message = factory.read(in);
         } catch (AtnaException e) {
-            AtnaErrorLogger.log(e);
+            processReadError(e);
         }
     }
 
@@ -88,11 +88,21 @@ public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
         try {
             factory.write(getMessageObject(), out);
         } catch (AtnaException e) {
-            AtnaErrorLogger.log(e);
+            processWriteError(e);
         }
     }
 
     public AtnaMessage getMessageObject() {
         return message;
     }
+
+
+    protected void processReadError(AtnaException e) {
+        AtnaErrorLogger.log(e);
+    }
+
+    protected void processWriteError(AtnaException e) {
+        AtnaErrorLogger.log(e);
+    }
+
 }
