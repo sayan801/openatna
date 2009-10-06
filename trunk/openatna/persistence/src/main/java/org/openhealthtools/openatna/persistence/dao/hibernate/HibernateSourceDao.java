@@ -19,16 +19,17 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
+import java.util.List;
+import java.util.Set;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.persistence.dao.SourceDao;
 import org.openhealthtools.openatna.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Andrew Harrison
@@ -68,7 +69,11 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
             CodeDao cd = SpringDaoFactory.getFactory().codeDao();
             for (SourceCodeEntity code : codes) {
                 codes.remove(code);
-                code = (SourceCodeEntity) cd.find(code);
+                CodeEntity ce = cd.find(code);
+                if (!(ce instanceof SourceCodeEntity)) {
+                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                }
+                code = (SourceCodeEntity) ce;
                 if (code.getVersion() != null) {
                     codes.add(code);
                 } else {

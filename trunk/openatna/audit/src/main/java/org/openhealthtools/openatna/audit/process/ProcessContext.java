@@ -70,6 +70,10 @@ public class ProcessContext {
         this.throwable = throwable;
     }
 
+    public void addProperties(Map<String, Object> properties) {
+        this.properties.putAll(properties);
+    }
+
     public void putProperty(String key, Object value) {
         properties.put(key, value);
     }
@@ -78,6 +82,7 @@ public class ProcessContext {
         return properties.get(key);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getProperty(String key, Class<? extends T> cls) {
         Object val = properties.get(key);
         if (val != null && cls.isAssignableFrom(val.getClass())) {

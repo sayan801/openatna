@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.URL;
 
 import org.openhealthtools.openatna.anom.*;
+import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
 
 /**
@@ -37,12 +39,17 @@ import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
 public class BsdClientTest0 {
 
     public static void main(String[] args) {
+        URL defCodes = Thread.currentThread().getContextClassLoader().getResource("atnacodes.xml");
+        if (defCodes != null) {
+        }
+        CodeParser.parse(defCodes);
+
         try {
             BsdMessage m = new BsdMessage(10, 5, "Oct  1 22:14:15", "127.0.0.1", new JaxbLogMessage(createMessage()), "ATNALOG");
-            System.out.println("message:");
+            System.out.println("BsdClientTest0.main message:");
             m.write(System.out);
             byte[] bytes = m.toByteArray();
-            DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 1513));
+            DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 1741));
             DatagramSocket socket = new DatagramSocket();
             socket.send(packet);
         } catch (IOException e) {

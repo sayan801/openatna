@@ -43,6 +43,11 @@ public class AtnaPersistenceException extends Exception {
          * no mathcing code in DB
          */
         NON_EXISTENT_CODE,
+
+        /**
+         * a matching code exists, but it is of the wrong type
+         */
+        WRONG_CODE_TYPE,
         /**
          * no matching network access point in DB
          */
