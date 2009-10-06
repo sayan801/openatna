@@ -28,6 +28,7 @@ import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.audit.process.AtnaMessageListener;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
@@ -45,8 +46,9 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 public class AuditService {
 
     public static final String PROPERTY_DAO_FACTORY = AuditService.class.getName() + ".dao.factory";
+    public static final String PROPERTY_PERSISTENCE_POLICIES = AuditService.class.getName() + ".persistence.policies";
 
-    private AuditPolicy policy = new AuditPolicy();
+    private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private Class<? extends LogMessage> logMessageClass;
     private SyslogServer syslogServer;
     private Set<URL> codeUrls = new HashSet<URL>();
@@ -67,7 +69,7 @@ public class AuditService {
         CodeParser.parse(getCodeUrls());
         SyslogMessageFactory.setDefaultLogMessage(getLogMessageClass());
         ProcessorChain chain = new ProcessorChain();
-        chain.putProperties(policy);
+        chain.putProperty(PROPERTY_PERSISTENCE_POLICIES, persistencePolicies);
         chain.putProperty(PROPERTY_DAO_FACTORY, daoFactory);
         syslogServer.addSyslogListener(new AtnaMessageListener(chain));
         syslogServer.start();
@@ -104,12 +106,12 @@ public class AuditService {
         this.logMessageClass = logMessageClass;
     }
 
-    public AuditPolicy getPolicy() {
-        return policy;
+    public PersistencePolicies getPersistencePolicies() {
+        return persistencePolicies;
     }
 
-    public void setPolicy(AuditPolicy policy) {
-        this.policy = policy;
+    public void setPersistencePolicies(PersistencePolicies persistencePolicies) {
+        this.persistencePolicies = persistencePolicies;
     }
 
     public DaoFactory getDaoFactory() {

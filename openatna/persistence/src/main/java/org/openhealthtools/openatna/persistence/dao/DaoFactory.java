@@ -35,16 +35,8 @@ public interface DaoFactory {
 
     public MessageDao messageDao();
 
-    public MessageObjectDao messageObjectDao();
-
-    public MessageParticipantDao messageParticipantDao();
-
-    public MessageSourceDao messageSourceDao();
-
     public SourceDao sourceDao();
 
     public ObjectDao objectDao();
-
-    public ObjectDetailDao objectDetailDao();
 
 }

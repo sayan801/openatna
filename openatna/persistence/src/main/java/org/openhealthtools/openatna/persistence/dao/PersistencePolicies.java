@@ -17,73 +17,80 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit;
+package org.openhealthtools.openatna.persistence.dao;
 
 import java.util.HashMap;
 
 /**
- * Policies related to receiving messages, what to allow etc.
- *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Oct 5, 2009: 9:46:41 PM
+ * @created Oct 6, 2009: 6:03:28 PM
  * @date $Date:$ modified by $Author:$
  */
 
-public class AuditPolicy extends HashMap<String, Object> {
+public class PersistencePolicies extends HashMap<String, Object> {
 
-    private boolean allowNewCodes;
-    private boolean allowNewNetworkAccessPoints;
-    private boolean allowNewParticipants;
-    private boolean allowNewSources;
-    private boolean allowNewObjects;
-    private boolean allowUnknownDetailTypes;
+
+    public static final String ALLOW_NEW_CODES = "allowNewCodes";
+    public static final String ALLOW_NEW_NETWORK_POINTS = "allowNewNetworkAccessPoints";
+    public static final String ALLOW_NEW_PARTICIPANTS = "allowNewParticipants";
+    public static final String ALLOW_NEW_SOURCES = "allowNewSources";
+    public static final String ALLOW_NEW_OBJECTS = "allowNewObjects";
+    public static final String ALLOW_UNKNOWN_DETAIL_TYPES = "allowUnknownDetailTypes";
+
 
     public boolean isAllowNewCodes() {
-        return allowNewCodes;
+        Object o = get(ALLOW_NEW_CODES);
+        return o != null && o.equals(Boolean.TRUE);
     }
 
     public void setAllowNewCodes(boolean allowNewCodes) {
-        this.allowNewCodes = allowNewCodes;
+        put(ALLOW_NEW_CODES, allowNewCodes);
     }
 
     public boolean isAllowNewNetworkAccessPoints() {
-        return allowNewNetworkAccessPoints;
+        Object o = get(ALLOW_NEW_NETWORK_POINTS);
+        return o != null && o.equals(Boolean.TRUE);
     }
 
     public void setAllowNewNetworkAccessPoints(boolean allowNewNetworkAccessPoints) {
-        this.allowNewNetworkAccessPoints = allowNewNetworkAccessPoints;
+        put(ALLOW_NEW_NETWORK_POINTS, allowNewNetworkAccessPoints);
     }
 
     public boolean isAllowNewParticipants() {
-        return allowNewParticipants;
+        Object o = get(ALLOW_NEW_PARTICIPANTS);
+        return o != null && o.equals(Boolean.TRUE);
     }
 
     public void setAllowNewParticipants(boolean allowNewParticipants) {
-        this.allowNewParticipants = allowNewParticipants;
+        put(ALLOW_NEW_PARTICIPANTS, allowNewParticipants);
     }
 
     public boolean isAllowNewSources() {
-        return allowNewSources;
+        Object o = get(ALLOW_NEW_SOURCES);
+        return o != null && o.equals(Boolean.TRUE);
     }
 
     public void setAllowNewSources(boolean allowNewSources) {
-        this.allowNewSources = allowNewSources;
+        put(ALLOW_NEW_SOURCES, allowNewSources);
     }
 
     public boolean isAllowNewObjects() {
-        return allowNewObjects;
+        Object o = get(ALLOW_NEW_OBJECTS);
+        return o != null && o.equals(Boolean.TRUE);
     }
 
     public void setAllowNewObjects(boolean allowNewObjects) {
-        this.allowNewObjects = allowNewObjects;
+        put(ALLOW_NEW_OBJECTS, allowNewObjects);
     }
 
     public boolean isAllowUnknownDetailTypes() {
-        return allowUnknownDetailTypes;
+        Object o = get(ALLOW_UNKNOWN_DETAIL_TYPES);
+        return o != null && o.equals(Boolean.TRUE);
     }
 
     public void setAllowUnknownDetailTypes(boolean allowUnknownDetailTypes) {
-        this.allowUnknownDetailTypes = allowUnknownDetailTypes;
+        put(ALLOW_UNKNOWN_DETAIL_TYPES, allowUnknownDetailTypes);
     }
+
 }

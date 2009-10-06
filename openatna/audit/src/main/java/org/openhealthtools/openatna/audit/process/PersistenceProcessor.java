@@ -24,6 +24,7 @@ import org.openhealthtools.openatna.audit.AuditException;
 import org.openhealthtools.openatna.audit.AuditService;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.persistence.util.EntityConverter;
@@ -44,14 +45,19 @@ public class PersistenceProcessor implements AtnaProcessor {
         }
         MessageEntity entity = EntityConverter.createMessage(msg);
         if (entity != null) {
-            DaoFactory fac = context.getProperty(AuditService.PROPERTY_DAO_FACTORY, DaoFactory.class);
+            DaoFactory fac = context.getProperty(AuditService.PROPERTY_DAO_FACTORY,
+                    DaoFactory.class);
             if (fac == null) {
                 fac = SpringDaoFactory.getFactory();
-                context.putProperty(AuditService.PROPERTY_DAO_FACTORY, fac);
+            }
+            PersistencePolicies pp = context.getProperty(AuditService.PROPERTY_PERSISTENCE_POLICIES,
+                    PersistencePolicies.class);
+            if (pp == null) {
+                pp = new PersistencePolicies();
             }
             MessageDao dao = fac.messageDao();
             if (dao != null) {
-                dao.save(entity);
+                dao.save(entity, pp);
                 context.setState(ProcessContext.State.PERSISTED);
             } else {
                 throw new AuditException("Message Data Access Object could not be created",
@@ -65,4 +71,5 @@ public class PersistenceProcessor implements AtnaProcessor {
 
     public void error(ProcessContext context) {
     }
+
 }

@@ -61,7 +61,7 @@
     </bean>
 
 
-    <!-- transactions for beans. saves using spring annotations, i.e. string deps in classes-->
+    <!-- transactions for beans. saves using spring annotations, i.e. spring deps in classes-->
     <!-- Transaction Interceptor matches ALL methods!!-->
     <bean id="txAttributeSource"
           class="org.springframework.transaction.interceptor.MatchAlwaysTransactionAttributeSource">
@@ -83,14 +83,10 @@
         <property name="beanNames">
             <list>
                 <idref local="codeDao"/>
-                <idref local="participantDao"/>
                 <idref local="networkAccessPointDao"/>
+                <idref local="participantDao"/>
                 <idref local="objectDao"/>
                 <idref local="sourceDao"/>
-                <idref local="objectDetailDao"/>
-                <idref local="messageObjectDao"/>
-                <idref local="messageParticipantDao"/>
-                <idref local="messageSourceDao"/>
                 <idref local="messageDao"/>
             </list>
         </property>
@@ -114,10 +110,6 @@
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="objectDetailDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateObjectDetailDao">
-        <constructor-arg ref="sessionFactory"/>
-    </bean>
-
     <bean id="sourceDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateSourceDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
@@ -125,18 +117,5 @@
     <bean id="messageDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
-
-    <bean id="messageObjectDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageObjectDao">
-        <constructor-arg ref="sessionFactory"/>
-    </bean>
-
-    <bean id="messageParticipantDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageParticipantDao">
-        <constructor-arg ref="sessionFactory"/>
-    </bean>
-
-    <bean id="messageSourceDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateMessageSourceDao">
-        <constructor-arg ref="sessionFactory"/>
-    </bean>
-
 
 </beans>

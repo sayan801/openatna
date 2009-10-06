@@ -64,18 +64,6 @@ public class SpringDaoFactory implements DaoFactory {
         return (MessageDao) context.getBean("messageDao");
     }
 
-    public MessageObjectDao messageObjectDao() {
-        return (MessageObjectDao) context.getBean("messageObjectDao");
-    }
-
-    public MessageParticipantDao messageParticipantDao() {
-        return (MessageParticipantDao) context.getBean("messageParticipantDao");
-    }
-
-    public MessageSourceDao messageSourceDao() {
-        return (MessageSourceDao) context.getBean("messageSourceDao");
-    }
-
     public SourceDao sourceDao() {
         return (SourceDao) context.getBean("sourceDao");
     }
@@ -84,7 +72,4 @@ public class SpringDaoFactory implements DaoFactory {
         return (ObjectDao) context.getBean("objectDao");
     }
 
-    public ObjectDetailDao objectDetailDao() {
-        return (ObjectDetailDao) context.getBean("objectDetailDao");
-    }
 }
