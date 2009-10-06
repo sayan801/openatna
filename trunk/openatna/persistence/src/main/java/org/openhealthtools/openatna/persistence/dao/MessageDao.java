@@ -76,10 +76,9 @@ public interface MessageDao extends Dao {
     public List<? extends MessageEntity> getByObjectSensitivity(String sensitivity) throws AtnaPersistenceException;
 
 
-    public void save(MessageEntity messageEntity) throws AtnaPersistenceException;
+    public void save(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(MessageEntity messageEntity) throws AtnaPersistenceException;
 
-    public void normalize(MessageEntity messageEntity) throws AtnaPersistenceException;
 
 }

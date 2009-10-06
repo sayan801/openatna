@@ -19,25 +19,28 @@
 
 package org.openhealthtools.openatna.persistence.util;
 
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.persistence.dao.*;
-import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.model.*;
-import org.openhealthtools.openatna.persistence.model.codes.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.*;
+import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
+import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.persistence.model.codes.*;
 
 /**
  * Reads an XML file and loads entities into the DB.
@@ -111,7 +114,6 @@ public class DataReader {
     private Map<String, SourceEntity> sources = new HashMap<String, SourceEntity>();
     private Map<String, ParticipantEntity> parts = new HashMap<String, ParticipantEntity>();
     private Map<String, ObjectEntity> objects = new HashMap<String, ObjectEntity>();
-    private Map<String, ObjectDetailEntity> details = new HashMap<String, ObjectDetailEntity>();
 
     public DataReader(InputStream in) {
         try {
@@ -141,12 +143,7 @@ public class DataReader {
                 dao.save(nap);
             }
         }
-        if (details.size() > 0) {
-            ObjectDetailDao dao = factory.objectDetailDao();
-            for (ObjectDetailEntity detail : details.values()) {
-                dao.save(detail);
-            }
-        }
+
         if (sources.size() > 0) {
             SourceDao dao = factory.sourceDao();
             for (SourceEntity source : sources.values()) {

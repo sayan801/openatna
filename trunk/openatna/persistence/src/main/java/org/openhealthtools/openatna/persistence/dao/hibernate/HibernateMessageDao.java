@@ -144,8 +144,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
      * @param messageEntity
      * @throws AtnaPersistenceException
      */
-    public void save(MessageEntity messageEntity) throws AtnaPersistenceException {
-        normalize(messageEntity);
+    public void save(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException {
+        normalize(messageEntity, policies);
         currentSession().saveOrUpdate(messageEntity);
     }
 
@@ -153,7 +153,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         currentSession().delete(messageEntity);
     }
 
-    public void normalize(MessageEntity messageEntity) throws AtnaPersistenceException {
+    private void normalize(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException {
         if (messageEntity.getEventId() == null) {
             throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_EVENT_ID);
         }
@@ -189,23 +189,98 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         if (messageParticipants.size() == 0) {
             throw new AtnaPersistenceException("no participants defined", AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
         }
-        MessageParticipantDao pdao = SpringDaoFactory.getFactory().messageParticipantDao();
         for (MessageParticipantEntity entity : messageParticipants) {
-            pdao.normalize(entity);
+            normalize(entity, policies);
         }
         Set<MessageSourceEntity> atnaSources = messageEntity.getMessageSources();
         if (atnaSources.size() == 0) {
             throw new AtnaPersistenceException("no sources defined", AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }
-        MessageSourceDao sdao = SpringDaoFactory.getFactory().messageSourceDao();
         for (MessageSourceEntity entity : atnaSources) {
-            sdao.normalize(entity);
+            normalize(entity, policies);
         }
         Set<MessageObjectEntity> messageObjects = messageEntity.getMessageObjects();
         if (messageObjects.size() > 0) {
-            MessageObjectDao odao = SpringDaoFactory.getFactory().messageObjectDao();
             for (MessageObjectEntity entity : messageObjects) {
-                odao.normalize(entity);
+                normalize(entity, policies);
+            }
+        }
+    }
+
+    private void normalize(MessageParticipantEntity ap, PersistencePolicies policies) throws AtnaPersistenceException {
+        if (ap.getParticipant() == null) {
+            throw new AtnaPersistenceException("no active participant defined.", AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
+        }
+        if (ap.getId() != null) {
+            // hmm. Should not be able to modify audit messages?
+            // this is a bit harsh. There will be situations where certain users could do this.
+            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+        }
+        ParticipantEntity pe = ap.getParticipant();
+        ParticipantDao dao = SpringDaoFactory.getFactory().participantDao();
+        ParticipantEntity existing = dao.getByUserId(pe.getUserId());
+        if (existing == null) {
+            throw new AtnaPersistenceException("unknown participant.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
+        } else {
+            ap.setParticipant(existing);
+        }
+        NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
+        if (net != null) {
+            NetworkAccessPointDao netdao = SpringDaoFactory.getFactory().networkAccessPointDao();
+            NetworkAccessPointEntity there = netdao.getByTypeAndIdentifier(net.getType(), net.getIdentifier());
+            if (there == null) {
+                throw new AtnaPersistenceException("unknown network access point.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_NETWORK_ACCESS_POINT);
+            } else {
+                ap.setNetworkAccessPoint(there);
+            }
+        }
+    }
+
+    private void normalize(MessageSourceEntity as, PersistencePolicies policies) throws AtnaPersistenceException {
+        if (as.getSource() == null) {
+            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_SOURCE);
+        }
+        if (as.getId() != null) {
+            // hmm. Should not be able to modify audit messages?
+            // this is a bit harsh. There will be situations where certain users could do this.
+            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+
+        }
+        SourceEntity se = as.getSource();
+        SourceDao dao = SpringDaoFactory.getFactory().sourceDao();
+        SourceEntity existing = dao.getBySourceId(se.getSourceId());
+        if (existing == null) {
+            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
+        } else {
+            as.setSource(existing);
+        }
+    }
+
+    private void normalize(MessageObjectEntity ao, PersistencePolicies policies) throws AtnaPersistenceException {
+        if (ao.getObject() == null) {
+            throw new AtnaPersistenceException("no participant object defined.", AtnaPersistenceException.PersistenceError.NO_OBJECT);
+        }
+        if (ao.getId() != null) {
+            // hmm. Should not be able to modify audit messages?
+            // this is a bit harsh. There will be situations where certain users could do this.
+            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+
+        }
+        ObjectEntity oe = ao.getObject();
+
+        ObjectDao dao = SpringDaoFactory.getFactory().objectDao();
+        ObjectEntity existing = dao.getByObjectId(oe.getObjectId());
+        if (existing == null) {
+            throw new AtnaPersistenceException("no object defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
+        } else {
+            ao.setObject(existing);
+        }
+        Set<ObjectDetailEntity> details = ao.getDetails();
+        if (details.size() > 0) {
+            for (ObjectDetailEntity detail : details) {
+                if (!existing.containsDetailType(detail.getType())) {
+                    throw new AtnaPersistenceException("bad object detail key.", AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
+                }
             }
         }
     }
