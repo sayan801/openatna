@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.atnatest;
 import java.io.IOException;
 
 import org.openhealthtools.openatna.audit.AuditService;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
 import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
 
@@ -40,11 +41,10 @@ public class BsdServerTest0 {
         UdpConfig conf = new UdpConfig();
         conf.setHost("localhost");
         server.configure(conf);
+        SyslogMessageFactory.setDefaultLogMessage(JaxbLogMessage.class);
 
         AuditService service = new AuditService();
         service.setSyslogServer(server);
-        service.setLogMessageClass(JaxbLogMessage.class);
-
         try {
             service.start();
         } catch (IOException e) {
