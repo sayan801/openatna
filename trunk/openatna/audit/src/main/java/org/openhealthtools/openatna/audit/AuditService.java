@@ -30,8 +30,6 @@ import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.syslog.LogMessage;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 /**
@@ -49,17 +47,20 @@ public class AuditService {
     public static final String PROPERTY_PERSISTENCE_POLICIES = AuditService.class.getName() + ".persistence.policies";
 
     private PersistencePolicies persistencePolicies = new PersistencePolicies();
-    private Class<? extends LogMessage> logMessageClass;
     private SyslogServer syslogServer;
     private Set<URL> codeUrls = new HashSet<URL>();
     private DaoFactory daoFactory;
+    private ProcessorChain chain = new ProcessorChain();
 
+
+    /**
+     * start the service
+     *
+     * @throws IOException
+     */
     public void start() throws IOException {
         if (syslogServer == null) {
             throw new RuntimeException("no server defined!");
-        }
-        if (getLogMessageClass() == null) {
-            throw new RuntimeException("no log message class defined!");
         }
         if (daoFactory == null) {
             daoFactory = SpringDaoFactory.getFactory();
@@ -67,58 +68,107 @@ public class AuditService {
         URL defCodes = Thread.currentThread().getContextClassLoader().getResource("atnacodes.xml");
         addCodeUrls(defCodes);
         CodeParser.parse(getCodeUrls());
-        SyslogMessageFactory.setDefaultLogMessage(getLogMessageClass());
-        ProcessorChain chain = new ProcessorChain();
         chain.putProperty(PROPERTY_PERSISTENCE_POLICIES, persistencePolicies);
         chain.putProperty(PROPERTY_DAO_FACTORY, daoFactory);
         syslogServer.addSyslogListener(new AtnaMessageListener(chain));
         syslogServer.start();
     }
 
+    /**
+     * stop the service
+     *
+     * @throws IOException
+     */
     public void stop() throws IOException {
         syslogServer.stop();
     }
 
-
+    /**
+     * get the URLs pointing to coded value XML.
+     * default codes are added automatically just before starting the service
+     *
+     * @return
+     */
     public URL[] getCodeUrls() {
         return codeUrls.toArray(new URL[codeUrls.size()]);
     }
 
+    /**
+     * add URLs pointing to XML files containing Coded Values.
+     * default codes are added automatically
+     *
+     * @param urls
+     */
     public void addCodeUrls(URL... urls) {
         for (URL url : urls) {
             codeUrls.add(url);
         }
     }
 
+    /**
+     * set the URLs pointing to Coded Values XML
+     * default codes are added automatically
+     *
+     * @param urls
+     */
+    public void setCodeUrls(URL[] urls) {
+        codeUrls.clear();
+        addCodeUrls(urls);
+    }
+
+    /**
+     * get the syslog server that will receive the messages.
+     * This should be fully configured, including have the LogMessage set.
+     *
+     * @return
+     */
     public SyslogServer getSyslogServer() {
         return syslogServer;
     }
 
+    /**
+     * set the fully configured syslog server
+     *
+     * @param syslogServer
+     */
     public void setSyslogServer(SyslogServer syslogServer) {
         this.syslogServer = syslogServer;
     }
 
-    public Class<? extends LogMessage> getLogMessageClass() {
-        return logMessageClass;
-    }
-
-    public void setLogMessageClass(Class<? extends LogMessage> logMessageClass) {
-        this.logMessageClass = logMessageClass;
-    }
-
+    /**
+     * get the persistence policies. This allows for setting how unknown
+     *
+     * @return
+     */
     public PersistencePolicies getPersistencePolicies() {
         return persistencePolicies;
     }
 
-    public void setPersistencePolicies(PersistencePolicies persistencePolicies) {
-        this.persistencePolicies = persistencePolicies;
-    }
-
+    /**
+     * get the data Access Object factory
+     *
+     * @return
+     */
     public DaoFactory getDaoFactory() {
         return daoFactory;
     }
 
+    /**
+     * set the data access object factory
+     *
+     * @param daoFactory
+     */
     public void setDaoFactory(DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
+
+    /**
+     * get the processing chain that will be invoked when a message arrives.
+     *
+     * @return
+     */
+    public ProcessorChain getChain() {
+        return chain;
+    }
+
 }
