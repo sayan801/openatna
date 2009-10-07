@@ -38,25 +38,26 @@ public class ObjectIdTypeCodeEntity extends CodeEntity {
     private static final long serialVersionUID = -1L;
 
     public ObjectIdTypeCodeEntity() {
+        super(CodeType.PARTICIPANT_OBJECT_ID_TYPE);
     }
 
     public ObjectIdTypeCodeEntity(String code) {
-        super(code);
+        super(CodeType.PARTICIPANT_OBJECT_ID_TYPE, code);
     }
 
     public ObjectIdTypeCodeEntity(String code, String codeSystem) {
-        super(code, codeSystem);
+        super(CodeType.PARTICIPANT_OBJECT_ID_TYPE, code, codeSystem);
     }
 
     public ObjectIdTypeCodeEntity(String code, String codeSystem, String codeSystemName) {
-        super(code, codeSystem, codeSystemName);
+        super(CodeType.PARTICIPANT_OBJECT_ID_TYPE, code, codeSystem, codeSystemName);
     }
 
     public ObjectIdTypeCodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
-        super(code, codeSystem, codeSystemName, displayName);
+        super(CodeType.PARTICIPANT_OBJECT_ID_TYPE, code, codeSystem, codeSystemName, displayName);
     }
 
     public ObjectIdTypeCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
-        super(code, codeSystem, codeSystemName, displayName, originalText);
+        super(CodeType.PARTICIPANT_OBJECT_ID_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
     }
 }

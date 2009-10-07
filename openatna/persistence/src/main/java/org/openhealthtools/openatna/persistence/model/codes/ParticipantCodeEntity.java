@@ -38,25 +38,26 @@ public class ParticipantCodeEntity extends CodeEntity {
     private static final long serialVersionUID = -1L;
 
     public ParticipantCodeEntity() {
+        super(CodeType.ACTIVE_PARTICIPANT);
     }
 
     public ParticipantCodeEntity(String code) {
-        super(code);
+        super(CodeType.ACTIVE_PARTICIPANT, code);
     }
 
     public ParticipantCodeEntity(String code, String codeSystem) {
-        super(code, codeSystem);
+        super(CodeType.ACTIVE_PARTICIPANT, code, codeSystem);
     }
 
     public ParticipantCodeEntity(String code, String codeSystem, String codeSystemName) {
-        super(code, codeSystem, codeSystemName);
+        super(CodeType.ACTIVE_PARTICIPANT, code, codeSystem, codeSystemName);
     }
 
     public ParticipantCodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
-        super(code, codeSystem, codeSystemName, displayName);
+        super(CodeType.ACTIVE_PARTICIPANT, code, codeSystem, codeSystemName, displayName);
     }
 
     public ParticipantCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
-        super(code, codeSystem, codeSystemName, displayName, originalText);
+        super(CodeType.ACTIVE_PARTICIPANT, code, codeSystem, codeSystemName, displayName, originalText);
     }
 }

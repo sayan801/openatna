@@ -68,12 +68,18 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         return list(criteria().add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
-    public CodeEntity getByCodeAndSystem(String code, String codeSystem) throws AtnaPersistenceException {
-        return uniqueResult(criteria().add(Restrictions.eq("code", code)).add(Restrictions.eq("codeSystem", codeSystem)));
+    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem) throws AtnaPersistenceException {
+        return uniqueResult(criteria()
+                .add(Restrictions.eq("type", type))
+                .add(Restrictions.eq("code", code))
+                .add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
-    public CodeEntity getByCodeAndSystemName(String code, String codeSystemName) throws AtnaPersistenceException {
-        return uniqueResult(criteria().add(Restrictions.eq("code", code)).add(Restrictions.eq("codeSystemName", codeSystemName)));
+    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName) throws AtnaPersistenceException {
+        return uniqueResult(criteria()
+                .add(Restrictions.eq("type", type))
+                .add(Restrictions.eq("code", code))
+                .add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
     public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type) throws AtnaPersistenceException {
@@ -84,9 +90,10 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         return list(criteria(fromCodeType(type)).add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
-    public CodeEntity getByCodeAndSystemAndSystemName(String code, String codeSystem, String codeSystemName) throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem, String codeSystemName) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("codeSystemName", codeSystemName))
                 .add(Restrictions.eq("code", code))
+                .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
@@ -124,12 +131,12 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
             return null;
         }
         if (sys != null && name != null) {
-            return getByCodeAndSystemAndSystemName(c, sys, name);
+            return getByCodeAndSystemAndSystemName(code.getType(), c, sys, name);
         }
         if (sys != null) {
-            return getByCodeAndSystem(c, sys);
+            return getByCodeAndSystem(code.getType(), c, sys);
         } else {
-            return getByCodeAndSystemName(c, name);
+            return getByCodeAndSystemName(code.getType(), c, name);
         }
     }
 

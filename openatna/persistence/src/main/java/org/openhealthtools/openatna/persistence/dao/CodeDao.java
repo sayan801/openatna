@@ -19,10 +19,10 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
-import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-
 import java.util.List;
+
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
 
 /**
  * Class Description Here...
@@ -44,11 +44,11 @@ public interface CodeDao extends Dao {
 
     public List<? extends CodeEntity> getByCodeSystemName(String codeSystemName) throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndSystem(String code, String codeSystem) throws AtnaPersistenceException;
+    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem) throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndSystemName(String code, String codeSystemName) throws AtnaPersistenceException;
+    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName) throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndSystemAndSystemName(String code, String codeSystem, String codeSystemName) throws AtnaPersistenceException;
+    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem, String codeSystemName) throws AtnaPersistenceException;
 
     public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type) throws AtnaPersistenceException;
 

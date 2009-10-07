@@ -73,7 +73,7 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                 codes.remove(code);
                 CodeEntity ce = cd.find(code);
                 if (!(ce instanceof SourceCodeEntity)) {
-                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    throw new AtnaPersistenceException(ce.toString(), AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                 }
                 code = (SourceCodeEntity) ce;
                 if (code.getVersion() != null) {

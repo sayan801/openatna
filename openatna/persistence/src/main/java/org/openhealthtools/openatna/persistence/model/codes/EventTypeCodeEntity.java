@@ -38,25 +38,27 @@ public class EventTypeCodeEntity extends CodeEntity {
     private static final long serialVersionUID = -1L;
 
     public EventTypeCodeEntity() {
+        super(CodeType.EVENT_TYPE);
     }
 
     public EventTypeCodeEntity(String code) {
-        super(code);
+        super(CodeType.EVENT_TYPE, code);
     }
 
     public EventTypeCodeEntity(String code, String codeSystem) {
-        super(code, codeSystem);
+        super(CodeType.EVENT_TYPE, code, codeSystem);
     }
 
     public EventTypeCodeEntity(String code, String codeSystem, String codeSystemName) {
-        super(code, codeSystem, codeSystemName);
+        super(CodeType.EVENT_TYPE, code, codeSystem, codeSystemName);
     }
 
     public EventTypeCodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
-        super(code, codeSystem, codeSystemName, displayName);
+        super(CodeType.EVENT_TYPE, code, codeSystem, codeSystemName, displayName);
     }
 
     public EventTypeCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
-        super(code, codeSystem, codeSystemName, displayName, originalText);
+        super(CodeType.EVENT_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
+
     }
 }

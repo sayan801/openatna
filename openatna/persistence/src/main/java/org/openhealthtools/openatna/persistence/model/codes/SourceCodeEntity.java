@@ -38,25 +38,26 @@ public class SourceCodeEntity extends CodeEntity {
     private static final long serialVersionUID = -1L;
 
     public SourceCodeEntity() {
+        super(CodeType.AUDIT_SOURCE);
     }
 
     public SourceCodeEntity(String code) {
-        super(code);
+        super(CodeType.AUDIT_SOURCE, code);
     }
 
     public SourceCodeEntity(String code, String codeSystem) {
-        super(code, codeSystem);
+        super(CodeType.AUDIT_SOURCE, code, codeSystem);
     }
 
     public SourceCodeEntity(String code, String codeSystem, String codeSystemName) {
-        super(code, codeSystem, codeSystemName);
+        super(CodeType.AUDIT_SOURCE, code, codeSystem, codeSystemName);
     }
 
     public SourceCodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
-        super(code, codeSystem, codeSystemName, displayName);
+        super(CodeType.AUDIT_SOURCE, code, codeSystem, codeSystemName, displayName);
     }
 
     public SourceCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
-        super(code, codeSystem, codeSystemName, displayName, originalText);
+        super(CodeType.AUDIT_SOURCE, code, codeSystem, codeSystemName, displayName, originalText);
     }
 }
