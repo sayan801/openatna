@@ -19,9 +19,8 @@
 
 package org.openhealthtools.openatna.persistence.model.codes;
 
-import org.openhealthtools.openatna.persistence.model.PersistentEntity;
-
 import javax.persistence.*;
+import org.openhealthtools.openatna.persistence.model.PersistentEntity;
 
 
 /**
@@ -31,6 +30,7 @@ import javax.persistence.*;
  * This makes determining equality slightly tricky. Added to this, two null values in the DB
  * do not equate, so two Codes with the same code, and null for the system and system name are not equal.
  */
+
 
 @Entity
 @Table(name = "codes")

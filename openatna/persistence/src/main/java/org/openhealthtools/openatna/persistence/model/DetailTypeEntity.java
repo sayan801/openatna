@@ -28,6 +28,7 @@ import javax.persistence.*;
  * @date $Date:$ modified by $Author:$
  */
 
+
 @Entity
 @Table(name = "detail_types")
 public class DetailTypeEntity extends PersistentEntity {

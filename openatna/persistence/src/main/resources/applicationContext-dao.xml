@@ -20,8 +20,12 @@
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
        default-lazy-init="true">
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -39,8 +43,10 @@
         <property name="password" value="${DBpassword}"/>
     </bean>
 
-    <!-- Hibernate SessionFactory -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" destroy-method="close">
+    <!-- Hibernate SessionFactory
+    NOTE: after_transaction connection release mode. Could this be a problem in certain environments?
+    -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
         <property name="hibernateProperties">
@@ -49,6 +55,7 @@
                 hibernate.cache.use_second_level_cache=true
                 hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
                 hibernate.hbm2ddl.auto=update
+                hibernate.connection.release_mode=after_transaction
             </value>
             <!-- Turn batching off for better error messages under PostgreSQL -->
             <!-- hibernate.jdbc.batch_size=0 -->
@@ -56,14 +63,17 @@
     </bean>
 
     <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
-    <bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
 
+    <tx:annotation-driven/>
+
+
     <!-- transactions for beans. saves using spring annotations, i.e. spring deps in classes-->
     <!-- Transaction Interceptor matches ALL methods!!-->
-    <bean id="txAttributeSource"
+    <!--<bean id="txAttributeSource"
           class="org.springframework.transaction.interceptor.MatchAlwaysTransactionAttributeSource">
     </bean>
 
@@ -90,7 +100,7 @@
                 <idref local="messageDao"/>
             </list>
         </property>
-    </bean>
+    </bean>-->
 
     <!-- DAO beans -->
 

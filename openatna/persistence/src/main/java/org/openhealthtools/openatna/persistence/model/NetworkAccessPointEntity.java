@@ -29,6 +29,7 @@ import javax.persistence.*;
  * @created Sep 4, 2009: 11:40:25 AM
  * @date $Date:$ modified by $Author:$
  */
+
 @Entity
 @Table(name = "network_access_points")
 public class NetworkAccessPointEntity extends PersistentEntity {

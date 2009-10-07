@@ -30,6 +30,7 @@ import org.openhealthtools.openatna.persistence.dao.SourceDao;
 import org.openhealthtools.openatna.persistence.model.SourceEntity;
 import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrew Harrison
@@ -38,6 +39,7 @@ import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
  * @date $Date:$ modified by $Author:$
  */
 
+@Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> implements SourceDao {
 
     public HibernateSourceDao(SessionFactory sessionFactory) {

@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.atnatest;
 import java.io.IOException;
 
 import org.openhealthtools.openatna.audit.AuditService;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
 import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
@@ -45,6 +46,13 @@ public class BsdServerTest0 {
 
         AuditService service = new AuditService();
         service.setSyslogServer(server);
+        PersistencePolicies pp = service.getPersistencePolicies();
+        pp.setAllowNewParticipants(true);
+        pp.setAllowNewCodes(true);
+        pp.setAllowNewNetworkAccessPoints(true);
+        pp.setAllowNewSources(true);
+        pp.setAllowUnknownDetailTypes(true);
+        pp.setAllowNewObjects(true);
         try {
             service.start();
         } catch (IOException e) {

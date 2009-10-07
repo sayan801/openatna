@@ -34,6 +34,7 @@ import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntit
  * @date $Date:$ modified by $Author:$
  */
 
+
 @Entity
 @Table(name = "participants")
 public class ParticipantEntity extends PersistentEntity {

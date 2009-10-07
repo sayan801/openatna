@@ -45,7 +45,7 @@ public class BsdClientTest0 {
         CodeParser.parse(defCodes);
 
         try {
-            BsdMessage m = new BsdMessage(10, 5, "Oct  1 22:14:15", "127.0.0.1", new JaxbLogMessage(createMessage()), "ATNALOG");
+            BsdMessage m = new BsdMessage(10, 5, "Oct  1 22:14:15", "127.0.0.1", new JaxbLogMessage(createNewMessage()), "ATNALOG");
             System.out.println("BsdClientTest0.main message:");
             m.write(System.out);
             byte[] bytes = m.toByteArray();
@@ -70,6 +70,16 @@ public class BsdClientTest0 {
                 .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("scmabh")))
                 .addObject(new AtnaMessageObject(new AtnaObject("obj1", new AtnaCode(AtnaCode.OBJECT_ID_TYPE, "110180", null, "DCM", null, null))));
         msg.getObject("obj1").addObjectDetail(new AtnaObjectDetail().setType("version").setValue("THIS IS DETAIL".getBytes()));
+        return msg;
+    }
+
+    protected static AtnaMessage createNewMessage() {
+        AtnaCode evtCode = AtnaCode.eventIdCode("11", "11", "11", "A new Event id Code", null);
+        AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
+        msg.addSource(new AtnaSource("ls").addSourceTypeCode(AtnaCode.sourceTypeCode("111", "11", "11", "A new Source Code", null)))
+                .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("scm123")))
+                .addObject(new AtnaMessageObject(new AtnaObject("newobj", new AtnaCode(AtnaCode.OBJECT_ID_TYPE, "1111", null, "11", null, null))));
+        msg.getObject("newobj").addObjectDetail(new AtnaObjectDetail().setType("v").setValue("THIS IS DETAIL".getBytes()));
         return msg;
     }
 }

@@ -37,6 +37,7 @@ public class PersistencePolicies extends HashMap<String, Object> {
     public static final String ALLOW_NEW_SOURCES = "allowNewSources";
     public static final String ALLOW_NEW_OBJECTS = "allowNewObjects";
     public static final String ALLOW_UNKNOWN_DETAIL_TYPES = "allowUnknownDetailTypes";
+    public static final String ALLOW_MODIFY_MESSAGES = "allowModifyMessages";
 
 
     public boolean isAllowNewCodes() {
@@ -91,6 +92,15 @@ public class PersistencePolicies extends HashMap<String, Object> {
 
     public void setAllowUnknownDetailTypes(boolean allowUnknownDetailTypes) {
         put(ALLOW_UNKNOWN_DETAIL_TYPES, allowUnknownDetailTypes);
+    }
+
+    public boolean isAllowModifyMessages() {
+        Object o = get(ALLOW_MODIFY_MESSAGES);
+        return o != null && o.equals(Boolean.TRUE);
+    }
+
+    public void setAllowModifyMessages(boolean allowModifyMessages) {
+        put(ALLOW_MODIFY_MESSAGES, allowModifyMessages);
     }
 
 }
