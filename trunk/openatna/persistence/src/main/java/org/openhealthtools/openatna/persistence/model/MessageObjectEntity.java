@@ -19,9 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.model;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
+
 
 @Entity
 @Table(name = "message_objects")

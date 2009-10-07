@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.persistence.model;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "message_participants")
 public class MessageParticipantEntity extends PersistentEntity {

@@ -29,6 +29,7 @@ import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.*;
 import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.*;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrew Harrison
@@ -37,6 +38,7 @@ import org.openhealthtools.openatna.persistence.model.codes.*;
  * @date $Date:$ modified by $Author:$
  */
 
+@Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> implements MessageDao {
 
     public HibernateMessageDao(SessionFactory sessionFactory) {
@@ -155,31 +157,54 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
     private void normalize(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException {
         if (messageEntity.getEventId() == null) {
-            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_EVENT_ID);
+            throw new AtnaPersistenceException("no audit source defined.",
+                    AtnaPersistenceException.PersistenceError.NO_EVENT_ID);
         }
         if (messageEntity.getId() != null) {
-            // hmm. Should not be able to modify audit messages?
-            // this is a bit harsh. There will be situations where certain users could do this.
-            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
-
+            if (!policies.isAllowModifyMessages()) {
+                throw new AtnaPersistenceException("audit messages cannot be modified.",
+                        AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+            }
         }
         EventIdCodeEntity ce = messageEntity.getEventId();
         CodeDao dao = SpringDaoFactory.getFactory().codeDao();
-        EventIdCodeEntity existing = (EventIdCodeEntity) dao.get(ce);
+        CodeEntity existing = dao.get(ce);
         if (existing == null) {
-            throw new AtnaPersistenceException("no event id code defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+            if (policies.isAllowNewCodes()) {
+                currentSession().saveOrUpdate(ce);
+
+            } else {
+                throw new AtnaPersistenceException("no event id code defined.",
+                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+            }
         } else {
-            messageEntity.setEventId(existing);
+            if (existing instanceof EventIdCodeEntity) {
+                messageEntity.setEventId((EventIdCodeEntity) existing);
+            } else {
+                throw new AtnaPersistenceException("code is defined but is of a different type.",
+                        AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+            }
         }
         Set<EventTypeCodeEntity> codes = messageEntity.getEventTypeCodes();
         if (codes.size() > 0) {
             for (EventTypeCodeEntity code : codes) {
-                codes.remove(code);
-                code = (EventTypeCodeEntity) dao.find(code);
-                if (code.getVersion() != null) {
-                    codes.add(code);
+                CodeEntity codeEnt = dao.get(code);
+                if (codeEnt == null) {
+                    if (policies.isAllowNewCodes()) {
+                        currentSession().saveOrUpdate(code);
+
+                    } else {
+                        throw new AtnaPersistenceException(code.toString(),
+                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    }
                 } else {
-                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    if (codeEnt instanceof EventTypeCodeEntity) {
+                        codes.remove(code);
+                        codes.add((EventTypeCodeEntity) codeEnt);
+                    } else {
+                        throw new AtnaPersistenceException("code is defined but is of a different type.",
+                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    }
                 }
             }
             messageEntity.setEventTypeCodes(codes);
@@ -187,41 +212,51 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
         Set<MessageParticipantEntity> messageParticipants = messageEntity.getMessageParticipants();
         if (messageParticipants.size() == 0) {
-            throw new AtnaPersistenceException("no participants defined", AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
+            throw new AtnaPersistenceException("no participants defined",
+                    AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
         }
         for (MessageParticipantEntity entity : messageParticipants) {
             normalize(entity, policies);
         }
         Set<MessageSourceEntity> atnaSources = messageEntity.getMessageSources();
         if (atnaSources.size() == 0) {
-            throw new AtnaPersistenceException("no sources defined", AtnaPersistenceException.PersistenceError.NO_SOURCE);
+            throw new AtnaPersistenceException("no sources defined",
+                    AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }
         for (MessageSourceEntity entity : atnaSources) {
             normalize(entity, policies);
         }
         Set<MessageObjectEntity> messageObjects = messageEntity.getMessageObjects();
-        if (messageObjects.size() > 0) {
-            for (MessageObjectEntity entity : messageObjects) {
-                normalize(entity, policies);
-            }
+        for (MessageObjectEntity entity : messageObjects) {
+            normalize(entity, policies);
         }
     }
 
     private void normalize(MessageParticipantEntity ap, PersistencePolicies policies) throws AtnaPersistenceException {
         if (ap.getParticipant() == null) {
-            throw new AtnaPersistenceException("no active participant defined.", AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
+            throw new AtnaPersistenceException("no active participant defined.",
+                    AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
         }
         if (ap.getId() != null) {
-            // hmm. Should not be able to modify audit messages?
-            // this is a bit harsh. There will be situations where certain users could do this.
-            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+            if (!policies.isAllowModifyMessages()) {
+                throw new AtnaPersistenceException("audit messages cannot be modified.",
+                        AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+            }
         }
         ParticipantEntity pe = ap.getParticipant();
         ParticipantDao dao = SpringDaoFactory.getFactory().participantDao();
         ParticipantEntity existing = dao.getByUserId(pe.getUserId());
         if (existing == null) {
-            throw new AtnaPersistenceException("unknown participant.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
+            if (policies.isAllowNewParticipants()) {
+                saveParticipantCodes(pe, policies);
+                currentSession().saveOrUpdate(pe);
+
+            } else {
+                throw new AtnaPersistenceException("unknown participant.",
+                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
+            }
         } else {
+            saveParticipantCodes(pe, policies);
             ap.setParticipant(existing);
         }
         NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
@@ -229,58 +264,156 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             NetworkAccessPointDao netdao = SpringDaoFactory.getFactory().networkAccessPointDao();
             NetworkAccessPointEntity there = netdao.getByTypeAndIdentifier(net.getType(), net.getIdentifier());
             if (there == null) {
-                throw new AtnaPersistenceException("unknown network access point.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_NETWORK_ACCESS_POINT);
+                if (policies.isAllowNewNetworkAccessPoints()) {
+                    currentSession().saveOrUpdate(net);
+
+                } else {
+                    throw new AtnaPersistenceException("unknown network access point.",
+                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_NETWORK_ACCESS_POINT);
+                }
             } else {
                 ap.setNetworkAccessPoint(there);
             }
         }
     }
 
+    private void saveParticipantCodes(ParticipantEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
+        Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
+        CodeDao dao = SpringDaoFactory.getFactory().codeDao();
+
+        for (ParticipantCodeEntity code : codes) {
+            CodeEntity codeEnt = dao.get(code);
+            if (codeEnt == null) {
+                if (policies.isAllowNewCodes()) {
+                    currentSession().saveOrUpdate(code);
+
+                } else {
+                    throw new AtnaPersistenceException(code.toString(),
+                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                }
+            } else {
+                if (codeEnt instanceof ParticipantCodeEntity) {
+                    codes.remove(code);
+                    codes.add((ParticipantCodeEntity) codeEnt);
+                } else {
+                    throw new AtnaPersistenceException("code is defined but is of a different type.",
+                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                }
+            }
+        }
+    }
+
     private void normalize(MessageSourceEntity as, PersistencePolicies policies) throws AtnaPersistenceException {
         if (as.getSource() == null) {
-            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NO_SOURCE);
+            throw new AtnaPersistenceException("no audit source defined.",
+                    AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }
         if (as.getId() != null) {
-            // hmm. Should not be able to modify audit messages?
-            // this is a bit harsh. There will be situations where certain users could do this.
-            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
-
+            if (!policies.isAllowModifyMessages()) {
+                throw new AtnaPersistenceException("audit messages cannot be modified.",
+                        AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+            }
         }
         SourceEntity se = as.getSource();
         SourceDao dao = SpringDaoFactory.getFactory().sourceDao();
         SourceEntity existing = dao.getBySourceId(se.getSourceId());
         if (existing == null) {
-            throw new AtnaPersistenceException("no audit source defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
+            if (policies.isAllowNewSources()) {
+                saveSourceCodes(se, policies);
+                currentSession().saveOrUpdate(se);
+
+            } else {
+                throw new AtnaPersistenceException("no audit source defined.",
+                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
+            }
         } else {
+            saveSourceCodes(se, policies);
             as.setSource(existing);
+        }
+    }
+
+    private void saveSourceCodes(SourceEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
+        Set<SourceCodeEntity> codes = pe.getSourceTypeCodes();
+        CodeDao dao = SpringDaoFactory.getFactory().codeDao();
+
+        for (SourceCodeEntity code : codes) {
+            CodeEntity codeEnt = dao.get(code);
+            if (codeEnt == null) {
+                if (policies.isAllowNewCodes()) {
+                    currentSession().saveOrUpdate(code);
+
+                } else {
+                    throw new AtnaPersistenceException(code.toString(),
+                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                }
+            } else {
+                if (codeEnt instanceof SourceCodeEntity) {
+                    codes.remove(code);
+                    codes.add((SourceCodeEntity) codeEnt);
+                } else {
+                    throw new AtnaPersistenceException("code is defined but is of a different type.",
+                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                }
+            }
         }
     }
 
     private void normalize(MessageObjectEntity ao, PersistencePolicies policies) throws AtnaPersistenceException {
         if (ao.getObject() == null) {
-            throw new AtnaPersistenceException("no participant object defined.", AtnaPersistenceException.PersistenceError.NO_OBJECT);
+            throw new AtnaPersistenceException("no participant object defined.",
+                    AtnaPersistenceException.PersistenceError.NO_OBJECT);
         }
         if (ao.getId() != null) {
-            // hmm. Should not be able to modify audit messages?
-            // this is a bit harsh. There will be situations where certain users could do this.
-            throw new AtnaPersistenceException("audit messages cannot be modified.", AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
-
+            if (!policies.isAllowModifyMessages()) {
+                throw new AtnaPersistenceException("audit messages cannot be modified.",
+                        AtnaPersistenceException.PersistenceError.UNMODIFIABLE);
+            }
         }
         ObjectEntity oe = ao.getObject();
 
         ObjectDao dao = SpringDaoFactory.getFactory().objectDao();
         ObjectEntity existing = dao.getByObjectId(oe.getObjectId());
         if (existing == null) {
-            throw new AtnaPersistenceException("no object defined.", AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
+            if (policies.isAllowNewObjects()) {
+                saveObjectCode(oe, policies);
+                currentSession().saveOrUpdate(oe);
+
+            } else {
+                throw new AtnaPersistenceException("no object defined.",
+                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
+            }
         } else {
+            saveObjectCode(oe, policies);
             ao.setObject(existing);
-        }
-        Set<ObjectDetailEntity> details = ao.getDetails();
-        if (details.size() > 0) {
+            Set<ObjectDetailEntity> details = ao.getDetails();
             for (ObjectDetailEntity detail : details) {
-                if (!existing.containsDetailType(detail.getType())) {
-                    throw new AtnaPersistenceException("bad object detail key.", AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
+                if (!existing.containsDetailType(detail.getType()) &&
+                        !policies.isAllowUnknownDetailTypes()) {
+                    throw new AtnaPersistenceException("bad object detail key.",
+                            AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
                 }
+            }
+        }
+    }
+
+    private void saveObjectCode(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
+        ObjectIdTypeCodeEntity oe = entity.getObjectIdTypeCode();
+        CodeDao dao = SpringDaoFactory.getFactory().codeDao();
+        CodeEntity existing = dao.get(oe);
+        if (existing == null) {
+            if (policies.isAllowNewCodes()) {
+                currentSession().saveOrUpdate(oe);
+
+            } else {
+                throw new AtnaPersistenceException("no event id code defined.",
+                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+            }
+        } else {
+            if (existing instanceof ObjectIdTypeCodeEntity) {
+                entity.setObjectIdTypeCode((ObjectIdTypeCodeEntity) existing);
+            } else {
+                throw new AtnaPersistenceException("code is defined but is of a different type.",
+                        AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
             }
         }
     }

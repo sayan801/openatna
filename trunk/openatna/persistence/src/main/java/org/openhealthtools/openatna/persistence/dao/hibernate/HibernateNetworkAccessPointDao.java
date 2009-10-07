@@ -19,13 +19,14 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.NetworkAccessPointDao;
 import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrew Harrison
@@ -34,6 +35,7 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
+@Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<NetworkAccessPointEntity> implements NetworkAccessPointDao {
 
     public HibernateNetworkAccessPointDao(SessionFactory sessionFactory) {

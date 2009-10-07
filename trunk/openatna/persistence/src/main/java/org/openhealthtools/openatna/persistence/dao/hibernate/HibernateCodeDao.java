@@ -19,13 +19,14 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.persistence.model.codes.*;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * NOTE: the fields that determine a code's uniqueness are its code, code system AND system name.
@@ -40,6 +41,7 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
+@Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implements CodeDao {
 
     public HibernateCodeDao(SessionFactory sessionFactory) {

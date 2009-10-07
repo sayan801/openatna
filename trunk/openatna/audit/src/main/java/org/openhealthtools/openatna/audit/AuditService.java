@@ -33,7 +33,7 @@ import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 /**
- * At last...
+ * This pulls together various configurations to create an ATNA Audit service
  *
  * @author Andrew Harrison
  * @version $Revision:$

@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
@@ -26,8 +28,7 @@ import org.openhealthtools.openatna.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.persistence.dao.ObjectDao;
 import org.openhealthtools.openatna.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrew Harrison
@@ -36,6 +37,7 @@ import java.util.List;
  * @date $Date:$ modified by $Author:$
  */
 
+@Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> implements ObjectDao {
 
     public HibernateObjectDao(SessionFactory sessionFactory) {
