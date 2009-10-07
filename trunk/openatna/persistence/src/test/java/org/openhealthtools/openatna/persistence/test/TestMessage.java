@@ -19,16 +19,17 @@
 
 package org.openhealthtools.openatna.persistence.test;
 
-import org.junit.Test;
+import java.util.Date;
+import java.util.List;
+
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.*;
-
-import java.util.Date;
-import java.util.List;
+import org.junit.Test;
 
 
 /**
@@ -74,7 +75,7 @@ public class TestMessage {
         objEnt.addObjectDetail(new ObjectDetailEntity("version", "1.2"));
         msgEnt.addMessageObject(objEnt);
 
-        dao.save(msgEnt);
+        dao.save(msgEnt, new PersistencePolicies());
     }
 
     @Test
@@ -102,7 +103,7 @@ public class TestMessage {
         objEnt.setObject(obj);
         msgEnt.getMessageObjects().add(objEnt);
 
-        dao.save(msgEnt);
+        dao.save(msgEnt, new PersistencePolicies());
     }
 
     @Test
