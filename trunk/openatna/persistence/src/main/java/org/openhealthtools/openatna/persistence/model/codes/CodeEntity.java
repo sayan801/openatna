@@ -36,7 +36,7 @@ import org.openhealthtools.openatna.persistence.model.PersistentEntity;
 @Table(name = "codes")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
-        name = "type",
+        name = "codetype",
         discriminatorType = DiscriminatorType.STRING
 )
 public abstract class CodeEntity extends PersistentEntity {
@@ -52,38 +52,46 @@ public abstract class CodeEntity extends PersistentEntity {
     private Long id;
     private Integer version;
 
+    protected CodeType type;
+
     private String code;
     private String codeSystem;
     private String codeSystemName;
     private String displayName;
     private String originalText;
 
-    protected CodeEntity() {
+    protected CodeEntity(CodeType type) {
+        this.type = type;
     }
 
-    protected CodeEntity(String code) {
+    protected CodeEntity(CodeType type, String code) {
+        this.type = type;
         this.code = code;
     }
 
-    protected CodeEntity(String code, String codeSystem) {
+    protected CodeEntity(CodeType type, String code, String codeSystem) {
+        this.type = type;
         this.code = code;
         this.codeSystem = codeSystem;
     }
 
-    protected CodeEntity(String code, String codeSystem, String codeSystemName) {
+    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName) {
+        this.type = type;
         this.code = code;
         this.codeSystem = codeSystem;
         this.codeSystemName = codeSystemName;
     }
 
-    protected CodeEntity(String code, String codeSystem, String codeSystemName, String displayName) {
+    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName, String displayName) {
+        this.type = type;
         this.code = code;
         this.codeSystem = codeSystem;
         this.codeSystemName = codeSystemName;
         this.displayName = displayName;
     }
 
-    protected CodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
+    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
+        this.type = type;
         this.code = code;
         this.codeSystem = codeSystem;
         this.codeSystemName = codeSystemName;
@@ -210,6 +218,14 @@ public abstract class CodeEntity extends PersistentEntity {
         this.codeSystemName = value;
     }
 
+    public CodeType getType() {
+        return type;
+    }
+
+    public void setType(CodeType type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -222,17 +238,19 @@ public abstract class CodeEntity extends PersistentEntity {
         if (codeSystemName != null ? !codeSystemName.equals(that.codeSystemName) : that.codeSystemName != null) return false;
         if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
         if (originalText != null ? !originalText.equals(that.originalText) : that.originalText != null) return false;
+        if (type != that.type) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = code != null ? code.hashCode() : 0;
-        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
-        result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (codeSystem != null ? codeSystem.hashCode() : 0);
         result = 31 * result + (codeSystemName != null ? codeSystemName.hashCode() : 0);
+        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
+        result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
         return result;
     }
 
@@ -242,6 +260,8 @@ public abstract class CodeEntity extends PersistentEntity {
                 .append(getId())
                 .append(", version=")
                 .append(getVersion())
+                .append(", type=")
+                .append(getType())
                 .append(", code=")
                 .append(getCode())
                 .append(", code system=")
