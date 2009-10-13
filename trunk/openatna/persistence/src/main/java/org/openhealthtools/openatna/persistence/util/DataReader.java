@@ -21,9 +21,7 @@ package org.openhealthtools.openatna.persistence.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,13 +31,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.openhealthtools.openatna.anom.Timestamp;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.*;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.*;
 
 /**
@@ -105,6 +101,13 @@ public class DataReader {
     public static final String TYPE = "type";
     public static final String VALUE = "value";
 
+    public static final String MESSAGE = "message";
+    public static final String EVT_ACTION = "eventAction";
+    public static final String EVT_OUTCOME = "eventOutcome";
+    public static final String EVT_TIME = "eventTime";
+    public static final String EVT_ID = "eventId";
+    public static final String EVT_TYPE = "eventType";
+
 
     private Document doc;
     private DaoFactory factory;
@@ -114,6 +117,7 @@ public class DataReader {
     private Map<String, SourceEntity> sources = new HashMap<String, SourceEntity>();
     private Map<String, ParticipantEntity> parts = new HashMap<String, ParticipantEntity>();
     private Map<String, ObjectEntity> objects = new HashMap<String, ObjectEntity>();
+    private Set<MessageEntity> messages = new HashSet<MessageEntity>();
 
     public DataReader(InputStream in) {
         try {
@@ -162,6 +166,13 @@ public class DataReader {
                 dao.save(e);
             }
         }
+        if (messages.size() > 0) {
+            PersistencePolicies pp = new PersistencePolicies();
+            MessageDao dao = factory.messageDao();
+            for (MessageEntity e : messages) {
+                dao.save(e, pp);
+            }
+        }
 
 
     }
@@ -193,6 +204,16 @@ public class DataReader {
                         readParts(e);
                     } else if (name.equals(OBJECTS)) {
                         readObjects(e);
+                    }
+                }
+            }
+            for (int i = 0; i < children.getLength(); i++) {
+                Node n = children.item(i);
+                if (n instanceof Element) {
+                    Element e = (Element) n;
+                    String name = (e).getLocalName();
+                    if (name.equals(MESSAGE)) {
+                        readMessage(e);
                     }
                 }
             }
@@ -402,6 +423,102 @@ public class DataReader {
             return;
         }
         objects.put(id(el), e);
+    }
+
+    public void readMessage(Element el) {
+        String action = el.getAttribute(EVT_ACTION);
+        String outcome = el.getAttribute(EVT_OUTCOME);
+        String time = el.getAttribute(EVT_TIME);
+        Date ts = null;
+        if (time != null) {
+            ts = Timestamp.parseToDate(time);
+        }
+        if (ts == null) {
+            ts = new Date();
+        }
+        if (nill(action) || nill(outcome)) {
+            System.out.println("action or outcome of message is null. Not loading...");
+        }
+        MessageEntity ent = new MessageEntity();
+        ent.setEventActionCode(action);
+        ent.setEventDateTime(ts);
+        ent.setEventOutcome(Integer.parseInt(outcome));
+        NodeList children = el.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node n = children.item(i);
+            if (n instanceof Element) {
+                Element ele = (Element) n;
+                if (ele.getLocalName().equals(EVT_ID)) {
+                    String ref = ele.getAttribute(REF);
+                    if (nill(ref)) {
+                        System.out.println("no event id type defined. Not loading...");
+                        return;
+                    }
+                    CodeEntity code = codes.get(ref);
+                    if (code != null && code instanceof EventIdCodeEntity) {
+                        ent.setEventId((EventIdCodeEntity) code);
+                    } else {
+                        System.out.println("no event id type defined. Not loading...");
+                        return;
+                    }
+                } else if (ele.getLocalName().equals(EVT_TYPE)) {
+                    String ref = ele.getAttribute(REF);
+                    if (!nill(ref)) {
+                        CodeEntity code = codes.get(ref);
+                        if (code != null && code instanceof EventTypeCodeEntity) {
+                            ent.addEventTypeCode((EventTypeCodeEntity) code);
+                        }
+                    }
+                } else if (ele.getLocalName().equals(PARTICIPANT)) {
+                    String ref = ele.getAttribute(REF);
+                    if (!nill(ref)) {
+                        ParticipantEntity pe = parts.get(ref);
+                        if (pe != null) {
+                            MessageParticipantEntity p = new MessageParticipantEntity(pe);
+                            String requestor = ele.getAttribute("requestor");
+                            if (requestor != null) {
+                                p.setUserIsRequestor(Boolean.valueOf(requestor));
+                            }
+                            String nap = ele.getAttribute("nap");
+                            if (nap != null) {
+                                NetworkAccessPointEntity net = naps.get(nap);
+                                if (net != null) {
+                                    p.setNetworkAccessPoint(net);
+                                }
+                            }
+                            ent.addMessageParticipant(p);
+                        }
+                    }
+                } else if (ele.getLocalName().equals(SOURCE)) {
+                    String ref = ele.getAttribute(REF);
+                    if (!nill(ref)) {
+                        SourceEntity se = sources.get(ref);
+                        if (se != null) {
+                            MessageSourceEntity p = new MessageSourceEntity(se);
+                            ent.addMessageSource(p);
+                        }
+                    }
+                } else if (ele.getLocalName().equals(OBJECT)) {
+                    String ref = ele.getAttribute(REF);
+                    if (!nill(ref)) {
+                        ObjectEntity oe = objects.get(ref);
+                        if (oe != null) {
+                            MessageObjectEntity p = new MessageObjectEntity(oe);
+                            ent.addMessageObject(p);
+                        }
+                    }
+                }
+            }
+        }
+        if (ent.getMessageParticipants().size() == 0) {
+            System.out.println("message has no participants. Not loading...");
+            return;
+        }
+        if (ent.getMessageSources().size() == 0) {
+            System.out.println("message has no sources. Not loading...");
+            return;
+        }
+        messages.add(ent);
     }
 
 

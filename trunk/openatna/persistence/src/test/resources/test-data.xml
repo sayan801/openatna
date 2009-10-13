@@ -35,6 +35,14 @@
      participants require a "userId"
      objects require an "objectId" and a reference to an objectIdType code.
 
+     To insert dummy audit messages, use the message element. This has event attributes and references other elements
+     (participants, sources, objects)
+     messages must have and eventOutcome and one eventId reference. They must also have at least
+     one participant and one source.
+     Event times should be according to ISO8601. Example: 2009-10-13T12:07:27.232+01:00
+     if no event time is given, the current time will be used.
+     The "nap" attribute is a reference to a netPoint element
+
 <entities>
     <codes>
         <eventId id="" code="" system="" systemName="" displayName="" originalText=""/>
@@ -66,6 +74,14 @@
             <objectDetailKey key=""/>
         </object>
     </objects>
+
+    <message eventAction="" eventOutcome="" eventTime="">
+        <eventId ref=""/>
+        <eventType ref=""/>
+        <participant ref="" requestor="true" nap=""/>
+        <source ref=""/>
+        <object ref=""/>
+    </message>
 </entities>
 
 =========================================================================================
@@ -191,4 +207,13 @@
             <objectDetailKey key="version"/>
         </object>
     </objects>
+
+    <message eventAction="C" eventOutcome="0" eventTime="">
+        <eventId ref="DCM-110100"/>
+        <eventType ref="DCM-110120"/>
+        <!-- requestor is true or false. nap is a ref to an netPoint element -->
+        <participant ref="p1" requestor="true" nap="nap1"/>
+        <source ref="s1"/>
+        <object ref="o1"/>
+    </message>
 </entities>
