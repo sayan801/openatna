@@ -58,7 +58,7 @@ public class UdpConfig extends TransportConfig {
     public int getMtu() {
         Integer mtu = (Integer) getProperty("mtu");
         if (mtu == null) {
-            mtu = 1024;
+            mtu = 32768;
         }
         return mtu;
     }
