@@ -108,6 +108,9 @@ public class DataReader {
     public static final String EVT_ID = "eventId";
     public static final String EVT_TYPE = "eventType";
 
+    public static final String DETAIL = "detail";
+    public static final String QUERY = "query";
+
 
     private Document doc;
     private DaoFactory factory;
@@ -504,6 +507,38 @@ public class DataReader {
                         ObjectEntity oe = objects.get(ref);
                         if (oe != null) {
                             MessageObjectEntity p = new MessageObjectEntity(oe);
+                            NodeList ch = ele.getChildNodes();
+                            for (int j = 0; j < ch.getLength(); j++) {
+                                Node node = ch.item(j);
+                                if (node instanceof Element) {
+                                    Element child = (Element) node;
+                                    boolean enc = child.getAttribute("encoded") != null &&
+                                            child.getAttribute("encoded").equalsIgnoreCase("true");
+                                    if (child.getLocalName().equals(QUERY)) {
+                                        String q = child.getTextContent();
+                                        if (q != null) {
+                                            q = q.trim();
+                                            if (!enc) {
+                                                q = Base64.encodeString(q);
+                                            }
+                                            p.setObjectQuery(q);
+                                        }
+                                    } else if (child.getLocalName().equals(DETAIL)) {
+                                        String type = child.getAttribute(TYPE);
+                                        if (type != null) {
+                                            String val = child.getTextContent();
+                                            if (val != null) {
+                                                val = val.trim();
+                                                if (!enc) {
+                                                    val = Base64.encodeString(val);
+                                                }
+                                                ObjectDetailEntity ode = new ObjectDetailEntity(type, val);
+                                                p.addObjectDetail(ode);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             ent.addMessageObject(p);
                         }
                     }
