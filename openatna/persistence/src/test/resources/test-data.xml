@@ -80,7 +80,14 @@
         <eventType ref=""/>
         <participant ref="" requestor="true" nap=""/>
         <source ref=""/>
-        <object ref=""/>
+        <object ref="">
+            <query encoded="">
+                PCDATA
+            </query>
+            <detail type="" encoded="">
+                PCDATA
+            </detail>
+        </object>
     </message>
 </entities>
 
@@ -215,5 +222,23 @@
         <participant ref="p1" requestor="true" nap="nap1"/>
         <source ref="s1"/>
         <object ref="o1"/>
+    </message>
+
+    <message eventAction="C" eventOutcome="0" eventTime="">
+        <eventId ref="DCM-110100"/>
+        <eventType ref="DCM-110120"/>
+        <!-- requestor is true or false. nap is a ref to an netPoint element -->
+        <participant ref="p1" requestor="true" nap="nap1"/>
+        <source ref="s1"/>
+        <object ref="o1">
+            <!-- if encoded is false or absent, then the value is considered to require Base 64 encoding-->
+            <query encoded="false">
+                1234
+            </query>
+            <!-- if encoded is false or absent, then the value is considered to require Base 64 encoding-->
+            <detail type="version" encoded="false">
+                1234
+            </detail>
+        </object>
     </message>
 </entities>
