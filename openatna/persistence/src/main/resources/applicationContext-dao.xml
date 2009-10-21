@@ -30,17 +30,17 @@
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location">
-            <value>classpath:atnaDB.properties</value>
+            <value>classpath:openatna.properties</value>
         </property>
     </bean>
 
     <!-- dataSource should be somewhere better and use properties -->
     <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">-->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${DBdriverClass}"/>
-        <property name="url" value="${DBurl}"/>
-        <property name="username" value="${DBusername}"/>
-        <property name="password" value="${DBpassword}"/>
+        <property name="driverClassName" value="${db.driver.class}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
     </bean>
 
     <!-- Hibernate SessionFactory

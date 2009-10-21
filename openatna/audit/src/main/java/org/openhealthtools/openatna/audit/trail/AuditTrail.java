@@ -33,6 +33,7 @@ import org.openhealthtools.openatna.persistence.util.EntityConverter;
 
 /**
  * Provides access to the trail of messages in the DB
+ * TODO: more utility methods
  *
  * @author Andrew Harrison
  * @version $Revision:$

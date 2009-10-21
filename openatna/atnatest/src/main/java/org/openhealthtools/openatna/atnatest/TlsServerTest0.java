@@ -19,46 +19,43 @@
 
 package org.openhealthtools.openatna.atnatest;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.openhealthtools.openatna.audit.AuditService;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
-import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
+import org.openhealthtools.openatna.audit.server.AtnaServer;
+import org.openhealthtools.openatna.audit.server.PropertiesLoader;
+import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 
 /**
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 30, 2009: 9:08:56 PM
+ * @created Oct 21, 2009: 2:40:31 PM
  * @date $Date:$ modified by $Author:$
  */
 
-public class BsdServerTest0 {
+public class TlsServerTest0 {
 
     public static void main(String[] args) {
-
-        UdpServer server = new UdpServer();
-        UdpConfig conf = new UdpConfig();
-        conf.setHost("localhost");
-        server.configure(conf);
-        SyslogMessageFactory.setDefaultLogMessage(JaxbLogMessage.class);
-
+        ServerConfiguration sc = ServerConfiguration.getInstance();
+        File actors = PropertiesLoader.getActorsFile();
+        if (actors == null) {
+            throw new RuntimeException("no Actors file found. Cannot continue.");
+        }
+        boolean configured = sc.loadActors(actors);
+        AtnaServer server = sc.getActor(AtnaServer.class);
+        if (server == null) {
+            throw new RuntimeException("No AtnaServer was created! Cannot go on.");
+        }
         AuditService service = new AuditService();
         service.setSyslogServer(server);
-        PersistencePolicies pp = new PersistencePolicies();
-        pp.setAllowNewParticipants(true);
-        pp.setAllowNewCodes(true);
-        pp.setAllowNewNetworkAccessPoints(true);
-        pp.setAllowNewSources(true);
-        pp.setAllowUnknownDetailTypes(true);
-        pp.setAllowNewObjects(true);
-
+        service.setPersistencePolicies(server.getPersistencePolicies());
         try {
             service.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
 }

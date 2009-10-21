@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.syslog.transport;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * SyslogServers take a particular type of config. This is the base class.
+ * Utility class for configuring servers. Not required by SyslogServers
  *
  * @author Andrew Harrison
  * @version $Revision:$
