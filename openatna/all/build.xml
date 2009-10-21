@@ -1,0 +1,48 @@
+<!--
+
+-->
+
+
+<project name="openatna-dist" default="dist" basedir=".">
+
+    <property name="version" value="0.1"/>
+
+	
+
+    <target name="dist">
+		<echo>Ant version is ${ant.java.version}</echo>
+		<path id="jar.class.path">
+		  <fileset dir="build/lib">
+		    <include name="**/*.jar"/>
+		  </fileset>
+		</path>
+
+	    <manifestclasspath property="manifest.classpath.prop" jarfile="build/openatna-${version}.jar">
+	      <classpath refid="jar.class.path" />
+	    </manifestclasspath>
+	
+        <delete dir="build/conf"/>
+        <copy todir="build" overwrite="yes">
+            <fileset dir="src/main/resources/" includes="**/**" excludes=".svn"/>
+        </copy>
+		<delete file="build/openatna-${version}.jar"/>
+		<mkdir dir="stage"/>
+		<copy todir="stage" overwrite="yes">
+            <fileset dir="target/classes" includes="**/**"/>
+        </copy>
+		<jar destfile="build/openatna-${version}.jar">
+			<manifest>
+                <attribute name="Main-Class" value="org.openhealthtools.openatna.dist.Server"/>
+                <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
+            </manifest>
+            <fileset dir="stage" includes="**/**"/>	
+		</jar>
+		<delete dir="stage"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+
+</project>
