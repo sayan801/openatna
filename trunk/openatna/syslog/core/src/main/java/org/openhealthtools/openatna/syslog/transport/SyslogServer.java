@@ -29,9 +29,7 @@ import java.io.IOException;
  * @created Aug 18, 2009: 12:31:22 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface SyslogServer<C extends TransportConfig> {
-
-    public void configure(C config);
+public interface SyslogServer {
 
     public void start() throws IOException;
 

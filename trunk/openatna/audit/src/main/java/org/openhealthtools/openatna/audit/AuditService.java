@@ -135,13 +135,10 @@ public class AuditService {
         this.syslogServer = syslogServer;
     }
 
-    /**
-     * get the persistence policies. This allows for setting how unknown
-     *
-     * @return
-     */
-    public PersistencePolicies getPersistencePolicies() {
-        return persistencePolicies;
+    public void setPersistencePolicies(PersistencePolicies persistencePolicies) {
+        if (persistencePolicies != null) {
+            this.persistencePolicies = persistencePolicies;
+        }
     }
 
     /**

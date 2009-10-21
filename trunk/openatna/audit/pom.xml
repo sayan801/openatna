@@ -15,18 +15,44 @@
     <name>OpenATNA Audit</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>../all/build/lib</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+
     <dependencies>
-		<dependency>
+        <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>syslog-core</artifactId>
             <version>0.1</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-anom</artifactId>
             <version>0.1</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-persistence</artifactId>
             <version>0.1</version>
@@ -35,6 +61,21 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging-api</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.misys.braid</groupId>
+            <artifactId>braid-base</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
         </dependency>
     </dependencies>
 </project>

@@ -83,8 +83,8 @@ public class PersistencePoliciesIO {
     }
 
     public static PersistencePolicies read(Element parent) throws IOException {
-        if (!parent.getLocalName().equals(POLICIES)) {
-            throw new IOException("unknown element. Got " + parent.getLocalName() +
+        if (!parent.getTagName().equals(POLICIES)) {
+            throw new IOException("unknown element. Got " + parent.getTagName() +
                     " but expected " + POLICIES);
         }
         PersistencePolicies pp = new PersistencePolicies();
@@ -94,19 +94,19 @@ public class PersistencePoliciesIO {
                 Node n = ch.item(i);
                 if (n instanceof Element) {
                     Element el = (Element) n;
-                    if (el.getLocalName().equals(PersistencePolicies.ALLOW_MODIFY_MESSAGES)) {
+                    if (el.getTagName().equals(PersistencePolicies.ALLOW_MODIFY_MESSAGES)) {
                         pp.setAllowModifyMessages(Boolean.valueOf(el.getTextContent().trim()));
-                    } else if (el.getLocalName().equals(PersistencePolicies.ALLOW_NEW_CODES)) {
+                    } else if (el.getTagName().equals(PersistencePolicies.ALLOW_NEW_CODES)) {
                         pp.setAllowNewCodes(Boolean.valueOf(el.getTextContent().trim()));
-                    } else if (el.getLocalName().equals(PersistencePolicies.ALLOW_NEW_NETWORK_POINTS)) {
+                    } else if (el.getTagName().equals(PersistencePolicies.ALLOW_NEW_NETWORK_POINTS)) {
                         pp.setAllowNewNetworkAccessPoints(Boolean.valueOf(el.getTextContent().trim()));
-                    } else if (el.getLocalName().equals(PersistencePolicies.ALLOW_NEW_OBJECTS)) {
+                    } else if (el.getTagName().equals(PersistencePolicies.ALLOW_NEW_OBJECTS)) {
                         pp.setAllowNewObjects(Boolean.valueOf(el.getTextContent().trim()));
-                    } else if (el.getLocalName().equals(PersistencePolicies.ALLOW_NEW_PARTICIPANTS)) {
+                    } else if (el.getTagName().equals(PersistencePolicies.ALLOW_NEW_PARTICIPANTS)) {
                         pp.setAllowNewParticipants(Boolean.valueOf(el.getTextContent().trim()));
-                    } else if (el.getLocalName().equals(PersistencePolicies.ALLOW_NEW_SOURCES)) {
+                    } else if (el.getTagName().equals(PersistencePolicies.ALLOW_NEW_SOURCES)) {
                         pp.setAllowNewSources(Boolean.valueOf(el.getTextContent().trim()));
-                    } else if (el.getLocalName().equals(PersistencePolicies.ALLOW_UNKNOWN_DETAIL_TYPES)) {
+                    } else if (el.getTagName().equals(PersistencePolicies.ALLOW_UNKNOWN_DETAIL_TYPES)) {
                         pp.setAllowUnknownDetailTypes(Boolean.valueOf(el.getTextContent().trim()));
                     }
                 }

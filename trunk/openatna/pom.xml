@@ -81,7 +81,10 @@
             <id>sun</id>
             <url>http://download.java.net/maven/2</url>
         </repository>
-
+        <repository>
+            <id>ibilio</id>
+            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+        </repository>
     </repositories>
 
     <modules>
@@ -90,7 +93,8 @@
         <module>persistence</module>
         <module>anom</module>
         <module>jaxb</module>
-		<module>atnatest</module>
+        <module>atnatest</module>
+        <module>all</module>
     </modules>
 
 

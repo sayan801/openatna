@@ -19,6 +19,7 @@
 
 package org.openhealthtools.openatna.jaxb21;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +30,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.*;
 
 /**
@@ -39,6 +42,9 @@ import org.openhealthtools.openatna.anom.*;
  */
 
 public class JaxbIOFactory implements AtnaIOFactory {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.jaxb21.JaxbIOFactory");
+
 
     static JAXBContext jc;
 
@@ -59,6 +65,19 @@ public class JaxbIOFactory implements AtnaIOFactory {
             Unmarshaller u = jc.createUnmarshaller();
             AuditMessage a = (AuditMessage) u.unmarshal(in);
             AtnaMessage jm = createMessage(a);
+            try {
+                if (log.isDebugEnabled()) {
+                    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                    AuditMessage jmessage = createMessage(jm);
+                    Marshaller marshaller = jc.createMarshaller();
+                    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                    marshaller.marshal(jmessage, bout);
+                }
+            } catch (AtnaException e) {
+
+            } catch (JAXBException e) {
+
+            }
             return jm;
         } catch (JAXBException e) {
             throw new AtnaException(e);
@@ -77,6 +96,11 @@ public class JaxbIOFactory implements AtnaIOFactory {
             Marshaller marshaller = jc.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(jmessage, out);
+            if (log.isDebugEnabled()) {
+                ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                marshaller.marshal(jmessage, bout);
+                log.debug(new String(bout.toByteArray()));
+            }
 
         } catch (JAXBException e) {
             throw new AtnaException(e);

@@ -49,7 +49,7 @@ public class BsdClientTest0 {
             System.out.println("BsdClientTest0.main message:");
             m.write(System.out);
             byte[] bytes = m.toByteArray();
-            DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 1741));
+            DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 2862));
             DatagramSocket socket = new DatagramSocket();
             socket.send(packet);
         } catch (IOException e) {

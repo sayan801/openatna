@@ -19,17 +19,6 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
-import org.apache.mina.common.*;
-import org.apache.mina.filter.SSLFilter;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
-
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -40,6 +29,17 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
+import org.apache.mina.common.*;
+import org.apache.mina.filter.SSLFilter;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.transport.socket.nio.SocketAcceptor;
+import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+import org.openhealthtools.openatna.syslog.transport.SyslogServer;
+
 /**
  * Class Description Here...
  *
@@ -49,7 +49,7 @@ import java.util.logging.Logger;
  * @date $Date:$ modified by $Author:$
  */
 
-public class TlsServer implements SyslogServer<TlsConfig> {
+public class TlsServer implements SyslogServer {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.TlsServer");
 

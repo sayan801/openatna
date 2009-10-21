@@ -46,7 +46,7 @@ public class UdpConfig extends TransportConfig {
     public int getPort() {
         Integer port = (Integer) getProperty("port");
         if (port == null) {
-            port = 1741;
+            port = 2862;
         }
         return port;
     }

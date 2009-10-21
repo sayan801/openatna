@@ -19,6 +19,15 @@
 
 package org.openhealthtools.openatna.syslog.mina.udp;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.DefaultIoFilterChainBuilder;
 import org.apache.mina.common.IoAcceptorConfig;
@@ -30,16 +39,6 @@ import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
 /**
  * Class Description Here...
  *
@@ -49,7 +48,7 @@ import java.util.logging.Logger;
  * @date $Date:$ modified by $Author:$
  */
 
-public class UdpServer implements SyslogServer<UdpConfig> {
+public class UdpServer implements SyslogServer {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.udp.UdpServer");
 
