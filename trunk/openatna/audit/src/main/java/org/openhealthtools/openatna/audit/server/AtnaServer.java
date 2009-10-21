@@ -51,6 +51,7 @@ public class AtnaServer implements SyslogServer {
     private IConnectionDescription tlsConnection;
     private IConnectionDescription udpConnection;
     private TcpServer tcpServer = null;
+    private UdpServer udpServer = null;
     private PersistencePolicies persistencePolicies;
     private Class<? extends LogMessage> logMessageClass;
     private volatile boolean destroyed = false;
@@ -77,7 +78,8 @@ public class AtnaServer implements SyslogServer {
             tcpServer.start();
         }
         if (udpConnection != null) {
-            //udpConn = ConnectionFactory.getServerConnection(udpConnection);
+            udpServer = new UdpServer(this, udpConnection);
+            udpServer.start();
         }
     }
 
@@ -85,8 +87,8 @@ public class AtnaServer implements SyslogServer {
         if (tcpServer != null) {
             tcpServer.stop();
         }
-        if (udpConnection != null) {
-            //udpConn.closeServerConnection();
+        if (udpServer != null) {
+            udpServer.stop();
         }
     }
 

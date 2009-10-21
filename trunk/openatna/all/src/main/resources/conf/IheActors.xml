@@ -26,14 +26,14 @@
 <!--Each configuration file has a root Configuration tag-->
 <Configuration>
 
-	<!--Defines the configuration of Audit Repository Server-->
-	<ConnectionFile file="ArrConnections.xml" />
+    <!--Defines the configuration of Audit Repository Server-->
+    <ConnectionFile file="ArrConnections.xml"/>
 
-	<!--The ARR actor configuration-->
-	<Actor name="arr" type="SecureNode">
-		<Description>Audit Record Repository</Description>
-		<Tcp connection="arr-tls" />
-        <!--<Udp connection="arr-udp"/>-->
+    <!--The ARR actor configuration-->
+    <Actor name="arr" type="SecureNode">
+        <Description>Audit Record Repository</Description>
+        <Tcp connection="arr-tls"/>
+        <Udp connection="arr-udp"/>
 
         <!-- the class name of the Syslog Log Message implementation -->
         <LogMessage>org.openhealthtools.openatna.dist.JaxbLogMessage</LogMessage>
@@ -43,6 +43,6 @@
             <allowNewParticipants>true</allowNewParticipants>
         </PersistencePolicies>
 
-	</Actor>
+    </Actor>
 
 </Configuration>
