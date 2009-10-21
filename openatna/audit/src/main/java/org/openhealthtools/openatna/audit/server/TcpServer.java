@@ -67,6 +67,7 @@ public class TcpServer {
     }
 
     public void stop() {
+        running = false;
         thread.interrupt();
         tlsConn.closeServerConnection();
     }

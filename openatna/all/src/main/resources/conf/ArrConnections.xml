@@ -24,21 +24,29 @@
 <!-- For IHE Actor -->
 
 <Configuration>
-	<!--<StandardConnection name="arr-udp">
-		<HostName>localhost</HostName>
-		<Port>2863</Port>
-	</StandardConnection>-->
+    <!--<StandardConnection name="arr-udp">
+         <HostName>localhost</HostName>
+         <Port>2863</Port>
+     </StandardConnection>-->
 
-	<SecureConnection name="arr-tls">
-		<HostName>localhost</HostName>
-		<Port>2862</Port>
+    <SecureConnection name="arr-tls">
+        <HostName>localhost</HostName>
+        <Port>2862</Port>
 
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/serverKeyStore</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/clientKeyStore</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
+        <!-- Trust and Keystore -->
+        <KeyStore>certs/serverKeyStore</KeyStore>
+        <KeyPass>password</KeyPass>
+        <TrustStore>certs/clientKeyStore</TrustStore>
+        <TrustPass>password</TrustPass>
+    </SecureConnection>
+
+    <StandardConnection name="arr-udp">
+        <HostName>localhost</HostName>
+        <Port>2863</Port>
+        <PropertySet name="UdpProperties">
+            <mtu>16384</mtu>
+        </PropertySet>
+    </StandardConnection>
 
 
 </Configuration>
