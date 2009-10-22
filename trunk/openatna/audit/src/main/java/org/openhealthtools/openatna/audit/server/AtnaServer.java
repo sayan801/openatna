@@ -56,7 +56,7 @@ public class AtnaServer implements SyslogServer {
     private Class<? extends LogMessage> logMessageClass;
     private volatile boolean destroyed = false;
 
-    private Executor exec = Executors.newFixedThreadPool(5);
+    private Executor exec;
     private Set<SyslogListener> listeners = new HashSet<SyslogListener>();
 
 
