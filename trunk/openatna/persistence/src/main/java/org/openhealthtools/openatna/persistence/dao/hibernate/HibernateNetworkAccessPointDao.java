@@ -83,7 +83,7 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
 
     private boolean isDuplicate(NetworkAccessPointEntity nap) throws AtnaPersistenceException {
         NetworkAccessPointEntity entity = getByTypeAndIdentifier(nap.getType(), nap.getIdentifier());
-        if (entity != null && !(entity.getId().equals(nap.getId()))) {
+        if (entity != null) {
             return true;
         }
         return false;
