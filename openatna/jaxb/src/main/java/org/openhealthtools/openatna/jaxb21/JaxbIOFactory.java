@@ -72,6 +72,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
                     Marshaller marshaller = jc.createMarshaller();
                     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                     marshaller.marshal(jmessage, bout);
+                    log.debug("Received Audit Message:\n" + new String(bout.toByteArray()));
                 }
             } catch (AtnaException e) {
 
@@ -94,12 +95,12 @@ public class JaxbIOFactory implements AtnaIOFactory {
         try {
             AuditMessage jmessage = createMessage(message);
             Marshaller marshaller = jc.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(jmessage, out);
             if (log.isDebugEnabled()) {
+                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                 ByteArrayOutputStream bout = new ByteArrayOutputStream();
                 marshaller.marshal(jmessage, bout);
-                log.debug(new String(bout.toByteArray()));
+                log.debug("Written Audit Message:\n" + new String(bout.toByteArray()));
             }
 
         } catch (JAXBException e) {

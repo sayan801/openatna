@@ -22,7 +22,11 @@ package org.openhealthtools.openatna.audit.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Andrew Harrison
@@ -33,14 +37,19 @@ import java.util.Properties;
 
 public class PropertiesLoader {
 
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.PropertiesLoader");
+
+
     private static Properties atnaProps = new Properties();
 
     static {
-        InputStream in = ServerConfiguration.class.getResourceAsStream("/openatna.properties");
-        if (in == null) {
+        URL url = ServerConfiguration.class.getResource("/openatna.properties");
+        if (url == null) {
             throw new RuntimeException("FATAL: Could not find openatna.properties file!");
         }
+        log.debug("Loaded openatna.properties from:" + url);
         try {
+            InputStream in = url.openStream();
             atnaProps.load(in);
         } catch (IOException e) {
             throw new RuntimeException("FATAL: Could not load openatna.properties file", e);

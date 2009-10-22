@@ -21,11 +21,11 @@ package org.openhealthtools.openatna.atnatest;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLSocket;
 import org.openhealthtools.openatna.anom.*;
 import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.atnatest.ssl.AuthSSLSocketFactory;
@@ -69,15 +69,16 @@ public class TlsClientTest0 {
             sl.addStructuredElement(se);
 
 
-            Socket s = f.createSecureSocket("localhost", 2862);
+            SSLSocket s = (SSLSocket) f.createSecureSocket("localhost", 2862);
+            s.setEnabledCipherSuites(new String[]{"SSL_RSA_WITH_NULL_SHA"});
             OutputStream out = s.getOutputStream();
             byte[] bytes = sl.toByteArray();
-            for (int i = 0; i < 5; i++) {
-                // add message length plus space before message
-                out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
-                out.write(bytes);
-                out.flush();
-            }
+            //for (int i = 0; i < 5; i++) {
+            // add message length plus space before message
+            out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
+            out.write(bytes);
+            out.flush();
+            //}
             out.close();
             s.close();
         } catch (IOException e) {
