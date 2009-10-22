@@ -38,6 +38,10 @@ import org.openhealthtools.openatna.persistence.util.PersistencePoliciesIO;
 import org.openhealthtools.openatna.syslog.LogMessage;
 
 /**
+ * Loads XML actor and connection files.
+ * This throws RuntimeExceptions if something goes pear shaped - no point in carrying
+ * on if errors occur here.
+ *
  * @author Andrew Harrison
  * @version $Revision:$
  * @created Oct 21, 2009: 10:24:00 AM

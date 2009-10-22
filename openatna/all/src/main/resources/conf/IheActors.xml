@@ -35,9 +35,15 @@
         <Tcp connection="arr-tls"/>
         <Udp connection="arr-udp"/>
 
-        <!-- the class name of the Syslog Log Message implementation -->
+        <!--
+        the class name of the Syslog Log Message implementation
+        This must implement org.openhealthtools.syslog.LogMessage
+        -->
         <LogMessage>org.openhealthtools.openatna.dist.JaxbLogMessage</LogMessage>
-        <!-- policies on what unknown entities to allow into the repository via audit messages-->
+        <!--
+        policies on what unknown entities to allow into the repository via audit messages
+        see org.openhealthtools.openatna.persistence.PersistencePolicies for more details
+        -->
         <PersistencePolicies>
             <allowNewNetworkAccessPoints>true</allowNewNetworkAccessPoints>
             <allowNewParticipants>true</allowNewParticipants>

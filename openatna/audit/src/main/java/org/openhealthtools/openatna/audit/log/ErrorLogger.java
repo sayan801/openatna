@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class ErrorLogger {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.ErrorLogger");
+    static Log log = LogFactory.getLog("ATNA.ERROR_LOG");
 
     private static List<ErrorHandler<Throwable>> handlers = new ArrayList<ErrorHandler<Throwable>>();
 
