@@ -3,14 +3,40 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!--  Log4j Configuration                                                  -->
+<!--  Log4j Configuration Please read the section about ATNA LOGGING below                                                 -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!--
-   | For more configuration infromation and examples see the Jakarta Log4j
-   | owebsite: http://jakarta.apache.org/log4j
- -->
+<!-- **************************************** ATNA LOGGING *****************************************
+
+  | ATNA loggers come in a few flavours representing the layers at which exceptions could happen:
+  | ATNA.SYSLOG_ERROR_LOG reports Syslog exceptions
+  | ATNA.PERSISTENCE_ERROR_LOG reports persistence exceptions
+  | ATNA.ATNA_ERROR_LOG reports errors at the message parsing layer
+  | ATNA.AUDIT_ERROR_LOG reports exceptions at the audit (i.e. application) layer.
+  | The example below is a logger that logs all ATNA loggers at the DEBUG level
+  | to the ATNA_LOG appender. By changing the name of the logger to the full name
+  | of the atna logger, you can split output to different appenders and set different
+  | levels.
+
+    <logger name="ATNA" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="ATNA_FILE"/>
+    </logger>
+
+    <appender name="ATNA_LOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="atna.log"/>
+        <param name="Append" value="false"/>
+        <param name="MaxFileSize" value="500KB"/>
+        <param name="MaxBackupIndex" value="1"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+   *********************************************************************************************** -->
+
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
@@ -31,6 +57,7 @@
         </layout>
     </appender>
 
+
     <!-- ============================== -->
     <!-- Append messages to the console -->
     <!-- ============================== -->
@@ -38,12 +65,12 @@
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
         <param name="Threshold" value="DEBUG"/>
-
         <layout class="org.apache.log4j.PatternLayout">
             <!-- The default pattern: Date Priority [Category] Message\n -->
             <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
         </layout>
     </appender>
+
 
     <!-- ====================== -->
     <!-- More Appender examples -->

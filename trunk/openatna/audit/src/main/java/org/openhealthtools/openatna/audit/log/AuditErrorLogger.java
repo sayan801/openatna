@@ -38,7 +38,7 @@ import org.openhealthtools.openatna.audit.AuditException;
 
 public class AuditErrorLogger {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.log.AuditErrorLogger");
+    static Log log = LogFactory.getLog("ATNA.AUDIT_ERROR_LOG");
 
     private static List<ErrorHandler<AuditException>> handlers = new ArrayList<ErrorHandler<AuditException>>();
 
