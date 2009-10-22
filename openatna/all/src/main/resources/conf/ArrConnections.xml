@@ -44,7 +44,7 @@
         <HostName>localhost</HostName>
         <Port>2863</Port>
         <PropertySet name="UdpProperties">
-            <mtu>16384</mtu>
+            <entry name="mtu" value="1024"/>
         </PropertySet>
     </StandardConnection>
 

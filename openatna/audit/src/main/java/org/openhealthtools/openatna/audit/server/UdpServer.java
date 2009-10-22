@@ -80,7 +80,6 @@ public class UdpServer {
         }
 
         public void run() {
-            log.debug(" socket port is:" + socket.getLocalPort());
             while (running && !interrupted()) {
                 try {
                     byte[] buffer = new byte[udpConn.getMaxTransmissionUnit()];
@@ -89,7 +88,7 @@ public class UdpServer {
                     atnaServer.execute(new UdpReceiver(packet));
                 }
                 catch (SocketException x) {
-                    log.debug("Socket Exception thrown.");
+                    log.debug("Socket closed.");
                 }
                 catch (SocketTimeoutException x) {
                     x.printStackTrace();
@@ -100,7 +99,6 @@ public class UdpServer {
                     break;
                 }
             }
-            log.debug(" exiting udp server thread.");
         }
     }
 
