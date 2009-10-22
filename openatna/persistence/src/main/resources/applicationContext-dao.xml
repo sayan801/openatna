@@ -50,13 +50,14 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
         <property name="hibernateProperties">
-            <value>
-                hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-                hibernate.cache.use_second_level_cache=true
-                hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
-                hibernate.hbm2ddl.auto=update
-                hibernate.connection.release_mode=after_transaction
-            </value>
+            <props>
+                <prop key="hibernate.dialect">${hib.dialect}</prop>
+                <prop key="hibernate.cache.use_second_level_cache">${hib.cache.use-second-level}</prop>
+                <prop key="hibernate.cache.provider_class">${hib.cache.provider}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hib.hbm2ddl.auto}</prop>
+                <prop key="hibernate.connection.release_mode">${hib.connection.release}</prop>
+            </props>
+
             <!-- Turn batching off for better error messages under PostgreSQL -->
             <!-- hibernate.jdbc.batch_size=0 -->
         </property>

@@ -38,7 +38,7 @@ import org.openhealthtools.openatna.persistence.util.EntityConverter;
 
 public class PersistenceProcessor implements AtnaProcessor {
 
-    public void process(ProcessContext context) throws Exception {
+    public synchronized void process(ProcessContext context) throws Exception {
         AtnaMessage msg = context.getMessage();
         if (msg == null) {
             throw new AuditException("no message", null, AuditException.AuditError.NULL_MESSAGE);
