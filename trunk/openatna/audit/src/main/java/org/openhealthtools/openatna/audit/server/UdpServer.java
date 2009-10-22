@@ -21,10 +21,7 @@ package org.openhealthtools.openatna.audit.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 import org.apache.commons.logging.Log;
@@ -46,22 +43,23 @@ public class UdpServer {
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.UdpServer");
 
     private AtnaServer atnaServer;
-    private IConnectionDescription tlsConnection;
+    private IConnectionDescription udpConnection;
     private UdpServerConnection udpConn = null;
     private boolean running = false;
     private UdpServerThread thread;
 
-    public UdpServer(AtnaServer atnaServer, IConnectionDescription tlsConnection) {
+    public UdpServer(AtnaServer atnaServer, IConnectionDescription udpConnection) {
         this.atnaServer = atnaServer;
-        this.tlsConnection = tlsConnection;
+        this.udpConnection = udpConnection;
     }
 
     public void start() throws IOException {
-        udpConn = new UdpServerConnection(tlsConnection);
+        udpConn = new UdpServerConnection(udpConnection);
         DatagramSocket socket = udpConn.getSocket();
         thread = new UdpServerThread(socket);
         running = true;
         thread.start();
+        log.debug("UDP Server running on port:" + udpConnection.getPort());
 
     }
 
@@ -69,6 +67,7 @@ public class UdpServer {
         running = false;
         thread.interrupt();
         udpConn.closeServerConnection();
+        log.debug("UDP Server shutting down...");
     }
 
     private class UdpServerThread extends Thread {
@@ -114,7 +113,7 @@ public class UdpServer {
             SyslogMessage msg = null;
             try {
                 byte[] data = new byte[packet.getLength()];
-                log.debug(" getting bytes from DatagramPacket with a length of " + data.length);
+                log.debug(logPacket(packet));
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, data.length);
                 msg = createMessage(data);
             } catch (SyslogException e) {
@@ -130,5 +129,13 @@ public class UdpServer {
         private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
+    }
+
+    private String logPacket(DatagramPacket packet) {
+        String localAddress = udpConn.getSocket().getLocalAddress().getHostAddress();
+        int port = udpConn.getSocket().getLocalPort();
+        InetSocketAddress addr = (InetSocketAddress) packet.getSocketAddress();
+        return "UDP DatagramPacket received from:" + addr.getAddress().getHostAddress() + ":" + addr.getPort() +
+                " to:" + localAddress + ":" + port;
     }
 }

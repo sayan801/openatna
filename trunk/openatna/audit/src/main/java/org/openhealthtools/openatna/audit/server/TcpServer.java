@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.audit.server;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -64,12 +65,14 @@ public class TcpServer {
         running = true;
         thread = new TcpServerThread(ss);
         thread.start();
+        log.debug("TLS Server running on port:" + tlsConnection.getPort());
     }
 
     public void stop() {
         running = false;
         thread.interrupt();
         tlsConn.closeServerConnection();
+        log.debug("TLS Server shutting down...");
     }
 
 
@@ -86,6 +89,7 @@ public class TcpServer {
             while (running && !interrupted()) {
                 try {
                     Socket s = server.accept();
+                    log.debug(logSocket(s));
                     atnaServer.execute(new WorkerThread(s));
                 } catch (SocketException e) {
                     log.debug("Socket closed.");
@@ -93,6 +97,13 @@ public class TcpServer {
                     atnaServer.notifyException(new SyslogException(e));
                 }
             }
+        }
+
+        private String logSocket(Socket socket) {
+            InetSocketAddress local = (InetSocketAddress) socket.getLocalSocketAddress();
+            InetSocketAddress addr = (InetSocketAddress) socket.getRemoteSocketAddress();
+            return "TCP data received from:" + addr.getHostName() + ":" + addr.getPort() +
+                    " to:" + local.getHostName() + ":" + local.getPort();
         }
     }
 
@@ -163,5 +174,9 @@ public class TcpServer {
         private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
+
+
     }
+
+
 }
