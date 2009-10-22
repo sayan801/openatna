@@ -21,6 +21,9 @@ package org.openhealthtools.openatna.audit.process;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * A chain for processors.
  * <p/>
@@ -49,6 +52,9 @@ import java.util.*;
  */
 
 public class ProcessorChain {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.ProcessorChain");
+
 
     private List<AtnaProcessor> processors = new ArrayList<AtnaProcessor>();
     private int next = 0;
@@ -85,6 +91,7 @@ public class ProcessorChain {
     }
 
     public void process(ProcessContext context) {
+        long before = System.currentTimeMillis();
         context.addProperties(Collections.unmodifiableMap(contextProperties));
         List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
         try {
@@ -107,6 +114,8 @@ public class ProcessorChain {
             context.setThrowable(e);
             rewind(done, context);
         }
+        long now = System.currentTimeMillis();
+        log.debug("message processing time:" + (now - before));
     }
 
     private void rewind(List<AtnaProcessor> completed, ProcessContext context) {
