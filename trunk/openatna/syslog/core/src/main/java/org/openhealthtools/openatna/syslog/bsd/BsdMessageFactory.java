@@ -19,8 +19,6 @@
 
 package org.openhealthtools.openatna.syslog.bsd;
 
-import org.openhealthtools.openatna.syslog.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
@@ -30,6 +28,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.syslog.*;
 
 /**
  * Reads in data and creates BSD style syslog messages
@@ -41,6 +43,9 @@ import java.util.TimeZone;
  */
 
 public class BsdMessageFactory extends SyslogMessageFactory {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.syslog.bsd.BsdMessageFactory");
+
 
     private static SimpleDateFormat format = new SimpleDateFormat("MMM d HH:mm:ss");
     private static SimpleDateFormat singleDateFormat = new SimpleDateFormat("MMM  d HH:mm:ss");

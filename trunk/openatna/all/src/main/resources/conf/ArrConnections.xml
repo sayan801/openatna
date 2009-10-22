@@ -43,9 +43,6 @@
     <StandardConnection name="arr-udp">
         <HostName>localhost</HostName>
         <Port>2863</Port>
-        <PropertySet name="UdpProperties">
-            <entry name="mtu" value="1024"/>
-        </PropertySet>
     </StandardConnection>
 
 

@@ -41,6 +41,9 @@
         <PersistencePolicies>
             <allowNewNetworkAccessPoints>true</allowNewNetworkAccessPoints>
             <allowNewParticipants>true</allowNewParticipants>
+            <allowNewObjects>true</allowNewObjects>
+            <allowNewSources>true</allowNewSources>
+            <allowUnknownDetailTypes>true</allowUnknownDetailTypes>
         </PersistencePolicies>
 
     </Actor>

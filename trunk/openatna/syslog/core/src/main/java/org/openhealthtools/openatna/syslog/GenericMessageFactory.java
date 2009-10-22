@@ -19,12 +19,14 @@
 
 package org.openhealthtools.openatna.syslog;
 
-import org.openhealthtools.openatna.syslog.bsd.BsdMessageFactory;
-import org.openhealthtools.openatna.syslog.protocol.ProtocolMessageFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.syslog.bsd.BsdMessageFactory;
+import org.openhealthtools.openatna.syslog.protocol.ProtocolMessageFactory;
 
 /**
  * Determies whether the message is BSD or RFC 5424 based on the first few bytes
@@ -37,6 +39,9 @@ import java.io.PushbackInputStream;
  */
 
 public class GenericMessageFactory extends SyslogMessageFactory {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.syslog.GenericMessageFactory");
+
 
     private static BsdMessageFactory bsdFactory = new BsdMessageFactory();
     private static ProtocolMessageFactory protFactory = new ProtocolMessageFactory();
@@ -81,8 +86,10 @@ public class GenericMessageFactory extends SyslogMessageFactory {
             boolean bsd = isBSD(bytes);
             pin.unread(bytes);
             if (bsd) {
+                log.debug("message is BSD style");
                 return bsdFactory.read(pin);
             } else {
+                log.debug("message RFC 5424");
                 return protFactory.read(pin);
             }
         } catch (IOException e) {
