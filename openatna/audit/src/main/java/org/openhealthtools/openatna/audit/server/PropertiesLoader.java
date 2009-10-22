@@ -43,7 +43,7 @@ public class PropertiesLoader {
     private static Properties atnaProps = new Properties();
 
     static {
-        URL url = ServerConfiguration.class.getResource("/openatna.properties");
+        URL url = PropertiesLoader.class.getResource("/openatna.properties");
         if (url == null) {
             throw new RuntimeException("FATAL: Could not find openatna.properties file!");
         }

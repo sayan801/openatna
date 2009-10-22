@@ -29,12 +29,12 @@ import org.apache.commons.logging.LogFactory;
  * <p/>
  * The addNext() method is relative to the previous call to one of the add* methods.
  * addFirst() resets the "next" counter to 1.
- * addLastLast() resets the "next" counter to the size of the list of processors.
+ * addLast() resets the "next" counter to the size of the list of processors.
  * addNext() increments the "next" counter.
  * <p/>
  * The "next" counter starts off with a value of 0.
  * <p/>
- * The chain will persists the atna message, if no previous processors have set the
+ * The chain will persist the atna message, if no previous processors have set the
  * state of the context to PERSISTED. This means only domain/business processors
  * need to be added manually.
  * <p/>

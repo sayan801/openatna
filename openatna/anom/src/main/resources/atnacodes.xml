@@ -6,8 +6,6 @@
     -->
 <Codes>
     <CodeType name="EventId">
-
-
         <Code code="110100" codingScheme="DCM" display="Application Activity"/>
         <Code code="110101" codingScheme="DCM" display="Audit Log Used"/>
         <Code code="110102" codingScheme="DCM" display="Being Transfering DICOM Instances"/>

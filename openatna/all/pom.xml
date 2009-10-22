@@ -15,7 +15,7 @@
     <name>OpenATNA All</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
-	
+
     <build>
         <plugins>
             <plugin>
@@ -35,7 +35,7 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-					<execution>
+                    <execution>
                         <id>ant2</id>
                         <phase>clean</phase>
                         <configuration>
@@ -74,7 +74,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                    <exclude>*</exclude>
+                    <exclude>**/**</exclude>
                 </excludes>
             </resource>
         </resources>

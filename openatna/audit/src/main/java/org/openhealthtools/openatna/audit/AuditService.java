@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.audit.process.AtnaMessageListener;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
@@ -42,6 +44,9 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
  */
 
 public class AuditService {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.AuditService");
+
 
     public static final String PROPERTY_DAO_FACTORY = AuditService.class.getName() + ".dao.factory";
     public static final String PROPERTY_PERSISTENCE_POLICIES = AuditService.class.getName() + ".persistence.policies";
@@ -65,7 +70,7 @@ public class AuditService {
         if (daoFactory == null) {
             daoFactory = SpringDaoFactory.getFactory();
         }
-        URL defCodes = Thread.currentThread().getContextClassLoader().getResource("atnacodes.xml");
+        URL defCodes = getClass().getResource("/conf/atnacodes.xml");
         addCodeUrls(defCodes);
         CodeParser.parse(getCodeUrls());
         chain.putProperty(PROPERTY_PERSISTENCE_POLICIES, persistencePolicies);
@@ -101,7 +106,10 @@ public class AuditService {
      */
     public void addCodeUrls(URL... urls) {
         for (URL url : urls) {
-            codeUrls.add(url);
+            if (url != null) {
+                log.debug("loading Codes from url:" + url);
+                codeUrls.add(url);
+            }
         }
     }
 

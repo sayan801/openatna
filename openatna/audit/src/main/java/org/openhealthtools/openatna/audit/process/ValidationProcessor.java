@@ -36,6 +36,58 @@ import org.openhealthtools.openatna.anom.*;
 
 public class ValidationProcessor implements AtnaProcessor {
 
+    private static ObjectTypeCodeRole[] persons = {
+            ObjectTypeCodeRole.CUSTOMER,
+            ObjectTypeCodeRole.PATIENT,
+            ObjectTypeCodeRole.DOCTOR,
+            ObjectTypeCodeRole.RESOURCE,
+            ObjectTypeCodeRole.USER,
+            ObjectTypeCodeRole.GUARANTOR,
+            ObjectTypeCodeRole.SECURITY_USER_ENTITY,
+            ObjectTypeCodeRole.PROVIDER
+    };
+
+    private static ObjectTypeCodeRole[] systemObjects = {
+            ObjectTypeCodeRole.REPORT,
+            ObjectTypeCodeRole.MASTER_FILE,
+            ObjectTypeCodeRole.USER,
+            ObjectTypeCodeRole.LIST,
+            ObjectTypeCodeRole.SECURITY_USER_ENTITY,
+            ObjectTypeCodeRole.SECURITY_GRANULARITY_DEFINITION,
+            ObjectTypeCodeRole.SECURITY_RESOURCE,
+            ObjectTypeCodeRole.SECURITY_USER_GROUP,
+            ObjectTypeCodeRole.DATA_DESTINATION,
+            ObjectTypeCodeRole.DATA_REPOSITORY,
+            ObjectTypeCodeRole.SCHEDULE,
+            ObjectTypeCodeRole.JOB,
+            ObjectTypeCodeRole.JOB_STREAM,
+            ObjectTypeCodeRole.TABLE,
+            ObjectTypeCodeRole.ROUTING_CRITERIA,
+            ObjectTypeCodeRole.QUERY
+    };
+
+    private static ObjectTypeCodeRole[] organisations = {
+            ObjectTypeCodeRole.LOCATION,
+            ObjectTypeCodeRole.RESOURCE,
+            ObjectTypeCodeRole.SUBSCRIBER,
+            ObjectTypeCodeRole.GUARANTOR,
+            ObjectTypeCodeRole.PROVIDER,
+            ObjectTypeCodeRole.CUSTOMER,
+
+    };
+
+    private static String[] personIds = {
+            "1", "2", "3", "4", "5", "6", "7", "11"
+    };
+
+    private static String[] systemObjectIds = {
+            "8", "9", "10", "11", "12"
+    };
+
+    private static String[] organisationIds = {
+            "6", "7"
+    };
+
 
     public void process(ProcessContext context) throws Exception {
         validate(context.getMessage());
@@ -132,6 +184,13 @@ public class ValidationProcessor implements AtnaProcessor {
         if (obj.getObjectIdTypeCode() == null || obj.getObjectIdTypeCode().getCode() == null) {
             throw new AtnaException("invalid object id type code", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
         }
+        if (obj.getObjectTypeCode() != null) {
+            validateObjectIdTypeCode(obj.getObjectIdTypeCode(), obj.getObjectTypeCode());
+            if (obj.getObjectTypeCodeRole() != null) {
+                validateObjectTypeCodeRole(obj.getObjectTypeCodeRole(), obj.getObjectTypeCode());
+            }
+        }
+
         List<AtnaObjectDetail> details = object.getObjectDetails();
         for (AtnaObjectDetail detail : details) {
             if (detail.getType() == null || detail.getValue() == null || detail.getValue().length == 0) {
@@ -139,4 +198,81 @@ public class ValidationProcessor implements AtnaProcessor {
             }
         }
     }
+
+    private boolean isInArray(ObjectTypeCodeRole role, ObjectTypeCodeRole[] arr) {
+        for (ObjectTypeCodeRole codeRole : arr) {
+            if (codeRole == role) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isInArray(String role, String[] arr) {
+        for (String codeRole : arr) {
+            if (codeRole.equals(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void validateObjectTypeCodeRole(ObjectTypeCodeRole role, ObjectType type) throws AtnaException {
+        switch (type) {
+            case PERSON:
+                if (!isInArray(role, persons)) {
+                    throw new AtnaException("Invalid combination of role and type. Role:" + role + " type:" + type);
+                }
+                break;
+            case ORGANIZATION:
+                if (!isInArray(role, organisations)) {
+                    throw new AtnaException("Invalid combination of role and type. Role:" + role + " type:" + type);
+                }
+                break;
+            case SYSTEM_OBJECT:
+                if (!isInArray(role, systemObjects)) {
+                    throw new AtnaException("Invalid combination of role and type. Role:" + role + " type:" + type);
+                }
+                break;
+            case OTHER:
+
+                break;
+            default:
+                throw new AtnaException("unknown Object type.");
+        }
+
+    }
+
+    private void validateObjectIdTypeCode(AtnaCode code, ObjectType type) throws AtnaException {
+        if (code.getCodeType().equals(AtnaCode.OBJECT_ID_TYPE) &&
+                code.getCodeSystemName().equalsIgnoreCase("RFC-3881")) {
+            String s = code.getCode();
+            switch (type) {
+                case PERSON:
+                    if (!isInArray(s, personIds)) {
+                        throw new AtnaException("Invalid combination of id type and Object type. Code:" + s + " type:" + type);
+                    }
+                    break;
+                case ORGANIZATION:
+                    if (!isInArray(s, organisationIds)) {
+                        throw new AtnaException("Invalid combination of id type and Object type. Code:" + s + " type:" + type);
+                    }
+                    break;
+                case SYSTEM_OBJECT:
+                    if (!isInArray(s, systemObjectIds)) {
+                        throw new AtnaException("Invalid combination of id type and Object type. Code:" + s + " type:" + type);
+                    }
+                    break;
+                case OTHER:
+
+                    break;
+                default:
+                    throw new AtnaException("unknown Object type.");
+            }
+        }
+
+    }
+
+
 }
