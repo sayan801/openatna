@@ -96,28 +96,6 @@
 -->
 <entities>
     <codes>
-        <eventId id="ITI-8" code="ITI-8" systemName="IHE Transactions" displayName="Patient Identity Feed"/>
-        <eventId id="ITI-9" code="ITI-9" systemName="IHE Transactions" displayName="PIX Query"/>
-        <eventId id="ITI-10" code="ITI-10" systemName="IHE Transactions" displayName="PIX Update Notification"/>
-        <eventId id="ITI-21" code="ITI-21" systemName="IHE Transactions" displayName="Patient Demographics Query"/>
-        <eventId id="ITI-22" code="ITI-22" systemName="IHE Transactions" displayName="Patient Demographics and Visit Query"/>
-        <eventId id="ITI-14" code="ITI-14" systemName="IHE Transactions" displayName="Register Document Set"/>
-        <eventId id="ITI-15" code="ITI-15" systemName="IHE Transactions" displayName="Provide and Register Document Set"/>
-        <eventId id="ITI-16" code="ITI-16" systemName="IHE Transactions" displayName="Registry SQL Query"/>
-        <eventId id="ITI-17" code="ITI-17" systemName="IHE Transactions" displayName="Retrieve Document"/>
-        <eventId id="ITI-18" code="ITI-18" systemName="IHE Transactions" displayName="Registry Stored Query"/>
-        <eventId id="ITI-32" code="ITI-32" systemName="IHE Transactions" displayName="Distribute Document Set on Media"/>
-        <eventId id="ITI-30" code="ITI-30" systemName="IHE Transactions" displayName="Patient Identity Management"/>
-        <eventId id="ITI-38" code="ITI-38" systemName="IHE Transactions" displayName="Cross Gateway Query"/>
-        <eventId id="ITI-39" code="ITI-39" systemName="IHE Transactions" displayName="Cross Gateway Retrieve"/>
-        <eventId id="ITI-41" code="ITI-41" systemName="IHE Transactions" displayName="Provide and Register Document Set-b"/>
-        <eventId id="ITI-42" code="ITI-42" systemName="IHE Transactions" displayName="Register Document Set-b"/>
-        <eventId id="ITI-43" code="ITI-43" systemName="IHE Transactions" displayName="Retrieve Document Set"/>
-        <eventId id="ITI-48" code="ITI-48" systemName="IHE Transactions" displayName="Retrieve Value Set"/>
-
-        <eventId id="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd" code="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd"
-                 systemName="IHE XDS Metadata" displayName="SubmissionSet ClassificationNode"/>
-
         <sourceType id="RFC-3881-1" code="1" systemName="RFC-3881" displayName="End User Display Device"/>
         <sourceType id="RFC-3881-2" code="2" systemName="RFC-3881" displayName="Data Acquisition Device"/>
         <sourceType id="RFC-3881-3" code="3" systemName="RFC-3881" displayName="Web Server Process"/>
@@ -140,6 +118,8 @@
         <objectIdType id="RFC-3881-110" code="10" systemName="RFC-3881" displayName="Search Criteria"/>
         <objectIdType id="RFC-3881-111" code="11" systemName="RFC-3881" displayName="User Identifier"/>
         <objectIdType id="RFC-3881-112" code="12" systemName="RFC-3881" displayName="URI"/>
+        <objectIdType id="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd" code="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd"
+                      systemName="IHE XDS Metadata" displayName="SubmissionSet ClassificationNode"/>
 
         <eventId id="DCM-110100" code="110100" systemName="DCM" displayName="Application Activity"/>
         <eventId id="DCM-110101" code="110101" systemName="DCM" displayName="Audit Log Used"/>
@@ -175,6 +155,25 @@
         <eventType id="DCM-110135" code="110135" systemName="DCM" displayName="Object Security Attributes Changed"/>
         <eventType id="DCM-110136" code="110136" systemName="DCM" displayName="Security Roles Changed"/>
         <eventType id="DCM-110137" code="110137" systemName="DCM" displayName="User Security Attributes Changed"/>
+
+        <eventType id="ITI-8" code="ITI-8" systemName="IHE Transactions" displayName="Patient Identity Feed"/>
+        <eventType id="ITI-9" code="ITI-9" systemName="IHE Transactions" displayName="PIX Query"/>
+        <eventType id="ITI-10" code="ITI-10" systemName="IHE Transactions" displayName="PIX Update Notification"/>
+        <eventType id="ITI-21" code="ITI-21" systemName="IHE Transactions" displayName="Patient Demographics Query"/>
+        <eventType id="ITI-22" code="ITI-22" systemName="IHE Transactions" displayName="Patient Demographics and Visit Query"/>
+        <eventType id="ITI-14" code="ITI-14" systemName="IHE Transactions" displayName="Register Document Set"/>
+        <eventType id="ITI-15" code="ITI-15" systemName="IHE Transactions" displayName="Provide and Register Document Set"/>
+        <eventType id="ITI-16" code="ITI-16" systemName="IHE Transactions" displayName="Registry SQL Query"/>
+        <eventType id="ITI-17" code="ITI-17" systemName="IHE Transactions" displayName="Retrieve Document"/>
+        <eventType id="ITI-18" code="ITI-18" systemName="IHE Transactions" displayName="Registry Stored Query"/>
+        <eventType id="ITI-32" code="ITI-32" systemName="IHE Transactions" displayName="Distribute Document Set on Media"/>
+        <eventType id="ITI-30" code="ITI-30" systemName="IHE Transactions" displayName="Patient Identity Management"/>
+        <eventType id="ITI-38" code="ITI-38" systemName="IHE Transactions" displayName="Cross Gateway Query"/>
+        <eventType id="ITI-39" code="ITI-39" systemName="IHE Transactions" displayName="Cross Gateway Retrieve"/>
+        <eventType id="ITI-41" code="ITI-41" systemName="IHE Transactions" displayName="Provide and Register Document Set-b"/>
+        <eventType id="ITI-42" code="ITI-42" systemName="IHE Transactions" displayName="Register Document Set-b"/>
+        <eventType id="ITI-43" code="ITI-43" systemName="IHE Transactions" displayName="Retrieve Document Set"/>
+        <eventType id="ITI-48" code="ITI-48" systemName="IHE Transactions" displayName="Retrieve Value Set"/>
 
 
         <participantType id="DCM-110150" code="110150" systemName="DCM" displayName="Application"/>

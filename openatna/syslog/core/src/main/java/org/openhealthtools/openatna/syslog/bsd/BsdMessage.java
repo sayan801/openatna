@@ -20,6 +20,7 @@
 package org.openhealthtools.openatna.syslog.bsd;
 
 import java.io.*;
+import java.util.Date;
 
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
@@ -46,6 +47,11 @@ public class BsdMessage<M> extends SyslogMessage {
             tag = null;
         }
         this.tag = tag;
+    }
+
+    public BsdMessage(int facility, int severity, String hostName, LogMessage<M> message, String tag) {
+        this(facility, severity, BsdMessageFactory.createDate(new Date()), hostName, message);
+
     }
 
     public BsdMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message) {

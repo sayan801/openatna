@@ -23,11 +23,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.net.URL;
+import java.util.List;
 
-import org.openhealthtools.openatna.anom.*;
-import org.openhealthtools.openatna.anom.codes.CodeParser;
+import org.openhealthtools.openatna.anom.AtnaException;
+import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
+import org.junit.Test;
 
 /**
  * @author Andrew Harrison
@@ -36,50 +37,25 @@ import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
  * @date $Date:$ modified by $Author:$
  */
 
-public class BsdClientTest0 {
+public class BsdClientTest0 extends ClientTest {
 
-    public static void main(String[] args) {
-        URL defCodes = Thread.currentThread().getContextClassLoader().getResource("atnacodes.xml");
-        if (defCodes != null) {
-        }
-        CodeParser.parse(defCodes);
-
+    @Test
+    public void testMessages() {
         try {
-            BsdMessage m = new BsdMessage(10, 5, "Oct  1 22:14:15", "127.0.0.1", new JaxbLogMessage(createNewMessage()), "ATNALOG");
-            System.out.println("BsdClientTest0.main message:");
-            m.write(System.out);
-            byte[] bytes = m.toByteArray();
-            DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 2862));
-            DatagramSocket socket = new DatagramSocket();
-            socket.send(packet);
+            List<AtnaMessage> messages = getMessages();
+            for (AtnaMessage message : messages) {
+                BsdMessage m = new BsdMessage(10, 5, "127.0.0.1", new JaxbLogMessage(message), "ATNALOG");
+
+                byte[] bytes = m.toByteArray();
+                DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 2863));
+                DatagramSocket socket = new DatagramSocket();
+                socket.send(packet);
+            }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (AtnaException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * this is taken from test-data.xml in the resource/ dir of persistence module
-     * To load these sources, objects etc into the db, run Populate.java in the test/ dir of the persistence module
-     *
-     * @return
-     */
-    protected static AtnaMessage createMessage() {
-        AtnaCode evtCode = IheCodes.eventTypePatientIdFeed();
-        AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
-        msg.addSource(new AtnaSource("cat").addSourceTypeCode(AtnaCodes.sourceTypeIsoOperatingSoftware()))
-                .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("scmabh")))
-                .addObject(new AtnaMessageObject(new AtnaObject("obj1", new AtnaCode(AtnaCode.OBJECT_ID_TYPE, "110180", null, "DCM", null, null))));
-        msg.getObject("obj1").addObjectDetail(new AtnaObjectDetail().setType("version").setValue("THIS IS DETAIL".getBytes()));
-        return msg;
-    }
-
-    protected static AtnaMessage createNewMessage() {
-        AtnaCode evtCode = AtnaCode.eventIdCode("11", "11", "11", "A new Event id Code", null);
-        AtnaMessage msg = new AtnaMessage(evtCode, EventOutcome.SUCCESS);
-        msg.addSource(new AtnaSource("ls").addSourceTypeCode(AtnaCode.sourceTypeCode("111", "11", "11", "A new Source Code", null)))
-                .addParticipant(new AtnaMessageParticipant(new AtnaParticipant("scm123")))
-                .addObject(new AtnaMessageObject(new AtnaObject("newobj", new AtnaCode(AtnaCode.OBJECT_ID_TYPE, "1111", null, "11", null, null))));
-        msg.getObject("newobj").addObjectDetail(new AtnaObjectDetail().setType("v").setValue("THIS IS DETAIL".getBytes()));
-        return msg;
-    }
 }

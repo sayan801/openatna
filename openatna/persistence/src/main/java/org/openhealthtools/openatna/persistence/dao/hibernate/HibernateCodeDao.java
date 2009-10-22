@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implements CodeDao {
 
+
     public HibernateCodeDao(SessionFactory sessionFactory) {
         super(CodeEntity.class, sessionFactory);
     }
@@ -80,6 +81,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("codeSystemName", codeSystemName)));
+
     }
 
     public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type) throws AtnaPersistenceException {
