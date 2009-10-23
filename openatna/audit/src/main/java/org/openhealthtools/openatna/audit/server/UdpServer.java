@@ -21,12 +21,17 @@ package org.openhealthtools.openatna.audit.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.audit.server.udp.UdpServerConnection;
+import org.openhealthtools.openatna.net.ConnectionFactory;
+import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.openhealthtools.openatna.net.IUdpServerConnection;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
@@ -44,7 +49,7 @@ public class UdpServer {
 
     private AtnaServer atnaServer;
     private IConnectionDescription udpConnection;
-    private UdpServerConnection udpConn = null;
+    private IUdpServerConnection udpConn = null;
     private boolean running = false;
     private UdpServerThread thread;
 
@@ -54,8 +59,8 @@ public class UdpServer {
     }
 
     public void start() throws IOException {
-        udpConn = new UdpServerConnection(udpConnection);
-        DatagramSocket socket = udpConn.getSocket();
+        udpConn = ConnectionFactory.getUdpServerConnection(udpConnection);
+        DatagramSocket socket = udpConn.getServerSocket();
         thread = new UdpServerThread(socket);
         running = true;
         thread.start();
@@ -132,8 +137,8 @@ public class UdpServer {
     }
 
     private String logPacket(DatagramPacket packet) {
-        String localAddress = udpConn.getSocket().getLocalAddress().getHostAddress();
-        int port = udpConn.getSocket().getLocalPort();
+        String localAddress = udpConn.getServerSocket().getLocalAddress().getHostAddress();
+        int port = udpConn.getServerSocket().getLocalPort();
         InetSocketAddress addr = (InetSocketAddress) packet.getSocketAddress();
         return "UDP DatagramPacket received from:" + addr.getAddress().getHostAddress() + ":" + addr.getPort() +
                 " to:" + localAddress + ":" + port;

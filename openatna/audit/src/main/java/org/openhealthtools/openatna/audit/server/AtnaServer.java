@@ -26,9 +26,9 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.net.IConnectionDescription;
 import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;

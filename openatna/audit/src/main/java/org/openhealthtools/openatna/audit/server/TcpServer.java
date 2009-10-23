@@ -27,11 +27,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import com.misyshealthcare.connect.net.ConnectionFactory;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.net.IServerConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.net.ConnectionFactory;
+import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.openhealthtools.openatna.net.IServerConnection;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;

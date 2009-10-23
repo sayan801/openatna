@@ -45,32 +45,27 @@
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>syslog-core</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-anom</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-persistence</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openatna</groupId>
+            <artifactId>openatna-net</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging-api</artifactId>
             <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.misys.braid</groupId>
-            <artifactId>braid-base</artifactId>
-            <version>1.2.2</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

@@ -25,17 +25,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.net.ConnectionFactory;
+import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
+import org.openhealthtools.openatna.persistence.util.PersistencePoliciesIO;
+import org.openhealthtools.openatna.syslog.LogMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import com.misyshealthcare.connect.net.ConnectionFactory;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
-import org.openhealthtools.openatna.persistence.util.PersistencePoliciesIO;
-import org.openhealthtools.openatna.syslog.LogMessage;
 
 /**
  * Loads XML actor and connection files.
