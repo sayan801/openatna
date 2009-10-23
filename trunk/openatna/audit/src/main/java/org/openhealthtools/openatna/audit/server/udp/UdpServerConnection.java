@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.net.PropertySet;
+import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.openhealthtools.openatna.net.PropertySet;
 
 /**
  * @author Andrew Harrison
