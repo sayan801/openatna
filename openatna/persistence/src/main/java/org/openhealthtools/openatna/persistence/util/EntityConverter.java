@@ -298,4 +298,22 @@ public class EntityConverter {
                 code.getOriginalText());
         return ac;
     }
+
+    public static CodeEntity.CodeType getCodeType(AtnaCode code) {
+        String type = code.getCodeType();
+        if (type.equals(AtnaCode.EVENT_ID)) {
+            return CodeEntity.CodeType.EVENT_ID;
+        } else if (type.equals(AtnaCode.EVENT_TYPE)) {
+            return CodeEntity.CodeType.EVENT_TYPE;
+        } else if (type.equals(AtnaCode.OBJECT_ID_TYPE)) {
+            return CodeEntity.CodeType.PARTICIPANT_OBJECT_ID_TYPE;
+        } else if (type.equals(AtnaCode.PARTICIPANT_ROLE_TYPE)) {
+            return CodeEntity.CodeType.ACTIVE_PARTICIPANT;
+        } else if (type.equals(AtnaCode.SOURCE_TYPE)) {
+            return CodeEntity.CodeType.AUDIT_SOURCE;
+        }
+        return null;
+    }
+
+
 }
