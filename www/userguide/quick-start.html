@@ -58,11 +58,11 @@ CONNECTION LIMIT = -1;
             mobile phone is 2862.</p></div><div class="sect2" title="Configuration"><div class="titlepage"><div><div><h3 class="title"><a name="d0e101"></a>Configuration</h3></div></div></div><p>The configuration files for OpenATNA are in the all/build directory. Their purpose is
             described below. They allow you change the configuration of OpenATNA without
             re-compiling, although they do require that you shut the servers down, and restart them
-            so the chages can take effect. To kill the servers, hit Control + C. 
-            </p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Remember! The build all/directory is generated during the build. Any changes you make
-            to configuration files will be lost if you run "mvn install" again. To make permanent changes
-            that will survive the build, edit the corresponding files in the
-                <span class="bold"><strong>openatna/all/src/main/resources/</strong></span> directory.</p></div><p>
+            so the chages can take effect. To kill the servers, hit Control + C.
+                    </p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Remember! The build all/directory is generated during the build. Any
+                    changes you make to configuration files will be lost if you run "mvn install"
+                    again. To make permanent changes that will survive the build, edit the
+                    corresponding files in the <span class="bold"><strong>openatna/all/src/main/resources/</strong></span> directory.</p></div><p>
             </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
                         <span class="bold"><strong>commons-logging.properties</strong></span> - This sets the
                         logging system to use. The default is Log4J. </p></li><li class="listitem"><p>
@@ -90,13 +90,13 @@ CONNECTION LIMIT = -1;
                         second) and also define the database connection values, for example the
                         username and password of the role that connects to the database. Edit this
                         file if you want to use a different username, or have made the atna password
-                        a little more secure :-).</p><p>Once you have built OpenATNA once, you can change
-                the value of the hib.hbm2ddl.auto property value to "none".</p><p></p></li><li class="listitem"><p>If you have run the servers, you will also see an <span class="bold"><strong>openatna.log</strong></span> file. This receives the log messages
+                        a little more secure :-).</p><p>Once you have built OpenATNA once, you
+                        can change the value of the hib.hbm2ddl.auto property value to
+                        "none".</p><p></p></li><li class="listitem"><p>If you have run the servers, you will also see an <span class="bold"><strong>openatna.log</strong></span> file. This receives the log messages
                         from Log4J and will not grow beyond 1/2 MB in size.</p></li><li class="listitem"><p>The <span class="bold"><strong>conf</strong></span> directory - this contains
-                    the actors, their connection parameters, and another directory called
-                    <span class="bold"><strong>certs/</strong></span>
-                        which contains dummy certificates for testing secure nodes.
-                    </p></li><li class="listitem"><p><span class="bold"><strong>conf/IheActors.xml</strong></span> - contains the
+                        the actors, their connection parameters, and another directory called
+                            <span class="bold"><strong>certs/</strong></span> which contains dummy
+                        certificates for testing secure nodes. </p></li><li class="listitem"><p><span class="bold"><strong>conf/IheActors.xml</strong></span> - contains the
                         Audit Record Repository (ARR) actor definition. This contains references to
                         the two connections it uses (TLS and UDP), as well as some persistence
                         policies. Persistence policies are used to specify which types of entities
@@ -105,10 +105,10 @@ CONNECTION LIMIT = -1;
                         the Audit Record Repository (ARR) connection definitions. These specify the
                         port numbers and in the case of the secured TCP connection, the certificates
                         to use during exchanges. These values reference the keystores stored in the
-                            <span class="bold"><strong>conf/certs/</strong></span> directory. When you want to use
-                    real certificates in real keystores, put those keystores in the <span class="bold"><strong>conf/certs/</strong></span>
-                    directory, and reference them in the secure connection definition.
-                </p></li><li class="listitem"><p><span class="bold"><strong>conf/atnacodes.xml</strong></span> - Contains codes
+                            <span class="bold"><strong>conf/certs/</strong></span> directory. When you want to
+                        use real certificates in real keystores, put those keystores in the
+                            <span class="bold"><strong>conf/certs/</strong></span> directory, and reference
+                        them in the secure connection definition. </p></li><li class="listitem"><p><span class="bold"><strong>conf/atnacodes.xml</strong></span> - Contains codes
                         used by ATNA. You can add codes here according to the type of the code. When
                         the default build runs, i.e. when you type "mvn install" from the openatna
                         directory, then the codes in this file will be loaded into the database. If
@@ -129,25 +129,77 @@ CONNECTION LIMIT = -1;
                         </p><pre class="programlisting">ant populateEntities</pre><p> This will read in the
                         file and store the entities in the data base. This requires that you have
                         Ant installed independently of Maven, and on your $PATH environment
-                        variable.
-                    </p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The syntax of the atnacodes.xml and the entities.xml
+                        variable. </p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The syntax of the atnacodes.xml and the entities.xml
                                 code definitions is subtly different with regard to the codes
                                 element. In the atnacode.xml, the "Codes" element is the top level
                                 XML element. In the entities.xml file, the "entities" element is the
                                 top level XML element, and the "Codes" element is inside
                                 this.</p></div><p>
-                </p></li></ul></div></div><div class="sect2" title="Testing"><div class="titlepage"><div><div><h3 class="title"><a name="d0e190"></a>Testing</h3></div></div></div><p> You can test against the server by running the clients in the atnatest module. These
+                    </p></li></ul></div></div><div class="sect2" title="Testing"><div class="titlepage"><div><div><h3 class="title"><a name="d0e190"></a>Testing</h3></div></div></div><p> You can test against the server by running the clients in the atnatest module. These
             are JUnit tests and are probably easiest to run inside your IDE. The classes that are
             designed to run against the server are: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
                         <span class="bold"><strong>org.openhealthtools.openatna.atnatest.TlsClientTest0</strong></span> sends
-                        six messages to the ARR using TLS and Syslog RFC 5424 style messages. The first
-                        three messages use mutually authentication with message encryption.
-                        The second three messages use mutual authentication without message encryption.
-                    </p></li><li class="listitem"><p>
+                        six messages to the ARR using TLS and Syslog RFC 5424 style messages. The
+                        first three messages use mutually authentication with message encryption.
+                        The second three messages use mutual authentication without message
+                        encryption. </p></li><li class="listitem"><p>
                         <span class="bold"><strong>org.openhealthtools.openatna.atnatest.UdpClientTest0</strong></span> sends
                         three messages to the ARR using UDP and Syslog RFC 5424 style messages.
                     </p></li><li class="listitem"><p>
                         <span class="bold"><strong>org.openhealthtools.openatna.atnatest.BsdClientTest0</strong></span> sends
                         three messages to the ARR using UDP and Syslog BSD style messages.
                     </p></li></ul></div><p>
-        </p><p>Have fun</p></div></div></body></html>
+        </p></div><div class="sect2" title="Adding Message Processors"><div class="titlepage"><div><div><h3 class="title"><a name="d0e215"></a>Adding Message Processors</h3></div></div></div><p>The OpenATNA build allows the addition of externally defined message processors. This can be useful if
+            you want to add functionality beyond the simple default behaviour of OpenATNA when audit
+            messages arrive. The message processing is organized as a chain of
+            org.openhealthtools.openatna.audit.process.AtnaProcessors. These are given a chance at
+            processing the Message on its inward journey. The message chain creates a ProcessContext
+            object that contains the message, a set of configurable properties (a Map), as well as
+            the current state of context.</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Currently, the process of deploying external processors described below requires that you run the build again ("mvn install")
+            after you have followed the above instructions. This means you should edit the IheActors.xml file in the
+            <span class="bold"><strong>openatna/all/src/main/resources/conf/</strong></span> directory, not the one in the
+            <span class="bold"><strong>openatna/all/build/conf/</strong></span> directory, and then run "mvn install"</p></div><p>By default, OpenATNA contains three processors. The first validates the incoming message and sets
+            the context state to VALIDATED if validation succeeds. The second persists the message and sets
+            the context state to PERSISTED. The third logs exceptions that may occur.
+        </p><p>The AtnaProcessor interface is shown below.</p><pre class="programlisting">
+        public interface AtnaProcessor {
+            
+           /**
+            * process an incoming message wrapped in a context
+            * @param context
+            * @throws Exception
+            */
+            public void process(ProcessContext context) throws Exception;
+            
+           /**
+            * process an exception that has occured further up the processing chain.
+            * When an exception occurs, then processors are invoked in reverse order
+            * with this method. The context will contain a Throwable object which is
+            * the exception that was thrown.
+            * @param context
+            */
+            public void error(ProcessContext context);
+            
+        }            
+        </pre><p>Once you have written your processors, you need to deploy them to OpenATNA so that
+        it is picked up at runtime. The first thing you need to do is drop the jar or classes into
+        the <span class="bold"><strong>openatna/all/ext</strong></span> directory. Then you need to edit
+        the <span class="bold"><strong>IheActors.xml</strong></span> file to add the processors to the processing chain.
+        This involves declaring the full class name of the processors you want to include. 
+        The snippet below shows the XML should be added as a child of the &lt;ServiceConfig&gt; element.
+        (A commented-out template is already in the file):</p><pre class="programlisting">
+        &lt;ProcessorChain validate="true"&gt;
+            &lt;Processor&gt;my.procesors.Processor1&lt;/Processor&gt;
+            &lt;Processor&gt;my.procesors.Processor2&lt;/Processor&gt;
+        &lt;/ProcessorChain&gt;
+        </pre><p>Supplied AtnaProcessors must implement the
+            org.openhealthtools.openatna.audit.process.AtnaProcessor interface and should have a
+            default constructor. They are added in the order they are listed in the chain.
+            If the ProcessorChain element has an attribute "validate" and its value is "false",
+            then the default message validator will not be used, and another one should be
+            specified in the XML.
+            If the default validator is used, this is always run at the beginning of the chain so
+            application specific processors know the message has been validated. If no processor is
+            added that sets the ProcessContext's state to PERSISTED, then the default
+            PersistenceProcessor is added after the processors defined below.</p><p>If you start the servers again, your processors will be invoked each time a message arrives.
+        An simple example processor is given in the ext module.</p></div></div></body></html>
