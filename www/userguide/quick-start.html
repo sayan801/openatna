@@ -58,7 +58,12 @@ CONNECTION LIMIT = -1;
             mobile phone is 2862.</p></div><div class="sect2" title="Configuration"><div class="titlepage"><div><div><h3 class="title"><a name="d0e101"></a>Configuration</h3></div></div></div><p>The configuration files for OpenATNA are in the all/build directory. Their purpose is
             described below. They allow you change the configuration of OpenATNA without
             re-compiling, although they do require that you shut the servers down, and restart them
-            so the chages can take effect. To kill the servers, hit Control + C. </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+            so the chages can take effect. To kill the servers, hit Control + C. 
+            </p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Remember! The build all/directory is generated during the build. Any changes you make
+            to configuration files will be lost if you run "mvn install" again. To make permanent changes
+            that will survive the build, edit the corresponding files in the
+                <span class="bold"><strong>openatna/all/src/main/resources/</strong></span> directory.</p></div><p>
+            </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
                         <span class="bold"><strong>commons-logging.properties</strong></span> - This sets the
                         logging system to use. The default is Log4J. </p></li><li class="listitem"><p>
                         <span class="bold"><strong>log4j.xml</strong></span> - This is the configuration for
@@ -131,7 +136,7 @@ CONNECTION LIMIT = -1;
                                 XML element. In the entities.xml file, the "entities" element is the
                                 top level XML element, and the "Codes" element is inside
                                 this.</p></div><p>
-                    </p></li></ul></div><p> You can test against the server by running the clients in the atnatest module. These
+                </p></li></ul></div></div><div class="sect2" title="Testing"><div class="titlepage"><div><div><h3 class="title"><a name="d0e190"></a>Testing</h3></div></div></div><p> You can test against the server by running the clients in the atnatest module. These
             are JUnit tests and are probably easiest to run inside your IDE. The classes that are
             designed to run against the server are: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
                         <span class="bold"><strong>org.openhealthtools.openatna.atnatest.TlsClientTest0</strong></span> sends

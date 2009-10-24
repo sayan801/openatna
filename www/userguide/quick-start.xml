@@ -104,7 +104,12 @@ CONNECTION LIMIT = -1;
         <para>The configuration files for OpenATNA are in the all/build directory. Their purpose is
             described below. They allow you change the configuration of OpenATNA without
             re-compiling, although they do require that you shut the servers down, and restart them
-            so the chages can take effect. To kill the servers, hit Control + C. <itemizedlist><listitem><para>
+            so the chages can take effect. To kill the servers, hit Control + C. 
+            <note><para>Remember! The build all/directory is generated during the build. Any changes you make
+            to configuration files will be lost if you run "mvn install" again. To make permanent changes
+            that will survive the build, edit the corresponding files in the
+                <emphasis role="bold">openatna/all/src/main/resources/</emphasis> directory.</para></note>
+            <itemizedlist><listitem><para>
                         <emphasis role="bold">commons-logging.properties</emphasis> - This sets the
                         logging system to use. The default is Log4J. </para></listitem><listitem><para>
                         <emphasis role="bold">log4j.xml</emphasis> - This is the configuration for
@@ -188,7 +193,11 @@ CONNECTION LIMIT = -1;
                                 top level XML element, and the "Codes" element is inside
                                 this.</para>
                     </note>
-                    </para></listitem> </itemizedlist></para>
+                </para></listitem> </itemizedlist></para>
+        
+    </sect2>
+    <sect2>
+        <title>Testing</title>
         <para> You can test against the server by running the clients in the atnatest module. These
             are JUnit tests and are probably easiest to run inside your IDE. The classes that are
             designed to run against the server are: <itemizedlist>
