@@ -26,6 +26,7 @@ import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.persistence.dao.ObjectDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +76,7 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
     }
 
     // TODO - check for INCONSISTENT_REPRESENTATION, e.g sensitivity
-    public void save(ObjectEntity entity) throws AtnaPersistenceException {
+    public void save(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
 
         CodeDao cd = SpringDaoFactory.getFactory().codeDao();
         ObjectIdTypeCodeEntity code = entity.getObjectIdTypeCode();
@@ -85,7 +86,12 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
             if (code.getVersion() != null) {
                 entity.setObjectIdTypeCode(code);
             } else {
-                throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                if (policies.isAllowNewCodes()) {
+                    cd.save(code, policies);
+                    entity.setObjectIdTypeCode(code);
+                } else {
+                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                }
             }
         } else {
             throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
@@ -95,7 +101,11 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
             // new one.
             ObjectEntity existing = getByObjectId(entity.getObjectId());
             if (existing != null) {
-                throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_OBJECT);
+                if (policies.isErrorOnDuplicateInsert()) {
+                    throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_OBJECT);
+                } else {
+                    return;
+                }
             }
         } else {
             // from DB - update. All ok?

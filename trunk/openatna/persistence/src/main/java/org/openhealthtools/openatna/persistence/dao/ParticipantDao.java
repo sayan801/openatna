@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
+import java.util.List;
+
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-
-import java.util.List;
 
 /**
  * Class Description Here...
@@ -47,7 +47,7 @@ public interface ParticipantDao extends Dao {
 
     public List<? extends ParticipantEntity> getAll() throws AtnaPersistenceException;
 
-    public void save(ParticipantEntity ap) throws AtnaPersistenceException;
+    public void save(ParticipantEntity ap, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(ParticipantEntity ap) throws AtnaPersistenceException;
 

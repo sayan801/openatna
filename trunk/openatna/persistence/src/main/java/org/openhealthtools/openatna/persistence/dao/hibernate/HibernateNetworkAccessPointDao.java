@@ -25,6 +25,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,8 +63,8 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
         return all();
     }
 
-    public void save(NetworkAccessPointEntity nap) throws AtnaPersistenceException {
-        if (worthSaving(nap) && !isDuplicate(nap)) {
+    public void save(NetworkAccessPointEntity nap, PersistencePolicies policies) throws AtnaPersistenceException {
+        if (worthSaving(nap) && !isDuplicate(nap, policies)) {
             currentSession().saveOrUpdate(nap);
         }
     }
@@ -81,9 +82,13 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
         return true;
     }
 
-    private boolean isDuplicate(NetworkAccessPointEntity nap) throws AtnaPersistenceException {
+    private boolean isDuplicate(NetworkAccessPointEntity nap, PersistencePolicies policies) throws AtnaPersistenceException {
         NetworkAccessPointEntity entity = getByTypeAndIdentifier(nap.getType(), nap.getIdentifier());
         if (entity != null) {
+            if (policies.isErrorOnDuplicateInsert()) {
+                throw new AtnaPersistenceException("Attempt to load duplicate network access point.",
+                        AtnaPersistenceException.PersistenceError.DUPLICATE_NETWORK_ACCESS_POINT);
+            }
             return true;
         }
         return false;

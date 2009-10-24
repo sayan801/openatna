@@ -25,6 +25,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.model.codes.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,10 +113,12 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
      * @param ce
      * @throws AtnaPersistenceException
      */
-    public void save(CodeEntity ce) throws AtnaPersistenceException {
-        if (!isDuplicate(ce)) {
+    public boolean save(CodeEntity ce, PersistencePolicies policies) throws AtnaPersistenceException {
+        if (!isDuplicate(ce, policies)) {
             currentSession().saveOrUpdate(ce);
+            return true;
         }
+        return false;
     }
 
     public void delete(CodeEntity ce) throws AtnaPersistenceException {
@@ -159,9 +162,13 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         }
     }
 
-    private boolean isDuplicate(CodeEntity entity) throws AtnaPersistenceException {
+    private boolean isDuplicate(CodeEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
         CodeEntity ce = get(entity);
         if (ce != null) {
+            if (policies.isErrorOnDuplicateInsert()) {
+                throw new AtnaPersistenceException("Attempt to load duplicate Code Entity",
+                        AtnaPersistenceException.PersistenceError.DUPLICATE_CODE);
+            }
             return true;
         }
         return false;

@@ -56,7 +56,7 @@ public interface CodeDao extends Dao {
 
     public List<? extends CodeEntity> getAll() throws AtnaPersistenceException;
 
-    public void save(CodeEntity code) throws AtnaPersistenceException;
+    public boolean save(CodeEntity code, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(CodeEntity code) throws AtnaPersistenceException;
 

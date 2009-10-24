@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
+import java.util.List;
+
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-
-import java.util.List;
 
 /**
  * @author Andrew Harrison
@@ -47,7 +47,7 @@ public interface ObjectDao {
 
     public List<? extends ObjectEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity code) throws AtnaPersistenceException;
 
-    public void save(ObjectEntity entity) throws AtnaPersistenceException;
+    public void save(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(ObjectEntity entity) throws AtnaPersistenceException;
 

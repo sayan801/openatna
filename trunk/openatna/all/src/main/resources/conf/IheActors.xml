@@ -50,6 +50,8 @@
             <allowNewObjects>true</allowNewObjects>
             <allowNewSources>true</allowNewSources>
             <allowUnknownDetailTypes>true</allowUnknownDetailTypes>
+            <!-- is false be default anyway -->
+            <errorOnDuplicateInsert>false</errorOnDuplicateInsert>
         </PersistencePolicies>
 
     </Actor>

@@ -29,6 +29,7 @@ import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.anom.codes.CodeRegistry;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.persistence.util.EntityConverter;
@@ -53,9 +54,13 @@ public class CodeLoader {
         CodeDao dao = f.codeDao();
         for (AtnaCode atnaCode : l) {
             CodeEntity ce = EntityConverter.createCode(atnaCode, EntityConverter.getCodeType(atnaCode));
+            PersistencePolicies pp = new PersistencePolicies();
+            pp.setErrorOnDuplicateInsert(false);
+            pp.setAllowNewCodes(true);
             try {
-                log.info("loading code:" + atnaCode);
-                dao.save(ce);
+                if (dao.save(ce, pp)) {
+                    log.info("loading code:" + atnaCode);
+                }
             } catch (AtnaPersistenceException e) {
                 log.info("Exception thrown while storing code:" + e.getMessage());
             }

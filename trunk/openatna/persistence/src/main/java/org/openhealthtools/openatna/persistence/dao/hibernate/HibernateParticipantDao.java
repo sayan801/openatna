@@ -27,6 +27,7 @@ import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.model.ParticipantEntity;
 import org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +92,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
      *
      * @param pe
      */
-    public void save(ParticipantEntity pe) throws AtnaPersistenceException {
+    public void save(ParticipantEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
         if (codes.size() > 0) {
             CodeDao cd = SpringDaoFactory.getFactory().codeDao();
@@ -101,7 +102,12 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
                 if (code.getVersion() != null) {
                     codes.add(code);
                 } else {
-                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    if (policies.isAllowNewCodes()) {
+                        cd.save(code, policies);
+                        codes.add(code);
+                    } else {
+                        throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    }
                 }
             }
             pe.setParticipantTypeCodes(codes);
@@ -111,7 +117,11 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
             // new one.
             ParticipantEntity existing = getByUserId(pe.getUserId());
             if (existing != null) {
-                throw new AtnaPersistenceException(pe.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_PARTICIPANT);
+                if (policies.isErrorOnDuplicateInsert()) {
+                    throw new AtnaPersistenceException(pe.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_PARTICIPANT);
+                } else {
+                    return;
+                }
             }
         } else {
             // from DB - update. All ok?
