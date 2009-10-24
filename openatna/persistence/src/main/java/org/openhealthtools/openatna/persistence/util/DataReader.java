@@ -58,18 +58,17 @@ public class DataReader {
     public static final String NETWORK_ACCESS_POINTS = "netPoints";
 
     public static final String ID = "id";
-    public static final String REF = "ref";
 
-    public static final String CODE_EVENT_ID = "eventId";
-    public static final String CODE_EVENT_TYPE = "eventType";
-    public static final String CODE_OBJ_ID_TYPE = "objectIdType";
-    public static final String CODE_PARTICIPANT_TYPE = "participantType";
-    public static final String CODE_SOURCE = "sourceType";
+    public static final String CODE_EVENT_ID = "EventId";
+    public static final String CODE_EVENT_TYPE = "EventType";
+    public static final String CODE_OBJ_ID_TYPE = "ObjectIdType";
+    public static final String CODE_PARTICIPANT_TYPE = "ParticipantRoleType";
+    public static final String CODE_SOURCE = "SourceType";
 
     public static final String CODE = "code";
-    public static final String CODE_SYSTEM = "system";
-    public static final String CODE_SYSTEM_NAME = "systemName";
-    public static final String DISPLAY_NAME = "displayName";
+    public static final String CODE_SYSTEM = "codeSystem";
+    public static final String CODE_SYSTEM_NAME = "codingScheme";
+    public static final String DISPLAY_NAME = "display";
     public static final String ORIGINAL_TEXT = "originalText";
 
     public static final String NETWORK_ACCESS_POINT = "netPoint";
@@ -100,6 +99,7 @@ public class DataReader {
 
     public static final String TYPE = "type";
     public static final String VALUE = "value";
+    public static final String REF = "ref";
 
     public static final String MESSAGE = "message";
     public static final String EVT_ACTION = "eventAction";
@@ -115,7 +115,13 @@ public class DataReader {
     private Document doc;
     private DaoFactory factory;
 
-    private Map<String, CodeEntity> codes = new HashMap<String, CodeEntity>();
+    private Map<String, CodeEntity> evtIds = new HashMap<String, CodeEntity>();
+    private Map<String, CodeEntity> evtTypes = new HashMap<String, CodeEntity>();
+    private Map<String, CodeEntity> sourceTypes = new HashMap<String, CodeEntity>();
+    private Map<String, CodeEntity> objTypes = new HashMap<String, CodeEntity>();
+    private Map<String, CodeEntity> partTypes = new HashMap<String, CodeEntity>();
+
+
     private Map<String, NetworkAccessPointEntity> naps = new HashMap<String, NetworkAccessPointEntity>();
     private Map<String, SourceEntity> sources = new HashMap<String, SourceEntity>();
     private Map<String, ParticipantEntity> parts = new HashMap<String, ParticipantEntity>();
@@ -138,39 +144,69 @@ public class DataReader {
     }
 
     private void load() throws AtnaPersistenceException {
-        if (codes.size() > 0) {
+        PersistencePolicies pp = new PersistencePolicies();
+        pp.setErrorOnDuplicateInsert(false);
+        pp.setAllowNewCodes(true);
+        pp.setAllowNewNetworkAccessPoints(true);
+        pp.setAllowNewObjects(true);
+        pp.setAllowNewParticipants(true);
+        pp.setAllowNewSources(true);
+        if (evtTypes.size() > 0) {
             CodeDao dao = factory.codeDao();
-            for (CodeEntity code : codes.values()) {
-                dao.save(code);
+            for (CodeEntity code : evtTypes.values()) {
+                dao.save(code, pp);
+            }
+        }
+        if (evtIds.size() > 0) {
+            CodeDao dao = factory.codeDao();
+            for (CodeEntity code : evtIds.values()) {
+                dao.save(code, pp);
+            }
+        }
+        if (sourceTypes.size() > 0) {
+            CodeDao dao = factory.codeDao();
+            for (CodeEntity code : sourceTypes.values()) {
+                dao.save(code, pp);
+            }
+        }
+        if (objTypes.size() > 0) {
+            CodeDao dao = factory.codeDao();
+            for (CodeEntity code : objTypes.values()) {
+                dao.save(code, pp);
+            }
+        }
+        if (partTypes.size() > 0) {
+            CodeDao dao = factory.codeDao();
+            for (CodeEntity code : partTypes.values()) {
+                dao.save(code, pp);
             }
         }
         if (naps.size() > 0) {
             NetworkAccessPointDao dao = factory.networkAccessPointDao();
             for (NetworkAccessPointEntity nap : naps.values()) {
-                dao.save(nap);
+                dao.save(nap, pp);
             }
         }
 
         if (sources.size() > 0) {
             SourceDao dao = factory.sourceDao();
             for (SourceEntity source : sources.values()) {
-                dao.save(source);
+                dao.save(source, pp);
             }
         }
         if (parts.size() > 0) {
             ParticipantDao dao = factory.participantDao();
             for (ParticipantEntity pe : parts.values()) {
-                dao.save(pe);
+                dao.save(pe, pp);
             }
         }
         if (objects.size() > 0) {
             ObjectDao dao = factory.objectDao();
             for (ObjectEntity e : objects.values()) {
-                dao.save(e);
+                dao.save(e, pp);
             }
         }
         if (messages.size() > 0) {
-            PersistencePolicies pp = new PersistencePolicies();
             MessageDao dao = factory.messageDao();
             for (MessageEntity e : messages) {
                 dao.save(e, pp);
@@ -189,9 +225,9 @@ public class DataReader {
                 if (n instanceof Element) {
                     Element e = (Element) n;
                     String name = (e).getLocalName();
-                    if (name.equals(CODES)) {
+                    if (name.equalsIgnoreCase(CODES)) {
                         readCodes(e);
-                    } else if (name.equals(NETWORK_ACCESS_POINTS)) {
+                    } else if (name.equalsIgnoreCase(NETWORK_ACCESS_POINTS)) {
                         readNaps(e);
                     }
                 }
@@ -201,11 +237,11 @@ public class DataReader {
                 if (n instanceof Element) {
                     Element e = (Element) n;
                     String name = (e).getLocalName();
-                    if (name.equals(SOURCES)) {
+                    if (name.equalsIgnoreCase(SOURCES)) {
                         readSources(e);
-                    } else if (name.equals(PARTICIPANTS)) {
+                    } else if (name.equalsIgnoreCase(PARTICIPANTS)) {
                         readParts(e);
-                    } else if (name.equals(OBJECTS)) {
+                    } else if (name.equalsIgnoreCase(OBJECTS)) {
                         readObjects(e);
                     }
                 }
@@ -215,7 +251,7 @@ public class DataReader {
                 if (n instanceof Element) {
                     Element e = (Element) n;
                     String name = (e).getLocalName();
-                    if (name.equals(MESSAGE)) {
+                    if (name.equalsIgnoreCase(MESSAGE)) {
                         readMessage(e);
                     }
                 }
@@ -230,23 +266,42 @@ public class DataReader {
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
-                readCode((Element) n);
+                Element e = (Element) n;
+                if (e.getTagName().equalsIgnoreCase("CodeType")) {
+                    String type = e.getAttribute("name");
+                    if (type != null) {
+                        readCodeTypes(e, type);
+                    }
+                }
             }
         }
     }
 
-    private void readCode(Element el) {
-        String type = el.getLocalName();
+    private void readCodeTypes(Element code, String type) {
+        NodeList children = code.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node n = children.item(i);
+            if (n instanceof Element) {
+                if (((Element) n).getTagName().equalsIgnoreCase(CODE)) {
+                    readCode((Element) n, type);
+                }
+            }
+        }
+
+    }
+
+    private void readCode(Element el, String type) {
+
         CodeEntity entity = null;
-        if (type.equals(CODE_EVENT_ID)) {
+        if (type.equalsIgnoreCase(CODE_EVENT_ID)) {
             entity = new EventIdCodeEntity();
-        } else if (type.equals(CODE_EVENT_TYPE)) {
+        } else if (type.equalsIgnoreCase(CODE_EVENT_TYPE)) {
             entity = new EventTypeCodeEntity();
-        } else if (type.equals(CODE_OBJ_ID_TYPE)) {
+        } else if (type.equalsIgnoreCase(CODE_OBJ_ID_TYPE)) {
             entity = new ObjectIdTypeCodeEntity();
-        } else if (type.equals(CODE_PARTICIPANT_TYPE)) {
+        } else if (type.equalsIgnoreCase(CODE_PARTICIPANT_TYPE)) {
             entity = new ParticipantCodeEntity();
-        } else if (type.equals(CODE_SOURCE)) {
+        } else if (type.equalsIgnoreCase(CODE_SOURCE)) {
             entity = new SourceCodeEntity();
         }
         if (entity == null) {
@@ -266,7 +321,17 @@ public class DataReader {
         entity.setCodeSystemName(nill(name) ? null : name);
         entity.setDisplayName(nill(dis) ? null : dis);
         entity.setOriginalText(nill(orig) ? null : orig);
-        codes.put(id(el), entity);
+        if (type.equals(CODE_EVENT_ID)) {
+            evtIds.put(code, entity);
+        } else if (type.equals(CODE_EVENT_TYPE)) {
+            evtTypes.put(code, entity);
+        } else if (type.equals(CODE_OBJ_ID_TYPE)) {
+            objTypes.put(code, entity);
+        } else if (type.equals(CODE_PARTICIPANT_TYPE)) {
+            partTypes.put(code, entity);
+        } else if (type.equals(CODE_SOURCE)) {
+            sourceTypes.put(code, entity);
+        }
     }
 
 
@@ -318,11 +383,11 @@ public class DataReader {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(SOURCE_TYPE)) {
                 Element ch = (Element) n;
-                String ref = ch.getAttribute(REF);
+                String ref = ch.getAttribute(CODE);
                 if (nill(ref)) {
                     continue;
                 }
-                CodeEntity code = codes.get(ref);
+                CodeEntity code = sourceTypes.get(ref);
                 if (code != null && code instanceof SourceCodeEntity) {
                     e.getSourceTypeCodes().add((SourceCodeEntity) code);
                 }
@@ -357,11 +422,11 @@ public class DataReader {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(PARTICIPANT_TYPE)) {
                 Element ch = (Element) n;
-                String ref = ch.getAttribute(REF);
+                String ref = ch.getAttribute(CODE);
                 if (nill(ref)) {
                     continue;
                 }
-                CodeEntity code = codes.get(ref);
+                CodeEntity code = partTypes.get(ref);
                 if (code != null && code instanceof ParticipantCodeEntity) {
                     e.getParticipantTypeCodes().add((ParticipantCodeEntity) code);
                 }
@@ -400,13 +465,14 @@ public class DataReader {
             Node n = children.item(i);
             if (n instanceof Element) {
                 Element ele = (Element) n;
+
                 if (ele.getLocalName().equals(OBJECT_ID_TYPE)) {
-                    String ref = ele.getAttribute(REF);
+                    String ref = ele.getAttribute(CODE);
                     if (nill(ref)) {
                         System.out.println("no object id type defined. Not loading...");
                         return;
                     }
-                    CodeEntity code = codes.get(ref);
+                    CodeEntity code = objTypes.get(ref);
                     if (code != null && code instanceof ObjectIdTypeCodeEntity) {
                         e.setObjectIdTypeCode((ObjectIdTypeCodeEntity) code);
                     } else {
@@ -452,12 +518,12 @@ public class DataReader {
             if (n instanceof Element) {
                 Element ele = (Element) n;
                 if (ele.getLocalName().equals(EVT_ID)) {
-                    String ref = ele.getAttribute(REF);
+                    String ref = ele.getAttribute(CODE);
                     if (nill(ref)) {
                         System.out.println("no event id type defined. Not loading...");
                         return;
                     }
-                    CodeEntity code = codes.get(ref);
+                    CodeEntity code = evtIds.get(ref);
                     if (code != null && code instanceof EventIdCodeEntity) {
                         ent.setEventId((EventIdCodeEntity) code);
                     } else {
@@ -465,9 +531,9 @@ public class DataReader {
                         return;
                     }
                 } else if (ele.getLocalName().equals(EVT_TYPE)) {
-                    String ref = ele.getAttribute(REF);
+                    String ref = ele.getAttribute(CODE);
                     if (!nill(ref)) {
-                        CodeEntity code = codes.get(ref);
+                        CodeEntity code = evtTypes.get(ref);
                         if (code != null && code instanceof EventTypeCodeEntity) {
                             ent.addEventTypeCode((EventTypeCodeEntity) code);
                         }

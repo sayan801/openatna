@@ -19,11 +19,11 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
+import java.util.List;
+
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.model.SourceEntity;
 import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-
-import java.util.List;
 
 /**
  * @author Andrew Harrison
@@ -41,7 +41,7 @@ public interface SourceDao {
 
     public List<? extends SourceEntity> getByCode(SourceCodeEntity code) throws AtnaPersistenceException;
 
-    public void save(SourceEntity entity) throws AtnaPersistenceException;
+    public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(SourceEntity entity) throws AtnaPersistenceException;
 }

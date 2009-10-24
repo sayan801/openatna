@@ -38,6 +38,7 @@ public class PersistencePolicies extends HashMap<String, Object> {
     public static final String ALLOW_NEW_OBJECTS = "allowNewObjects";
     public static final String ALLOW_UNKNOWN_DETAIL_TYPES = "allowUnknownDetailTypes";
     public static final String ALLOW_MODIFY_MESSAGES = "allowModifyMessages";
+    public static final String ERROR_ON_DUPLICATE_INSERT = "errorOnDuplicateInsert";
 
 
     public boolean isAllowNewCodes() {
@@ -101,6 +102,15 @@ public class PersistencePolicies extends HashMap<String, Object> {
 
     public void setAllowModifyMessages(boolean allowModifyMessages) {
         put(ALLOW_MODIFY_MESSAGES, allowModifyMessages);
+    }
+
+    public boolean isErrorOnDuplicateInsert() {
+        Object o = get(ERROR_ON_DUPLICATE_INSERT);
+        return o != null && o.equals(Boolean.TRUE);
+    }
+
+    public void setErrorOnDuplicateInsert(boolean errorOnDuplicateInsert) {
+        put(ERROR_ON_DUPLICATE_INSERT, errorOnDuplicateInsert);
     }
 
 }

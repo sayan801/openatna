@@ -26,6 +26,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.SourceDao;
 import org.openhealthtools.openatna.persistence.model.SourceEntity;
 import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
@@ -65,7 +66,7 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
-    public void save(SourceEntity entity) throws AtnaPersistenceException {
+    public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<SourceCodeEntity> codes = entity.getSourceTypeCodes();
         if (codes.size() > 0) {
             CodeDao cd = SpringDaoFactory.getFactory().codeDao();
@@ -79,7 +80,12 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                 if (code.getVersion() != null) {
                     codes.add(code);
                 } else {
-                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    if (policies.isAllowNewCodes()) {
+                        cd.save(code, policies);
+                        codes.add(code);
+                    } else {
+                        throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    }
                 }
             }
             entity.setSourceTypeCodes(codes);
@@ -88,7 +94,11 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
             // new one.
             SourceEntity existing = getBySourceId(entity.getSourceId());
             if (existing != null) {
-                throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
+                if (policies.isErrorOnDuplicateInsert()) {
+                    throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
+                } else {
+                    return;
+                }
             }
         } else {
             // from DB - update. All ok?
