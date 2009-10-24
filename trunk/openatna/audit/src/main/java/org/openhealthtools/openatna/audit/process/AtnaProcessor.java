@@ -33,9 +33,22 @@ package org.openhealthtools.openatna.audit.process;
 
 public interface AtnaProcessor {
 
+    /**
+     * process an incoming message wrapped in a context
+     *
+     * @param context
+     * @throws Exception
+     */
     public void process(ProcessContext context) throws Exception;
 
+    /**
+     * process an exception that has occured further up the processing chain.
+     * When an exception occurs, then processors are invoked in reverse order
+     * with this method. The context will contain a Throwable object which is
+     * the exception that was thrown.
+     *
+     * @param context
+     */
     public void error(ProcessContext context);
-
 
 }
