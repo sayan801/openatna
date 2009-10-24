@@ -5,13 +5,12 @@
 ]>
 <sect1 xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xl="http://www.w3.org/1999/xlink">
     <title>&atna; Quick Start</title>
-    <para>This document provides a a quick start guide to &atna;. &atna; is currently developed
-        at Cardiff University
-        and Misys Open Source Systems. It is released under the <link xl:show="new"
-            xl:href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2 Licence</link>. The
-        description of the code in this document describes &atna;
-        <emphasis>as it stands at the time of writing</emphasis> (October 2009). The code is still
-        in a pre version 1.0 state. </para>
+    <para>This document provides a a quick start guide to &atna;. &atna; is currently
+        developed at Cardiff University and Misys Open Source Systems. It is released under the
+            <link xl:show="new" xl:href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2
+            Licence</link>. The description of the code in this document describes &atna;
+            <emphasis>as it stands at the time of writing</emphasis> (October 2009). The code is
+        still in a pre version 1.0 state. </para>
     <para/>
     <sect2>
         <title>Useful Links</title>
@@ -87,8 +86,8 @@ CONNECTION LIMIT = -1;
             for your IDE. </para>
         <para> The code is compiled and packaged into modules. The "all" directory contains a module
             that generates a useable version of OpenATNA. Change directory into the all/build
-            folder. You should see a jar file called openatna-&version;.jar. This is the executable
-            jar file. The dependencies are in the lib/ directory. To run OpenATNA, type:
+            folder. You should see a jar file called openatna-&version;.jar. This is the
+            executable jar file. The dependencies are in the lib/ directory. To run OpenATNA, type:
             <programlisting>java -jar openatna-&version;.jar</programlisting> from the all/build
             directory. You should see something similar to:
             <programlisting>
@@ -99,15 +98,15 @@ CONNECTION LIMIT = -1;
             This has started two servers. The first is a secured TCP server socket. The second is an
             unsecured UDP connection. The port numbers are not completely random - "ATNA" on your
             mobile phone is 2862.</para>
-        
-        <para>The configuration files for OpenATNA are in the all/build
-            directory. Their purpose is described below. They allow you change the configuration of
-            OpenATNA without re-compiling, although they do require that you shut the servers down,
-            and restart them so the chages can take effect. To kill the servers, hit Control + C.
-                        <itemizedlist><listitem><para>
+    </sect2>
+    <sect2>
+        <title>Configuration</title>
+        <para>The configuration files for OpenATNA are in the all/build directory. Their purpose is
+            described below. They allow you change the configuration of OpenATNA without
+            re-compiling, although they do require that you shut the servers down, and restart them
+            so the chages can take effect. To kill the servers, hit Control + C. <itemizedlist><listitem><para>
                         <emphasis role="bold">commons-logging.properties</emphasis> - This sets the
-                        logging system to use. The default is Log4J.
-                        </para></listitem><listitem><para>
+                        logging system to use. The default is Log4J. </para></listitem><listitem><para>
                         <emphasis role="bold">log4j.xml</emphasis> - This is the configuration for
                         the Log4J logging system. If you saw the output above when you ran the
                         servers, then the default level for logging to the console is set to DEBUG.
@@ -128,86 +127,89 @@ CONNECTION LIMIT = -1;
                         <programlisting>
 &lt;param name="Threshold" value="INFO"/>
                         </programlisting></para></listitem>
-                            <listitem><para><emphasis
-                            role="bold">openatna.properties</emphasis> - These are the core
-                        properties of OpenATNA. They point to the conf directory (more in a second)
-                        and also define the database connection values, for example the username and
-                        password of the role that connects to the database. Edit this file if you
-                        want to use a different username, or have made the atna password a little
-                        more secure :-)</para>
-                    </listitem>
-                    <listitem><para>If you have run the
-                        servers, you will also see an <emphasis role="bold">openatna.log</emphasis>
-                        file. This receives the log messages from Log4J and will not grow beyond 1/2
-                        MB in size.</para></listitem>
-                    <listitem><para>The <emphasis role="bold"
-                            >conf</emphasis> directory - this contains the actors, their connection
-                        parameters, and another directory called certs/ which contains dummy
-                        certificates for testing secure
-                        nodes.  
+                <listitem><para><emphasis role="bold">openatna.properties</emphasis> - These are the
+                        core properties of OpenATNA. They point to the conf directory (more in a
+                        second) and also define the database connection values, for example the
+                        username and password of the role that connects to the database. Edit this
+                        file if you want to use a different username, or have made the atna password
+                        a little more secure :-).</para><para>Once you have built OpenATNA once, you can change
+                the value of the hib.hbm2ddl.auto property value to "none".</para>
+                    <para/>
+                </listitem>
+                <listitem><para>If you have run the servers, you will also see an <emphasis
+                            role="bold">openatna.log</emphasis> file. This receives the log messages
+                        from Log4J and will not grow beyond 1/2 MB in size.</para></listitem>
+                <listitem><para>The <emphasis role="bold">conf</emphasis> directory - this contains
+                    the actors, their connection parameters, and another directory called
+                    <emphasis role="bold">certs/</emphasis>
+                        which contains dummy certificates for testing secure nodes.
                     </para></listitem>
-                            <listitem><para><emphasis role="bold">conf/IheActors.xml</emphasis> - 
-                            contains the Audit Record Repository (ARR) actor definition. This contains
-                            references to the two connectins it uses (TLS and UDP), as well as some
-                            persistence policies. Persistence policies are used to specify which
-                            types of entities are allowed in messages, specifically, when these
-                            entities are not already present in the repository.</para></listitem>  
-                   <listitem><para><emphasis role="bold">conf/ArrConnections.xml</emphasis> - 
-                                contains the Audit Record Repository (ARR) connection definitions.
-                            These specify the port numbers and in the case of the secured TCP connection,
-                            the certificates to use during exchanges. These values reference the keystores
-                            stored in the <emphasis role="bold">conf/certs/</emphasis> directory.
-                            
-                   </para></listitem> 
-                   <listitem><para><emphasis role="bold">conf/atnacodes.xml</emphasis> - 
-                         Contains codes used by ATNA. You can add codes here according to the type of the code. 
-                         When the default build runs, i.e. when you type "mvn install" from the openatna directory,
-                         then the codes in this file will be loaded into the database. If you want to add codes
-                         to the database that are not in this file, first add the codes to the file using the
-                         syntax of the file, then change directory to the all/ directory under the openatna directory,
-                         and type:
-                       <programlisting>ant populateCodes</programlisting>
-                       This will read in the file and store any codes not already in the database. This requires that
-                       you have Ant installed independently of Maven, and on your $PATH environment variable.
-                   </para></listitem>
-                   <listitem><para><emphasis role="bold">conf/entities.xml</emphasis> - 
-                        Contains codes and entities to load into the database.
-                        This file contains Codes, as well as ATNA entities that you may want
-                        to load into the data base, for example network access points, participant objects,
-                        active participants and audit sources. You can also define "pre-cooked" audit messages
-                        to load into the data base.
-                        Please read the comments on the entities.xml files for details of the syntax of the file.
-                        To load the contents in the data base, change directory to the all/ directory under the openatna directory,
-                        and type:
-                        <programlisting>ant populateEntities</programlisting>
-                        This will read in the file and store the entities in the data base. This requires that
-                        you have Ant installed independently of Maven, and on your $PATH environment variable.
-                        <note><para>The syntax of the atnacodes.xml and the entities.xml
-                            code definitions is subtly different with regard to the codes element.
-                        In the atnacode.xml, the "Codes" element is the top level XML element. In the entities.xml
-                        file, the "entities" element is the top level XML element, and the "Codes" element
-                        is inside this.</para></note>
-                   </para></listitem>
-                        
-                        </itemizedlist></para>
+                <listitem><para><emphasis role="bold">conf/IheActors.xml</emphasis> - contains the
+                        Audit Record Repository (ARR) actor definition. This contains references to
+                        the two connections it uses (TLS and UDP), as well as some persistence
+                        policies. Persistence policies are used to specify which types of entities
+                        are allowed in messages, specifically, when these entities are not already
+                        present in the repository.</para></listitem>
+                <listitem><para><emphasis role="bold">conf/ArrConnections.xml</emphasis> - contains
+                        the Audit Record Repository (ARR) connection definitions. These specify the
+                        port numbers and in the case of the secured TCP connection, the certificates
+                        to use during exchanges. These values reference the keystores stored in the
+                            <emphasis role="bold">conf/certs/</emphasis> directory. When you want to use
+                    real certificates in real keystores, put those keystores in the <emphasis role="bold">conf/certs/</emphasis>
+                    directory, and reference them in the secure connection definition.
+                </para></listitem>
+                <listitem><para><emphasis role="bold">conf/atnacodes.xml</emphasis> - Contains codes
+                        used by ATNA. You can add codes here according to the type of the code. When
+                        the default build runs, i.e. when you type "mvn install" from the openatna
+                        directory, then the codes in this file will be loaded into the database. If
+                        you want to add codes to the database that are not in this file, first add
+                        the codes to the file using the syntax of the file, then change directory to
+                        the all/ directory under the openatna directory, and type:
+                        <programlisting>ant populateCodes</programlisting> This will read in the
+                        file and store any codes not already in the database. This requires that you
+                        have Ant installed independently of Maven, and on your $PATH environment
+                        variable. </para></listitem>
+                <listitem><para><emphasis role="bold">conf/entities.xml</emphasis> - Contains codes
+                        and entities to load into the database. This file contains Codes, as well as
+                        ATNA entities that you may want to load into the data base, for example
+                        network access points, participant objects, active participants and audit
+                        sources. You can also define "pre-cooked" audit messages to load into the
+                        data base. Please read the comments on the entities.xml files for details of
+                        the syntax of the file. To load the contents in the data base, change
+                        directory to the all/ directory under the openatna directory, and type:
+                        <programlisting>ant populateEntities</programlisting> This will read in the
+                        file and store the entities in the data base. This requires that you have
+                        Ant installed independently of Maven, and on your $PATH environment
+                        variable.
+                    <note><para>The syntax of the atnacodes.xml and the entities.xml
+                                code definitions is subtly different with regard to the codes
+                                element. In the atnacode.xml, the "Codes" element is the top level
+                                XML element. In the entities.xml file, the "entities" element is the
+                                top level XML element, and the "Codes" element is inside
+                                this.</para>
+                    </note>
+                    </para></listitem> </itemizedlist></para>
         <para> You can test against the server by running the clients in the atnatest module. These
-            are JUnit tests and are probably easiest to run inside your IDE. The classes that are designed to
-        run against the server are:
-        <itemizedlist>
-            <listitem><para>
-                <emphasis role="bold">org.openhealthtools.openatna.atnatest.TlsClientTest0</emphasis> sends
-                three messages to the ARR using TLS and Syslog RFC 5424 style messages.
-            </para></listitem>
-            <listitem><para>
-                <emphasis role="bold">org.openhealthtools.openatna.atnatest.UdpClientTest0</emphasis> sends
-                three messages to the ARR using UDP and Syslog RFC 5424 style messages.
-            </para></listitem>
-            <listitem><para>
-                <emphasis role="bold">org.openhealthtools.openatna.atnatest.BsdClientTest0</emphasis> sends
-                three messages to the ARR using TLS and Syslog BSD style messages.
-            </para></listitem>
-        </itemizedlist>
-        
+            are JUnit tests and are probably easiest to run inside your IDE. The classes that are
+            designed to run against the server are: <itemizedlist>
+                <listitem><para>
+                        <emphasis role="bold"
+                            >org.openhealthtools.openatna.atnatest.TlsClientTest0</emphasis> sends
+                        six messages to the ARR using TLS and Syslog RFC 5424 style messages. The first
+                        three messages use mutually authentication with message encryption.
+                        The second three messages use mutual authentication without message encryption.
+                    </para></listitem>
+                <listitem><para>
+                        <emphasis role="bold"
+                            >org.openhealthtools.openatna.atnatest.UdpClientTest0</emphasis> sends
+                        three messages to the ARR using UDP and Syslog RFC 5424 style messages.
+                    </para></listitem>
+                <listitem><para>
+                        <emphasis role="bold"
+                            >org.openhealthtools.openatna.atnatest.BsdClientTest0</emphasis> sends
+                        three messages to the ARR using UDP and Syslog BSD style messages.
+                    </para></listitem>
+            </itemizedlist>
         </para>
         <para>Have fun</para>
     </sect2>
