@@ -25,18 +25,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.net.ConnectionFactory;
-import org.openhealthtools.openatna.net.IConnectionDescription;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
-import org.openhealthtools.openatna.persistence.util.PersistencePoliciesIO;
-import org.openhealthtools.openatna.syslog.LogMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.audit.ServiceConfig;
+import org.openhealthtools.openatna.audit.process.AtnaProcessor;
+import org.openhealthtools.openatna.net.ConnectionFactory;
+import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.openhealthtools.openatna.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
+import org.openhealthtools.openatna.persistence.util.PersistencePoliciesIO;
+import org.openhealthtools.openatna.syslog.LogMessage;
 
 /**
  * Loads XML actor and connection files.
@@ -145,9 +147,10 @@ public class ServerConfiguration {
     private boolean processArr(Element parent) {
         IConnectionDescription tcp = null;
         IConnectionDescription udp = null;
-        PersistencePolicies pp = null;
-        Class<? extends LogMessage> logClass = null;
+        ServiceConfig sc = new ServiceConfig();
+
         NodeList children = parent.getChildNodes();
+        int threads = 5;
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
@@ -172,21 +175,78 @@ public class ServerConfiguration {
                         throw new RuntimeException("No connection defined for Audit Record Repository");
                     }
 
-                } else if (el.getTagName().equalsIgnoreCase("PERSISTENCEPOLICIES")) {
-                    try {
-                        pp = PersistencePoliciesIO.read(el);
-                    } catch (IOException e) {
-                        log.warn("exception thrown trying to read persistence policies", e);
+                } else if (el.getTagName().equalsIgnoreCase("EXECUTIONTHREADS")) {
+                    String t = el.getTextContent().trim();
+                    if (t.length() > 0) {
+                        try {
+                            threads = Integer.parseInt(t);
+                        } catch (NumberFormatException e) {
+                            log.warn("Could not parse number of execution threads. Using default");
+                        }
                     }
-                } else if (el.getTagName().equalsIgnoreCase("LOGMESSAGE")) {
-                    String logType = el.getTextContent().trim();
-                    if (logType == null || logType.length() == 0) {
-                        throw new RuntimeException("No log message implementation specified. This is required.");
-                    }
-                    try {
-                        logClass = (Class<? extends LogMessage>) getClass().getClassLoader().loadClass(logType);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Unable to load log message implementation.", e);
+
+                } else if (el.getTagName().equalsIgnoreCase("SERVICECONFIG")) {
+                    NodeList childers = el.getChildNodes();
+                    for (int j = 0; j < childers.getLength(); j++) {
+                        Node node = childers.item(j);
+                        if (node instanceof Element) {
+                            Element child = (Element) node;
+                            if (child.getTagName().equalsIgnoreCase("PERSISTENCEPOLICIES")) {
+                                try {
+                                    PersistencePolicies pp = PersistencePoliciesIO.read(child);
+                                    sc.setPersistencePolicies(pp);
+                                } catch (IOException e) {
+                                    log.warn("exception thrown trying to read persistence policies", e);
+                                }
+                            } else if (child.getTagName().equalsIgnoreCase("LOGMESSAGE")) {
+                                String logType = child.getTextContent().trim();
+                                if (logType == null || logType.length() == 0) {
+                                    throw new RuntimeException("No log message implementation specified. This is required.");
+                                }
+                                try {
+                                    Class<? extends LogMessage> logClass = (Class<? extends LogMessage>) Class.forName(logType, true, getClass().getClassLoader());
+                                    sc.setLogMessageClass(logClass);
+                                } catch (Exception e) {
+                                    throw new RuntimeException("Unable to load log message implementation=|" + logType + "|", e);
+                                }
+
+                            } else if (child.getTagName().equalsIgnoreCase("DAOFACTORY")) {
+                                String dao = child.getTextContent().trim();
+                                if (dao != null && dao.length() > 0) {
+                                    try {
+                                        Class<? extends DaoFactory> cls = (Class<? extends DaoFactory>) Class.forName(dao, true, getClass().getClassLoader());
+                                        DaoFactory f = cls.newInstance();
+                                        sc.setDaoFactory(f);
+                                    } catch (Exception e) {
+                                        log.warn("Could not load DaoFactory implementation " + dao);
+                                    }
+                                }
+                            } else if (child.getTagName().equalsIgnoreCase("PROCESSORCHAIN")) {
+                                String val = child.getAttribute("validate");
+                                if (val != null && val.length() > 0) {
+                                    boolean v = Boolean.valueOf(val);
+                                    sc.setValidationProcessor(v);
+                                }
+                                NodeList ps = child.getChildNodes();
+                                for (int k = 0; k < childers.getLength(); k++) {
+                                    Node p = ps.item(k);
+                                    if (p instanceof Element) {
+                                        Element pro = (Element) p;
+                                        if (pro.getTagName().equalsIgnoreCase("PROCESSOR")) {
+                                            String procls = pro.getTextContent().trim();
+                                            try {
+                                                Class<? extends AtnaProcessor> cls = (Class<? extends AtnaProcessor>) Class.forName(procls, true, getClass().getClassLoader());
+                                                AtnaProcessor proc = cls.newInstance();
+                                                sc.addProcessor(proc);
+                                                log.info("added application processor:" + proc);
+                                            } catch (Exception e) {
+                                                log.warn("Could not load Processor implementation " + procls);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -195,14 +255,9 @@ public class ServerConfiguration {
         if (tcp == null && udp == null) {
             throw new RuntimeException("No connections defined for Audit Record Repository. It cannot serve");
         }
-        if (logClass == null) {
-            throw new RuntimeException("No Log Message class specified. This is required.");
-        }
-        AtnaServer server = new AtnaServer(tcp, udp);
-        server.setLogMessageClass(logClass);
-        if (pp != null) {
-            server.setPersistencePolicies(pp);
-        }
+
+        AtnaServer server = new AtnaServer(tcp, udp, threads);
+        server.setServiceConfig(sc);
         actors.add(server);
         return true;
     }

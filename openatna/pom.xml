@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openhealthtools.openatna</groupId>
@@ -86,19 +87,19 @@
         </repository>
     </repositories>
 
-   	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>${commons.logging.version}</version>
-        </dependency>   	
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4Jlog.version}</version>
         </dependency>
-    </dependencies>    
-    
+    </dependencies>
+
     <modules>
         <module>syslog</module>
         <module>audit</module>
@@ -107,13 +108,14 @@
         <module>jaxb</module>
         <module>atnatest</module>
         <module>all</module>
-    	<module>net</module>
+        <module>net</module>
+        <module>ext</module>
     </modules>
 
     <!-- Properties defined by OpenATNA -->
-    <properties>   
-        <commons.logging.version>1.1.1</commons.logging.version>    
-        <log4Jlog.version>1.2.14</log4Jlog.version>    
+    <properties>
+        <commons.logging.version>1.1.1</commons.logging.version>
+        <log4Jlog.version>1.2.14</log4Jlog.version>
     </properties>
-    
+
 </project>

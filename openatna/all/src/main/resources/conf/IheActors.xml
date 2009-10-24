@@ -34,26 +34,69 @@
         <Description>Audit Record Repository</Description>
         <Tcp connection="arr-tls"/>
         <Udp connection="arr-udp"/>
-
         <!--
-        the class name of the Syslog Log Message implementation
-        This must implement org.openhealthtools.syslog.LogMessage
+        Max number of threads to use for dispatching messages for processing.
+        Default = 5
         -->
-        <LogMessage>org.openhealthtools.openatna.dist.JaxbLogMessage</LogMessage>
         <!--
-        policies on what unknown entities to allow into the repository via audit messages
-        see org.openhealthtools.openatna.persistence.PersistencePolicies for more details
+        <ExecutionThreads>5</ExecutionThreads>
         -->
-        <PersistencePolicies>
-            <allowNewNetworkAccessPoints>true</allowNewNetworkAccessPoints>
-            <allowNewParticipants>true</allowNewParticipants>
-            <allowNewObjects>true</allowNewObjects>
-            <allowNewSources>true</allowNewSources>
-            <allowUnknownDetailTypes>true</allowUnknownDetailTypes>
-            <!-- is false be default anyway -->
-            <errorOnDuplicateInsert>false</errorOnDuplicateInsert>
-        </PersistencePolicies>
+        <ServiceConfig>
+            <!--
+            A DaoFactory implementation. This should implement the
+            org.openhealthtools.openatna.persistence.dao.DaoFactory interface
+            and have a default constructor. If not supplied, the default Spring/hibernate
+            DaoFactory will be used.
+            -->
+            <!--><daoFactory>my.dao.FactoryImpl</daoFactory>-->
+            <!--
+            the class name of the Syslog Log Message implementation
+            This must implement org.openhealthtools.syslog.LogMessage<AtnaMessage> and have a default constructor
+            In general, this will have some message (de)serialization
+            behind it because the LogMessage receives a stream and must return an AtnaMessage.
+            The org.openhealthtools.openatna.audit.process.AtnaLogMessage is provided as a convenience
+            abstract class from which to derive LogMessage<AtnaMessage> objects. This takes an implementation
+            of an org.openhealthtools.openatna.anom.AtnaIOFactory which performs the (de)serialization for it.
+            The default uses JAXB to serialize to and from the wire.
+            -->
+            <LogMessage>org.openhealthtools.openatna.dist.JaxbLogMessage</LogMessage>
+            <!--
+            policies on what unknown entities to allow into the repository via audit messages
+            see org.openhealthtools.openatna.persistence.PersistencePolicies for more details
+            -->
+            <PersistencePolicies>
+                <allowNewNetworkAccessPoints>true</allowNewNetworkAccessPoints>
+                <allowNewParticipants>true</allowNewParticipants>
+                <allowNewObjects>true</allowNewObjects>
+                <allowNewSources>true</allowNewSources>
+                <allowUnknownDetailTypes>true</allowUnknownDetailTypes>
+                <!-- is false be default anyway -->
+                <errorOnDuplicateInsert>false</errorOnDuplicateInsert>
+                <!--<allowNewCodes>true</allowNewCodes>-->
+            </PersistencePolicies>
+            <!--
+           Processor chain configuration.
+           If the ProcessorChain element has an attribute "validate" and its value is "false",
+           then the default message validator will not be used, and another one should be
+           specified below.
 
+           The specified Processors must implement org.openhealthtools.openatna.audit.process.AtnaProcessor
+           and should have a default constructor. They are added in the order they are listed below.
+           If the default validator is used, this is always run at the beginning of the chain so application
+           specific processors know the message has been validated.
+           If no processor is added that sets the ProcessContext's state to PERSISTED, then the default
+           PersistenceProcessor is added after the processors defined below.
+           External implementations can add their processors to the all/ext directory. These will be picked
+           up during the build and be available to OpenATNA at runtime.
+           -->
+
+            <!--
+            <ProcessorChain validate="false">
+                <Processor>org.openhealthtools.openatna.ext.processors.SimpleProcessor</Processor>
+            </ProcessorChain>
+            -->
+
+        </ServiceConfig>
     </Actor>
 
 </Configuration>

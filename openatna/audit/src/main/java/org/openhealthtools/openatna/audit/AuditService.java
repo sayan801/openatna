@@ -22,16 +22,17 @@ package org.openhealthtools.openatna.audit;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.audit.process.AtnaMessageListener;
+import org.openhealthtools.openatna.audit.process.AtnaProcessor;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
-import org.openhealthtools.openatna.persistence.dao.DaoFactory;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 /**
@@ -51,10 +52,9 @@ public class AuditService {
     public static final String PROPERTY_DAO_FACTORY = AuditService.class.getName() + ".dao.factory";
     public static final String PROPERTY_PERSISTENCE_POLICIES = AuditService.class.getName() + ".persistence.policies";
 
-    private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private SyslogServer syslogServer;
     private Set<URL> codeUrls = new HashSet<URL>();
-    private DaoFactory daoFactory;
+    private ServiceConfig serviceConfig = new ServiceConfig();
     private ProcessorChain chain = new ProcessorChain();
 
 
@@ -64,17 +64,25 @@ public class AuditService {
      * @throws IOException
      */
     public void start() throws IOException {
+        if (serviceConfig.getLogMessageClass() == null) {
+            throw new RuntimeException("no log message defined!");
+        }
+        SyslogMessageFactory.setDefaultLogMessage(serviceConfig.getLogMessageClass());
         if (syslogServer == null) {
             throw new RuntimeException("no server defined!");
         }
-        if (daoFactory == null) {
-            daoFactory = SpringDaoFactory.getFactory();
+        if (serviceConfig.getDaoFactory() == null) {
+            serviceConfig.setDaoFactory(SpringDaoFactory.getFactory());
         }
         URL defCodes = getClass().getResource("/conf/atnacodes.xml");
         addCodeUrls(defCodes);
         CodeParser.parse(getCodeUrls());
-        chain.putProperty(PROPERTY_PERSISTENCE_POLICIES, persistencePolicies);
-        chain.putProperty(PROPERTY_DAO_FACTORY, daoFactory);
+        chain.putProperty(PROPERTY_PERSISTENCE_POLICIES, serviceConfig.getPersistencePolicies());
+        chain.putProperty(PROPERTY_DAO_FACTORY, serviceConfig.getDaoFactory());
+        List<AtnaProcessor> processors = serviceConfig.getProcessors();
+        for (AtnaProcessor processor : processors) {
+            chain.addNext(processor);
+        }
         syslogServer.addSyslogListener(new AtnaMessageListener(chain));
         syslogServer.start();
     }
@@ -143,30 +151,6 @@ public class AuditService {
         this.syslogServer = syslogServer;
     }
 
-    public void setPersistencePolicies(PersistencePolicies persistencePolicies) {
-        if (persistencePolicies != null) {
-            this.persistencePolicies = persistencePolicies;
-        }
-    }
-
-    /**
-     * get the data Access Object factory
-     *
-     * @return
-     */
-    public DaoFactory getDaoFactory() {
-        return daoFactory;
-    }
-
-    /**
-     * set the data access object factory
-     *
-     * @param daoFactory
-     */
-    public void setDaoFactory(DaoFactory daoFactory) {
-        this.daoFactory = daoFactory;
-    }
-
     /**
      * get the processing chain that will be invoked when a message arrives.
      *
@@ -176,4 +160,11 @@ public class AuditService {
         return chain;
     }
 
+    public ServiceConfig getServiceConfig() {
+        return serviceConfig;
+    }
+
+    public void setServiceConfig(ServiceConfig serviceConfig) {
+        this.serviceConfig = serviceConfig;
+    }
 }
