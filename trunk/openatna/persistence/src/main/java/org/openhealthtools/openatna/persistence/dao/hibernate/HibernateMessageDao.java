@@ -148,7 +148,9 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
      */
     public void save(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException {
         normalize(messageEntity, policies);
-        currentSession().saveOrUpdate(messageEntity);
+        synchronized (MessageEntity.class) {
+            currentSession().saveOrUpdate(messageEntity);
+        }
     }
 
     public void delete(MessageEntity messageEntity) throws AtnaPersistenceException {
@@ -168,67 +170,76 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
         EventIdCodeEntity ce = messageEntity.getEventId();
         CodeDao dao = SpringDaoFactory.getFactory().codeDao();
-        CodeEntity existing = dao.get(ce);
-        if (existing == null) {
-            if (policies.isAllowNewCodes()) {
-                currentSession().saveOrUpdate(ce);
+        synchronized (CodeEntity.class) {
+            CodeEntity existing = dao.get(ce);
+            if (existing == null) {
+                if (policies.isAllowNewCodes()) {
+                    currentSession().saveOrUpdate(ce);
 
-            } else {
-                throw new AtnaPersistenceException("no event id code defined.",
-                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-            }
-        } else {
-            if (existing instanceof EventIdCodeEntity) {
-                messageEntity.setEventId((EventIdCodeEntity) existing);
-            } else {
-                throw new AtnaPersistenceException("code is defined but is of a different type.",
-                        AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
-            }
-        }
-        Set<EventTypeCodeEntity> codes = messageEntity.getEventTypeCodes();
-        if (codes.size() > 0) {
-            for (EventTypeCodeEntity code : codes) {
-                CodeEntity codeEnt = dao.get(code);
-                if (codeEnt == null) {
-                    if (policies.isAllowNewCodes()) {
-                        currentSession().saveOrUpdate(code);
-
-                    } else {
-                        throw new AtnaPersistenceException(code.toString(),
-                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-                    }
                 } else {
-                    if (codeEnt instanceof EventTypeCodeEntity) {
-                        codes.remove(code);
-                        codes.add((EventTypeCodeEntity) codeEnt);
-                    } else {
-                        throw new AtnaPersistenceException("code is defined but is of a different type.",
-                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
-                    }
+                    throw new AtnaPersistenceException("no event id code defined.",
+                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                }
+            } else {
+                if (existing instanceof EventIdCodeEntity) {
+                    messageEntity.setEventId((EventIdCodeEntity) existing);
+                } else {
+                    throw new AtnaPersistenceException("code is defined but is of a different type.",
+                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                 }
             }
-            messageEntity.setEventTypeCodes(codes);
-        }
 
+            Set<EventTypeCodeEntity> codes = messageEntity.getEventTypeCodes();
+            if (codes.size() > 0) {
+                for (EventTypeCodeEntity code : codes) {
+                    CodeEntity codeEnt = dao.get(code);
+                    if (codeEnt == null) {
+                        if (policies.isAllowNewCodes()) {
+                            dao.save(code, policies);
+
+                        } else {
+                            throw new AtnaPersistenceException(code.toString(),
+                                    AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                        }
+                    } else {
+                        if (codeEnt instanceof EventTypeCodeEntity) {
+                            codes.remove(code);
+                            codes.add((EventTypeCodeEntity) codeEnt);
+                        } else {
+                            throw new AtnaPersistenceException("code is defined but is of a different type.",
+                                    AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                        }
+                    }
+                }
+                messageEntity.setEventTypeCodes(codes);
+            }
+        }
         Set<MessageParticipantEntity> messageParticipants = messageEntity.getMessageParticipants();
         if (messageParticipants.size() == 0) {
             throw new AtnaPersistenceException("no participants defined",
                     AtnaPersistenceException.PersistenceError.NO_PARTICIPANT);
         }
-        for (MessageParticipantEntity entity : messageParticipants) {
-            normalize(entity, policies);
+        synchronized (MessageParticipantEntity.class) {
+            for (MessageParticipantEntity entity : messageParticipants) {
+                normalize(entity, policies);
+            }
         }
+
         Set<MessageSourceEntity> atnaSources = messageEntity.getMessageSources();
         if (atnaSources.size() == 0) {
             throw new AtnaPersistenceException("no sources defined",
                     AtnaPersistenceException.PersistenceError.NO_SOURCE);
         }
-        for (MessageSourceEntity entity : atnaSources) {
-            normalize(entity, policies);
+        synchronized (MessageSourceEntity.class) {
+            for (MessageSourceEntity entity : atnaSources) {
+                normalize(entity, policies);
+            }
         }
-        Set<MessageObjectEntity> messageObjects = messageEntity.getMessageObjects();
-        for (MessageObjectEntity entity : messageObjects) {
-            normalize(entity, policies);
+        synchronized (MessageObjectEntity.class) {
+            Set<MessageObjectEntity> messageObjects = messageEntity.getMessageObjects();
+            for (MessageObjectEntity entity : messageObjects) {
+                normalize(entity, policies);
+            }
         }
     }
 
@@ -249,7 +260,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         if (existing == null) {
             if (policies.isAllowNewParticipants()) {
                 saveParticipantCodes(pe, policies);
-                currentSession().saveOrUpdate(pe);
+                dao.save(pe, policies);
 
             } else {
                 throw new AtnaPersistenceException("unknown participant.",
@@ -265,8 +276,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             NetworkAccessPointEntity there = netdao.getByTypeAndIdentifier(net.getType(), net.getIdentifier());
             if (there == null) {
                 if (policies.isAllowNewNetworkAccessPoints()) {
-                    currentSession().saveOrUpdate(net);
-
+                    netdao.save(net, policies);
                 } else {
                     throw new AtnaPersistenceException("unknown network access point.",
                             AtnaPersistenceException.PersistenceError.NON_EXISTENT_NETWORK_ACCESS_POINT);
@@ -285,8 +295,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             CodeEntity codeEnt = dao.get(code);
             if (codeEnt == null) {
                 if (policies.isAllowNewCodes()) {
-                    currentSession().saveOrUpdate(code);
-
+                    dao.save(code, policies);
                 } else {
                     throw new AtnaPersistenceException(code.toString(),
                             AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
@@ -320,7 +329,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         if (existing == null) {
             if (policies.isAllowNewSources()) {
                 saveSourceCodes(se, policies);
-                currentSession().saveOrUpdate(se);
+                dao.save(se, policies);
 
             } else {
                 throw new AtnaPersistenceException("no audit source defined.",
@@ -340,7 +349,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             CodeEntity codeEnt = dao.get(code);
             if (codeEnt == null) {
                 if (policies.isAllowNewCodes()) {
-                    currentSession().saveOrUpdate(code);
+                    dao.save(code, policies);
 
                 } else {
                     throw new AtnaPersistenceException(code.toString(),
@@ -376,7 +385,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         if (existing == null) {
             if (policies.isAllowNewObjects()) {
                 saveObjectCode(oe, policies);
-                currentSession().saveOrUpdate(oe);
+                dao.save(oe, policies);
 
             } else {
                 throw new AtnaPersistenceException("no object defined.",
@@ -402,8 +411,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         CodeEntity existing = dao.get(oe);
         if (existing == null) {
             if (policies.isAllowNewCodes()) {
-                currentSession().saveOrUpdate(oe);
-
+                dao.save(oe, policies);
             } else {
                 throw new AtnaPersistenceException("no event id code defined.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
