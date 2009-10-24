@@ -20,15 +20,15 @@
 
 package org.openhealthtools.openatna.persistence.model;
 
-import org.openhealthtools.openatna.persistence.model.codes.EventIdCodeEntity;
-import org.openhealthtools.openatna.persistence.model.codes.EventTypeCodeEntity;
-
-import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
+import org.openhealthtools.openatna.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.persistence.model.codes.EventTypeCodeEntity;
 
 
 @Entity
@@ -38,7 +38,6 @@ public class MessageEntity extends PersistentEntity {
     private static final long serialVersionUID = -1L;
 
     private static DateFormat format = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:SS");
-
 
     private Long id;
 

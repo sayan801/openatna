@@ -60,4 +60,5 @@ public class SourceCodeEntity extends CodeEntity {
     public SourceCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
         super(CodeType.AUDIT_SOURCE, code, codeSystem, codeSystemName, displayName, originalText);
     }
+
 }

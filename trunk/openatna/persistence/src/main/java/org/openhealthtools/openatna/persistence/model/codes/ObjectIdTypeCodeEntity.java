@@ -60,4 +60,5 @@ public class ObjectIdTypeCodeEntity extends CodeEntity {
     public ObjectIdTypeCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
         super(CodeType.PARTICIPANT_OBJECT_ID_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
     }
+
 }
