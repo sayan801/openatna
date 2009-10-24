@@ -91,7 +91,7 @@
            -->
 
             <!--
-            <ProcessorChain validate="false">
+            <ProcessorChain validate="true">
                 <Processor>org.openhealthtools.openatna.ext.processors.SimpleProcessor</Processor>
             </ProcessorChain>
             -->
