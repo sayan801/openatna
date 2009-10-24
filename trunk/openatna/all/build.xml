@@ -1,5 +1,5 @@
 <!--
-
+	ATNA all build file. Creates an executable jar file and has some targets for adding codes and entities.
 -->
 
 
@@ -9,6 +9,9 @@
 
     <target name="dist">
         <echo>Ant version is ${ant.java.version}</echo>
+        <copy todir="build/lib" overwrite="yes">
+            <fileset dir="ext" includes="**/**" excludes=".svn"/>
+        </copy>
         <path id="jar.class.path">
             <fileset dir="build/lib">
                 <include name="**/*.jar"/>

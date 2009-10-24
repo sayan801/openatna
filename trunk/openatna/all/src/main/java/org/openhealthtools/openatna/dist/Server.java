@@ -19,13 +19,13 @@
 
 package org.openhealthtools.openatna.dist;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 
-import org.openhealthtools.openatna.audit.server.ServerConfiguration;
+import org.openhealthtools.openatna.audit.AuditService;
 import org.openhealthtools.openatna.audit.server.AtnaServer;
 import org.openhealthtools.openatna.audit.server.PropertiesLoader;
-import org.openhealthtools.openatna.audit.AuditService;
+import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 
 /**
  * @author Andrew Harrison
@@ -43,7 +43,7 @@ public class Server {
             throw new RuntimeException("no Actors file found. Cannot continue.");
         }
         boolean configured = sc.loadActors(actors);
-        if(!configured) {
+        if (!configured) {
             throw new RuntimeException("Could not configure AtnaServer");
         }
         AtnaServer server = sc.getActor(AtnaServer.class);
@@ -52,7 +52,7 @@ public class Server {
         }
         AuditService service = new AuditService();
         service.setSyslogServer(server);
-        service.setPersistencePolicies(server.getPersistencePolicies());
+        service.setServiceConfig(server.getServiceConfig());
         try {
             service.start();
         } catch (IOException e) {

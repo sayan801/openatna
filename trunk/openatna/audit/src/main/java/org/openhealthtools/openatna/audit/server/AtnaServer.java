@@ -28,12 +28,10 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.audit.ServiceConfig;
 import org.openhealthtools.openatna.net.IConnectionDescription;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
-import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
@@ -52,8 +50,8 @@ public class AtnaServer implements SyslogServer {
     private IConnectionDescription udpConnection;
     private TcpServer tcpServer = null;
     private UdpServer udpServer = null;
-    private PersistencePolicies persistencePolicies;
-    private Class<? extends LogMessage> logMessageClass;
+    private ServiceConfig serviceConfig;
+
     private volatile boolean destroyed = false;
 
     private Executor exec;
@@ -71,8 +69,15 @@ public class AtnaServer implements SyslogServer {
         this(tlsConnection, udpConnection, 5);
     }
 
+    public ServiceConfig getServiceConfig() {
+        return serviceConfig;
+    }
+
+    public void setServiceConfig(ServiceConfig serviceConfig) {
+        this.serviceConfig = serviceConfig;
+    }
+
     public void start() throws IOException {
-        SyslogMessageFactory.setDefaultLogMessage(logMessageClass);
         if (tlsConnection != null) {
             tcpServer = new TcpServer(this, tlsConnection);
             tcpServer.start();
@@ -92,24 +97,8 @@ public class AtnaServer implements SyslogServer {
         }
     }
 
-    public Class<? extends LogMessage> getLogMessageClass() {
-        return logMessageClass;
-    }
-
-    public void setLogMessageClass(Class<? extends LogMessage> logMessageClass) {
-        this.logMessageClass = logMessageClass;
-    }
-
     public void execute(Runnable r) {
         exec.execute(r);
-    }
-
-    public PersistencePolicies getPersistencePolicies() {
-        return persistencePolicies;
-    }
-
-    public void setPersistencePolicies(PersistencePolicies persistencePolicies) {
-        this.persistencePolicies = persistencePolicies;
     }
 
     public void addSyslogListener(SyslogListener listener) {
