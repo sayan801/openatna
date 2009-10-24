@@ -161,7 +161,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
 
     private boolean isDuplicate(CodeEntity entity) throws AtnaPersistenceException {
         CodeEntity ce = get(entity);
-        if (ce != null && !(ce.getId().equals(entity.getId()))) {
+        if (ce != null) {
             return true;
         }
         return false;

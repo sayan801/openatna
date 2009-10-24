@@ -51,6 +51,17 @@ public class CodeRegistry {
         return new ArrayList<AtnaCode>();
     }
 
+    public static List<AtnaCode> allCodes() {
+        ArrayList<AtnaCode> ret = new ArrayList<AtnaCode>();
+        for (String s : codes.keySet()) {
+            Set<AtnaCode> l = codes.get(s);
+            if (l != null) {
+                ret.addAll(l);
+            }
+        }
+        return ret;
+    }
+
     public static AtnaCode getCode(String type, String code, String system, String systemName) {
         if (type == null || code == null) {
             return null;
