@@ -121,25 +121,17 @@ public class AtnaServer implements SyslogServer {
     }
 
     protected void notifyListeners(final SyslogMessage msg) {
-        //exec.execute(new Runnable() {
-        //    public void run() {
         for (SyslogListener listener : listeners) {
             log.debug("notifying listener...");
             listener.messageArrived(msg);
         }
-        //    }
-        //});
     }
 
     protected void notifyException(final SyslogException ex) {
-        //exec.execute(new Runnable() {
-        //    public void run() {
         for (SyslogListener listener : listeners) {
             log.debug("notifying listener...");
             listener.exceptionThrown(ex);
         }
-        //    }
-        //});
     }
 
     private void kill() {

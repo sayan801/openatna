@@ -61,4 +61,5 @@ public class EventTypeCodeEntity extends CodeEntity {
         super(CodeType.EVENT_TYPE, code, codeSystem, codeSystemName, displayName, originalText);
 
     }
+
 }

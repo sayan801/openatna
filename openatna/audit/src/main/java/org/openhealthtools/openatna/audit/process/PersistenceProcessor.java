@@ -38,7 +38,7 @@ import org.openhealthtools.openatna.persistence.util.EntityConverter;
 
 public class PersistenceProcessor implements AtnaProcessor {
 
-    public synchronized void process(ProcessContext context) throws Exception {
+    public void process(ProcessContext context) throws Exception {
         AtnaMessage msg = context.getMessage();
         if (msg == null) {
             throw new AuditException("no message", null, AuditException.AuditError.NULL_MESSAGE);
@@ -57,8 +57,10 @@ public class PersistenceProcessor implements AtnaProcessor {
             }
             MessageDao dao = fac.messageDao();
             if (dao != null) {
-                dao.save(entity, pp);
-                context.setState(ProcessContext.State.PERSISTED);
+                synchronized (this) {
+                    dao.save(entity, pp);
+                    context.setState(ProcessContext.State.PERSISTED);
+                }
             } else {
                 throw new AuditException("Message Data Access Object could not be created",
                         msg, AuditException.AuditError.INVALID_MESSAGE);

@@ -41,6 +41,7 @@ public class ObjectDetailEntity extends PersistentEntity {
         this.value = value;
     }
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

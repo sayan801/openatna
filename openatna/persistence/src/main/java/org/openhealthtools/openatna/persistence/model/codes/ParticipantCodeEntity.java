@@ -60,4 +60,5 @@ public class ParticipantCodeEntity extends CodeEntity {
     public ParticipantCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
         super(CodeType.ACTIVE_PARTICIPANT, code, codeSystem, codeSystemName, displayName, originalText);
     }
+
 }
