@@ -105,7 +105,34 @@ CONNECTION LIMIT = -1;
                             the certificates to use during exchanges. These values reference the keystores
                             stored in the <span class="bold"><strong>conf/certs/</strong></span> directory.
                             
-                            </p></li></ul></div><p> You can test against the server by running the clients in the atnatest module. These
+                   </p></li><li class="listitem"><p><span class="bold"><strong>conf/atnacodes.xml</strong></span> - 
+                         Contains codes used by ATNA. You can add codes here according to the type of the code. 
+                         When the default build runs, i.e. when you type "mvn install" from the openatna directory,
+                         then the codes in this file will be loaded into the database. If you want to add codes
+                         to the database that are not in this file, first add the codes to the file using the
+                         syntax of the file, then change directory to the all/ directory under the openatna directory,
+                         and type:
+                       </p><pre class="programlisting">ant populateCodes</pre><p>
+                       This will read in the file and store any codes not already in the database. This requires that
+                       you have Ant installed independently of Maven, and on your $PATH environment variable.
+                   </p></li><li class="listitem"><p><span class="bold"><strong>conf/entities.xml</strong></span> - 
+                        Contains codes and entities to load into the database.
+                        This file contains Codes, as well as ATNA entities that you may want
+                        to load into the data base, for example network access points, participant objects,
+                        active participants and audit sources. You can also define "pre-cooked" audit messages
+                        to load into the data base.
+                        Please read the comments on the entities.xml files for details of the syntax of the file.
+                        To load the contents in the data base, change directory to the all/ directory under the openatna directory,
+                        and type:
+                        </p><pre class="programlisting">ant populateEntities</pre><p>
+                        This will read in the file and store the entities in the data base. This requires that
+                        you have Ant installed independently of Maven, and on your $PATH environment variable.
+                        </p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The syntax of the atnacodes.xml and the entities.xml
+                            code definitions is subtly different with regard to the codes element.
+                        In the atnacode.xml, the "Codes" element is the top level XML element. In the entities.xml
+                        file, the "entities" element is the top level XML element, and the "Codes" element
+                        is inside this.</p></div><p>
+                   </p></li></ul></div><p> You can test against the server by running the clients in the atnatest module. These
             are JUnit tests and are probably easiest to run inside your IDE. The classes that are designed to
         run against the server are:
         </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>

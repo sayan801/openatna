@@ -152,13 +152,42 @@ CONNECTION LIMIT = -1;
                             persistence policies. Persistence policies are used to specify which
                             types of entities are allowed in messages, specifically, when these
                             entities are not already present in the repository.</para></listitem>  
-                            <listitem><para><emphasis role="bold">conf/ArrConnections.xml</emphasis> - 
+                   <listitem><para><emphasis role="bold">conf/ArrConnections.xml</emphasis> - 
                                 contains the Audit Record Repository (ARR) connection definitions.
                             These specify the port numbers and in the case of the secured TCP connection,
                             the certificates to use during exchanges. These values reference the keystores
                             stored in the <emphasis role="bold">conf/certs/</emphasis> directory.
                             
-                            </para></listitem>  
+                   </para></listitem> 
+                   <listitem><para><emphasis role="bold">conf/atnacodes.xml</emphasis> - 
+                         Contains codes used by ATNA. You can add codes here according to the type of the code. 
+                         When the default build runs, i.e. when you type "mvn install" from the openatna directory,
+                         then the codes in this file will be loaded into the database. If you want to add codes
+                         to the database that are not in this file, first add the codes to the file using the
+                         syntax of the file, then change directory to the all/ directory under the openatna directory,
+                         and type:
+                       <programlisting>ant populateCodes</programlisting>
+                       This will read in the file and store any codes not already in the database. This requires that
+                       you have Ant installed independently of Maven, and on your $PATH environment variable.
+                   </para></listitem>
+                   <listitem><para><emphasis role="bold">conf/entities.xml</emphasis> - 
+                        Contains codes and entities to load into the database.
+                        This file contains Codes, as well as ATNA entities that you may want
+                        to load into the data base, for example network access points, participant objects,
+                        active participants and audit sources. You can also define "pre-cooked" audit messages
+                        to load into the data base.
+                        Please read the comments on the entities.xml files for details of the syntax of the file.
+                        To load the contents in the data base, change directory to the all/ directory under the openatna directory,
+                        and type:
+                        <programlisting>ant populateEntities</programlisting>
+                        This will read in the file and store the entities in the data base. This requires that
+                        you have Ant installed independently of Maven, and on your $PATH environment variable.
+                        <note><para>The syntax of the atnacodes.xml and the entities.xml
+                            code definitions is subtly different with regard to the codes element.
+                        In the atnacode.xml, the "Codes" element is the top level XML element. In the entities.xml
+                        file, the "entities" element is the top level XML element, and the "Codes" element
+                        is inside this.</para></note>
+                   </para></listitem>
                         
                         </itemizedlist></para>
         <para> You can test against the server by running the clients in the atnatest module. These
