@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.audit.process;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.AuditException;
 import org.openhealthtools.openatna.audit.AuditService;
@@ -37,6 +39,9 @@ import org.openhealthtools.openatna.persistence.util.EntityConverter;
  */
 
 public class PersistenceProcessor implements AtnaProcessor {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.PersistenceProcessor");
+
 
     public void process(ProcessContext context) throws Exception {
         AtnaMessage msg = context.getMessage();
@@ -70,7 +75,7 @@ public class PersistenceProcessor implements AtnaProcessor {
                     msg, AuditException.AuditError.INVALID_MESSAGE);
         }
         msg.setMessageId(entity.getId());
-        System.out.println("PersistenceProcessor.process ADDED ID TO ATNA MESSAGE:" + msg.getMessageId());
+        log.debug("ADDED ID TO ATNA MESSAGE:" + msg.getMessageId());
     }
 
     public void error(ProcessContext context) {
