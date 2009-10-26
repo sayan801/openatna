@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.audit.ServiceConfig;
 import org.openhealthtools.openatna.audit.process.AtnaProcessor;
+import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.net.ConnectionFactory;
 import org.openhealthtools.openatna.net.IConnectionDescription;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
@@ -183,6 +184,9 @@ public class ServerConfiguration {
                         } catch (NumberFormatException e) {
                             log.warn("Could not parse number of execution threads. Using default");
                         }
+                        if (threads < 1) {
+                            threads = 5;
+                        }
                     }
 
                 } else if (el.getTagName().equalsIgnoreCase("SERVICECONFIG")) {
@@ -234,10 +238,18 @@ public class ServerConfiguration {
                                         Element pro = (Element) p;
                                         if (pro.getTagName().equalsIgnoreCase("PROCESSOR")) {
                                             String procls = pro.getTextContent().trim();
+                                            String ph = pro.getAttribute("phase");
+                                            ProcessorChain.PHASE phase = ProcessorChain.PHASE.POST_VERIFY;
+                                            if (ph != null) {
+                                                ProcessorChain.PHASE phase1 = ProcessorChain.PHASE.valueOf(ph);
+                                                if (phase1 != null) {
+                                                    phase = phase1;
+                                                }
+                                            }
                                             try {
                                                 Class<? extends AtnaProcessor> cls = (Class<? extends AtnaProcessor>) Class.forName(procls, true, getClass().getClassLoader());
                                                 AtnaProcessor proc = cls.newInstance();
-                                                sc.addProcessor(proc);
+                                                sc.addProcessor(proc, phase);
                                                 log.info("added application processor:" + proc);
                                             } catch (Exception e) {
                                                 log.warn("Could not load Processor implementation " + procls);

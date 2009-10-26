@@ -55,38 +55,79 @@ public class ProcessorChain {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.ProcessorChain");
 
+    public static enum PHASE {
+        PRE_VERIFY,
+        POST_VERIFY,
+        POST_PERSIST,
+    }
 
-    private List<AtnaProcessor> processors = new ArrayList<AtnaProcessor>();
-    private int next = 0;
     private ExceptionProcessor except = new ExceptionProcessor();
     private ValidationProcessor validator = new ValidationProcessor();
     private PersistenceProcessor persist = new PersistenceProcessor();
+    PhaseProcessor preVerify = new PhaseProcessor();
+    PhaseProcessor postVerify = new PhaseProcessor();
+    PhaseProcessor postPersist = new PhaseProcessor();
     private boolean validate;
     private Map<String, Object> contextProperties = new HashMap<String, Object>();
 
     public ProcessorChain(boolean validate) {
         this.validate = validate;
+
+
     }
 
     public ProcessorChain() {
         this(true);
     }
 
-    public ProcessorChain addFirst(AtnaProcessor processor) {
-        processors.add(0, processor);
-        next = 1;
+    public ProcessorChain addFirst(AtnaProcessor processor, PHASE phase) {
+        switch (phase) {
+            case PRE_VERIFY:
+                preVerify.addFirst(processor);
+                break;
+            case POST_VERIFY:
+                postVerify.addFirst(processor);
+                break;
+            case POST_PERSIST:
+                postPersist.addFirst(processor);
+                break;
+            default:
+                break;
+        }
         return this;
     }
 
-    public ProcessorChain addLast(AtnaProcessor processor) {
-        processors.add(processor);
-        next = processors.size();
+    public ProcessorChain addLast(AtnaProcessor processor, PHASE phase) {
+        switch (phase) {
+            case PRE_VERIFY:
+                preVerify.addLast(processor);
+                break;
+            case POST_VERIFY:
+                postVerify.addLast(processor);
+                break;
+            case POST_PERSIST:
+                postPersist.addLast(processor);
+                break;
+            default:
+                break;
+        }
         return this;
     }
 
-    public ProcessorChain addNext(AtnaProcessor processor) {
-        processors.add(next, processor);
-        next++;
+    public ProcessorChain addNext(AtnaProcessor processor, PHASE phase) {
+        switch (phase) {
+            case PRE_VERIFY:
+                preVerify.addNext(processor);
+                break;
+            case POST_VERIFY:
+                postVerify.addNext(processor);
+                break;
+            case POST_PERSIST:
+                postPersist.addNext(processor);
+                break;
+            default:
+                break;
+        }
         return this;
     }
 
@@ -97,18 +138,20 @@ public class ProcessorChain {
         try {
             except.process(context);
             done.add(except);
+            preVerify.process(context);
+            done.add(preVerify);
             if (validate) {
                 validator.process(context);
                 done.add(validator);
             }
-            for (AtnaProcessor processor : processors) {
-                processor.process(context);
-                done.add(processor);
-            }
+            postVerify.process(context);
+            done.add(postVerify);
             if (context.getState() != ProcessContext.State.PERSISTED) {
                 persist.process(context);
                 done.add(persist);
             }
+            postPersist.process(context);
+            done.add(postPersist);
         } catch (Exception e) {
             context.setState(ProcessContext.State.ERROR);
             context.setThrowable(e);

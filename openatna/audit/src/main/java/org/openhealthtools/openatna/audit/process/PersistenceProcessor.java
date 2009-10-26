@@ -69,6 +69,8 @@ public class PersistenceProcessor implements AtnaProcessor {
             throw new AuditException("Message Entity could not be created",
                     msg, AuditException.AuditError.INVALID_MESSAGE);
         }
+        msg.setMessageId(entity.getId());
+        System.out.println("PersistenceProcessor.process ADDED ID TO ATNA MESSAGE:" + msg.getMessageId());
     }
 
     public void error(ProcessContext context) {

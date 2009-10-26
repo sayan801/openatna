@@ -71,6 +71,7 @@ public class EntityConverter {
     public static AtnaMessage createMessage(MessageEntity entity) {
         AtnaCode evtid = createCode(entity.getEventId());
         AtnaMessage msg = new AtnaMessage(evtid, EventOutcome.getOutcome(entity.getEventOutcome()));
+        msg.setMessageId(entity.getId());
         msg.setEventDateTime(entity.getEventDateTime());
         if (entity.getEventActionCode() != null) {
             msg.setEventActionCode(EventAction.getAction(entity.getEventActionCode()));
