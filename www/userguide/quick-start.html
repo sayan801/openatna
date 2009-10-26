@@ -189,7 +189,7 @@ CONNECTION LIMIT = -1;
         The snippet below shows the XML should be added as a child of the &lt;ServiceConfig&gt; element.
         (A commented-out template is already in the file):</p><pre class="programlisting">
         &lt;ProcessorChain validate="true"&gt;
-            &lt;Processor&gt;my.procesors.Processor1&lt;/Processor&gt;
+            &lt;Processor phase="POST_PERSIST"&gt;my.procesors.Processor1&lt;/Processor&gt;
             &lt;Processor&gt;my.procesors.Processor2&lt;/Processor&gt;
         &lt;/ProcessorChain&gt;
         </pre><p>Supplied AtnaProcessors must implement the
@@ -201,5 +201,11 @@ CONNECTION LIMIT = -1;
             If the default validator is used, this is always run at the beginning of the chain so
             application specific processors know the message has been validated. If no processor is
             added that sets the ProcessContext's state to PERSISTED, then the default
-            PersistenceProcessor is added after the processors defined below.</p><p>If you start the servers again, your processors will be invoked each time a message arrives.
+            PersistenceProcessor is added after the processors defined below.</p><p>Processors can be associated with a phase of processing. Currently three phases are supported:
+            </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>PRE_VERIFY - processors are invoked before the message has be verified.</p></li><li class="listitem"><p>POST_VERIFY - processors are invoked after the message has been verified, but before
+                    it has been persisted. This is the default phase, meaning if no phase attribute is specified,
+                    then the processor will be placed in this phase.</p></li><li class="listitem"><p>POST_PERSIST - processors are invoked after the message has been persisted to the data base.</p></li></ul></div><p>
+            
+            
+            </p><p>If you start the servers again, your processors will be invoked each time a message arrives.
         An simple example processor is given in the ext module.</p></div></div></body></html>

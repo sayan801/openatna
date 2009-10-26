@@ -272,7 +272,7 @@ CONNECTION LIMIT = -1;
         (A commented-out template is already in the file):</para>
         <programlisting>
         &lt;ProcessorChain validate="true">
-            &lt;Processor>my.procesors.Processor1&lt;/Processor>
+            &lt;Processor phase="POST_PERSIST">my.procesors.Processor1&lt;/Processor>
             &lt;Processor>my.procesors.Processor2&lt;/Processor>
         &lt;/ProcessorChain>
         </programlisting>
@@ -286,6 +286,17 @@ CONNECTION LIMIT = -1;
             application specific processors know the message has been validated. If no processor is
             added that sets the ProcessContext's state to PERSISTED, then the default
             PersistenceProcessor is added after the processors defined below.</para>
+        <para>Processors can be associated with a phase of processing. Currently three phases are supported:
+            <itemizedlist>
+                <listitem><para>PRE_VERIFY - processors are invoked before the message has be verified.</para></listitem>
+                <listitem><para>POST_VERIFY - processors are invoked after the message has been verified, but before
+                    it has been persisted. This is the default phase, meaning if no phase attribute is specified,
+                    then the processor will be placed in this phase.</para></listitem>
+                <listitem><para>POST_PERSIST - processors are invoked after the message has been persisted to the data base.</para></listitem>
+            </itemizedlist>
+            
+            
+            </para>
         <para>If you start the servers again, your processors will be invoked each time a message arrives.
         An simple example processor is given in the ext module.</para>
     </sect2>
