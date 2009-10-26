@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -79,10 +80,14 @@ public class AuditService {
         CodeParser.parse(getCodeUrls());
         chain.putProperty(PROPERTY_PERSISTENCE_POLICIES, serviceConfig.getPersistencePolicies());
         chain.putProperty(PROPERTY_DAO_FACTORY, serviceConfig.getDaoFactory());
-        List<AtnaProcessor> processors = serviceConfig.getProcessors();
-        for (AtnaProcessor processor : processors) {
-            chain.addNext(processor);
+        Map<ProcessorChain.PHASE, List<AtnaProcessor>> processors = serviceConfig.getProcessors();
+        for (ProcessorChain.PHASE phase : processors.keySet()) {
+            List<AtnaProcessor> ap = processors.get(phase);
+            for (AtnaProcessor atnaProcessor : ap) {
+                chain.addNext(atnaProcessor, phase);
+            }
         }
+
         syslogServer.addSyslogListener(new AtnaMessageListener(chain));
         syslogServer.start();
     }

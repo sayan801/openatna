@@ -47,7 +47,6 @@ public class MessageEntity extends PersistentEntity {
 
     private Set<MessageObjectEntity> messageObjects = new HashSet<MessageObjectEntity>();
 
-
     private EventIdCodeEntity eventId;
     private Set<EventTypeCodeEntity> eventTypeCodes = new HashSet<EventTypeCodeEntity>();
     private String eventActionCode;
@@ -72,7 +71,6 @@ public class MessageEntity extends PersistentEntity {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

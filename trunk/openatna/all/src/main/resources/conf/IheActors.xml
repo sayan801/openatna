@@ -88,11 +88,18 @@
            PersistenceProcessor is added after the processors defined below.
            External implementations can add their processors to the all/ext directory. These will be picked
            up during the build and be available to OpenATNA at runtime.
-           -->
 
+           Processors can be associated with a phase of processing. Currently three phases are supported:
+           PRE_VERIFY - processors are invoked before the message has be verified.
+           POST_VERIFY - processors are invoked after the message has been verified, but before
+           it has been persisted. This is the default phase, meaning if no phase attribute is specified,
+           then the processor will be placed in this phase
+           POST_PERSIST - processors are invoked after the message has been persisted to the data base.
+           -->
             <!--
+
             <ProcessorChain validate="true">
-                <Processor>org.openhealthtools.openatna.ext.processors.SimpleProcessor</Processor>
+                <Processor phase="POST_PERSIST">org.openhealthtools.openatna.ext.processors.SimpleProcessor</Processor>
             </ProcessorChain>
             -->
 

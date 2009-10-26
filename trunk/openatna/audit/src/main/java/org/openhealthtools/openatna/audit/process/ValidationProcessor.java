@@ -24,7 +24,7 @@ import java.util.List;
 import org.openhealthtools.openatna.anom.*;
 
 /**
- * Does some basic validation on message contents.
+ * Does some basic validation on message contents and sets a unique id on the message
  * <p/>
  *
  * @author Andrew Harrison
@@ -135,6 +135,7 @@ public class ValidationProcessor implements AtnaProcessor {
         for (AtnaMessageObject object : objects) {
             validateObject(object);
         }
+
     }
 
     private void validateParticipant(AtnaMessageParticipant participant) throws AtnaException {

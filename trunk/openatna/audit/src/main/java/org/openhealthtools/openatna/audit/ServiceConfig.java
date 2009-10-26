@@ -19,10 +19,10 @@
 
 package org.openhealthtools.openatna.audit;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.openhealthtools.openatna.audit.process.AtnaProcessor;
+import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
 import org.openhealthtools.openatna.syslog.LogMessage;
@@ -38,7 +38,7 @@ public class ServiceConfig {
 
     private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private Class<? extends LogMessage> logMessageClass;
-    private List<AtnaProcessor> processors = new ArrayList<AtnaProcessor>();
+    private Map<ProcessorChain.PHASE, List<AtnaProcessor>> processors = new HashMap<ProcessorChain.PHASE, List<AtnaProcessor>>();
     private DaoFactory daoFactory;
     private boolean validationProcessor = true;
 
@@ -58,12 +58,21 @@ public class ServiceConfig {
         this.logMessageClass = logMessageClass;
     }
 
-    public List<AtnaProcessor> getProcessors() {
-        return processors;
+    public List<AtnaProcessor> getProcessors(ProcessorChain.PHASE phase) {
+        return processors.get(phase);
     }
 
-    public void addProcessor(AtnaProcessor processor) {
-        this.processors.add(processor);
+    public Map<ProcessorChain.PHASE, List<AtnaProcessor>> getProcessors() {
+        return Collections.unmodifiableMap(processors);
+    }
+
+    public void addProcessor(AtnaProcessor processor, ProcessorChain.PHASE phase) {
+        List<AtnaProcessor> l = processors.get(phase);
+        if (l == null) {
+            l = new ArrayList<AtnaProcessor>();
+        }
+        l.add(processor);
+        processors.put(phase, l);
     }
 
     public DaoFactory getDaoFactory() {

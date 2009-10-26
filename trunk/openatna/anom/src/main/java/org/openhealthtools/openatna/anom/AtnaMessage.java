@@ -41,6 +41,8 @@ public class AtnaMessage implements Serializable {
     private EventOutcome eventOutcome;
     private Date eventDateTime;
 
+    private Long messageId;
+
     private Set<AtnaMessageParticipant> participants = new HashSet<AtnaMessageParticipant>();
     private Set<AtnaSource> sources = new HashSet<AtnaSource>();
     private Set<AtnaMessageObject> objects = new HashSet<AtnaMessageObject>();
@@ -48,6 +50,19 @@ public class AtnaMessage implements Serializable {
     public AtnaMessage(AtnaCode eventCode, EventOutcome eventOutcome) {
         this.eventCode = eventCode;
         this.eventOutcome = eventOutcome;
+    }
+
+    /**
+     * a unique id for the message. This is assigned once a message has been successfully persisted.
+     *
+     * @return
+     */
+    public Long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
     }
 
     public List<AtnaCode> getEventTypeCodes() {
