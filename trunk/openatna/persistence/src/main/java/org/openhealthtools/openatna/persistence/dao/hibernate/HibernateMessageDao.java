@@ -41,13 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> implements MessageDao {
 
-    private static String CODE_LOCK = "CodeLock";
-    private static String OBJ_LOCK = "ObjLock";
-    private static String PRT_LOCK = "PrtLock";
-    private static String SRC_LOCK = "SrcLock";
-    private static String NAP_LOCK = "NapLock";
-    private static String MSG_LOCK = "MsgLock";
-
     public HibernateMessageDao(SessionFactory sessionFactory) {
         super(MessageEntity.class, sessionFactory);
     }
