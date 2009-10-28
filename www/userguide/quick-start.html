@@ -1,7 +1,7 @@
 <html><head>
       <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
    <title>OpenATNA Quick Start</title><link rel="stylesheet" href="docbook.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="sect1" title="OpenATNA Quick Start"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1"></a>OpenATNA Quick Start</h2></div></div><hr></div><p>This document provides a a quick start guide to OpenATNA. OpenATNA is currently
-        developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the
+        developed at Cardiff University and Misys Open Source Systems. It is released under the
             <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2
             Licence</a>. The description of the code in this document describes OpenATNA
             <span class="emphasis"><em>as it stands at the time of writing</em></span> (October 2009). The code is
@@ -23,7 +23,7 @@ psql (8.4.0)
 Type "help" for help.
 
 template1=# CREATE USER openatna WITH PASSWORD 'openatna';
-            </pre><p>Next, create the data base. On the command line:
+            </pre><p>Next, create the data base, also called 'openatna'. On the command line:
             </p><pre class="programlisting">
 template1=# CREATE DATABASE openatna
 WITH OWNER = openatna
@@ -89,7 +89,7 @@ CONNECTION LIMIT = -1;
                         core properties of OpenATNA. They point to the conf directory (more in a
                         second) and also define the database connection values, for example the
                         username and password of the role that connects to the database. Edit this
-                        file if you want to use a different username, or have made the openatna password
+                        file if you want to use a different username, or have made the atna password
                         a little more secure :-).</p><p>Once you have built OpenATNA once, you
                         can change the value of the hib.hbm2ddl.auto property value to
                         "none".</p><p></p></li><li class="listitem"><p>If you have run the servers, you will also see an <span class="bold"><strong>openatna.log</strong></span> file. This receives the log messages
