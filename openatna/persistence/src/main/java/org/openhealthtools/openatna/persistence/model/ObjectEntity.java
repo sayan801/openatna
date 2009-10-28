@@ -20,11 +20,11 @@
 
 package org.openhealthtools.openatna.persistence.model;
 
-import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
+import org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity;
 
 
 @Entity
@@ -73,7 +73,7 @@ public class ObjectEntity extends PersistentEntity {
         this.version = version;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     public ObjectIdTypeCodeEntity getObjectIdTypeCode() {
         return objectIdTypeCode;
     }
@@ -90,7 +90,7 @@ public class ObjectEntity extends PersistentEntity {
         this.objectName = objectName;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<DetailTypeEntity> getObjectDetailTypes() {
         return objectDetailTypes;
     }
@@ -147,9 +147,9 @@ public class ObjectEntity extends PersistentEntity {
 
         ObjectEntity that = (ObjectEntity) o;
 
-        if (objectDetailTypes != null ? !objectDetailTypes.equals(that.objectDetailTypes) : that.objectDetailTypes != null) return false;
+        //if (getObjectDetailTypes() != null ? !getObjectDetailTypes().equals(that.getObjectDetailTypes()) : that.getObjectDetailTypes() != null) return false;
         if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) return false;
-        if (objectIdTypeCode != null ? !objectIdTypeCode.equals(that.objectIdTypeCode) : that.objectIdTypeCode != null) return false;
+        //if (getObjectIdTypeCode() != null ? !getObjectIdTypeCode().equals(that.getObjectIdTypeCode()) : that.getObjectIdTypeCode() != null) return false;
         if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
         if (objectSensitivity != null ? !objectSensitivity.equals(that.objectSensitivity) : that.objectSensitivity != null) return false;
         if (objectTypeCode != null ? !objectTypeCode.equals(that.objectTypeCode) : that.objectTypeCode != null) return false;
@@ -160,13 +160,13 @@ public class ObjectEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = objectIdTypeCode != null ? objectIdTypeCode.hashCode() : 0;
-        result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
+        //int result = getObjectIdTypeCode() != null ? getObjectIdTypeCode().hashCode() : 0;
+        int result = (objectName != null ? objectName.hashCode() : 0);
         result = 31 * result + (objectId != null ? objectId.hashCode() : 0);
         result = 31 * result + (objectTypeCode != null ? objectTypeCode.hashCode() : 0);
         result = 31 * result + (objectTypeCodeRole != null ? objectTypeCodeRole.hashCode() : 0);
         result = 31 * result + (objectSensitivity != null ? objectSensitivity.hashCode() : 0);
-        result = 31 * result + (objectDetailTypes != null ? objectDetailTypes.hashCode() : 0);
+        //result = 31 * result + (getObjectDetailTypes() != null ? getObjectDetailTypes().hashCode() : 0);
         return result;
     }
 

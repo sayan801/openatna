@@ -45,6 +45,8 @@ public interface ObjectDao {
 
     public List<? extends ObjectEntity> getBySensitivity(String sensitivity) throws AtnaPersistenceException;
 
+    public List<? extends ObjectEntity> getAll() throws AtnaPersistenceException;
+
     public List<? extends ObjectEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity code) throws AtnaPersistenceException;
 
     public void save(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException;

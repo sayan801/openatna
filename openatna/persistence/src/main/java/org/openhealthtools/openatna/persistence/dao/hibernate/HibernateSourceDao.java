@@ -66,6 +66,10 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
+    public List<? extends SourceEntity> getAll() throws AtnaPersistenceException {
+        return all();
+    }
+
     public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<SourceCodeEntity> codes = entity.getSourceTypeCodes();
         if (codes.size() > 0) {

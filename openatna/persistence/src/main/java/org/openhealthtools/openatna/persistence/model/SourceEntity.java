@@ -20,13 +20,16 @@
 
 package org.openhealthtools.openatna.persistence.model;
 
-import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.*;
+import org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity;
 
+
+/**
+ * The sourceId and enterpriseSiteId only, are used to determine equality
+ */
 @Entity
 @Table(name = "sources")
 public class SourceEntity extends PersistentEntity {
@@ -71,7 +74,7 @@ public class SourceEntity extends PersistentEntity {
         this.version = version;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "sources_to_codes",
             joinColumns = {@JoinColumn(name = "source")},
@@ -138,15 +141,15 @@ public class SourceEntity extends PersistentEntity {
 
         if (enterpriseSiteId != null ? !enterpriseSiteId.equals(that.enterpriseSiteId) : that.enterpriseSiteId != null) return false;
         if (sourceId != null ? !sourceId.equals(that.sourceId) : that.sourceId != null) return false;
-        if (getSourceTypeCodes() != null ? !getSourceTypeCodes().equals(that.getSourceTypeCodes()) : that.getSourceTypeCodes() != null) return false;
+        //if (getSourceTypeCodes() != null ? !getSourceTypeCodes().equals(that.getSourceTypeCodes()) : that.getSourceTypeCodes() != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = getSourceTypeCodes() != null ? getSourceTypeCodes().hashCode() : 0;
-        result = 31 * result + (enterpriseSiteId != null ? enterpriseSiteId.hashCode() : 0);
+        //int result = getSourceTypeCodes() != null ? getSourceTypeCodes().hashCode() : 0;
+        int result = (enterpriseSiteId != null ? enterpriseSiteId.hashCode() : 0);
         result = 31 * result + (sourceId != null ? sourceId.hashCode() : 0);
         return result;
     }

@@ -72,7 +72,7 @@ public class MessageEntity extends PersistentEntity {
         this.id = id;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_types_to_codes",
             joinColumns = {@JoinColumn(name = "event_type")},
@@ -90,7 +90,7 @@ public class MessageEntity extends PersistentEntity {
         this.eventTypeCodes = eventTypeCodeEntities;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     public EventIdCodeEntity getEventId() {
         return eventId;
     }
@@ -174,21 +174,22 @@ public class MessageEntity extends PersistentEntity {
         if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) return false;
         if (eventId != null ? !eventId.equals(that.eventId) : that.eventId != null) return false;
         if (eventOutcome != null ? !eventOutcome.equals(that.eventOutcome) : that.eventOutcome != null) return false;
-        if (eventTypeCodes != null ? !eventTypeCodes.equals(that.eventTypeCodes) : that.eventTypeCodes != null) return false;
-        if (messageObjects != null ? !messageObjects.equals(that.messageObjects) : that.messageObjects != null) return false;
-        if (messageParticipants != null ? !messageParticipants.equals(that.messageParticipants) : that.messageParticipants != null) return false;
-        if (messageSources != null ? !messageSources.equals(that.messageSources) : that.messageSources != null) return false;
+        if (getEventTypeCodes() != null ? !getEventTypeCodes().equals(that.getEventTypeCodes()) : that.getEventTypeCodes() != null) return false;
+        if (getMessageObjects() != null ? !getMessageObjects().equals(that.getMessageObjects()) : that.getMessageObjects() != null) return false;
+        if (getMessageParticipants() != null ? !getMessageParticipants().equals(that.getMessageParticipants()) : that.getMessageParticipants() != null)
+            return false;
+        if (messageSources != null ? !getMessageSources().equals(that.getMessageSources()) : that.getMessageSources() != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = messageParticipants != null ? messageParticipants.hashCode() : 0;
-        result = 31 * result + (messageSources != null ? messageSources.hashCode() : 0);
-        result = 31 * result + (messageObjects != null ? messageObjects.hashCode() : 0);
+        int result = getMessageParticipants() != null ? getMessageParticipants().hashCode() : 0;
+        result = 31 * result + (getMessageSources() != null ? getMessageSources().hashCode() : 0);
+        result = 31 * result + (getMessageObjects() != null ? getMessageObjects().hashCode() : 0);
         result = 31 * result + (eventId != null ? eventId.hashCode() : 0);
-        result = 31 * result + (eventTypeCodes != null ? eventTypeCodes.hashCode() : 0);
+        result = 31 * result + (getEventTypeCodes() != null ? getEventTypeCodes().hashCode() : 0);
         result = 31 * result + (eventActionCode != null ? eventActionCode.hashCode() : 0);
         result = 31 * result + (eventDateTime != null ? eventDateTime.hashCode() : 0);
         result = 31 * result + (eventOutcome != null ? eventOutcome.hashCode() : 0);

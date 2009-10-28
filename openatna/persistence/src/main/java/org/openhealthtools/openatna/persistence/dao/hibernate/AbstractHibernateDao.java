@@ -19,13 +19,13 @@
 
 package org.openhealthtools.openatna.persistence.dao.hibernate;
 
-import org.hibernate.SessionFactory;
+import java.io.Serializable;
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-
-import java.util.List;
-import java.io.Serializable;
+import org.hibernate.SessionFactory;
 
 /**
  * Base Hibernate Dao class
@@ -56,11 +56,11 @@ public class AbstractHibernateDao<E> {
     }
 
     protected Criteria criteria() {
-        return currentSession().createCriteria(entityClass);
+        return currentSession().createCriteria(entityClass).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     }
 
     protected Criteria criteria(Class entityClass) {
-        return currentSession().createCriteria(entityClass);
+        return currentSession().createCriteria(entityClass).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     }
 
     protected Query query(String hql) {
