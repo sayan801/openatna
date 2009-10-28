@@ -17,12 +17,12 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.persistence.test;
+package org.openhealthtools.openatna.atnatest.persistence;
+
+import java.io.InputStream;
 
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.util.DataReader;
-
-import java.io.InputStream;
 
 
 /**

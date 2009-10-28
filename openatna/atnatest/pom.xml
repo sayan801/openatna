@@ -17,35 +17,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>syslog-core</artifactId>
-            <version>0.1</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.4</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>openatna-anom</artifactId>
+            <artifactId>openatna-all</artifactId>
             <version>0.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>openatna-audit</artifactId>
-            <version>0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>openatna-jaxb</artifactId>
-            <version>0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>openatna-persistence</artifactId>
-            <version>0.1</version>
-        </dependency>
+
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging-api</artifactId>

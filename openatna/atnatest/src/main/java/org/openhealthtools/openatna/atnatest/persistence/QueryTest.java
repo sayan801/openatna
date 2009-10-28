@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.persistence.test;
+package org.openhealthtools.openatna.atnatest.persistence;
 
 import java.util.List;
 
