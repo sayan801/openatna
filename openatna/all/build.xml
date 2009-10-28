@@ -29,7 +29,7 @@
         <delete file="build/openatna-${version}.jar"/>
         <mkdir dir="stage"/>
         <copy todir="stage" overwrite="yes">
-            <fileset dir="target/classes" includes="**/**"/>
+            <fileset dir="target/classes" includes="**/*.class"/>
         </copy>
         <jar destfile="build/openatna-${version}.jar">
             <manifest>
