@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<reportConfig>
+    <property key="outputFileName" type="string">report</property>
+    <property key="title" type="string">Messages</property>
+    <property key="groupingField" type="string">eventId</property>
+    <property key="query" type="string">EVENT_OUTCOME NULLITY "false"</property>
+    <property key="outputType" type="string">PDF</property>
+    <property key="outputDirectory" type="string">/Users/scmabh/ATNAreports</property>
+</reportConfig>
