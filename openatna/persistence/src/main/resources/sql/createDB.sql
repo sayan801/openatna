@@ -1,9 +1,9 @@
--- Database: atna
+-- Database: openatna
 
--- DROP DATABASE atna;
+-- DROP DATABASE openatna;
 
-CREATE DATABASE atna
-  WITH OWNER = atna
+CREATE DATABASE openatna
+  WITH OWNER = openatna
        ENCODING = 'UTF8'
        LC_COLLATE = 'C'
        LC_CTYPE = 'C'
