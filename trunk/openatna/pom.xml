@@ -110,6 +110,7 @@
         <module>all</module>
         <module>net</module>
         <module>ext</module>
+        <module>report</module>
     </modules>
 
     <!-- Properties defined by OpenATNA -->

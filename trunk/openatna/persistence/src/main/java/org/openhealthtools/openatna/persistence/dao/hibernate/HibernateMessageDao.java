@@ -72,6 +72,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
     }
 
     public List<? extends MessageEntity> getByEventOutcome(Integer outcome) throws AtnaPersistenceException {
+
         return list(criteria().add(Restrictions.eq("eventOutcome", outcome)));
     }
 

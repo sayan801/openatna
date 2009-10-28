@@ -147,6 +147,7 @@ public class PersistencePoliciesIO {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setNamespaceAware(true);
+            dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
             doc = db.newDocument();
         } catch (ParserConfigurationException e) {
@@ -177,6 +178,14 @@ public class PersistencePoliciesIO {
             throw new IOException(te.getMessage());
         }
         return sr;
+    }
+
+    public static void main(String[] args) {
+        try {
+            PersistencePoliciesIO.write(System.out, new PersistencePolicies());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -44,11 +44,11 @@ public class MessageSourceEntity extends PersistentEntity {
     }
 
     public MessageSourceEntity(String sourceId) {
-        this.source = new SourceEntity(sourceId);
+        setSource(new SourceEntity(sourceId));
     }
 
     public MessageSourceEntity(SourceEntity source) {
-        this.source = source;
+        setSource(source);
     }
 
     @Id
@@ -61,7 +61,7 @@ public class MessageSourceEntity extends PersistentEntity {
         this.id = id;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     public SourceEntity getSource() {
         return source;
     }
@@ -77,14 +77,14 @@ public class MessageSourceEntity extends PersistentEntity {
 
         MessageSourceEntity that = (MessageSourceEntity) o;
 
-        if (source != null ? !source.equals(that.source) : that.source != null) return false;
+        if (getSource() != null ? !getSource().equals(that.getSource()) : that.getSource() != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return source != null ? source.hashCode() : 0;
+        return getSource() != null ? getSource().hashCode() : 0;
     }
 
 

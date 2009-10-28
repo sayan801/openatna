@@ -39,7 +39,7 @@ public class MessageParticipantEntity extends PersistentEntity {
     }
 
     public MessageParticipantEntity(ParticipantEntity participant) {
-        this.participant = participant;
+        setParticipant(participant);
     }
 
     @Id
@@ -52,7 +52,7 @@ public class MessageParticipantEntity extends PersistentEntity {
         this.id = id;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     public ParticipantEntity getParticipant() {
         return participant;
     }
@@ -85,8 +85,9 @@ public class MessageParticipantEntity extends PersistentEntity {
 
         MessageParticipantEntity that = (MessageParticipantEntity) o;
 
-        if (networkAccessPoint != null ? !networkAccessPoint.equals(that.networkAccessPoint) : that.networkAccessPoint != null) return false;
-        if (participant != null ? !participant.equals(that.participant) : that.participant != null) return false;
+        if (getNetworkAccessPoint() != null ? !getNetworkAccessPoint().equals(that.getNetworkAccessPoint()) : that.getNetworkAccessPoint() != null)
+            return false;
+        if (getParticipant() != null ? !getParticipant().equals(that.getParticipant()) : that.getParticipant() != null) return false;
         if (userIsRequestor != null ? !userIsRequestor.equals(that.userIsRequestor) : that.userIsRequestor != null) return false;
 
         return true;
@@ -94,9 +95,9 @@ public class MessageParticipantEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = participant != null ? participant.hashCode() : 0;
+        int result = getParticipant() != null ? getParticipant().hashCode() : 0;
         result = 31 * result + (userIsRequestor != null ? userIsRequestor.hashCode() : 0);
-        result = 31 * result + (networkAccessPoint != null ? networkAccessPoint.hashCode() : 0);
+        result = 31 * result + (getNetworkAccessPoint() != null ? getNetworkAccessPoint().hashCode() : 0);
         return result;
     }
 

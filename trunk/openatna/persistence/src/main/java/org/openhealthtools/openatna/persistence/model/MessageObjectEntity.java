@@ -42,7 +42,7 @@ public class MessageObjectEntity extends PersistentEntity {
     }
 
     public MessageObjectEntity(ObjectEntity object) {
-        this.object = object;
+        setObject(object);
     }
 
     @Id
