@@ -20,6 +20,7 @@
 package org.openhealthtools.openatna.audit.process;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.audit.AuditService;
 import org.openhealthtools.openatna.audit.log.SyslogErrorLogger;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
@@ -35,17 +36,16 @@ import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 
 public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
 
-    private ProcessorChain chain;
+    private AuditService service;
 
-    public AtnaMessageListener(ProcessorChain chain) {
-        this.chain = chain;
+    public AtnaMessageListener(AuditService service) {
+        this.service = service;
     }
 
     public void messageArrived(SyslogMessage<AtnaMessage> message) {
         LogMessage<AtnaMessage> msg = message.getMessage();
         AtnaMessage atnaMessage = msg.getMessageObject();
-        ProcessContext context = new ProcessContext(atnaMessage);
-        chain.process(context);
+        service.process(atnaMessage);
     }
 
     public void exceptionThrown(SyslogException exception) {
