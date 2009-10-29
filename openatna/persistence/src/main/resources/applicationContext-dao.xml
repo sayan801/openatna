@@ -129,4 +129,7 @@
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
+    <bean id="entityDao" class="org.openhealthtools.openatna.persistence.dao.hibernate.HibernateEntityDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
 </beans>

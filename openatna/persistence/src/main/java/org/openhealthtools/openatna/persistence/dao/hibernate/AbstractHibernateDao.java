@@ -36,8 +36,7 @@ import org.hibernate.SessionFactory;
  * @date $Date:$ modified by $Author:$
  */
 
-public class AbstractHibernateDao<E> {
-
+public abstract class AbstractHibernateDao<E> {
 
     private final Class<E> entityClass;
     private final SessionFactory sessionFactory;
@@ -63,7 +62,7 @@ public class AbstractHibernateDao<E> {
         return currentSession().createCriteria(entityClass).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     }
 
-    protected Query query(String hql) {
+    protected Query doQuery(String hql) {
         return currentSession().createQuery(hql);
     }
 

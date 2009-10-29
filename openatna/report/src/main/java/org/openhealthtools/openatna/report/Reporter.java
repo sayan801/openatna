@@ -19,27 +19,29 @@
 
 package org.openhealthtools.openatna.report;
 
-import java.util.Date;
-import java.util.List;
-import java.text.SimpleDateFormat;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URISyntaxException;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.type.Type;
+import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.persistence.dao.EntityDao;
+import org.openhealthtools.openatna.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.persistence.model.*;
 import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.persistence.util.QueryString;
-import org.openhealthtools.openatna.persistence.dao.DaoFactory;
-import org.openhealthtools.openatna.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 
 /**
  * @author Andrew Harrison
@@ -49,6 +51,9 @@ import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
  */
 
 public class Reporter {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.report.Reporter");
+
 
     private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
 
@@ -91,7 +96,18 @@ public class Reporter {
                 config.setReportInstance("MessageReport");
                 isAtnaQuery = true;
             } catch (Exception e) {
-                // TODO  HQL
+                String target = config.getTarget();
+                if (target != null) {
+                    report = getReportFromTarget(target);
+                    if (report == null) {
+                        throw new IllegalArgumentException("Could not parse query:" + query);
+                    } else {
+                        config.setQueryLanguage(ReportConfig.HQL);
+                        config.setReportInstance(report);
+                    }
+                } else {
+                    throw new IllegalArgumentException("Could not parse query:" + query);
+                }
             }
         }
         String input = getInputDirectory();
@@ -194,7 +210,14 @@ public class Reporter {
                 }
             }
         } else if (config.getQueryLanguage().equals(ReportConfig.HQL)) {
-            System.out.println("HQL not supported yet... watch this space");
+            try {
+                EntityDao dao = factory.entityDao();
+                List<? extends PersistentEntity> l = dao.query(query);
+                return new EntityDataSource(l);
+            } catch (AtnaPersistenceException e) {
+                e.printStackTrace();
+                return null;
+            }
         } else {
             throw new IllegalArgumentException("Unknown query language: " + config.getQueryLanguage());
         }

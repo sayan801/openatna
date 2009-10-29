@@ -109,7 +109,7 @@
             codes can be added here as a URL string
             -->
             <!--
-            <CodesUrl>file:/my/codes/codes.xml</CodeUrl>
+            <CodesUrl>file:/my/codes/codes.xml</CodesUrl>
             -->
 
         </ServiceConfig>

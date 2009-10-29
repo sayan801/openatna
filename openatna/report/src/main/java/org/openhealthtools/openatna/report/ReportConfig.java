@@ -19,24 +19,23 @@
 
 package org.openhealthtools.openatna.report;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.openhealthtools.openatna.persistence.model.Query;
 import org.openhealthtools.openatna.persistence.util.QueryString;
@@ -69,8 +68,8 @@ public class ReportConfig extends HashMap<String, Object> {
 
     public static final String INPUT_DIRECTORY = "inputDirectory";
     public static final String REPORT_INSTANCE = "reportInstance";
+    public static final String TARGET = "target";
 
-    
 
     public static final String MESSAGES = "MESSAGES";
     public static final String CODES = "CODES";
@@ -88,13 +87,13 @@ public class ReportConfig extends HashMap<String, Object> {
     public static final String PDF = "PDF";
 
     public static final String[] outputTypes = {
-        PDF,
-        HTML
+            PDF,
+            HTML
     };
 
     public static final String[] queryLanguages = {
-        HQL,
-        ATNA
+            HQL,
+            ATNA
     };
 
     public static final String[] targets = {
@@ -182,35 +181,43 @@ public class ReportConfig extends HashMap<String, Object> {
         return (String) get(GROUPING_FIELD);
     }
 
+    public void setTarget(String entity) {
+        put(TARGET, entity);
+    }
+
+    public String getTarget() {
+        return (String) get(TARGET);
+    }
+
 
     public static ReportConfig fromXml(InputStream in) throws IOException {
         ReportConfig conf = new ReportConfig();
         Document doc = newDocument(in);
         Element root = doc.getDocumentElement();
-        if(!root.getTagName().equalsIgnoreCase(REPORT_CONFIG)) {
+        if (!root.getTagName().equalsIgnoreCase(REPORT_CONFIG)) {
             throw new IOException("unknown XML root element:" + root.getTagName());
         }
         NodeList l = root.getChildNodes();
-        for(int i = 0; i < l.getLength(); i++) {
+        for (int i = 0; i < l.getLength(); i++) {
             Node n = l.item(i);
-            if(n instanceof Element) {
+            if (n instanceof Element) {
                 Element p = (Element) n;
-                if(p.getTagName().equalsIgnoreCase(PROPERTY)) {
+                if (p.getTagName().equalsIgnoreCase(PROPERTY)) {
                     String type = STRING;
                     String key = p.getAttribute(KEY);
-                    if(key == null || key.length() == 0) {
+                    if (key == null || key.length() == 0) {
                         continue;
                     }
                     String cls = p.getAttribute(TYPE);
-                    if(cls != null) {
+                    if (cls != null) {
                         type = cls;
                     }
 
                     String val = p.getTextContent().trim();
-                    if(val != null && val.length() > 0) {
+                    if (val != null && val.length() > 0) {
                         Object v = val;
                         if (type.equals(BOOLEAN)) {
-                           v = Boolean.valueOf(val);
+                            v = Boolean.valueOf(val);
                         }
                         conf.put(key, v);
                     }
@@ -228,7 +235,7 @@ public class ReportConfig extends HashMap<String, Object> {
             Object val = conf.get(key);
             String type;
             String v;
-            if(val instanceof String) {
+            if (val instanceof String) {
                 type = STRING;
                 v = (String) val;
             } else if (val instanceof Boolean) {
@@ -319,7 +326,6 @@ public class ReportConfig extends HashMap<String, Object> {
             e.printStackTrace();
         }
     }
-
 
 
 }
