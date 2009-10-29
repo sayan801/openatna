@@ -72,4 +72,8 @@ public class SpringDaoFactory implements DaoFactory {
         return (ObjectDao) context.getBean("objectDao");
     }
 
+    public EntityDao entityDao() {
+        return (EntityDao) context.getBean("entityDao");
+    }
+
 }

@@ -2,8 +2,11 @@
 <reportConfig>
     <property key="outputFileName" type="string">report</property>
     <property key="title" type="string">Messages</property>
-    <property key="groupingField" type="string">eventId</property>
-    <property key="query" type="string">EVENT_OUTCOME NULLITY "false"</property>
+    <property key="groupingField" type="string">type</property>
+    <property key="query" type="string">from CodeEntity as code where code.codeSystemName = 'RFC-3881'</property>
     <property key="outputType" type="string">PDF</property>
     <property key="outputDirectory" type="string">/Users/scmabh/ATNAreports</property>
+    <!-- target is required for HQL queries. This should one of the targets array in ReportConfig -->
+    <property key="target" type="string">CODES</property>
+    <property key="queryLanguage" type="string">HQL</property>
 </reportConfig>

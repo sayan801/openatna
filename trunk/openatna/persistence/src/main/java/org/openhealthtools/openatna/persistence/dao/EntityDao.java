@@ -19,26 +19,22 @@
 
 package org.openhealthtools.openatna.persistence.dao;
 
+import java.util.List;
+
+import org.openhealthtools.openatna.persistence.model.PersistentEntity;
+
+
 /**
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 8, 2009: 6:01:46 PM
+ * @created Oct 29, 2009: 10:17:00 PM
  * @date $Date:$ modified by $Author:$
  */
-public interface DaoFactory {
 
-    public CodeDao codeDao();
+public interface EntityDao {
 
-    public ParticipantDao participantDao();
+    public List<? extends PersistentEntity> query(String query);
 
-    public NetworkAccessPointDao networkAccessPointDao();
-
-    public MessageDao messageDao();
-
-    public SourceDao sourceDao();
-
-    public ObjectDao objectDao();
-
-    public EntityDao entityDao();
+    public String[] getSupportedQueryDialects();
 
 }
