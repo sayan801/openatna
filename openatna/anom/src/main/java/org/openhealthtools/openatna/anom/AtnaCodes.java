@@ -38,8 +38,8 @@ public class AtnaCodes {
         return CodeRegistry.getCode(AtnaCode.SOURCE_TYPE, code, null, "RFC-3881");
     }
 
-    private static AtnaCode participantCode(String code) {
-        return CodeRegistry.getCode(AtnaCode.PARTICIPANT_ROLE_TYPE, code, null, "RFC-3881");
+    private static AtnaCode objectIdTypeCode(String code) {
+        return CodeRegistry.getCode(AtnaCode.OBJECT_ID_TYPE, code, null, "RFC-3881");
     }
 
     /**
@@ -119,51 +119,51 @@ public class AtnaCodes {
      */
 
     public static AtnaCode objectIdTypeMedicalRecordNumber() {
-        return participantCode("1");
+        return objectIdTypeCode("1");
     }
 
     public static AtnaCode objectIdTypePatientNumber() {
-        return participantCode("2");
+        return objectIdTypeCode("2");
     }
 
     public static AtnaCode objectIdTypeEncounterNumber() {
-        return participantCode("3");
+        return objectIdTypeCode("3");
     }
 
     public static AtnaCode objectIdTypeEnrolleeNumber() {
-        return participantCode("4");
+        return objectIdTypeCode("4");
     }
 
     public static AtnaCode objectIdTypeSSNumber() {
-        return participantCode("5");
+        return objectIdTypeCode("5");
     }
 
     public static AtnaCode objectIdTypeAccountNumber() {
-        return participantCode("6");
+        return objectIdTypeCode("6");
     }
 
     public static AtnaCode objectIdTypeGuarantorNumber() {
-        return participantCode("7");
+        return objectIdTypeCode("7");
     }
 
     public static AtnaCode objectIdTypeReportName() {
-        return participantCode("8");
+        return objectIdTypeCode("8");
     }
 
     public static AtnaCode objectIdTypeReportNumber() {
-        return participantCode("9");
+        return objectIdTypeCode("9");
     }
 
     public static AtnaCode objectIdTypeSearchCriteria() {
-        return participantCode("10");
+        return objectIdTypeCode("10");
     }
 
     public static AtnaCode objectIdTypeUserId() {
-        return participantCode("11");
+        return objectIdTypeCode("11");
     }
 
     public static AtnaCode objectIdUri() {
-        return participantCode("12");
+        return objectIdTypeCode("12");
     }
 
 }

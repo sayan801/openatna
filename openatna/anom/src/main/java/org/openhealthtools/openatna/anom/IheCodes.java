@@ -40,7 +40,7 @@ public class IheCodes {
     }
 
     private static AtnaCode newCode(String code) {
-        return newCode(AtnaCode.EVENT_ID, code, "IHE Transactions");
+        return newCode(AtnaCode.EVENT_TYPE, code, "IHE Transactions");
     }
 
     /**
@@ -115,7 +115,7 @@ public class IheCodes {
     }
 
     public static AtnaCode objectIdTypeSubmissionSet() {
-        return newCode(AtnaCode.EVENT_ID, "urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd", "IHE XDS Metadata");
+        return newCode(AtnaCode.OBJECT_ID_TYPE, "urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd", "IHE XDS Metadata");
     }
 
 
