@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.dist;
 import java.io.File;
 import java.io.IOException;
 
+import org.openhealthtools.openatna.audit.ServiceConfig;
 import org.openhealthtools.openatna.audit.impl.AuditServiceImpl;
 import org.openhealthtools.openatna.audit.server.AtnaServer;
 import org.openhealthtools.openatna.audit.server.PropertiesLoader;
@@ -46,17 +47,21 @@ public class Server {
         if (!configured) {
             throw new RuntimeException("Could not configure AtnaServer");
         }
-        AtnaServer server = sc.getActor(AtnaServer.class);
+        AtnaServer server = sc.getConfiguredObject(AtnaServer.class);
         if (server == null) {
             throw new RuntimeException("No AtnaServer was created! Cannot go on.");
         }
+        ServiceConfig config = sc.getConfiguredObject(ServiceConfig.class);
+        if (config == null) {
+            throw new RuntimeException("No ServiceConfig was created! Cannot go on.");
+        }
         AuditServiceImpl service = new AuditServiceImpl();
         service.setSyslogServer(server);
-        service.setServiceConfig(server.getServiceConfig());
+        service.setServiceConfig(config);
         try {
             service.start();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("IO Error starting service:", e);
         }
 
 

@@ -28,7 +28,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.audit.ServiceConfig;
 import org.openhealthtools.openatna.net.IConnectionDescription;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
@@ -50,7 +49,6 @@ public class AtnaServer implements SyslogServer {
     private IConnectionDescription udpConnection;
     private TcpServer tcpServer = null;
     private UdpServer udpServer = null;
-    private ServiceConfig serviceConfig;
 
     private volatile boolean destroyed = false;
 
@@ -67,14 +65,6 @@ public class AtnaServer implements SyslogServer {
 
     public AtnaServer(IConnectionDescription tlsConnection, IConnectionDescription udpConnection) {
         this(tlsConnection, udpConnection, 5);
-    }
-
-    public ServiceConfig getServiceConfig() {
-        return serviceConfig;
-    }
-
-    public void setServiceConfig(ServiceConfig serviceConfig) {
-        this.serviceConfig = serviceConfig;
     }
 
     public void start() throws IOException {
