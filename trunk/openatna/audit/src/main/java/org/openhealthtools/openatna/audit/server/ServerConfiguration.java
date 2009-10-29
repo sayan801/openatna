@@ -59,7 +59,7 @@ public class ServerConfiguration {
 
     private static ServerConfiguration config = new ServerConfiguration();
 
-    private Set<Object> actors = new HashSet<Object>();
+    private Set<Object> configuredObjects = new HashSet<Object>();
 
     private ServerConfiguration() {
 
@@ -70,8 +70,8 @@ public class ServerConfiguration {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getActor(Class<? extends T> cls) {
-        for (Object o : actors) {
+    public <T> T getConfiguredObject(Class<? extends T> cls) {
+        for (Object o : configuredObjects) {
             if (cls.isAssignableFrom(o.getClass())) {
                 return (T) o;
             }
@@ -280,8 +280,8 @@ public class ServerConfiguration {
         }
 
         AtnaServer server = new AtnaServer(tcp, udp, threads);
-        server.setServiceConfig(sc);
-        actors.add(server);
+        configuredObjects.add(sc);
+        configuredObjects.add(server);
         return true;
     }
 
