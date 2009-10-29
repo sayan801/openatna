@@ -21,6 +21,7 @@ package org.openhealthtools.openatna.audit.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -223,6 +224,16 @@ public class ServerConfiguration {
                                         sc.setDaoFactory(f);
                                     } catch (Exception e) {
                                         log.warn("Could not load DaoFactory implementation " + dao);
+                                    }
+                                }
+                            } else if (child.getTagName().equalsIgnoreCase("CODESURL")) {
+                                String url = child.getTextContent().trim();
+                                if (url != null && url.length() > 0) {
+                                    try {
+                                        URL u = new URL(url);
+                                        sc.addCodeUrls(u);
+                                    } catch (Exception e) {
+                                        log.warn("Could not load Codes URL " + url);
                                     }
                                 }
                             } else if (child.getTagName().equalsIgnoreCase("PROCESSORCHAIN")) {

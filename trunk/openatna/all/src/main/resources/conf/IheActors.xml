@@ -103,6 +103,15 @@
             </ProcessorChain>
             -->
 
+            <!--
+            Codes URLs - these are locations of files containing codes required by openATNA.
+            See atnacodes.xml for the syntax. atnacodes.xml are loaded by default. Any other
+            codes can be added here as a URL string
+            -->
+            <!--
+            <CodesUrl>file:/my/codes/codes.xml</CodeUrl>
+            -->
+
         </ServiceConfig>
     </Actor>
 

@@ -19,8 +19,11 @@
 
 package org.openhealthtools.openatna.audit;
 
+import java.net.URL;
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.audit.process.AtnaProcessor;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
@@ -36,11 +39,16 @@ import org.openhealthtools.openatna.syslog.LogMessage;
 
 public class ServiceConfig {
 
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.ServiceConfig");
+
+
     private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private Class<? extends LogMessage> logMessageClass;
     private Map<ProcessorChain.PHASE, List<AtnaProcessor>> processors = new HashMap<ProcessorChain.PHASE, List<AtnaProcessor>>();
     private DaoFactory daoFactory;
     private boolean validationProcessor = true;
+    private Set<URL> codeUrls = new HashSet<URL>();
+
 
     public PersistencePolicies getPersistencePolicies() {
         return persistencePolicies;
@@ -89,5 +97,41 @@ public class ServiceConfig {
 
     public void setValidationProcessor(boolean validationProcessor) {
         this.validationProcessor = validationProcessor;
+    }
+
+    /**
+     * get the URLs pointing to coded value XML.
+     * default codes are added automatically just before starting the service
+     *
+     * @return
+     */
+    public URL[] getCodeUrls() {
+        return codeUrls.toArray(new URL[codeUrls.size()]);
+    }
+
+    /**
+     * add URLs pointing to XML files containing Coded Values.
+     * default codes are added automatically
+     *
+     * @param urls
+     */
+    public void addCodeUrls(URL... urls) {
+        for (URL url : urls) {
+            if (url != null) {
+                log.debug("loading Codes from url:" + url);
+                codeUrls.add(url);
+            }
+        }
+    }
+
+    /**
+     * set the URLs pointing to Coded Values XML
+     * default codes are added automatically
+     *
+     * @param urls
+     */
+    public void setCodeUrls(URL[] urls) {
+        codeUrls.clear();
+        addCodeUrls(urls);
     }
 }

@@ -22,7 +22,7 @@ package org.openhealthtools.openatna.dist;
 import java.io.File;
 import java.io.IOException;
 
-import org.openhealthtools.openatna.audit.AuditService;
+import org.openhealthtools.openatna.audit.impl.AuditServiceImpl;
 import org.openhealthtools.openatna.audit.server.AtnaServer;
 import org.openhealthtools.openatna.audit.server.PropertiesLoader;
 import org.openhealthtools.openatna.audit.server.ServerConfiguration;
@@ -50,7 +50,7 @@ public class Server {
         if (server == null) {
             throw new RuntimeException("No AtnaServer was created! Cannot go on.");
         }
-        AuditService service = new AuditService();
+        AuditServiceImpl service = new AuditServiceImpl();
         service.setSyslogServer(server);
         service.setServiceConfig(server.getServiceConfig());
         try {
