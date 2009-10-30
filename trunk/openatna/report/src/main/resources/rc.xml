@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <reportConfig>
-    <property key="outputFileName" type="string">report</property>
-    <property key="title" type="string">Messages</property>
-    <property key="groupingField" type="string">type</property>
-    <property key="query" type="string">from MessageParticipantEntity as p where p.participant.userId = 'scmabh'</property>
-    <property key="outputType" type="string">PDF</property>
+    <!--<property key="outputFileName" type="string">report</property>-->
+    <!--<property key="groupingField" type="string">type</property>-->
+    <property key="query" type="string">PARTICIPANT_ID LIKE "scmabh"</property>
+    <!--<property key="outputType" type="string">HTML</property>-->
     <property key="outputDirectory" type="string">/Users/scmabh/ATNAreports</property>
     <!-- target is useful for HQL queries. This should one of the targets array in ReportConfig
     if not supplied, the reporter will try to guess the return value (in the absence of a hibernate query object) -->
