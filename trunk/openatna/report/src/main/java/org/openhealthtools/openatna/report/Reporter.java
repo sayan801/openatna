@@ -53,7 +53,7 @@ public class Reporter {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.report.Reporter");
 
-    private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+    private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy_hh-mm-ss");
 
     private ReportConfig config;
     private DaoFactory factory = SpringDaoFactory.getFactory();

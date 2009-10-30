@@ -22,7 +22,9 @@ package org.openhealthtools.openatna.audit.server;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,7 +61,7 @@ public class ServerConfiguration {
 
     private static ServerConfiguration config = new ServerConfiguration();
 
-    private Set<Object> configuredObjects = new HashSet<Object>();
+    private Set<AuditRepositoryActor> auditRepositoryActors = new HashSet<AuditRepositoryActor>();
 
     private ServerConfiguration() {
 
@@ -69,17 +71,9 @@ public class ServerConfiguration {
         return config;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getConfiguredObject(Class<? extends T> cls) {
-        for (Object o : configuredObjects) {
-            if (cls.isAssignableFrom(o.getClass())) {
-                return (T) o;
-            }
-        }
-
-        return null;
+    public List<AuditRepositoryActor> getAuditRepositoryActors() {
+        return new ArrayList(auditRepositoryActors);
     }
-
 
     public boolean loadActors(File configFile) {
         boolean okay = true;
@@ -275,13 +269,14 @@ public class ServerConfiguration {
                 }
             }
         }
-        if (tcp == null && udp == null) {
-            throw new RuntimeException("No connections defined for Audit Record Repository. It cannot serve");
+        AtnaServer server = null;
+        if (tcp != null && udp != null) {
+            server = new AtnaServer(tcp, udp, threads);
+        } else {
+            log.warn("No connections defined for server. This ARR will be able to receive Syslog Messages.\n" +
+                    "The service will shut down unless you it is being run from inside a separate execution thread.");
         }
-
-        AtnaServer server = new AtnaServer(tcp, udp, threads);
-        configuredObjects.add(sc);
-        configuredObjects.add(server);
+        auditRepositoryActors.add(new AuditRepositoryActor(server, sc));
         return true;
     }
 
