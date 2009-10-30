@@ -17,9 +17,9 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.server;
+package org.openhealthtools.openatna.audit;
 
-import org.openhealthtools.openatna.audit.ServiceConfig;
+import org.openhealthtools.openatna.audit.server.AtnaServer;
 
 /**
  * @author Andrew Harrison
