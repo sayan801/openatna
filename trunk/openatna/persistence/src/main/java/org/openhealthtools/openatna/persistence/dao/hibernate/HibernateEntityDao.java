@@ -42,7 +42,7 @@ public class HibernateEntityDao extends AbstractHibernateDao<PersistentEntity> i
     }
 
     public List<? extends PersistentEntity> query(String query) {
-        return list(doQuery(query));
+        return list(createQuery(query));
     }
 
     public String[] getSupportedQueryDialects() {

@@ -33,14 +33,13 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.type.Type;
 import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.persistence.dao.DaoFactory;
 import org.openhealthtools.openatna.persistence.dao.EntityDao;
 import org.openhealthtools.openatna.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.model.*;
-import org.openhealthtools.openatna.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.persistence.model.PersistentEntity;
 import org.openhealthtools.openatna.persistence.util.QueryString;
 
 /**
@@ -53,7 +52,6 @@ import org.openhealthtools.openatna.persistence.util.QueryString;
 public class Reporter {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.report.Reporter");
-
 
     private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
 
@@ -97,17 +95,19 @@ public class Reporter {
                 isAtnaQuery = true;
             } catch (Exception e) {
                 String target = config.getTarget();
-                if (target != null) {
-                    report = getReportFromTarget(target);
+                if (target == null) {
+                    report = guessReportFromHql(query);
                     if (report == null) {
                         throw new IllegalArgumentException("Could not parse query:" + query);
-                    } else {
-                        config.setQueryLanguage(ReportConfig.HQL);
-                        config.setReportInstance(report);
                     }
                 } else {
-                    throw new IllegalArgumentException("Could not parse query:" + query);
+                    report = getReportFromTarget(target);
                 }
+                if (report == null) {
+                    throw new Exception("Could not parse query:" + query);
+                }
+                config.setQueryLanguage(ReportConfig.HQL);
+                config.setReportInstance(report);
             }
         }
         String input = getInputDirectory();
@@ -258,23 +258,54 @@ public class Reporter {
         return null;
     }
 
-    private String getReportFromHql(org.hibernate.Query hql) {
-        Type[] types = hql.getReturnTypes();
-        if (types.length == 1) {
-            Class cls = types[0].getReturnedClass();
-            if (MessageEntity.class.isAssignableFrom(cls)) {
-                return "MessageReport";
-            } else if (CodeEntity.class.isAssignableFrom(cls)) {
-                return "CodeReport";
-            } else if (ObjectEntity.class.isAssignableFrom(cls)) {
-                return "ObjectReport";
-            } else if (ParticipantEntity.class.isAssignableFrom(cls)) {
-                return "ParticipantReport";
-            } else if (SourceEntity.class.isAssignableFrom(cls)) {
-                return "SourceReport";
-            } else if (NetworkAccessPointEntity.class.isAssignableFrom(cls)) {
-                return "NapReport";
+    private String getReportFromEntity(String s) {
+        if (s.equals("MessageEntity")) {
+            return "MessageReport";
+        } else if (s.equals("CodeEntity")) {
+            return "CodeReport";
+        } else if (s.equals("ObjectEntity")) {
+            return "ObjectReport";
+        } else if (s.equals("ParticipantEntity")) {
+            return "ParticipantReport";
+        } else if (s.equals("SourceEntity")) {
+            return "SourceReport";
+        } else if (s.equals("NeworkAccessPointEntity")) {
+            return "NapReport";
+        } else if (s.equals("MessageObjectEntity")) {
+            return "MessageObjectReport";
+        } else if (s.equals("MessageParticipantEntity")) {
+            return "MessageParticipantReport";
+        } else if (s.equals("MessageSourceEntity")) {
+            return "MessageSourceReport";
+        }
+        return null;
+    }
+
+    public static final String[] entities = {
+            "CodeEntity",
+            "MessageEntity",
+            "SourceEntity",
+            "MessageSourceEntity",
+            "ParticipantEntity",
+            "MessageParticipantEntity",
+            "ObjectEntity",
+            "MessageObjectEntity",
+            "NetworkAccessPointEntity",
+            "ObjectDetailEntity"
+    };
+
+    private String guessReportFromHql(String hql) {
+        int min = Integer.MAX_VALUE;
+        String ent = null;
+        for (String entity : entities) {
+            int index = hql.indexOf(entity);
+            if (index > -1 && index < min) {
+                min = index;
+                ent = entity;
             }
+        }
+        if (ent != null && min > -1) {
+            return getReportFromEntity(ent);
         }
         return null;
     }

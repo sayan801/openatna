@@ -62,7 +62,7 @@ public abstract class AbstractHibernateDao<E> {
         return currentSession().createCriteria(entityClass).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     }
 
-    protected Query doQuery(String hql) {
+    protected Query createQuery(String hql) {
         return currentSession().createQuery(hql);
     }
 
