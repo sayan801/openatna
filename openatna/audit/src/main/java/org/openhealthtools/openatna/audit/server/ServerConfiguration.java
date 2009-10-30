@@ -273,7 +273,7 @@ public class ServerConfiguration {
         if (tcp != null && udp != null) {
             server = new AtnaServer(tcp, udp, threads);
         } else {
-            log.warn("No connections defined for server. This ARR will be able to receive Syslog Messages.\n" +
+            log.warn("No connections defined for server. This ARR will be not able to receive Syslog Messages.\n" +
                     "The service will shut down unless you it is being run from inside a separate execution thread.");
         }
         auditRepositoryActors.add(new AuditRepositoryActor(server, sc));
