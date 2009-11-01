@@ -51,6 +51,8 @@
         <property name="persistencePolicies" ref="persistencePolicies"/>
         <!-- NOTE: This class is not on the audit module build classpath but comes with the dist -->
         <property name="logMessageClass" value="org.openhealthtools.openatna.dist.JaxbLogMessage"/>
+
+        <!--<property name="validationProcessor" value="false"/>-->
         <!--
         Example atna processors
         -->
@@ -75,7 +77,7 @@
         <!--
         <property name="codeUrls">
             <set>
-                <value>file:/Users/scmabh/codes/mycodes.xml</value>
+                <value>file:/Users/bob/codes/mycodes.xml</value>
                 <value>http://www.server.com/codes/theircodes.xml</value>
             </set>
         </property>
