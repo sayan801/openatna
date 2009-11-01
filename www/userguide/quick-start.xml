@@ -105,11 +105,11 @@ CONNECTION LIMIT = -1;
             described below. They allow you change the configuration of OpenATNA without
             re-compiling, although they do require that you shut the servers down, and restart them
             so the chages can take effect. To kill the servers, hit Control + C.
-                    <note><para>Remember! The build all/directory is generated during the build. Any
+                    <note><para>Remember! The all/build directory is generated during the build. Any
                     changes you make to configuration files will be lost if you run "mvn install"
                     again. To make permanent changes that will survive the build, edit the
                     corresponding files in the <emphasis role="bold"
-                        >openatna/all/src/main/resources/</emphasis> directory.</para></note>
+                        >openatna/audit/src/main/resources/</emphasis> directory.</para></note>
             <itemizedlist><listitem><para>
                         <emphasis role="bold">commons-logging.properties</emphasis> - This sets the
                         logging system to use. The default is Log4J. </para></listitem><listitem><para>
@@ -143,6 +143,11 @@ CONNECTION LIMIT = -1;
                         "none".</para>
                     <para/>
                 </listitem>
+                <listitem><para><emphasis role="bold">ApplicationContext.xml</emphasis> - This
+                is the Spring configuration file for OpenATNA. This is read at start up to wire up
+                the various components. Editing this file gives you fine-grained control over the
+                components.</para>
+                </listitem>
                 <listitem><para>If you have run the servers, you will also see an <emphasis
                             role="bold">openatna.log</emphasis> file. This receives the log messages
                         from Log4J and will not grow beyond 1/2 MB in size.</para></listitem>
@@ -152,10 +157,7 @@ CONNECTION LIMIT = -1;
                         certificates for testing secure nodes. </para></listitem>
                 <listitem><para><emphasis role="bold">conf/IheActors.xml</emphasis> - contains the
                         Audit Record Repository (ARR) actor definition. This contains references to
-                        the two connections it uses (TLS and UDP), as well as some persistence
-                        policies. Persistence policies are used to specify which types of entities
-                        are allowed in messages, specifically, when these entities are not already
-                        present in the repository.</para></listitem>
+                        the two connections it uses (TLS and UDP).</para></listitem>
                 <listitem><para><emphasis role="bold">conf/ArrConnections.xml</emphasis> - contains
                         the Audit Record Repository (ARR) connection definitions. These specify the
                         port numbers and in the case of the secured TCP connection, the certificates
@@ -199,24 +201,24 @@ CONNECTION LIMIT = -1;
     </sect2>
     <sect2>
         <title>Testing</title>
-        <para> You can test against the server by running the clients in the atnatest module. These
+        <para> You can test against the server by running the clients in the "test" directory of the all module. These
             are JUnit tests and are probably easiest to run inside your IDE. The classes that are
             designed to run against the server are: <itemizedlist>
                 <listitem><para>
                         <emphasis role="bold"
-                            >org.openhealthtools.openatna.atnatest.TlsClientTest0</emphasis> sends
+                            >org.openhealthtools.openatna.dist.test.TlsClientTest0</emphasis> sends
                         six messages to the ARR using TLS and Syslog RFC 5424 style messages. The
                         first three messages use mutually authentication with message encryption.
                         The second three messages use mutual authentication without message
                         encryption. </para></listitem>
                 <listitem><para>
                         <emphasis role="bold"
-                            >org.openhealthtools.openatna.atnatest.UdpClientTest0</emphasis> sends
+                            >org.openhealthtools.openatna.dist.test.UdpClientTest0</emphasis> sends
                         three messages to the ARR using UDP and Syslog RFC 5424 style messages.
                     </para></listitem>
                 <listitem><para>
                         <emphasis role="bold"
-                            >org.openhealthtools.openatna.atnatest.BsdClientTest0</emphasis> sends
+                            >org.openhealthtools.openatna.dist.test.BsdClientTest0</emphasis> sends
                         three messages to the ARR using UDP and Syslog BSD style messages.
                     </para></listitem>
             </itemizedlist>
@@ -234,7 +236,7 @@ CONNECTION LIMIT = -1;
             the current state of context.</para>
         <note><para>Currently, the process of deploying external processors described below requires that you run the build again ("mvn install")
             after you have followed the above instructions. This means you should edit the IheActors.xml file in the
-            <emphasis role="bold">openatna/all/src/main/resources/conf/</emphasis> directory, not the one in the
+            <emphasis role="bold">openatna/audit/src/main/resources/conf/</emphasis> directory, not the one in the
             <emphasis role="bold">openatna/all/build/conf/</emphasis> directory, and then run "mvn install"</para></note>
         <para>By default, OpenATNA contains three processors. The first validates the incoming message and sets
             the context state to VALIDATED if validation succeeds. The second persists the message and sets
@@ -263,29 +265,6 @@ CONNECTION LIMIT = -1;
             
         }            
         </programlisting>
-        <para>Once you have written your processors, you need to deploy them to OpenATNA so that
-        it is picked up at runtime. The first thing you need to do is drop the jar or classes into
-        the <emphasis role="bold">openatna/all/ext</emphasis> directory. Then you need to edit
-        the <emphasis role="bold">IheActors.xml</emphasis> file to add the processors to the processing chain.
-        This involves declaring the full class name of the processors you want to include. 
-        The snippet below shows the XML should be added as a child of the &lt;ServiceConfig> element.
-        (A commented-out template is already in the file):</para>
-        <programlisting>
-        &lt;ProcessorChain validate="true">
-            &lt;Processor phase="POST_PERSIST">my.procesors.Processor1&lt;/Processor>
-            &lt;Processor>my.procesors.Processor2&lt;/Processor>
-        &lt;/ProcessorChain>
-        </programlisting>
-        <para>Supplied AtnaProcessors must implement the
-            org.openhealthtools.openatna.audit.process.AtnaProcessor interface and should have a
-            default constructor. They are added in the order they are listed in the chain.
-            If the ProcessorChain element has an attribute "validate" and its value is "false",
-            then the default message validator will not be used, and another one should be
-            specified in the XML.
-            If the default validator is used, this is always run at the beginning of the chain so
-            application specific processors know the message has been validated. If no processor is
-            added that sets the ProcessContext's state to PERSISTED, then the default
-            PersistenceProcessor is added after the processors defined below.</para>
         <para>Processors can be associated with a phase of processing. Currently three phases are supported:
             <itemizedlist>
                 <listitem><para>PRE_VERIFY - processors are invoked before the message has be verified.</para></listitem>
@@ -294,10 +273,74 @@ CONNECTION LIMIT = -1;
                     then the processor will be placed in this phase.</para></listitem>
                 <listitem><para>POST_PERSIST - processors are invoked after the message has been persisted to the data base.</para></listitem>
             </itemizedlist>
+            If the default validator is used, this is always run at the beginning of the chain so
+            application specific processors know the message has been validated unless they are added as part of
+            the PRE_VERIFY phase. If no processor is
+            added that sets the ProcessContext's state to PERSISTED, then the default
+            PersistenceProcessor is added after the processors defined below within the POST_VERIFY phase.
+            For business logic, it is advisable to add processors to the POST_PERSIST phase because if the processor
+            gets invoked, it can be sure that the message has been validated and persisted without errors.
             
+        </para>
+        <para>Once you have written your processors, you need to deploy them to OpenATNA so that
+        it is picked up at runtime. If you are integrating OpenATNA with your environment in a environment
+        specific way, then simple add the processors to the environment class path and follow the
+        String XML configuration instructions below. If you are using the default build process described in this
+        document, i.e., running OpenATNA from the command line, then you need to
+        drop the jar into
+        the <emphasis role="bold">openatna/all/ext</emphasis> directory. This allows them to be picked up by the build
+            and added to the executable jar's classpath. You can also add the jar to the <emphasis role="bold">all/build/</emphasis>
+            directory, but be aware that it will be deleted the next time you run "mvn clean".
             
+        To configure the system to use the processors, you need to edit
+        the <emphasis role="bold">applicationContext.xml</emphasis> file to add the processors to the processing chain.
+        
+        This involves declaring the full class name of the processors you want to include within a list inside the
+        bean with an id of "serviceConfig". 
+        The snippet below shows an example of the XML should be added as a child of the "serviceConfig" bean.
+        In this example, the processor is added to the POST_PERSIST phase of processing. Multiple processors
+        can be added using the "value" tag.
+        (A commented-out template is already in the file):</para>
+        <programlisting>
+        &lt;property name="postPersistProcessors">
+            &lt;list>
+                &lt;value>org.openhealthtools.openatna.ext.processors.SimpleProcessor&lt;/value>
+            &lt;/list>
+        &lt;/property>
+        </programlisting>
+        <para>To turn off default message validation, add a property named "validationProcessor" to the "serviceConfig"
+            bean, with a value of "false". (A commented out example is the the file).
+            Supplied AtnaProcessors must implement the
+            org.openhealthtools.openatna.audit.process.AtnaProcessor interface and should have a
+            default constructor.
             </para>
-        <para>If you start the servers again, your processors will be invoked each time a message arrives.
-        An simple example processor is given in the ext module.</para>
+        
+        <para>If you start the servers again, your processors will be invoked each time a message arrives.</para>
+    </sect2>
+    <sect2>
+        <title>Adding Codes to the runtime.</title>
+        <para>ATNA uses certain CodedValues/CDA CE types. The well-known types are defined in the <emphasis role="bold">
+            atnacodes.xml
+        </emphasis> file and are loaded by default. To add you own, either edit the default codes file, or add
+        other files containing codes. To add new files, edit the <emphasis role="bold">applicationContext.xml</emphasis>
+        file, in particular the bean with the id "serviceConfig", similar to adding processors. The list of code files
+        is a set of strings that will be used to create URL objects. Below is an example of adding two custom code URLs
+        to the "serviceConfig" bean.
+        
+        <programlisting>
+        &lt;property name="codeUrls">
+            &lt;set>
+                &lt;value>file:/Users/bob/codes/mycodes.xml&lt;/value>
+                &lt;value>http://www.server.com/codes/theircodes.xml&lt;/value>
+            &lt;/set>
+        &lt;/property>    
+        </programlisting>
+            
+        Please refer to the <emphasis role="bold">atnacodes.xml</emphasis> file to understand the XML syntax required by
+            code files.
+        
+        
+        
+        </para>
     </sect2>
 </sect1>
