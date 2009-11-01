@@ -43,7 +43,7 @@
     </target>
 
     <target name="populateCodes">
-        <java classname="org.openhealthtools.openatna.audit.impl.CodeLoader">
+        <java classname="org.openhealthtools.openatna.audit.util.CodeLoader">
             <classpath>
                 <pathelement location="build"/>
                 <pathelement location="target/classes"/>
@@ -55,7 +55,7 @@
     </target>
 
     <target name="populateEntities">
-        <java classname="org.openhealthtools.openatna.audit.impl.EntityLoader">
+        <java classname="org.openhealthtools.openatna.audit.util.EntityLoader">
             <classpath>
                 <pathelement location="build"/>
                 <pathelement location="target/classes"/>

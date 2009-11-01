@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit;
+package org.openhealthtools.openatna.audit.service;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ import org.openhealthtools.openatna.syslog.LogMessage;
 
 public class ServiceConfiguration {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.ServiceConfiguration");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.service.ServiceConfiguration");
 
     private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private Class<? extends LogMessage> logMessageClass;

@@ -24,11 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.AuditException;
-import org.openhealthtools.openatna.audit.AuditService;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.audit.persistence.util.EntityConverter;
+import org.openhealthtools.openatna.audit.service.AuditService;
 
 /**
  * @author Andrew Harrison
