@@ -17,10 +17,10 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.atnatest;
+package org.openhealthtools.openatna.audit.test;
 
-import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
 import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
 
 /**

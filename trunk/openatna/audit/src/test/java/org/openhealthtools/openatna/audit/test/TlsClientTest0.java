@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.atnatest;
+package org.openhealthtools.openatna.audit.test;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,8 +28,8 @@ import java.util.List;
 import javax.net.ssl.SSLSocket;
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.atnatest.ssl.AuthSSLSocketFactory;
-import org.openhealthtools.openatna.atnatest.ssl.KeystoreDetails;
+import org.openhealthtools.openatna.audit.test.ssl.AuthSSLSocketFactory;
+import org.openhealthtools.openatna.audit.test.ssl.KeystoreDetails;
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
