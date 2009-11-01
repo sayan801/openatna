@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.test.ssl;
+package org.openhealthtools.openatna.dist.test.ssl;
 
 import java.io.*;
 import java.net.URLDecoder;
