@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.test;
+package org.openhealthtools.openatna.dist.test;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
