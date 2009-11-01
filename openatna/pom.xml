@@ -105,7 +105,6 @@
         <module>audit</module>
         <module>anom</module>
         <module>jaxb</module>
-        <module>atnatest</module>
         <module>all</module>
         <module>net</module>
         <module>report</module>
