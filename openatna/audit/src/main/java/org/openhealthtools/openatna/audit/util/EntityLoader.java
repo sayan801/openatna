@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.impl;
+package org.openhealthtools.openatna.audit.util;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -35,7 +35,7 @@ import org.openhealthtools.openatna.audit.persistence.util.DataReader;
 
 public class EntityLoader {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.impl.EntityLoader");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.util.EntityLoader");
 
 
     public static void main(String[] args) {

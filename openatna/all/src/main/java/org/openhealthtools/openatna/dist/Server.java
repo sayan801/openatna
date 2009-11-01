@@ -22,7 +22,7 @@ package org.openhealthtools.openatna.dist;
 import java.io.IOException;
 
 import org.openhealthtools.openatna.audit.AtnaFactory;
-import org.openhealthtools.openatna.audit.AuditService;
+import org.openhealthtools.openatna.audit.service.AuditService;
 
 /**
  * @author Andrew Harrison

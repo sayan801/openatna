@@ -20,8 +20,8 @@
 package org.openhealthtools.openatna.audit.process;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.audit.AuditService;
 import org.openhealthtools.openatna.audit.log.SyslogErrorLogger;
+import org.openhealthtools.openatna.audit.service.AuditService;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;

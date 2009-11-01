@@ -20,6 +20,7 @@
 package org.openhealthtools.openatna.audit;
 
 import org.openhealthtools.openatna.audit.persistence.dao.*;
+import org.openhealthtools.openatna.audit.service.AuditService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

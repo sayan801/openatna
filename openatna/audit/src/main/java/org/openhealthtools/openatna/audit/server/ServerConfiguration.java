@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.audit.ServiceConfiguration;
+import org.openhealthtools.openatna.audit.service.ServiceConfiguration;
 import org.openhealthtools.openatna.net.ConnectionFactory;
 import org.openhealthtools.openatna.net.IConnectionDescription;
 

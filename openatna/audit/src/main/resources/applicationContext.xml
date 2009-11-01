@@ -47,7 +47,7 @@
         <property name="allowUnknownDetailTypes" value="true"/>
     </bean>
 
-    <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.ServiceConfiguration">
+    <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.service.ServiceConfiguration">
         <property name="persistencePolicies" ref="persistencePolicies"/>
         <!-- NOTE: This class is not on the audit module build classpath but comes with the dist -->
         <property name="logMessageClass" value="org.openhealthtools.openatna.dist.JaxbLogMessage"/>
@@ -88,7 +88,7 @@
     </bean>
 
 
-    <bean id="auditService" class="org.openhealthtools.openatna.audit.impl.AuditServiceImpl">
+    <bean id="auditService" class="org.openhealthtools.openatna.audit.service.AuditServiceImpl">
         <property name="serviceConfig" ref="serviceConfig"/>
         <property name="serverConfig" ref="serverConfig"/>
     </bean>

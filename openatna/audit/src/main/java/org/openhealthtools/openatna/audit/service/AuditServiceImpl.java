@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.impl;
+package org.openhealthtools.openatna.audit.service;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,8 +31,6 @@ import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.anom.codes.CodeParser;
 import org.openhealthtools.openatna.anom.codes.CodeRegistry;
 import org.openhealthtools.openatna.audit.AtnaFactory;
-import org.openhealthtools.openatna.audit.AuditService;
-import org.openhealthtools.openatna.audit.ServiceConfiguration;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
@@ -58,7 +56,7 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 public class AuditServiceImpl implements AuditService {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.impl.AuditServiceImpl");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.service.AuditServiceImpl");
 
     private ServerConfiguration serverConfig;
     private ServiceConfiguration serviceConfig = new ServiceConfiguration();

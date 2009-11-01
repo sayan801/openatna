@@ -17,7 +17,7 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.audit.impl;
+package org.openhealthtools.openatna.audit.util;
 
 import java.net.URL;
 import java.util.List;
@@ -43,7 +43,7 @@ import org.openhealthtools.openatna.audit.persistence.util.EntityConverter;
 
 public class CodeLoader {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.impl.CodeLoader");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.util.CodeLoader");
 
     public static void main(String[] args) {
         URL codes = CodeLoader.class.getResource("/conf/atnacodes.xml");
