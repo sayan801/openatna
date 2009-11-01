@@ -49,16 +49,38 @@
 
     <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.ServiceConfiguration">
         <property name="persistencePolicies" ref="persistencePolicies"/>
-        <!-- NOTE: This class is not on the audit module build classpath -->
+        <!-- NOTE: This class is not on the audit module build classpath but comes with the dist -->
         <property name="logMessageClass" value="org.openhealthtools.openatna.dist.JaxbLogMessage"/>
-        <!--<property name="preVerifyProcessors">
+        <!--
+        Example atna processors
+        -->
+        <!--
+        <property name="preVerifyProcessors">
             <list>
-                <ref bean="simpleProc"/>
+                <value>org.openhealthtools.openatna.ext.processors.SimpleProcessor</value>
             </list>
-        </property>-->
+        </property>
+        <property name="postVerifyProcessors">
+            <list>
+                <value>org.openhealthtools.openatna.ext.processors.SimpleProcessor</value>
+            </list>
+        </property>
+        <property name="postPersistProcessors">
+            <list>
+                <value>org.openhealthtools.openatna.ext.processors.SimpleProcessor</value>
+            </list>
+        </property>
+        -->
+        <!-- example custom code file urls-->
+        <!--
+        <property name="codeUrls">
+            <set>
+                <value>file:/Users/scmabh/codes/mycodes.xml</value>
+                <value>http://www.server.com/codes/theircodes.xml</value>
+            </set>
+        </property>
+        -->
     </bean>
-
-    <!--<bean id="simpleProc" class="org.openhealthtools.openatna.ext.processors.SimpleProcessor"/>-->
 
     <bean id="serverConfig" class="org.openhealthtools.openatna.audit.server.ServerConfiguration">
         <property name="actorDir" value="${ihe.actors.dir}"/>
@@ -92,10 +114,10 @@
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${hib.dialect}</prop>
-                <prop key="hibernate.cache.use_second_level_cache">${hib.cache.use-second-level}</prop>
-                <prop key="hibernate.cache.provider_class">${hib.cache.provider}</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hib.hbm2ddl.auto}</prop>
-                <prop key="hibernate.connection.release_mode">${hib.connection.release}</prop>
+                <prop key="hibernate.connection.release_mode">after_transaction</prop>
             </props>
         </property>
     </bean>

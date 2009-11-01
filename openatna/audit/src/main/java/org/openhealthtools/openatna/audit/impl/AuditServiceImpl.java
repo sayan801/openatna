@@ -79,11 +79,16 @@ public class AuditServiceImpl implements AuditService {
         loadCodes();
 
         chain.putProperty(AuditService.PROPERTY_PERSISTENCE_POLICIES, serviceConfig.getPersistencePolicies());
-        Map<ProcessorChain.PHASE, List<AtnaProcessor>> processors = serviceConfig.getProcessors();
+        Map<ProcessorChain.PHASE, List<String>> processors = serviceConfig.getProcessors();
         for (ProcessorChain.PHASE phase : processors.keySet()) {
-            List<AtnaProcessor> ap = processors.get(phase);
-            for (AtnaProcessor atnaProcessor : ap) {
-                chain.addNext(atnaProcessor, phase);
+            List<String> ap = processors.get(phase);
+            for (String atnaProcessor : ap) {
+                try {
+                    AtnaProcessor proc = (AtnaProcessor) Class.forName(atnaProcessor, true, getClass().getClassLoader()).newInstance();
+                    chain.addNext(proc, phase);
+                } catch (Exception e) {
+                    log.warn("Could not load processor " + atnaProcessor);
+                }
             }
         }
         if (serverConfig != null) {

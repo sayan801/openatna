@@ -24,7 +24,6 @@ import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
-import org.openhealthtools.openatna.audit.process.AtnaProcessor;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.syslog.LogMessage;
 
@@ -41,9 +40,9 @@ public class ServiceConfiguration {
 
     private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private Class<? extends LogMessage> logMessageClass;
-    private List<AtnaProcessor> preVerifyProcessors = new ArrayList<AtnaProcessor>();
-    private List<AtnaProcessor> postVerifyProcessors = new ArrayList<AtnaProcessor>();
-    private List<AtnaProcessor> postPersistProcessors = new ArrayList<AtnaProcessor>();
+    private List<String> preVerifyProcessors = new ArrayList<String>();
+    private List<String> postVerifyProcessors = new ArrayList<String>();
+    private List<String> postPersistProcessors = new ArrayList<String>();
 
     private boolean validationProcessor = true;
     private Set<String> codeUrls = new HashSet<String>();
@@ -65,51 +64,51 @@ public class ServiceConfiguration {
         this.logMessageClass = logMessageClass;
     }
 
-    public Map<ProcessorChain.PHASE, List<AtnaProcessor>> getProcessors() {
-        Map<ProcessorChain.PHASE, List<AtnaProcessor>> map = new HashMap<ProcessorChain.PHASE, List<AtnaProcessor>>();
+    public Map<ProcessorChain.PHASE, List<String>> getProcessors() {
+        Map<ProcessorChain.PHASE, List<String>> map = new HashMap<ProcessorChain.PHASE, List<String>>();
         map.put(ProcessorChain.PHASE.PRE_VERIFY, preVerifyProcessors);
         map.put(ProcessorChain.PHASE.POST_VERIFY, postVerifyProcessors);
         map.put(ProcessorChain.PHASE.POST_PERSIST, postPersistProcessors);
         return map;
     }
 
-    public void addPreVerifyProcessor(AtnaProcessor processor) {
+    public void addPreVerifyProcessor(String processor) {
         preVerifyProcessors.add(processor);
     }
 
-    public void addPostVerifyProcessor(AtnaProcessor processor) {
+    public void addPostVerifyProcessor(String processor) {
         postVerifyProcessors.add(processor);
     }
 
-    public void addPostPersistProcessor(AtnaProcessor processor) {
+    public void addPostPersistProcessor(String processor) {
         postPersistProcessors.add(processor);
     }
 
-    public List<AtnaProcessor> getPreVerifyProcessors() {
+    public List<String> getPreVerifyProcessors() {
         return preVerifyProcessors;
     }
 
-    public void setPreVerifyProcessors(List<AtnaProcessor> preVerifyProcessors) {
+    public void setPreVerifyProcessors(List<String> preVerifyProcessors) {
         this.preVerifyProcessors = preVerifyProcessors;
     }
 
-    public List<AtnaProcessor> getPostVerifyProcessors() {
+    public List<String> getPostVerifyProcessors() {
         return postVerifyProcessors;
     }
 
-    public void setPostVerifyProcessors(List<AtnaProcessor> postVerifyProcessors) {
+    public void setPostVerifyProcessors(List<String> postVerifyProcessors) {
         this.postVerifyProcessors = postVerifyProcessors;
     }
 
-    public List<AtnaProcessor> getPostPersistProcessors() {
+    public List<String> getPostPersistProcessors() {
         return postPersistProcessors;
     }
 
-    public void setPostPersistProcessors(List<AtnaProcessor> postPersistProcessors) {
+    public void setPostPersistProcessors(List<String> postPersistProcessors) {
         this.postPersistProcessors = postPersistProcessors;
     }
 
-    public void addProcessor(AtnaProcessor processor, ProcessorChain.PHASE phase) {
+    public void addProcessor(String processor, ProcessorChain.PHASE phase) {
         switch (phase) {
             case PRE_VERIFY:
                 addPreVerifyProcessor(processor);
