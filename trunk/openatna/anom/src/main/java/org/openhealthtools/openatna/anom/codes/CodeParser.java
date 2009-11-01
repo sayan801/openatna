@@ -19,7 +19,6 @@
 
 package org.openhealthtools.openatna.anom.codes;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +28,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaCode;
 
 /**
@@ -39,6 +40,9 @@ import org.openhealthtools.openatna.anom.AtnaCode;
  */
 
 public class CodeParser {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.anom.codes.CodeParser");
+
 
     public static void parse(String codes) {
         ArrayList<String> s = new ArrayList<String>();
@@ -59,10 +63,8 @@ public class CodeParser {
                     InputSource input = new InputSource(url.openStream());
                     input.setSystemId(code.toString());
                     sp.parse(input, handler);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    log.warn("Error parsing codes at:" + code);
                 }
             }
         } catch (Exception e) {
