@@ -35,7 +35,9 @@
     </bean>
 
 
-    <!-- Audit Service Beans -->
+    <!-- =============================================================================== -->
+    <!-- ========================== Audit Service Configuration ======================== -->
+    <!-- =============================================================================== -->
 
     <bean id="persistencePolicies" class="org.openhealthtools.openatna.audit.persistence.PersistencePolicies">
         <property name="allowNewNetworkAccessPoints" value="true"/>
@@ -47,8 +49,16 @@
 
     <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.ServiceConfiguration">
         <property name="persistencePolicies" ref="persistencePolicies"/>
+        <!-- NOTE: This class is not on the audit module build classpath -->
         <property name="logMessageClass" value="org.openhealthtools.openatna.dist.JaxbLogMessage"/>
+        <!--<property name="preVerifyProcessors">
+            <list>
+                <ref bean="simpleProc"/>
+            </list>
+        </property>-->
     </bean>
+
+    <!--<bean id="simpleProc" class="org.openhealthtools.openatna.ext.processors.SimpleProcessor"/>-->
 
     <bean id="serverConfig" class="org.openhealthtools.openatna.audit.server.ServerConfiguration">
         <property name="actorDir" value="${ihe.actors.dir}"/>
@@ -62,9 +72,10 @@
     </bean>
 
 
+    <!-- =============================================================================== -->
+    <!-- ============================ Persistence Configuration ======================== -->
+    <!-- =============================================================================== -->
 
-    <!-- dataSource should be somewhere better and use properties -->
-    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">-->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${db.driver.class}"/>
         <property name="url" value="${db.url}"/>
@@ -86,9 +97,6 @@
                 <prop key="hibernate.hbm2ddl.auto">${hib.hbm2ddl.auto}</prop>
                 <prop key="hibernate.connection.release_mode">${hib.connection.release}</prop>
             </props>
-
-            <!-- Turn batching off for better error messages under PostgreSQL -->
-            <!-- hibernate.jdbc.batch_size=0 -->
         </property>
     </bean>
 
@@ -99,7 +107,9 @@
 
     <tx:annotation-driven/>
 
-    <!-- DAO beans -->
+    <!-- =============================================================================== -->
+    <!-- ===================================== DAO Beans =============================== -->
+    <!-- =============================================================================== -->
 
     <bean id="codeDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateCodeDao">
         <constructor-arg ref="sessionFactory"/>

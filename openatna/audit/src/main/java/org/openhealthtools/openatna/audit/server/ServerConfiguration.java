@@ -203,95 +203,11 @@ public class ServerConfiguration {
                             threads = 5;
                         }
                     }
-
-                } /*else if (el.getTagName().equalsIgnoreCase("SERVICECONFIG")) {
-                    NodeList childers = el.getChildNodes();
-                    for (int j = 0; j < childers.getLength(); j++) {
-                        Node node = childers.item(j);
-                        if (node instanceof Element) {
-                            Element child = (Element) node;
-                            if (child.getTagName().equalsIgnoreCase("PERSISTENCEPOLICIES")) {
-                                try {
-                                    PersistencePolicies pp = PersistencePoliciesIO.read(child);
-                                    sc.setPersistencePolicies(pp);
-                                } catch (IOException e) {
-                                    log.warn("exception thrown trying to read persistence policies", e);
-                                }
-                            } else if (child.getTagName().equalsIgnoreCase("LOGMESSAGE")) {
-                                String logType = child.getTextContent().trim();
-                                if (logType == null || logType.length() == 0) {
-                                    throw new RuntimeException("No log message implementation specified. This is required.");
-                                }
-                                try {
-                                    Class<? extends LogMessage> logClass = (Class<? extends LogMessage>) Class.forName(logType, true, getClass().getClassLoader());
-                                    sc.setLogMessageClass(logClass);
-                                } catch (Exception e) {
-                                    throw new RuntimeException("Unable to load log message implementation=|" + logType + "|", e);
-                                }
-
-                            } else if (child.getTagName().equalsIgnoreCase("DAOFACTORY")) {
-                                String dao = child.getTextContent().trim();
-                                if (dao != null && dao.length() > 0) {
-                                    try {
-                                        Class<? extends DaoFactory> cls = (Class<? extends DaoFactory>) Class.forName(dao, true, getClass().getClassLoader());
-                                        DaoFactory f = cls.newInstance();
-                                        sc.setDaoFactory(f);
-                                    } catch (Exception e) {
-                                        log.warn("Could not load DaoFactory implementation " + dao);
-                                    }
-                                }
-                            } else if (child.getTagName().equalsIgnoreCase("CODESURL")) {
-                                String url = child.getTextContent().trim();
-                                if (url != null && url.length() > 0) {
-                                    try {
-
-                                        sc.addCodeUrl(url);
-                                    } catch (Exception e) {
-                                        log.warn("Could not load Codes URL " + url);
-                                    }
-                                }
-                            } else if (child.getTagName().equalsIgnoreCase("PROCESSORCHAIN")) {
-                                String val = child.getAttribute("validate");
-                                if (val != null && val.length() > 0) {
-                                    boolean v = Boolean.valueOf(val);
-                                    sc.setValidationProcessor(v);
-                                }
-                                NodeList ps = child.getChildNodes();
-                                for (int k = 0; k < childers.getLength(); k++) {
-                                    Node p = ps.item(k);
-                                    if (p instanceof Element) {
-                                        Element pro = (Element) p;
-                                        if (pro.getTagName().equalsIgnoreCase("PROCESSOR")) {
-                                            String procls = pro.getTextContent().trim();
-                                            String ph = pro.getAttribute("phase");
-                                            ProcessorChain.PHASE phase = ProcessorChain.PHASE.POST_VERIFY;
-                                            if (ph != null) {
-                                                ProcessorChain.PHASE phase1 = ProcessorChain.PHASE.valueOf(ph);
-                                                if (phase1 != null) {
-                                                    phase = phase1;
-                                                }
-                                            }
-                                            try {
-                                                Class<? extends AtnaProcessor> cls = (Class<? extends AtnaProcessor>) Class.forName(procls, true, getClass().getClassLoader());
-                                                AtnaProcessor proc = cls.newInstance();
-                                                sc.addProcessor(proc, phase);
-                                                log.info("added application processor:" + proc);
-                                            } catch (Exception e) {
-                                                log.warn("Could not load Processor implementation " + procls);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }  */
+                }
             }
         }
-        AtnaServer server = null;
         if (tcp != null && udp != null) {
-            server = new AtnaServer(tcp, udp, threads);
+            AtnaServer server = new AtnaServer(tcp, udp, threads);
             servers.add(server);
             return true;
         } else {
