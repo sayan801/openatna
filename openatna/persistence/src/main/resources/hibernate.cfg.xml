@@ -22,21 +22,21 @@
 
 <hibernate-configuration>
     <session-factory>
-        <mapping class="org.openhealthtools.openatna.persistence.model.MessageEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.MessageSourceEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.MessageObjectEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.MessageParticipantEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.SourceEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.ObjectEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.ParticipantEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.ObjectDetailEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.codes.EventIdCodeEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.codes.EventTypeCodeEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.codes.ObjectIdTypeCodeEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.codes.ParticipantCodeEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.codes.SourceCodeEntity"/>
-        <mapping class="org.openhealthtools.openatna.persistence.model.DetailTypeEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.MessageEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.SourceEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.ObjectEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.DetailTypeEntity"/>
 
     </session-factory>
 </hibernate-configuration>

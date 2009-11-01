@@ -19,14 +19,10 @@
 
 package org.openhealthtools.openatna.dist;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
-import org.openhealthtools.openatna.audit.impl.AuditServiceImpl;
-import org.openhealthtools.openatna.audit.server.AuditRepositoryActor;
-import org.openhealthtools.openatna.audit.server.PropertiesLoader;
-import org.openhealthtools.openatna.audit.server.ServerConfiguration;
+import org.openhealthtools.openatna.audit.AtnaFactory;
+import org.openhealthtools.openatna.audit.AuditService;
 
 /**
  * @author Andrew Harrison
@@ -38,29 +34,11 @@ import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 public class Server {
 
     public static void main(String[] args) {
-        ServerConfiguration sc = ServerConfiguration.getInstance();
-        File actors = PropertiesLoader.getActorsFile();
-        if (actors == null) {
-            throw new RuntimeException("no Actors file found. Cannot continue.");
-        }
-        boolean configured = sc.loadActors(actors);
-        if (!configured) {
-            throw new RuntimeException("Could not configure AtnaServer");
-        }
-        List<AuditRepositoryActor> arrs = sc.getAuditRepositoryActors();
-        if (arrs.size() == 0) {
-            throw new RuntimeException("No Actors! Cannot go on.");
-        }
-        AuditRepositoryActor arr = arrs.get(0);
-        AuditServiceImpl service = new AuditServiceImpl();
-        service.setSyslogServer(arr.getServer());
-        service.setServiceConfig(arr.getConfig());
+        AuditService service = AtnaFactory.auditService();
         try {
             service.start();
         } catch (IOException e) {
             throw new RuntimeException("IO Error starting service:", e);
         }
-
-
     }
 }

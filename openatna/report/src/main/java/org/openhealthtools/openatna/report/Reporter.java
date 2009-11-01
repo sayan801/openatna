@@ -33,14 +33,13 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.persistence.dao.DaoFactory;
-import org.openhealthtools.openatna.persistence.dao.EntityDao;
-import org.openhealthtools.openatna.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.persistence.model.PersistentEntity;
-import org.openhealthtools.openatna.persistence.util.QueryString;
+import org.openhealthtools.openatna.audit.AtnaFactory;
+import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.dao.EntityDao;
+import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
+import org.openhealthtools.openatna.audit.persistence.util.QueryString;
 
 /**
  * @author Andrew Harrison
@@ -56,7 +55,6 @@ public class Reporter {
     private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy_hh-mm-ss");
 
     private ReportConfig config;
-    private DaoFactory factory = SpringDaoFactory.getFactory();
     private boolean isAtnaQuery = false;
 
     public Reporter(ReportConfig config) {
@@ -183,7 +181,7 @@ public class Reporter {
 
         if (config.getQueryLanguage().equals(ReportConfig.ATNA)) {
             if (isAtnaQuery) {
-                MessageDao dao = factory.messageDao();
+                MessageDao dao = AtnaFactory.messageDao();
                 try {
                     List<? extends MessageEntity> l = dao.getByQuery(QueryString.parse(query));
                     return new EntityDataSource(l);
@@ -211,7 +209,7 @@ public class Reporter {
             }
         } else if (config.getQueryLanguage().equals(ReportConfig.HQL)) {
             try {
-                EntityDao dao = factory.entityDao();
+                EntityDao dao = AtnaFactory.entityDao();
                 List<? extends PersistentEntity> l = dao.query(query);
                 return new EntityDataSource(l);
             } catch (AtnaPersistenceException e) {
@@ -226,21 +224,28 @@ public class Reporter {
 
     private Object getObjectForTarget(String target) {
         if (target.equals("MessageReport")) {
-            return factory.messageDao();
+            return AtnaFactory.messageDao();
         } else if (target.equals("CodeReport")) {
-            return factory.codeDao();
+            return AtnaFactory.codeDao();
         } else if (target.equals("ObjectReport")) {
-            return factory.objectDao();
+            return AtnaFactory.objectDao();
         } else if (target.equals("ParticipantReport")) {
-            return factory.participantDao();
+            return AtnaFactory.participantDao();
         } else if (target.equals("SourceReport")) {
-            return factory.sourceDao();
+            return AtnaFactory.sourceDao();
         } else if (target.equals("NapReport")) {
-            return factory.networkAccessPointDao();
+            return AtnaFactory.networkAccessPointDao();
         }
         return null;
     }
 
+    /**
+     * gets the most simple query which is just the target entity requested.
+     * All entities of this type are returned.
+     *
+     * @param target
+     * @return
+     */
     private String getReportFromTarget(String target) {
         if (target.equals(ReportConfig.MESSAGES)) {
             return "MessageReport";

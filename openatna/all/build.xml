@@ -24,7 +24,7 @@
 
         <delete dir="build/conf"/>
         <copy todir="build" overwrite="yes">
-            <fileset dir="src/main/resources/" includes="**/**" excludes=".svn"/>
+            <fileset dir="../audit/src/main/resources/" includes="**/**" excludes=".svn,*.cfg.xml,sql"/>
         </copy>
         <delete file="build/openatna-${version}.jar"/>
         <mkdir dir="stage"/>
@@ -43,7 +43,7 @@
     </target>
 
     <target name="populateCodes">
-        <java classname="org.openhealthtools.openatna.dist.CodeLoader">
+        <java classname="org.openhealthtools.openatna.audit.impl.CodeLoader">
             <classpath>
                 <pathelement location="build"/>
                 <pathelement location="target/classes"/>
@@ -55,7 +55,7 @@
     </target>
 
     <target name="populateEntities">
-        <java classname="org.openhealthtools.openatna.dist.EntityLoader">
+        <java classname="org.openhealthtools.openatna.audit.impl.EntityLoader">
             <classpath>
                 <pathelement location="build"/>
                 <pathelement location="target/classes"/>

@@ -20,25 +20,26 @@
            isPdfEmbedded="false"/>
     <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
-    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique"
+           pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
     <parameter name="inputDirectory" class="java.lang.String"/>
 
-    <field name="source" class="org.openhealthtools.openatna.persistence.model.SourceEntity">
+    <field name="source" class="org.openhealthtools.openatna.audit.persistence.model.SourceEntity">
         <fieldDescription>source</fieldDescription>
     </field>
     <detail>
         <band height="4">
             <frame>
-            <reportElement mode="Opaque" backcolor="#fcd291" x="0" y="4" width="520" height="0"/>
-            <subreport>
-                <reportElement positionType="Float" x="0" y="0" width="520" height="0" isRemoveLineWhenBlank="true"/>
-                <subreportParameter name="inputDirectory">
-                    <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
-                </subreportParameter>
-                <dataSourceExpression>new EntityDataSource($F{source})</dataSourceExpression>
-                <subreportExpression>$P{inputDirectory} + "/SourceReport.jasper"</subreportExpression>
-            </subreport>
+                <reportElement mode="Opaque" backcolor="#fcd291" x="0" y="4" width="520" height="0"/>
+                <subreport>
+                    <reportElement positionType="Float" x="0" y="0" width="520" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{source})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/SourceReport.jasper"</subreportExpression>
+                </subreport>
             </frame>
         </band>
     </detail>

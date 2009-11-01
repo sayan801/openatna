@@ -24,7 +24,8 @@
            isPdfEmbedded="false"/>
     <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
-    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique"
+           pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
     <parameter name="query" class="java.lang.String"/>
     <parameter name="title" class="java.lang.String"/>
@@ -32,7 +33,7 @@
     <parameter name="reportInstance" class="java.lang.String"/>
     <parameter name="groupingField" class="java.lang.String"/>
 
-    <field name="entity" class="org.openhealthtools.openatna.persistence.model.PersistentEntity">
+    <field name="entity" class="org.openhealthtools.openatna.audit.persistence.model.PersistentEntity">
         <fieldDescription>entity</fieldDescription>
     </field>
 

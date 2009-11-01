@@ -42,7 +42,7 @@ public abstract class ClientTest {
     static {
         URL defCodes = Thread.currentThread().getContextClassLoader().getResource("atnacodes.xml");
         if (defCodes != null) {
-            CodeParser.parse(defCodes);
+            CodeParser.parse(defCodes.toString());
         } else {
             System.out.println("could not load codes!!");
         }

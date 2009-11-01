@@ -20,8 +20,6 @@
 package org.openhealthtools.openatna.audit.server;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,16 +32,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.audit.AuditRepositoryActor;
-import org.openhealthtools.openatna.audit.ServiceConfig;
-import org.openhealthtools.openatna.audit.process.AtnaProcessor;
-import org.openhealthtools.openatna.audit.process.ProcessorChain;
+import org.openhealthtools.openatna.audit.ServiceConfiguration;
 import org.openhealthtools.openatna.net.ConnectionFactory;
 import org.openhealthtools.openatna.net.IConnectionDescription;
-import org.openhealthtools.openatna.persistence.dao.DaoFactory;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
-import org.openhealthtools.openatna.persistence.util.PersistencePoliciesIO;
-import org.openhealthtools.openatna.syslog.LogMessage;
 
 /**
  * Loads XML actor and connection files.
@@ -60,20 +51,48 @@ public class ServerConfiguration {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.config.ServerConfiguration");
 
-    private static ServerConfiguration config = new ServerConfiguration();
+    private Set<AtnaServer> servers = new HashSet<AtnaServer>();
+    private String actorDir;
+    private String actorFile;
 
-    private Set<AuditRepositoryActor> auditRepositoryActors = new HashSet<AuditRepositoryActor>();
-
-    private ServerConfiguration() {
-
+    public String getActorDir() {
+        return actorDir;
     }
 
-    public static ServerConfiguration getInstance() {
-        return config;
+    public void setActorDir(String actorDir) {
+        this.actorDir = actorDir;
     }
 
-    public List<AuditRepositoryActor> getAuditRepositoryActors() {
-        return new ArrayList(auditRepositoryActors);
+    public String getActorFile() {
+        return actorFile;
+    }
+
+    public void setActorFile(String actorFile) {
+        this.actorFile = actorFile;
+    }
+
+    public List<AtnaServer> getServers() {
+        return new ArrayList(servers);
+    }
+
+    private File getActorsFile() {
+        String actorsFile = new File(actorDir).getAbsolutePath();
+        actorsFile = actorsFile.replace(File.separator + "." + File.separator, File.separator);
+        File actors = new File(actorsFile);
+        if (!actors.exists()) {
+            log.warn("Could not find actors dir:" + actors.getAbsolutePath());
+            return null;
+        }
+        File configFile = new File(actors, actorFile);
+        if (!configFile.exists()) {
+            log.warn("Could not find actors file:" + configFile.getAbsolutePath());
+            return null;
+        }
+        return configFile;
+    }
+
+    public boolean load() {
+        return loadActors(getActorsFile());
     }
 
     public boolean loadActors(File configFile) {
@@ -144,7 +163,7 @@ public class ServerConfiguration {
     private boolean processArr(Element parent) {
         IConnectionDescription tcp = null;
         IConnectionDescription udp = null;
-        ServiceConfig sc = new ServiceConfig();
+        ServiceConfiguration sc = new ServiceConfiguration();
 
         NodeList children = parent.getChildNodes();
         int threads = 5;
@@ -185,7 +204,7 @@ public class ServerConfiguration {
                         }
                     }
 
-                } else if (el.getTagName().equalsIgnoreCase("SERVICECONFIG")) {
+                } /*else if (el.getTagName().equalsIgnoreCase("SERVICECONFIG")) {
                     NodeList childers = el.getChildNodes();
                     for (int j = 0; j < childers.getLength(); j++) {
                         Node node = childers.item(j);
@@ -225,8 +244,8 @@ public class ServerConfiguration {
                                 String url = child.getTextContent().trim();
                                 if (url != null && url.length() > 0) {
                                     try {
-                                        URL u = new URL(url);
-                                        sc.addCodeUrls(u);
+
+                                        sc.addCodeUrl(url);
                                     } catch (Exception e) {
                                         log.warn("Could not load Codes URL " + url);
                                     }
@@ -267,18 +286,20 @@ public class ServerConfiguration {
                         }
                     }
 
-                }
+                }  */
             }
         }
         AtnaServer server = null;
         if (tcp != null && udp != null) {
             server = new AtnaServer(tcp, udp, threads);
+            servers.add(server);
+            return true;
         } else {
             log.warn("No connections defined for server. This ARR will be not able to receive Syslog Messages.\n" +
                     "The service will shut down unless you it is being run from inside a separate execution thread.");
+            return false;
         }
-        auditRepositoryActors.add(new AuditRepositoryActor(server, sc));
-        return true;
+
     }
 
     private boolean processConnectionFile(Element element, File configFile) {
