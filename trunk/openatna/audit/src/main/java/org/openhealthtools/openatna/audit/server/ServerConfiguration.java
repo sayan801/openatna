@@ -49,7 +49,7 @@ import org.openhealthtools.openatna.net.IConnectionDescription;
 
 public class ServerConfiguration {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.config.ServerConfiguration");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.ServerConfiguration");
 
     private Set<AtnaServer> servers = new HashSet<AtnaServer>();
     private String actorDir;
@@ -76,6 +76,9 @@ public class ServerConfiguration {
     }
 
     private File getActorsFile() {
+        if (actorDir == null || actorFile == null) {
+            throw new RuntimeException("ERROR. Please set both actorDir and actorFile.");
+        }
         String actorsFile = new File(actorDir).getAbsolutePath();
         actorsFile = actorsFile.replace(File.separator + "." + File.separator, File.separator);
         File actors = new File(actorsFile);
