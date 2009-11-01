@@ -37,8 +37,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.openhealthtools.openatna.persistence.model.Query;
-import org.openhealthtools.openatna.persistence.util.QueryString;
+import org.openhealthtools.openatna.audit.persistence.model.Query;
+import org.openhealthtools.openatna.audit.persistence.util.QueryString;
 
 /**
  * @author Andrew Harrison

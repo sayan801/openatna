@@ -22,7 +22,7 @@ package org.openhealthtools.openatna.audit;
 import java.io.IOException;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
+import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 
 /**
  * @author Andrew Harrison
@@ -55,14 +55,14 @@ public interface AuditService {
      *
      * @return
      */
-    public SyslogServer getSyslogServer();
+    public ServerConfiguration getServerConfig();
 
     /**
      * set the fully configured syslog server
      *
-     * @param syslogServer
+     * @param config
      */
-    public void setSyslogServer(SyslogServer syslogServer);
+    public void setServerConfig(ServerConfiguration config);
 
     /**
      * process an AtnaMessage
@@ -76,12 +76,12 @@ public interface AuditService {
      *
      * @return
      */
-    public ServiceConfig getServiceConfig();
+    public ServiceConfiguration getServiceConfig();
 
     /**
      * set the ServiceConfig
      *
      * @param serviceConfig
      */
-    public void setServiceConfig(ServiceConfig serviceConfig);
+    public void setServiceConfig(ServiceConfiguration serviceConfig);
 }

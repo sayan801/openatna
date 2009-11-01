@@ -103,13 +103,11 @@
     <modules>
         <module>syslog</module>
         <module>audit</module>
-        <module>persistence</module>
         <module>anom</module>
         <module>jaxb</module>
         <module>atnatest</module>
         <module>all</module>
         <module>net</module>
-        <module>ext</module>
         <module>report</module>
     </modules>
 

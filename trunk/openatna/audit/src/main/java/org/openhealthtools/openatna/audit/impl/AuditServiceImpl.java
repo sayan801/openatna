@@ -26,15 +26,24 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.anom.AtnaCode;
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.anom.codes.CodeParser;
+import org.openhealthtools.openatna.anom.codes.CodeRegistry;
+import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.AuditService;
-import org.openhealthtools.openatna.audit.ServiceConfig;
+import org.openhealthtools.openatna.audit.ServiceConfiguration;
+import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
+import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.util.EntityConverter;
 import org.openhealthtools.openatna.audit.process.AtnaMessageListener;
 import org.openhealthtools.openatna.audit.process.AtnaProcessor;
 import org.openhealthtools.openatna.audit.process.ProcessContext;
 import org.openhealthtools.openatna.audit.process.ProcessorChain;
-import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
+import org.openhealthtools.openatna.audit.server.AtnaServer;
+import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
@@ -51,9 +60,11 @@ public class AuditServiceImpl implements AuditService {
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.impl.AuditServiceImpl");
 
-    private SyslogServer syslogServer;
-    private ServiceConfig serviceConfig = new ServiceConfig();
+    private ServerConfiguration serverConfig;
+    private ServiceConfiguration serviceConfig = new ServiceConfiguration();
     private ProcessorChain chain = new ProcessorChain();
+    private SyslogServer syslogServer;
+
 
     /**
      * start the service
@@ -64,15 +75,10 @@ public class AuditServiceImpl implements AuditService {
         if (serviceConfig.getLogMessageClass() == null) {
             throw new RuntimeException("no log message defined!");
         }
-        if (serviceConfig.getDaoFactory() == null) {
-            serviceConfig.setDaoFactory(SpringDaoFactory.getFactory());
-        }
-        URL defCodes = getClass().getResource("/conf/atnacodes.xml");
 
-        serviceConfig.addCodeUrls(defCodes);
-        CodeParser.parse(serviceConfig.getCodeUrls());
+        loadCodes();
+
         chain.putProperty(AuditService.PROPERTY_PERSISTENCE_POLICIES, serviceConfig.getPersistencePolicies());
-        chain.putProperty(AuditService.PROPERTY_DAO_FACTORY, serviceConfig.getDaoFactory());
         Map<ProcessorChain.PHASE, List<AtnaProcessor>> processors = serviceConfig.getProcessors();
         for (ProcessorChain.PHASE phase : processors.keySet()) {
             List<AtnaProcessor> ap = processors.get(phase);
@@ -80,11 +86,45 @@ public class AuditServiceImpl implements AuditService {
                 chain.addNext(atnaProcessor, phase);
             }
         }
-        if (syslogServer != null) {
-            SyslogMessageFactory.setDefaultLogMessage(serviceConfig.getLogMessageClass());
-            syslogServer.addSyslogListener(new AtnaMessageListener(this));
-            syslogServer.start();
+        if (serverConfig != null) {
+            serverConfig.load();
+            List<AtnaServer> servers = serverConfig.getServers();
+            if (servers.size() == 0) {
+                log.warn("Could not start service. No AtnaServers were loaded!");
+                return;
+            } else {
+                this.syslogServer = servers.get(0);
+                if (syslogServer != null) {
+                    SyslogMessageFactory.setDefaultLogMessage(serviceConfig.getLogMessageClass());
+                    syslogServer.addSyslogListener(new AtnaMessageListener(this));
+                    syslogServer.start();
+                }
+            }
         }
+    }
+
+    private void loadCodes() {
+        URL defCodes = getClass().getResource("/conf/atnacodes.xml");
+        if (defCodes != null) {
+            serviceConfig.addCodeUrl(defCodes.toString());
+        }
+        CodeParser.parse(serviceConfig.getCodeUrls());
+        List<AtnaCode> l = CodeRegistry.allCodes();
+        CodeDao dao = AtnaFactory.codeDao();
+        for (AtnaCode atnaCode : l) {
+            CodeEntity ce = EntityConverter.createCode(atnaCode, EntityConverter.getCodeType(atnaCode));
+            PersistencePolicies pp = new PersistencePolicies();
+            pp.setErrorOnDuplicateInsert(false);
+            pp.setAllowNewCodes(true);
+            try {
+                if (dao.save(ce, pp)) {
+                    log.info("loading code:" + atnaCode);
+                }
+            } catch (AtnaPersistenceException e) {
+                log.info("Exception thrown while storing code:" + e.getMessage());
+            }
+        }
+
     }
 
     /**
@@ -98,36 +138,25 @@ public class AuditServiceImpl implements AuditService {
         }
     }
 
-
-    /**
-     * get the syslog server that will receive the messages.
-     * This should be fully configured, including have the LogMessage set.
-     *
-     * @return
-     */
-    public SyslogServer getSyslogServer() {
-        return syslogServer;
+    public ServerConfiguration getServerConfig() {
+        return serverConfig;
     }
 
-    /**
-     * set the fully configured syslog server
-     *
-     * @param syslogServer
-     */
-    public void setSyslogServer(SyslogServer syslogServer) {
-        this.syslogServer = syslogServer;
+    public void setServerConfig(ServerConfiguration serverConfig) {
+        this.serverConfig = serverConfig;
     }
+
 
     public void process(AtnaMessage message) {
         ProcessContext context = new ProcessContext(message);
         chain.process(context);
     }
 
-    public ServiceConfig getServiceConfig() {
+    public ServiceConfiguration getServiceConfig() {
         return serviceConfig;
     }
 
-    public void setServiceConfig(ServiceConfig serviceConfig) {
+    public void setServiceConfig(ServiceConfiguration serviceConfig) {
         this.serviceConfig = serviceConfig;
     }
 }

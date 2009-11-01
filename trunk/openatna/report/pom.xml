@@ -54,7 +54,7 @@
     <dependencies>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>openatna-all</artifactId>
+            <artifactId>openatna-audit</artifactId>
             <version>0.1</version>
         </dependency>
         <dependency>

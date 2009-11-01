@@ -31,12 +31,12 @@ import org.openhealthtools.openatna.audit.server.AtnaServer;
 public class AuditRepositoryActor {
 
     private AtnaServer server;
-    private ServiceConfig config;
+    private ServiceConfiguration config;
 
     public AuditRepositoryActor() {
     }
 
-    public AuditRepositoryActor(AtnaServer server, ServiceConfig config) {
+    public AuditRepositoryActor(AtnaServer server, ServiceConfiguration config) {
         this.server = server;
         this.config = config;
     }
@@ -49,11 +49,11 @@ public class AuditRepositoryActor {
         this.server = server;
     }
 
-    public ServiceConfig getConfig() {
+    public ServiceConfiguration getConfig() {
         return config;
     }
 
-    public void setConfig(ServiceConfig config) {
+    public void setConfig(ServiceConfiguration config) {
         this.config = config;
     }
 }

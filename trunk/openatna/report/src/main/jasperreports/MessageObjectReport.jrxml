@@ -36,7 +36,7 @@
     <field name="details" class="java.util.Set">
         <fieldDescription>details</fieldDescription>
     </field>
-    <field name="object" class="org.openhealthtools.openatna.persistence.model.ObjectEntity">
+    <field name="object" class="org.openhealthtools.openatna.audit.persistence.model.ObjectEntity">
         <fieldDescription>object</fieldDescription>
     </field>
 

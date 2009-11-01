@@ -39,7 +39,7 @@
     <field name="objectTypeCodeRole" class="java.lang.Short">
         <fieldDescription>objectTypeCodeRole</fieldDescription>
     </field>
-    <field name="objectIdTypeCode" class="org.openhealthtools.openatna.persistence.model.codes.CodeEntity">
+    <field name="objectIdTypeCode" class="org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity">
         <fieldDescription>objectIdTypeCode</fieldDescription>
     </field>
     <field name="objectSensitivity" class="java.lang.String">
@@ -107,7 +107,7 @@
                 </textField>
 
                 <subreport>
-                    <reportElement positionType="Float" x="5" y="45" backcolor="#ff9900"  width="510" height="0" isRemoveLineWhenBlank="true"/>
+                    <reportElement positionType="Float" x="5" y="45" backcolor="#ff9900" width="510" height="0" isRemoveLineWhenBlank="true"/>
                     <dataSourceExpression>new EntityDataSource($F{objectIdTypeCode})</dataSourceExpression>
                     <subreportExpression>$P{inputDirectory} + "/CodeReport.jasper"</subreportExpression>
                 </subreport>

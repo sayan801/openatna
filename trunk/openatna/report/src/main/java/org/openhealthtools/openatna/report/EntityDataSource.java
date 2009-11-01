@@ -19,15 +19,18 @@
 
 package org.openhealthtools.openatna.report;
 
-import java.util.*;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
-import org.openhealthtools.openatna.persistence.model.PersistentEntity;
-import org.openhealthtools.openatna.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
 
 /**
  * @author Andrew Harrison
@@ -82,7 +85,7 @@ public class EntityDataSource implements JRDataSource {
         if (ms != null) {
             try {
                 Object ret = ms.invoke(curr, new Object[0]);
-                if(ret instanceof Enum) {
+                if (ret instanceof Enum) {
                     return ret.toString();
                 }
                 return ret;

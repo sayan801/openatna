@@ -29,10 +29,10 @@
     <field name="userIsRequestor" class="java.lang.Boolean">
         <fieldDescription>userIsRequestor</fieldDescription>
     </field>
-    <field name="participant" class="org.openhealthtools.openatna.persistence.model.ParticipantEntity">
+    <field name="participant" class="org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity">
         <fieldDescription>participant</fieldDescription>
     </field>
-    <field name="networkAccessPoint" class="org.openhealthtools.openatna.persistence.model.NetworkAccessPointEntity">
+    <field name="networkAccessPoint" class="org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity">
         <fieldDescription>networkAccessPoint</fieldDescription>
     </field>
     <detail>
@@ -55,7 +55,6 @@
                     <dataSourceExpression>new EntityDataSource($F{participant})</dataSourceExpression>
                     <subreportExpression>$P{inputDirectory} + "/ParticipantReport.jasper"</subreportExpression>
                 </subreport>
-
 
 
                 <!--<textField isStretchWithOverflow="true">

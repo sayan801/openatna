@@ -22,14 +22,13 @@ package org.openhealthtools.openatna.audit.process;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.AuditException;
 import org.openhealthtools.openatna.audit.AuditService;
-import org.openhealthtools.openatna.persistence.dao.DaoFactory;
-import org.openhealthtools.openatna.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.persistence.dao.PersistencePolicies;
-import org.openhealthtools.openatna.persistence.dao.hibernate.SpringDaoFactory;
-import org.openhealthtools.openatna.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.persistence.util.EntityConverter;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
+import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.audit.persistence.util.EntityConverter;
 
 /**
  * @author Andrew Harrison
@@ -50,17 +49,13 @@ public class PersistenceProcessor implements AtnaProcessor {
         }
         MessageEntity entity = EntityConverter.createMessage(msg);
         if (entity != null) {
-            DaoFactory fac = context.getProperty(AuditService.PROPERTY_DAO_FACTORY,
-                    DaoFactory.class);
-            if (fac == null) {
-                fac = SpringDaoFactory.getFactory();
-            }
+
             PersistencePolicies pp = context.getProperty(AuditService.PROPERTY_PERSISTENCE_POLICIES,
                     PersistencePolicies.class);
             if (pp == null) {
                 pp = new PersistencePolicies();
             }
-            MessageDao dao = fac.messageDao();
+            MessageDao dao = AtnaFactory.messageDao();
             if (dao != null) {
                 synchronized (this) {
                     dao.save(entity, pp);

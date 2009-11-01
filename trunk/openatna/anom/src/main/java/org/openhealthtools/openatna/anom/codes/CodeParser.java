@@ -19,7 +19,10 @@
 
 package org.openhealthtools.openatna.anom.codes;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
@@ -37,16 +40,30 @@ import org.openhealthtools.openatna.anom.AtnaCode;
 
 public class CodeParser {
 
-    public static void parse(URL... codes) {
+    public static void parse(String codes) {
+        ArrayList<String> s = new ArrayList<String>();
+        s.add(codes);
+        parse(s);
+
+    }
+
+    public static void parse(Collection<String> codes) {
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             spf.setValidating(false);
             javax.xml.parsers.SAXParser sp = spf.newSAXParser();
             Handler handler = new Handler();
-            for (URL code : codes) {
-                InputSource input = new InputSource(code.openStream());
-                input.setSystemId(code.toString());
-                sp.parse(input, handler);
+            for (String code : codes) {
+                try {
+                    URL url = new URL(code);
+                    InputSource input = new InputSource(url.openStream());
+                    input.setSystemId(code.toString());
+                    sp.parse(input, handler);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException("Error loading system codes", e);
