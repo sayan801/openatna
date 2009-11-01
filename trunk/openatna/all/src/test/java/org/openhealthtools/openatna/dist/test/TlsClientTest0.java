@@ -47,9 +47,9 @@ public class TlsClientTest0 extends ClientTest {
     @Test
     public void testMessages() {
         try {
-            URL u = Thread.currentThread().getContextClassLoader().getResource("certs/serverKeyStore");
+            URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
             KeystoreDetails trust = new KeystoreDetails(u.toString(), "password", "myServerCert");
-            URL uu = Thread.currentThread().getContextClassLoader().getResource("certs/clientKeyStore");
+            URL uu = Thread.currentThread().getContextClassLoader().getResource("testcerts/clientKeyStore");
             KeystoreDetails key = new KeystoreDetails(uu.toString(), "password", "myClientCert", "password");
             AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
             List<AtnaMessage> messages = getMessages();
@@ -78,9 +78,9 @@ public class TlsClientTest0 extends ClientTest {
     @Test
     public void testNoEncryption() {
         try {
-            URL u = Thread.currentThread().getContextClassLoader().getResource("certs/serverKeyStore");
+            URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
             KeystoreDetails trust = new KeystoreDetails(u.toString(), "password", "myServerCert");
-            URL uu = Thread.currentThread().getContextClassLoader().getResource("certs/clientKeyStore");
+            URL uu = Thread.currentThread().getContextClassLoader().getResource("testcerts/clientKeyStore");
             KeystoreDetails key = new KeystoreDetails(uu.toString(), "password", "myClientCert", "password");
             AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
             List<AtnaMessage> messages = getMessages();
