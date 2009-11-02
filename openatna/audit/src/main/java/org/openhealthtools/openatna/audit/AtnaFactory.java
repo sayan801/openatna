@@ -34,50 +34,72 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class AtnaFactory {
 
     private ApplicationContext context;
-    private static AtnaFactory instance = new AtnaFactory();
+    private static AtnaFactory instance;
 
-    private AtnaFactory() {
-        context = new ClassPathXmlApplicationContext(
-                new String[]{"applicationContext.xml"});
-        if (context == null) {
-            throw new RuntimeException("FATAL: Could not create Spring Application Context.");
-        }
+
+    private AtnaFactory(ApplicationContext context) {
+        this.context = context;
     }
 
-    private Object getBean(String value) {
+    private Object getComponent(String value) {
         return context.getBean(value);
     }
 
+    /**
+     * if called before any bean getter methods, this allows the factory
+     * to be inialized by an arbitrary Application Context.
+     * Of course, this context must contain the beans defined by OpenATNA.
+     *
+     * @param context
+     */
+    public static synchronized void initialize(ApplicationContext context) {
+        if (context == null) {
+            context = new ClassPathXmlApplicationContext(
+                    new String[]{"openatnaContext.xml"});
+            if (context == null) {
+                throw new RuntimeException("FATAL: Could not create Spring Application Context.");
+            }
+        }
+        instance = new AtnaFactory(context);
+    }
+
+    private static synchronized Object getBean(String id) {
+        if (instance == null) {
+            initialize(null);
+        }
+        return instance.getComponent(id);
+    }
+
     public static CodeDao codeDao() {
-        return (CodeDao) instance.getBean("codeDao");
+        return (CodeDao) getBean("codeDao");
     }
 
     public static ParticipantDao participantDao() {
-        return (ParticipantDao) instance.getBean("participantDao");
+        return (ParticipantDao) getBean("participantDao");
     }
 
     public static NetworkAccessPointDao networkAccessPointDao() {
-        return (NetworkAccessPointDao) instance.getBean("networkAccessPointDao");
+        return (NetworkAccessPointDao) getBean("networkAccessPointDao");
     }
 
     public static MessageDao messageDao() {
-        return (MessageDao) instance.getBean("messageDao");
+        return (MessageDao) getBean("messageDao");
     }
 
     public static SourceDao sourceDao() {
-        return (SourceDao) instance.getBean("sourceDao");
+        return (SourceDao) getBean("sourceDao");
     }
 
     public static ObjectDao objectDao() {
-        return (ObjectDao) instance.getBean("objectDao");
+        return (ObjectDao) getBean("objectDao");
     }
 
     public static EntityDao entityDao() {
-        return (EntityDao) instance.getBean("entityDao");
+        return (EntityDao) getBean("entityDao");
     }
 
     public static AuditService auditService() {
-        return (AuditService) instance.getBean("auditService");
+        return (AuditService) getBean("auditService");
     }
 
 
