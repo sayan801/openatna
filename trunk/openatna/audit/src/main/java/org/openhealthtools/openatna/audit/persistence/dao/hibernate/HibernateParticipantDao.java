@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -96,22 +98,22 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
     public void save(ParticipantEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
         if (codes.size() > 0) {
+            ParticipantCodeEntity[] arr = codes.toArray(new ParticipantCodeEntity[codes.size()]);
             CodeDao cd = AtnaFactory.codeDao();
-            for (ParticipantCodeEntity code : codes) {
-                codes.remove(code);
+            for (int i = 0; i < arr.length; i++) {
+                ParticipantCodeEntity code = arr[i];
                 code = (ParticipantCodeEntity) cd.find(code);
                 if (code.getVersion() != null) {
-                    codes.add(code);
+                    arr[i] = (code);
                 } else {
                     if (policies.isAllowNewCodes()) {
                         cd.save(code, policies);
-                        codes.add(code);
                     } else {
                         throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                     }
                 }
             }
-            pe.setParticipantTypeCodes(codes);
+            pe.setParticipantTypeCodes(new HashSet<ParticipantCodeEntity>(Arrays.asList(arr)));
         }
 
         if (pe.getVersion() == null) {
