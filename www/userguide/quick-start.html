@@ -92,7 +92,7 @@ CONNECTION LIMIT = -1;
                         file if you want to use a different username, or have made the atna password
                         a little more secure :-).</p><p>Once you have built OpenATNA once, you
                         can change the value of the hib.hbm2ddl.auto property value to
-                        "none".</p><p></p></li><li class="listitem"><p><span class="bold"><strong>ApplicationContext.xml</strong></span> - This
+                        "none".</p><p></p></li><li class="listitem"><p><span class="bold"><strong>openatnaContext.xml</strong></span> - This
                 is the Spring configuration file for OpenATNA. This is read at start up to wire up
                 the various components. Editing this file gives you fine-grained control over the
                 components.</p></li><li class="listitem"><p>If you have run the servers, you will also see an <span class="bold"><strong>openatna.log</strong></span> file. This receives the log messages
@@ -204,7 +204,7 @@ CONNECTION LIMIT = -1;
             directory, but be aware that it will be deleted the next time you run "mvn clean".
             
         To configure the system to use the processors, you need to edit
-        the <span class="bold"><strong>applicationContext.xml</strong></span> file to add the processors to the processing chain.
+        the <span class="bold"><strong>openatnaContext.xml</strong></span> file to add the processors to the processing chain.
         
         This involves declaring the full class name of the processors you want to include within a list inside the
         bean with an id of "serviceConfig". 
@@ -225,7 +225,7 @@ CONNECTION LIMIT = -1;
             </p><p>If you start the servers again, your processors will be invoked each time a message arrives.</p></div><div class="sect2" title="Adding Codes to the runtime."><div class="titlepage"><div><div><h3 class="title"><a name="d0e270"></a>Adding Codes to the runtime.</h3></div></div></div><p>ATNA uses certain CodedValues/CDA CE types. The well-known types are defined in the <span class="bold"><strong>
             atnacodes.xml
         </strong></span> file and are loaded by default. To add you own, either edit the default codes file, or add
-        other files containing codes. To add new files, edit the <span class="bold"><strong>applicationContext.xml</strong></span>
+        other files containing codes. To add new files, edit the <span class="bold"><strong>openatnaContext.xml</strong></span>
         file, in particular the bean with the id "serviceConfig", similar to adding processors. The list of code files
         is a set of strings that will be used to create URL objects. Below is an example of adding two custom code URLs
         to the "serviceConfig" bean.

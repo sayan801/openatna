@@ -143,7 +143,7 @@ CONNECTION LIMIT = -1;
                         "none".</para>
                     <para/>
                 </listitem>
-                <listitem><para><emphasis role="bold">ApplicationContext.xml</emphasis> - This
+                <listitem><para><emphasis role="bold">openatnaContext.xml</emphasis> - This
                 is the Spring configuration file for OpenATNA. This is read at start up to wire up
                 the various components. Editing this file gives you fine-grained control over the
                 components.</para>
@@ -293,7 +293,7 @@ CONNECTION LIMIT = -1;
             directory, but be aware that it will be deleted the next time you run "mvn clean".
             
         To configure the system to use the processors, you need to edit
-        the <emphasis role="bold">applicationContext.xml</emphasis> file to add the processors to the processing chain.
+        the <emphasis role="bold">openatnaContext.xml</emphasis> file to add the processors to the processing chain.
         
         This involves declaring the full class name of the processors you want to include within a list inside the
         bean with an id of "serviceConfig". 
@@ -322,7 +322,7 @@ CONNECTION LIMIT = -1;
         <para>ATNA uses certain CodedValues/CDA CE types. The well-known types are defined in the <emphasis role="bold">
             atnacodes.xml
         </emphasis> file and are loaded by default. To add you own, either edit the default codes file, or add
-        other files containing codes. To add new files, edit the <emphasis role="bold">applicationContext.xml</emphasis>
+        other files containing codes. To add new files, edit the <emphasis role="bold">openatnaContext.xml</emphasis>
         file, in particular the bean with the id "serviceConfig", similar to adding processors. The list of code files
         is a set of strings that will be used to create URL objects. Below is an example of adding two custom code URLs
         to the "serviceConfig" bean.
