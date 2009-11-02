@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -192,27 +194,27 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
         Set<EventTypeCodeEntity> codes = messageEntity.getEventTypeCodes();
         if (codes.size() > 0) {
-            for (EventTypeCodeEntity code : codes) {
+            EventTypeCodeEntity[] arr = codes.toArray(new EventTypeCodeEntity[codes.size()]);
+            for (int i = 0; i < arr.length; i++) {
+                EventTypeCodeEntity code = arr[i];
                 CodeEntity codeEnt = dao.get(code);
                 if (codeEnt == null) {
                     if (policies.isAllowNewCodes()) {
                         dao.save(code, policies);
-
                     } else {
                         throw new AtnaPersistenceException(code.toString(),
                                 AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                     }
                 } else {
                     if (codeEnt instanceof EventTypeCodeEntity) {
-                        codes.remove(code);
-                        codes.add((EventTypeCodeEntity) codeEnt);
+                        arr[i] = ((EventTypeCodeEntity) codeEnt);
                     } else {
                         throw new AtnaPersistenceException("code is defined but is of a different type.",
                                 AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                     }
                 }
             }
-            messageEntity.setEventTypeCodes(codes);
+            messageEntity.setEventTypeCodes(new HashSet<EventTypeCodeEntity>(Arrays.asList(arr)));
         }
         Set<MessageParticipantEntity> messageParticipants = messageEntity.getMessageParticipants();
         if (messageParticipants.size() == 0) {
@@ -254,7 +256,6 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             if (policies.isAllowNewParticipants()) {
                 saveParticipantCodes(pe, policies);
                 dao.save(pe, policies);
-
             } else {
                 throw new AtnaPersistenceException("unknown participant.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
@@ -282,25 +283,29 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
     private void saveParticipantCodes(ParticipantEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
-        CodeDao dao = AtnaFactory.codeDao();
-        for (ParticipantCodeEntity code : codes) {
-            CodeEntity codeEnt = dao.get(code);
-            if (codeEnt == null) {
-                if (policies.isAllowNewCodes()) {
-                    dao.save(code, policies);
+        if (codes.size() > 0) {
+            ParticipantCodeEntity[] arr = codes.toArray(new ParticipantCodeEntity[codes.size()]);
+            CodeDao dao = AtnaFactory.codeDao();
+            for (int i = 0; i < arr.length; i++) {
+                ParticipantCodeEntity code = arr[i];
+                CodeEntity codeEnt = dao.get(code);
+                if (codeEnt == null) {
+                    if (policies.isAllowNewCodes()) {
+                        dao.save(code, policies);
+                    } else {
+                        throw new AtnaPersistenceException(code.toString(),
+                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    }
                 } else {
-                    throw new AtnaPersistenceException(code.toString(),
-                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-                }
-            } else {
-                if (codeEnt instanceof ParticipantCodeEntity) {
-                    codes.remove(code);
-                    codes.add((ParticipantCodeEntity) codeEnt);
-                } else {
-                    throw new AtnaPersistenceException("code is defined but is of a different type.",
-                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    if (codeEnt instanceof ParticipantCodeEntity) {
+                        arr[i] = ((ParticipantCodeEntity) codeEnt);
+                    } else {
+                        throw new AtnaPersistenceException("code is defined but is of a different type.",
+                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    }
                 }
             }
+            pe.setParticipantTypeCodes(new HashSet<ParticipantCodeEntity>(Arrays.asList(arr)));
         }
     }
 
@@ -335,26 +340,29 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
     private void saveSourceCodes(SourceEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<SourceCodeEntity> codes = pe.getSourceTypeCodes();
-        CodeDao dao = AtnaFactory.codeDao();
-        for (SourceCodeEntity code : codes) {
-            CodeEntity codeEnt = dao.get(code);
-            if (codeEnt == null) {
-                if (policies.isAllowNewCodes()) {
-                    dao.save(code, policies);
-
+        if (codes.size() > 0) {
+            CodeDao dao = AtnaFactory.codeDao();
+            SourceCodeEntity[] arr = codes.toArray(new SourceCodeEntity[codes.size()]);
+            for (int i = 0; i < arr.length; i++) {
+                SourceCodeEntity code = arr[i];
+                CodeEntity codeEnt = dao.get(code);
+                if (codeEnt == null) {
+                    if (policies.isAllowNewCodes()) {
+                        dao.save(code, policies);
+                    } else {
+                        throw new AtnaPersistenceException(code.toString(),
+                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    }
                 } else {
-                    throw new AtnaPersistenceException(code.toString(),
-                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-                }
-            } else {
-                if (codeEnt instanceof SourceCodeEntity) {
-                    codes.remove(code);
-                    codes.add((SourceCodeEntity) codeEnt);
-                } else {
-                    throw new AtnaPersistenceException("code is defined but is of a different type.",
-                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    if (codeEnt instanceof SourceCodeEntity) {
+                        arr[i] = ((SourceCodeEntity) codeEnt);
+                    } else {
+                        throw new AtnaPersistenceException("code is defined but is of a different type.",
+                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    }
                 }
             }
+            pe.setSourceTypeCodes(new HashSet<SourceCodeEntity>(Arrays.asList(arr)));
         }
     }
 
@@ -377,7 +385,6 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             if (policies.isAllowNewObjects()) {
                 saveObjectCode(oe, policies);
                 dao.save(oe, policies);
-
             } else {
                 throw new AtnaPersistenceException("no object defined.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);

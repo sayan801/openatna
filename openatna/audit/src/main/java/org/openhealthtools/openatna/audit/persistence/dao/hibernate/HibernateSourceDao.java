@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -75,25 +77,25 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
         Set<SourceCodeEntity> codes = entity.getSourceTypeCodes();
         if (codes.size() > 0) {
             CodeDao cd = AtnaFactory.codeDao();
-            for (SourceCodeEntity code : codes) {
-                codes.remove(code);
+            SourceCodeEntity[] arr = codes.toArray(new SourceCodeEntity[codes.size()]);
+            for (int i = 0; i < arr.length; i++) {
+                SourceCodeEntity code = arr[i];
                 CodeEntity ce = cd.find(code);
                 if (!(ce instanceof SourceCodeEntity)) {
                     throw new AtnaPersistenceException(ce.toString(), AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                 }
                 code = (SourceCodeEntity) ce;
                 if (code.getVersion() != null) {
-                    codes.add(code);
+                    arr[i] = code;
                 } else {
                     if (policies.isAllowNewCodes()) {
                         cd.save(code, policies);
-                        codes.add(code);
                     } else {
                         throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                     }
                 }
             }
-            entity.setSourceTypeCodes(codes);
+            entity.setSourceTypeCodes(new HashSet<SourceCodeEntity>(Arrays.asList(arr)));
         }
         if (entity.getVersion() == null) {
             // new one.
