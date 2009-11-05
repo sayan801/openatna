@@ -411,7 +411,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             if (policies.isAllowNewCodes()) {
                 dao.save(oe, policies);
             } else {
-                throw new AtnaPersistenceException("no event id code defined.",
+                throw new AtnaPersistenceException("no or unknown object id type code defined.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
             }
         } else {
