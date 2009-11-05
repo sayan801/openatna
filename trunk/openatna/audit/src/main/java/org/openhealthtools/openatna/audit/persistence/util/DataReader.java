@@ -21,6 +21,7 @@ package org.openhealthtools.openatna.audit.persistence.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -586,7 +587,11 @@ public class DataReader {
                                             if (!enc) {
                                                 q = Base64.encodeString(q);
                                             }
-                                            p.setObjectQuery(q);
+                                            try {
+                                                p.setObjectQuery(q.getBytes("UTF-8"));
+                                            } catch (UnsupportedEncodingException e) {
+                                                // shouldn't happen
+                                            }
                                         }
                                     } else if (child.getLocalName().equals(DETAIL)) {
                                         String type = child.getAttribute(TYPE);
@@ -597,8 +602,12 @@ public class DataReader {
                                                 if (!enc) {
                                                     val = Base64.encodeString(val);
                                                 }
-                                                ObjectDetailEntity ode = new ObjectDetailEntity(type, val);
-                                                p.addObjectDetail(ode);
+                                                try {
+                                                    ObjectDetailEntity ode = new ObjectDetailEntity(type, val.getBytes("UTF-8"));
+                                                    p.addObjectDetail(ode);
+                                                } catch (UnsupportedEncodingException e) {
+                                                    // shouldn't happen
+                                                }
                                             }
                                         }
                                     }

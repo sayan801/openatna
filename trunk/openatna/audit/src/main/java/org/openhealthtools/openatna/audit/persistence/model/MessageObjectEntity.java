@@ -33,7 +33,7 @@ public class MessageObjectEntity extends PersistentEntity {
 
     private Long id;
     private ObjectEntity object;
-    private String objectQuery;
+    private byte[] objectQuery;
     private Short objectDataLifeCycle;
 
     private Set<ObjectDetailEntity> details = new HashSet<ObjectDetailEntity>();
@@ -64,12 +64,12 @@ public class MessageObjectEntity extends PersistentEntity {
         this.object = object;
     }
 
-    @Lob
-    public String getObjectQuery() {
+
+    public byte[] getObjectQuery() {
         return objectQuery;
     }
 
-    public void setObjectQuery(String objectQuery) {
+    public void setObjectQuery(byte[] objectQuery) {
         this.objectQuery = objectQuery;
     }
 

@@ -28,6 +28,7 @@ import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.audit.persistence.model.*;
 import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.util.Base64;
 import org.junit.Test;
 
 
@@ -71,7 +72,7 @@ public class TestMessage {
 
         MessageObjectEntity objEnt = new MessageObjectEntity(obj);
         objEnt.setObjectDataLifeCycle(new Short("1"));
-        objEnt.addObjectDetail(new ObjectDetailEntity("version", "1.2"));
+        objEnt.addObjectDetail(new ObjectDetailEntity("version", Base64.encodeString("1.2").getBytes()));
         msgEnt.addMessageObject(objEnt);
 
         dao.save(msgEnt, new PersistencePolicies());

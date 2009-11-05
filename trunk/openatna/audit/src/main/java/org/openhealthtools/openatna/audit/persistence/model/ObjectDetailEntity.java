@@ -31,12 +31,12 @@ public class ObjectDetailEntity extends PersistentEntity {
 
     private Long id;
     private String type;
-    private String value;
+    private byte[] value;
 
     public ObjectDetailEntity() {
     }
 
-    public ObjectDetailEntity(String type, String value) {
+    public ObjectDetailEntity(String type, byte[] value) {
         this.type = type;
         this.value = value;
     }
@@ -73,8 +73,7 @@ public class ObjectDetailEntity extends PersistentEntity {
         this.type = value;
     }
 
-    @Lob
-    public String getValue() {
+    public byte[] getValue() {
         return value;
     }
 
@@ -83,7 +82,7 @@ public class ObjectDetailEntity extends PersistentEntity {
      *
      * @param value
      */
-    public void setValue(String value) {
+    public void setValue(byte[] value) {
         this.value = value;
     }
 
@@ -114,7 +113,7 @@ public class ObjectDetailEntity extends PersistentEntity {
                 .append(", type=")
                 .append(getType())
                 .append(", value=")
-                .append(getValue())
+                .append(new String(getValue()))
                 .append("]")
                 .toString();
     }
