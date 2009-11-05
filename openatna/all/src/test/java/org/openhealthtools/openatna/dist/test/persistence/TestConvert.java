@@ -78,8 +78,8 @@ public class TestConvert {
 
         MessageObjectEntity objEnt = new MessageObjectEntity(obj);
         objEnt.setObjectDataLifeCycle(new Short("1"));
-        objEnt.addObjectDetail(new ObjectDetailEntity("version", Base64.encode("1.2".getBytes())));
-        objEnt.setObjectQuery(Base64.encode("a query string".getBytes()));
+        objEnt.addObjectDetail(new ObjectDetailEntity("version", Base64.encodeString("1.2").getBytes()));
+        objEnt.setObjectQuery(Base64.encodeString("a query string").getBytes());
         msgEnt.addMessageObject(objEnt);
         AtnaMessage msg = EntityConverter.createMessage(msgEnt);
         assertEquals(msg.getParticipants().size(), 1);

@@ -128,14 +128,14 @@ public class EntityConverter {
         MessageObjectEntity e = new MessageObjectEntity();
         e.setObject(createObject(object.getObject()));
         if (object.getObjectQuery() != null && object.getObjectQuery().length > 0) {
-            e.setObjectQuery(Base64.encode(object.getObjectQuery()));
+            e.setObjectQuery(object.getObjectQuery());
         }
         if (object.getObjectDataLifeCycle() != null) {
             e.setObjectDataLifeCycle((short) object.getObjectDataLifeCycle().value());
         }
         List<AtnaObjectDetail> details = object.getObjectDetails();
         for (AtnaObjectDetail detail : details) {
-            ObjectDetailEntity ent = new ObjectDetailEntity(detail.getType(), Base64.encode(detail.getValue()));
+            ObjectDetailEntity ent = new ObjectDetailEntity(detail.getType(), detail.getValue());
             e.addObjectDetail(ent);
         }
         return e;
@@ -148,13 +148,13 @@ public class EntityConverter {
             o.setObjectDataLifeCycle(ObjectDataLifecycle.getLifecycle(entity.getObjectDataLifeCycle()));
         }
         if (entity.getObjectQuery() != null) {
-            o.setObjectQuery(Base64.decode(entity.getObjectQuery()));
+            o.setObjectQuery(entity.getObjectQuery());
         }
         Set<ObjectDetailEntity> pairs = entity.getDetails();
         for (ObjectDetailEntity pair : pairs) {
             AtnaObjectDetail detail = new AtnaObjectDetail();
             detail.setType(pair.getType());
-            detail.setValue(Base64.decode(pair.getValue()));
+            detail.setValue(pair.getValue());
             o.addObjectDetail(detail);
         }
         return o;

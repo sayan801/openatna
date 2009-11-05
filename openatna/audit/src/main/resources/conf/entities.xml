@@ -251,11 +251,35 @@
         <object ref="o1">
             <!-- if encoded is false or absent, then the value is considered to require Base 64 encoding-->
             <query encoded="false">
-                1234
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
+                This is a query which is very interesting and repeated. This is a query which is very interesting and repeated.
             </query>
             <!-- if encoded is false or absent, then the value is considered to require Base 64 encoding-->
             <detail type="version" encoded="false">
-                1234
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
+                This is a very long id. This is a very long id. This is a very long id. This is a very long id.
             </detail>
         </object>
     </message>

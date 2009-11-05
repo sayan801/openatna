@@ -31,6 +31,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
+import org.openhealthtools.openatna.audit.persistence.util.Base64;
 
 /**
  * @author Andrew Harrison
@@ -87,6 +88,8 @@ public class EntityDataSource implements JRDataSource {
                 Object ret = ms.invoke(curr, new Object[0]);
                 if (ret instanceof Enum) {
                     return ret.toString();
+                } else if (ret instanceof byte[]) {
+                    return Base64.decodeString(new String((byte[]) ret));
                 }
                 return ret;
             } catch (IllegalAccessException e) {
