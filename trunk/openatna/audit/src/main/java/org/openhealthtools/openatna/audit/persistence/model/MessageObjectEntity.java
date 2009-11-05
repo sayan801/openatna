@@ -64,6 +64,7 @@ public class MessageObjectEntity extends PersistentEntity {
         this.object = object;
     }
 
+    @Lob
     public String getObjectQuery() {
         return objectQuery;
     }

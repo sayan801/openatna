@@ -10,6 +10,7 @@
     </ActiveParticipant>
     <ActiveParticipant NetworkAccessPointTypeCode="1" NetworkAccessPointID="xds-ibm.lgs.com" UserIsRequestor="true" UserID="IBM|XDSab_REG_IBM">
         <RoleIDCode codeSystemName="DCM" displayName="Destination" code="110152"/>
+        <RoleIDCode codeSystemName="DCM" displayName="Source" code="110153"/>
     </ActiveParticipant>
     <AuditSourceIdentification AuditSourceID="SYS_NAME" AuditEnterpriseSiteID="ENTERPRISE_SYS_NAME"/>
     <ParticipantObjectIdentification ParticipantObjectTypeCodeRole="1" ParticipantObjectTypeCode="1"
