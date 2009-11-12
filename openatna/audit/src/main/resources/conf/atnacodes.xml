@@ -101,6 +101,7 @@
         <Code code="10" codingScheme="RFC-3881" display="Search Criteria"/>
         <Code code="11" codingScheme="RFC-3881" display="User Identifier"/>
         <Code code="12" codingScheme="RFC-3881" display="URI"/>
+        <Code code="ITI-21" codingScheme="IHE Transactions" display="Patient Demographics Query"/>
 
         <Code code="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd"
               codingScheme="IHE XDS Metadata" display="SubmissionSet ClassificationNode"/>
