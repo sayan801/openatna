@@ -36,6 +36,22 @@ import org.junit.Test;
  * @version $Revision:$
  * @created Oct 21, 2009: 4:52:05 PM
  * @date $Date:$ modified by $Author:$
+ * <p/>
+ * <85>1 2009-11-29T15:15:19Z hildegard Spartacus 777 PDQIN - ?<AuditMessage>
+ * <EventIdentification EventActionCode="E" EventDateTime="2009-11-29T15:15:19" EventOutcomeIndicator="0">
+ * <EventID code="110100" codeSystemName="DCM" displayName="Application Activity" />
+ * <EventTypeCode code="110120" codeSystemName="DCM" displayName="Application Start" />
+ * </EventIdentification>
+ * <ActiveParticipant UserID="MESA Application" AlternativeUserID="MESA AE Title" UserIsRequestor="false">
+ * <RoleIDCode code="110150" codeSystemName="DCM" displayName="Application"/>
+ * </ActiveParticipant>
+ * <ActiveParticipant UserID="smm" UserName="Steve Moore" UserIsRequestor="true">
+ * <RoleIDCode code="110151" codeSystemName="DCM" displayName="Application Launcher"/>
+ * </ActiveParticipant>
+ * <AuditSourceIdentification AuditEnterpriseSiteID="Hospital" AuditSourceID="ReadingRoom">
+ * <AuditSourceTypeCode code="1"/>
+ * </AuditSourceIdentification>
+ * </AuditMessage>
  */
 
 public class UdpClientTest0 extends ClientTest {
@@ -45,7 +61,7 @@ public class UdpClientTest0 extends ClientTest {
         try {
             List<AtnaMessage> messages = getMessages();
             for (AtnaMessage message : messages) {
-                ProtocolMessage sl = new ProtocolMessage(10, 5, "localhost", new JaxbLogMessage(message), "IHE_XDS", "ATNALOG", "1234");
+                ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new JaxbLogMessage(message), "Spartacus", "PDQIN", "777");
                 InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
                 DatagramSocket s = new DatagramSocket();
                 byte[] bytes = sl.toByteArray();
