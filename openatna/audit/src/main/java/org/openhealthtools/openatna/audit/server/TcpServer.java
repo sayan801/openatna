@@ -95,6 +95,8 @@ public class TcpServer {
                     log.debug("Socket closed.");
                 } catch (IOException e) {
                     atnaServer.notifyException(new SyslogException(e));
+                } catch (Exception e) {
+                    atnaServer.notifyException(new SyslogException(e));
                 }
             }
         }
