@@ -21,11 +21,7 @@ package org.openhealthtools.openatna.audit.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -120,6 +116,7 @@ public class UdpServer {
                 byte[] data = new byte[packet.getLength()];
                 log.debug(logPacket(packet));
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, data.length);
+                log.debug("creating message from bytes:" + new String(data));
                 msg = createMessage(data);
             } catch (SyslogException e) {
                 atnaServer.notifyException(e);

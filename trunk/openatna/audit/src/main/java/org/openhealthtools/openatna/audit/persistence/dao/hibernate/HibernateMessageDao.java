@@ -262,6 +262,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             }
         } else {
             saveParticipantCodes(pe, policies);
+            existing.setParticipantTypeCodes(pe.getParticipantTypeCodes());
             ap.setParticipant(existing);
         }
         NetworkAccessPointEntity net = ap.getNetworkAccessPoint();

@@ -172,6 +172,7 @@ public class TcpServer {
         }
 
         private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
+            log.debug("creating message from bytes: " + new String(bytes));
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
 
