@@ -19,6 +19,7 @@
 
 package org.openhealthtools.openatna.report;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -89,7 +90,15 @@ public class EntityDataSource implements JRDataSource {
                 if (ret instanceof Enum) {
                     return ret.toString();
                 } else if (ret instanceof byte[]) {
-                    return Base64.decodeString(new String((byte[]) ret));
+                    try {
+                        return Base64.decodeString(new String((byte[]) ret, "UTF-8"));
+                    } catch (Exception e) {
+                        try {
+                            return new String((byte[]) ret, "UTF-8");
+                        } catch (UnsupportedEncodingException e1) {
+
+                        }
+                    }
                 }
                 return ret;
             } catch (IllegalAccessException e) {

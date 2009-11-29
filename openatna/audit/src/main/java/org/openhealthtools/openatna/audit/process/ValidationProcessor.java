@@ -246,7 +246,7 @@ public class ValidationProcessor implements AtnaProcessor {
 
     private void validateObjectIdTypeCode(AtnaCode code, ObjectType type) throws AtnaException {
         if (code.getCodeType().equals(AtnaCode.OBJECT_ID_TYPE) &&
-                code.getCodeSystemName().equalsIgnoreCase("RFC-3881")) {
+                code.getCodeSystemName() != null && code.getCodeSystemName().equalsIgnoreCase("RFC-3881")) {
             String s = code.getCode();
             switch (type) {
                 case PERSON:

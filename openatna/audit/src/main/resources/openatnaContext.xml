@@ -45,6 +45,10 @@
         <property name="allowNewObjects" value="true"/>
         <property name="allowNewSources" value="true"/>
         <property name="allowUnknownDetailTypes" value="true"/>
+        <property name="allowNewCodes" value="true"/>
+        <!--<property name="allowModifyParticipants" value="true"/>-->
+        <!--<property name="allowModifySources" value="true"/>-->
+        <!--<property name="allowModifyObjects" value="true"/>-->
     </bean>
 
     <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.service.ServiceConfiguration">

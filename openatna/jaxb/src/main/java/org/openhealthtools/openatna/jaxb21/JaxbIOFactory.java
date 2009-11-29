@@ -64,20 +64,29 @@ public class JaxbIOFactory implements AtnaIOFactory {
         try {
             Unmarshaller u = jc.createUnmarshaller();
             AuditMessage a = (AuditMessage) u.unmarshal(in);
-            AtnaMessage jm = createMessage(a);
+            AtnaMessage jm = null;
+            AtnaException ae = null;
+            try {
+                jm = createMessage(a);
+            } catch (AtnaException e) {
+                ae = e;
+
+            }
             try {
                 if (log.isDebugEnabled()) {
                     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                    AuditMessage jmessage = createMessage(jm);
+                    /*AuditMessage jmessage = createMessage(jm);*/
                     Marshaller marshaller = jc.createMarshaller();
                     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                    marshaller.marshal(jmessage, bout);
+                    marshaller.marshal(a, bout);
                     log.debug("Received Audit Message:\n" + new String(bout.toByteArray()));
                 }
-            } catch (AtnaException e) {
 
             } catch (JAXBException e) {
 
+            }
+            if (ae != null) {
+                throw ae;
             }
             return jm;
         } catch (JAXBException e) {
