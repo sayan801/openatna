@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>0.1</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <artifactId>openatna-all</artifactId>
 
     <packaging>jar</packaging>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <name>OpenATNA All</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
@@ -91,24 +91,24 @@
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>syslog-core</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-anom</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-audit</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-jaxb</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
-        
+
     </dependencies>
 
 </project>

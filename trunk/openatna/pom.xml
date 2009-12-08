@@ -6,7 +6,7 @@
     <groupId>org.openhealthtools.openatna</groupId>
     <artifactId>openatna</artifactId>
     <packaging>pom</packaging>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <name>OpenATNA</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
@@ -73,10 +73,6 @@
             <url>http://static.appfuse.org/repository</url>
         </repository>
         <repository>
-            <id>openxds</id>
-            <url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
-        </repository>
-        <repository>
             <id>sun</id>
             <url>http://download.java.net/maven/2</url>
         </repository>
@@ -98,6 +94,15 @@
             <version>${log4Jlog.version}</version>
         </dependency>
     </dependencies>
+
+
+    <distributionManagement>
+        <repository>
+            <id>trianacode-maven-repos</id>
+            <name>Triana Maven Repository</name>
+            <url>scp://lapis.cs.cf.ac.uk/nfs/mntI3/static/triana/html/maven</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>syslog</module>
