@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>0.1</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <artifactId>openatna-report</artifactId>
 
     <packaging>jar</packaging>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <name>OpenATNA Report</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-audit</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>jasperreports</groupId>
