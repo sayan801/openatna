@@ -12,10 +12,7 @@
         <copy todir="build/lib" overwrite="yes">
             <fileset dir="ext" includes="**/**" excludes=".svn"/>
         </copy>
-        <delete file="build/lib/jaxb-api-1.0.1.jar"/>
-        <delete file="build/lib/jaxb-impl-1.0.5.jar"/>
-        <delete file="build/lib/jaxb-libs-1.0.5.jar"/>
-        <delete file="build/lib/jaxb-xjc-1.0.5.jar"/>
+
         <path id="jar.class.path">
             <fileset dir="build/lib">
                 <include name="**/*.jar"/>
