@@ -112,7 +112,7 @@ public class QueryString {
             case NETWORK_ACCESS_POINT_TYPE:
                 return NetworkAccessPoint.getAccessPoint(Integer.parseInt(value));
             case EVENT_TIME:
-                return Timestamp.parse(value);
+                return Timestamp.parseToDate(value);
             default:
                 return value;
         }
