@@ -18,6 +18,21 @@
 
 
 -->
+<!--
+
+
+****************************************************************************************************
+*                                                                                                  *
+* NOTE: This file should be considered an example, as opposed to a working copy,                   *
+* in particular because of the dependency on a LogMessageClass in the serviceConfig bean           *
+* This is currently set to the JaxbLogMessage that comes in the all/ module, which this module     *
+* does not depend on.                                                                              *
+*                                                                                                  *
+****************************************************************************************************
+
+
+
+-->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
@@ -53,7 +68,14 @@
 
     <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.service.ServiceConfiguration">
         <property name="persistencePolicies" ref="persistencePolicies"/>
-        <!-- NOTE: This class is not on the audit module build classpath but comes with the dist -->
+        <!--
+
+        *******************************************************************************************
+        NOTE: This class is not on the audit module build classpath but comes with the dist module
+        insert your preferred Log message class here
+        *******************************************************************************************
+
+        -->
         <property name="logMessageClass" value="org.openhealthtools.openatna.dist.JaxbLogMessage"/>
 
         <!--<property name="validationProcessor" value="false"/>-->
