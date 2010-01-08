@@ -48,7 +48,6 @@ public class EntityDataSource implements JRDataSource {
 
     public EntityDataSource(Collection<? extends PersistentEntity> codes) throws AtnaPersistenceException {
         this.it = codes.iterator();
-
     }
 
     public EntityDataSource(PersistentEntity code) throws AtnaPersistenceException {
