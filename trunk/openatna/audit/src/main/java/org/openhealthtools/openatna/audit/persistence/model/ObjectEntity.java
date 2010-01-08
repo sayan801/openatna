@@ -55,6 +55,8 @@ public class ObjectEntity extends PersistentEntity {
 
     private Set<DetailTypeEntity> objectDetailTypes = new HashSet<DetailTypeEntity>();
 
+    private Set<ObjectDescriptionEntity> objectDescriptions = new HashSet<ObjectDescriptionEntity>();
+
     public ObjectEntity() {
     }
 
@@ -115,6 +117,19 @@ public class ObjectEntity extends PersistentEntity {
     public boolean containsDetailType(String key) {
         DetailTypeEntity te = new DetailTypeEntity(key);
         return getObjectDetailTypes().contains(te);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Set<ObjectDescriptionEntity> getObjectDescriptions() {
+        return objectDescriptions;
+    }
+
+    public void setObjectDescriptions(Set<ObjectDescriptionEntity> objectDescriptions) {
+        this.objectDescriptions = objectDescriptions;
+    }
+
+    public void addObjectDescription(ObjectDescriptionEntity description) {
+        getObjectDescriptions().add(description);
     }
 
     public String getObjectId() {

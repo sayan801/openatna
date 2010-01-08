@@ -67,6 +67,18 @@ public class AtnaObject implements Serializable {
         return this;
     }
 
+    public List<ObjectDescription> getDescriptions() {
+        return new ArrayList(descriptions);
+    }
+
+    public void addObjectDescription(ObjectDescription desc) {
+        descriptions.add(desc);
+    }
+
+    public void removeObjectDescription(ObjectDescription desc) {
+        descriptions.remove(desc);
+    }
+
     public List<String> getObjectDetailTypes() {
         return new ArrayList<String>(objectDetailTypes);
     }

@@ -34,17 +34,21 @@ import org.openhealthtools.openatna.anom.EventAction;
 import org.openhealthtools.openatna.anom.EventOutcome;
 import org.openhealthtools.openatna.anom.NetworkAccessPoint;
 import org.openhealthtools.openatna.anom.ObjectDataLifecycle;
+import org.openhealthtools.openatna.anom.ObjectDescription;
 import org.openhealthtools.openatna.anom.ObjectType;
 import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
+import org.openhealthtools.openatna.anom.SopClass;
 import org.openhealthtools.openatna.audit.persistence.model.DetailTypeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
 import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
 import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
 import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectDescriptionEntity;
 import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
 import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.SopClassEntity;
 import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
@@ -220,6 +224,30 @@ public class EntityConverter {
         for (String s : detailTypes) {
             e.addObjectDetailType(s);
         }
+        List<ObjectDescription> descs = object.getDescriptions();
+        for (ObjectDescription desc : descs) {
+            ObjectDescriptionEntity ode = new ObjectDescriptionEntity();
+            List<String> uids = desc.getMppsUids();
+            for (String uid : uids) {
+                ode.addMppsUid(uid);
+            }
+            List<String> accNums = desc.getAccessionNumbers();
+            for (String accNum : accNums) {
+                ode.addAccessionNumber(accNum);
+            }
+            List<SopClass> sc = desc.getSopClasses();
+            for (SopClass sopClass : sc) {
+                SopClassEntity sce = new SopClassEntity();
+                sce.setUid(sopClass.getUid());
+                sce.setNumberOfInstances(sopClass.getNumberOfInstances());
+                List<String> instances = sopClass.getInstanceUids();
+                for (String instance : instances) {
+                    sce.addInstanceUid(instance);
+                }
+                ode.getSopClasses().add(sce);
+            }
+            e.addObjectDescription(ode);
+        }
         return e;
     }
 
@@ -238,8 +266,58 @@ public class EntityConverter {
         for (DetailTypeEntity type : types) {
             ao.addObjectDetailType(type.getType());
         }
+        Set<ObjectDescriptionEntity> descs = entity.getObjectDescriptions();
+        for (ObjectDescriptionEntity desc : descs) {
+            ObjectDescription od = new ObjectDescription();
+            List<String> uids = desc.mppsUidsAsList();
+            for (String uid : uids) {
+                od.addMppsUid(uid);
+            }
+            List<String> accNums = desc.accessionNumbersAsList();
+            for (String accNum : accNums) {
+                od.addAccessionNumber(accNum);
+            }
+            Set<SopClassEntity> sops = desc.getSopClasses();
+            for (SopClassEntity sop : sops) {
+                SopClass sc = new SopClass();
+                sc.setNumberOfInstances(sop.getNumberOfInstances());
+                sc.setUid(sop.getUid());
+                List<String> instances = sop.instanceUidsAsList();
+                for (String instance : instances) {
+                    sc.addInstanceUid(instance);
+                }
+                od.addSopClass(sc);
+            }
+            ao.addObjectDescription(od);
+        }
         return ao;
     }
+/*
+
+    public static List<String> mppsUidsAsList(ObjectDescriptionEntity entity) {
+        String uids = entity.getMppsUids();
+        String[] vals = uids.split(" ");
+        List<String> ret = new ArrayList<String>();
+        for (String val : vals) {
+            if (val.length() > 0) {
+                ret.add(val);
+            }
+        }
+        return ret;
+    }
+
+
+    public static List<String> getInstanceUidsAsList(SopClassEntity entity) {
+        String uids = entity.getInstanceUids();
+        String[] vals = uids.split(" ");
+        List<String> ret = new ArrayList<String>();
+        for (String val : vals) {
+            if (val.length() > 0) {
+                ret.add(val);
+            }
+        }
+        return ret;
+    }*/
 
 
     public static SourceEntity createSource(AtnaSource source) {

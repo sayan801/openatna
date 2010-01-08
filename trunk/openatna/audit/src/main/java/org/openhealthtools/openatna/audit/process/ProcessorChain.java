@@ -144,16 +144,19 @@ public class ProcessorChain {
         try {
             prov.process(context);
             if (context.getState() == ProcessContext.State.ABORTED) {
+                log.debug("chain aborted after provisional processor");
                 return;
             }
             except.process(context);
             done.add(except);
             if (context.getState() == ProcessContext.State.ABORTED) {
+                log.debug("chain aborted after exception processor");
                 return;
             }
             preVerify.process(context);
             done.add(preVerify);
             if (context.getState() == ProcessContext.State.ABORTED) {
+                log.debug("chain aborted after preverify processors");
                 return;
             }
             if (validate) {
@@ -163,9 +166,11 @@ public class ProcessorChain {
             postVerify.process(context);
             done.add(postVerify);
             if (context.getState() == ProcessContext.State.ABORTED) {
+                log.debug("chain aborted after postverify processor");
                 return;
             }
             if (context.getState() != ProcessContext.State.PERSISTED) {
+                log.debug("about to persist message");
                 persist.process(context);
                 done.add(persist);
             }

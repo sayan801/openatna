@@ -20,6 +20,12 @@ DROP TABLE participants CASCADE;
 DROP TABLE participants_to_codes CASCADE;
 DROP TABLE sources CASCADE;
 DROP TABLE sources_to_codes CASCADE;
+
 DROP TABLE provisional_messages CASCADE;
+
+DROP TABLE object_descriptions CASCADE;
+DROP TABLE object_descriptions_sop_classes CASCADE;
+DROP TABLE objects_object_descriptions CASCADE;
+DROP TABLE sop_classes CASCADE;
 
 
