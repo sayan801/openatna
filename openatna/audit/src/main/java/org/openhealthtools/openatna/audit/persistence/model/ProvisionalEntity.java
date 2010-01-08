@@ -19,6 +19,7 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import javax.persistence.Entity;
@@ -36,7 +37,7 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "provisional_messages")
-public class ProvisionalEntity {
+public class ProvisionalEntity extends PersistentEntity {
 
     private Long id;
     private Integer version;
@@ -86,6 +87,15 @@ public class ProvisionalEntity {
         }
 
         return true;
+    }
+
+    public String toString() {
+        try {
+            return new String(content, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            assert (false);
+        }
+        return getClass().getName();
     }
 
     @Override

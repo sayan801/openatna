@@ -45,11 +45,15 @@
     <field name="objectSensitivity" class="java.lang.String">
         <fieldDescription>objectSensitivity</fieldDescription>
     </field>
+    <field name="objectDescriptions" class="java.util.Set">
+        <fieldDescription>objectDescriptions</fieldDescription>
+    </field>
+
 
     <detail>
-        <band height="45">
+        <band height="60">
             <frame>
-                <reportElement x="0" y="0" width="520" height="45" style="Arial_Normal_Small"/>
+                <reportElement x="0" y="0" width="520" height="60" style="Arial_Normal_Small"/>
                 <staticText>
                     <reportElement x="5" y="0" width="100" height="15" style="Arial_Bold_Small" forecolor="#2c5519"/>
                     <text><![CDATA[Participating Object]]></text>
@@ -110,6 +114,22 @@
                     <reportElement positionType="Float" x="5" y="45" backcolor="#ff9900" width="510" height="0" isRemoveLineWhenBlank="true"/>
                     <dataSourceExpression>new EntityDataSource($F{objectIdTypeCode})</dataSourceExpression>
                     <subreportExpression>$P{inputDirectory} + "/CodeReport.jasper"</subreportExpression>
+                </subreport>
+
+                <staticText>
+                    <reportElement positionType="Float" x="10" y="45" width="95" height="15" style="Arial_Small_Italic"
+                                   forecolor="#2c5519">
+                        <printWhenExpression>$F{objectDescriptions}.size() > 0</printWhenExpression>
+                    </reportElement>
+                    <text><![CDATA[Object Descriptions]]></text>
+                </staticText>
+                <subreport>
+                    <reportElement positionType="Float" x="5" y="60" backcolor="#ff9900" width="510" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{objectDescriptions})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/DescriptionReport.jasper"</subreportExpression>
                 </subreport>
             </frame>
         </band>
