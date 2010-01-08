@@ -17,28 +17,20 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.dist.test;
+package org.openhealthtools.openatna.audit.persistence.model;
 
-import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
-import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 30, 2009: 10:11:53 PM
- * @date $Date:$ modified by $Author:$
+ * @version 1.0.0
+ * @date Jan 7, 2010: 11:48:17 PM
  */
 
-public class JaxbLogMessage extends AtnaLogMessage {
-
-    public JaxbLogMessage() {
-        super(new JaxbIOFactory());
-    }
-
-    public JaxbLogMessage(AtnaMessage message) {
-        super(message, new JaxbIOFactory());
-    }
+@Entity
+@Table(name = "object_descriptions")
+public class ObjectDescriptionEntity {
 
 
 }

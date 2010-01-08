@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import java.util.Arrays;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,29 +28,19 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-
 /**
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 11, 2009: 8:11:28 PM
- * @date $Date:$ modified by $Author:$
+ * @version 1.0.0
+ * @date Jan 8, 2010: 9:48:39 AM
  */
 
-
 @Entity
-@Table(name = "detail_types")
-public class DetailTypeEntity extends PersistentEntity {
+@Table(name = "provisional_messages")
+public class ProvisionalEntity {
 
     private Long id;
     private Integer version;
-    private String type;
-
-    public DetailTypeEntity() {
-    }
-
-    public DetailTypeEntity(String type) {
-        this.type = type;
-    }
+    private byte[] content;
 
 
     @Id
@@ -70,12 +62,12 @@ public class DetailTypeEntity extends PersistentEntity {
         this.version = version;
     }
 
-    public String getType() {
-        return type;
+    public byte[] getContent() {
+        return content;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
     @Override
@@ -83,13 +75,13 @@ public class DetailTypeEntity extends PersistentEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof DetailTypeEntity)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        DetailTypeEntity that = (DetailTypeEntity) o;
+        ProvisionalEntity that = (ProvisionalEntity) o;
 
-        if (type != null ? !type.equals(that.type) : that.type != null) {
+        if (!Arrays.equals(content, that.content)) {
             return false;
         }
 
@@ -98,19 +90,6 @@ public class DetailTypeEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        return type != null ? type.hashCode() : 0;
-    }
-
-    public String toString() {
-        return new StringBuilder(getClass().getName())
-                .append("[")
-                .append("id=")
-                .append(getId())
-                .append(", version=")
-                .append(getVersion())
-                .append(", type=")
-                .append(getType())
-                .append("]")
-                .toString();
+        return content != null ? Arrays.hashCode(content) : 0;
     }
 }

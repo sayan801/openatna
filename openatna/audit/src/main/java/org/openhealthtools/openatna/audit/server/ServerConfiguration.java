@@ -49,7 +49,7 @@ import org.openhealthtools.openatna.net.IConnectionDescription;
 
 public class ServerConfiguration {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.ServerConfiguration");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.ServerConfiguration");
 
     private Set<AtnaServer> servers = new HashSet<AtnaServer>();
     private String actorDir;
@@ -104,8 +104,8 @@ public class ServerConfiguration {
         try {
             configuration = createDocument(configFile);
         } catch (Exception e) {
-            throw new RuntimeException("Error loading config file:" +
-                    configFile.getAbsolutePath(), e);
+            throw new RuntimeException("Error loading config file:"
+                    + configFile.getAbsolutePath(), e);
         }
         // Get the list of XML elements in the configuration file
         NodeList configurationElements = configuration.getDocumentElement().getChildNodes();
@@ -117,12 +117,16 @@ public class ServerConfiguration {
                 String name = element.getNodeName();
                 if (name.equalsIgnoreCase("CONNECTIONFILE")) {
                     // An included connection file, load it
-                    if (!processConnectionFile((Element) element, configFile)) okay = false;
-                } else if (name.equalsIgnoreCase("SECURECONNECTION") || name.equalsIgnoreCase("STANDARDCONNECTION")) {
+                    if (!processConnectionFile((Element) element, configFile)) {
+                        okay = false;
+                    }
+                } else if (name.equalsIgnoreCase("SECURECONNECTION")
+                        || name.equalsIgnoreCase("STANDARDCONNECTION")) {
                     // An included connection, load it
                     if (!ConnectionFactory.loadConnectionDescriptionsFromXmlNode(element, configFile)) {
-                        throw new RuntimeException("Error loading configuration file \"" + configFile.getAbsolutePath() +
-                                "\" in configFile:" + configFile.getAbsolutePath());
+                        throw new RuntimeException("Error loading configuration file \""
+                                + configFile.getAbsolutePath()
+                                + "\" in configFile:" + configFile.getAbsolutePath());
                     }
                 }
             }
@@ -135,10 +139,14 @@ public class ServerConfiguration {
                     // See what type of element it is
                     String name = element.getNodeName();
                     if (name.equalsIgnoreCase("ACTORFILE")) {
-                        if (!processActorFile((Element) element, configFile)) okay = false;
+                        if (!processActorFile((Element) element, configFile)) {
+                            okay = false;
+                        }
                     } else if (name.equalsIgnoreCase("ACTOR")) {
                         // An IHE actor definition
-                        if (!processActorDefinition((Element) element)) okay = false;
+                        if (!processActorDefinition((Element) element)) {
+                            okay = false;
+                        }
                     }
                 }
             }
@@ -156,8 +164,8 @@ public class ServerConfiguration {
         if ("SECURENODE".equalsIgnoreCase(type) && "ARR".equalsIgnoreCase(name)) {
             okay = processArr(parent);
         } else {
-            log.warn("Unknown actor type or name. Expecting name=arr and type=SecureNode but got name=" +
-                    name + " type=" + type);
+            log.warn("Unknown actor type or name. Expecting name=arr and type=SecureNode but got name="
+                    + name + " type=" + type);
             okay = false;
         }
         return okay;
@@ -214,8 +222,8 @@ public class ServerConfiguration {
             servers.add(server);
             return true;
         } else {
-            log.warn("No connections defined for server. This ARR will be not able to receive Syslog Messages.\n" +
-                    "The service will shut down unless you it is being run from inside a separate execution thread.");
+            log.warn("No connections defined for server. This ARR will be not able to receive Syslog Messages.\n"
+                    + "The service will shut down unless it is being run from inside a separate execution thread.");
             return false;
         }
 
@@ -225,16 +233,20 @@ public class ServerConfiguration {
         boolean okay = false;
         // Get out the file name
         String filename = element.getAttribute("file");
-        if (filename == null) filename = element.getAttribute("name");
-        if (filename == null) filename = element.getTextContent().trim();
+        if (filename == null) {
+            filename = element.getAttribute("name");
+        }
+        if (filename == null) {
+            filename = element.getTextContent().trim();
+        }
         if (filename != null) {
             // Got the connection file name, load it
             File includeFile = new File(configFile.getParentFile(), filename);
             if (ConnectionFactory.loadConnectionDescriptionsFromFile(includeFile)) {
                 okay = true;
             } else {
-                throw new RuntimeException("Error loading connection file \"" +
-                        filename + "\" from config file:" + configFile.getAbsolutePath());
+                throw new RuntimeException("Error loading connection file \""
+                        + filename + "\" from config file:" + configFile.getAbsolutePath());
             }
         } else {
             // No connection file name given
@@ -248,16 +260,20 @@ public class ServerConfiguration {
         boolean okay = false;
         // Get out the file name
         String filename = element.getAttribute("file");
-        if (filename == null) filename = element.getAttribute("name");
-        if (filename == null) filename = element.getTextContent().trim();
+        if (filename == null) {
+            filename = element.getAttribute("name");
+        }
+        if (filename == null) {
+            filename = element.getTextContent().trim();
+        }
         if (filename != null) {
             // Got the actor file name, load it
             File includeFile = new File(configFile.getParentFile(), filename);
             if (loadActors(includeFile)) {
                 okay = true;
             } else {
-                throw new RuntimeException("Error loading actor file \"" +
-                        filename + "\" in config file:" + configFile.getAbsolutePath());
+                throw new RuntimeException("Error loading actor file \""
+                        + filename + "\" in config file:" + configFile.getAbsolutePath());
             }
         } else {
             // No connection file name given

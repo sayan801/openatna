@@ -26,7 +26,12 @@ import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -70,14 +75,16 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         return list(criteria().add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
-    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem) throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem)
+            throws AtnaPersistenceException {
         return uniqueResult(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
-    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName) throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName)
+            throws AtnaPersistenceException {
         return uniqueResult(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
@@ -85,15 +92,18 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
 
     }
 
-    public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type)
+            throws AtnaPersistenceException {
         return list(criteria(fromCodeType(type)).add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
-    public List<? extends CodeEntity> getBySystemNameAndType(String codeSystemName, CodeEntity.CodeType type) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getBySystemNameAndType(String codeSystemName, CodeEntity.CodeType type)
+            throws AtnaPersistenceException {
         return list(criteria(fromCodeType(type)).add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
-    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem, String codeSystemName) throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem,
+                                                      String codeSystemName) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("codeSystemName", codeSystemName))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("type", type))
@@ -130,7 +140,8 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         String sys = code.getCodeSystem();
         String name = code.getCodeSystemName();
         if (c == null) {
-            throw new AtnaPersistenceException("no code in code entity", AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+            throw new AtnaPersistenceException("no code in code entity",
+                    AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
         }
         if (sys == null && name == null) {
             return null;

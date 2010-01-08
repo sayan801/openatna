@@ -37,7 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @Transactional(rollbackFor = AtnaPersistenceException.class)
-public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<NetworkAccessPointEntity> implements NetworkAccessPointDao {
+public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<NetworkAccessPointEntity>
+        implements NetworkAccessPointDao {
 
     public HibernateNetworkAccessPointDao(SessionFactory sessionFactory) {
         super(NetworkAccessPointEntity.class, sessionFactory);
@@ -47,15 +48,18 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
         return get(id);
     }
 
-    public NetworkAccessPointEntity getByTypeAndIdentifier(Short type, String identifier) throws AtnaPersistenceException {
-        return uniqueResult(criteria().add(Restrictions.eq("type", type)).add(Restrictions.eq("identifier", identifier)));
+    public NetworkAccessPointEntity getByTypeAndIdentifier(Short type, String identifier)
+            throws AtnaPersistenceException {
+        return uniqueResult(criteria().add(Restrictions.eq("type", type))
+                .add(Restrictions.eq("identifier", identifier)));
     }
 
     public List<? extends NetworkAccessPointEntity> getByType(Short type) throws AtnaPersistenceException {
         return list(criteria().add(Restrictions.eq("type", type)));
     }
 
-    public List<? extends NetworkAccessPointEntity> getByIdentifier(String identifier) throws AtnaPersistenceException {
+    public List<? extends NetworkAccessPointEntity> getByIdentifier(String identifier)
+            throws AtnaPersistenceException {
         return list(criteria().add(Restrictions.eq("identifier", identifier)));
     }
 
@@ -82,7 +86,8 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
         return true;
     }
 
-    private boolean isDuplicate(NetworkAccessPointEntity nap, PersistencePolicies policies) throws AtnaPersistenceException {
+    private boolean isDuplicate(NetworkAccessPointEntity nap, PersistencePolicies policies)
+            throws AtnaPersistenceException {
         NetworkAccessPointEntity entity = getByTypeAndIdentifier(nap.getType(), nap.getIdentifier());
         if (entity != null) {
             if (policies.isErrorOnDuplicateInsert()) {

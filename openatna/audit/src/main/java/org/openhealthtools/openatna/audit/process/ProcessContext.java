@@ -37,6 +37,7 @@ public class ProcessContext {
         INITIALIZED,
         VALIDATED,
         PERSISTED,
+        ABORTED,
         ERROR
     }
 

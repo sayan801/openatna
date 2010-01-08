@@ -20,6 +20,8 @@
 package org.openhealthtools.openatna.dist.test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -27,6 +29,8 @@ import java.util.List;
 
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.ProvisionalMessage;
+import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
 import org.junit.Test;
@@ -75,6 +79,52 @@ public class UdpClientTest0 extends ClientTest {
             e.printStackTrace();
         } catch (SyslogException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testProvMessage() {
+        try {
+            ProvisionalMessage message = new ProvisionalMessage(prov.getBytes("UTF-8"));
+            ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new ProvLogMessage(message), "Spartacus", "PDQIN", "777");
+            InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
+            DatagramSocket s = new DatagramSocket();
+            byte[] bytes = sl.toByteArray();
+            DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, addr);
+            s.send(packet);
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SyslogException e) {
+            e.printStackTrace();
+        }
+    }
+
+    String prov = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+            "<IHEYr4>Stuff we don't care about</IHEYr4>";
+
+    static class ProvLogMessage implements LogMessage<ProvisionalMessage> {
+
+        private ProvisionalMessage msg;
+
+        ProvLogMessage(ProvisionalMessage msg) {
+            this.msg = msg;
+        }
+
+        public String getExpectedEncoding() {
+            return "UTF-8";
+        }
+
+        public void read(InputStream in, String encoding) throws IOException {
+        }
+
+        public void write(OutputStream out) throws IOException {
+            out.write(msg.getContent());
+            out.flush();
+        }
+
+        public ProvisionalMessage getMessageObject() {
+            return msg;
         }
     }
 

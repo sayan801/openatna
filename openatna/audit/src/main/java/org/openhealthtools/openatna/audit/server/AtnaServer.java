@@ -36,14 +36,12 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 /**
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Oct 21, 2009: 11:53:38 AM
  * @date $Date:$ modified by $Author:$
  */
 
 public class AtnaServer implements SyslogServer {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.AtnaServer");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.AtnaServer");
 
     private IConnectionDescription tlsConnection;
     private IConnectionDescription udpConnection;
@@ -117,7 +115,7 @@ public class AtnaServer implements SyslogServer {
         try {
             stop();
         } catch (IOException e) {
-            //e.printStackTrace();
+            log.debug(e);
         }
     }
 
@@ -125,10 +123,10 @@ public class AtnaServer implements SyslogServer {
 
         private void add() {
             try {
-                Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook", new Class[]{java.lang.Thread.class});
+                Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook",
+                        new Class[]{java.lang.Thread.class});
                 shutdownHook.invoke(Runtime.getRuntime(), new Object[]{this});
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -148,6 +146,7 @@ public class AtnaServer implements SyslogServer {
                 try {
                     Thread.sleep(500);
                 } catch (Exception e) {
+                    log.debug(e);
                     //e.printStackTrace();
                 }
                 destroyed = true;
@@ -155,4 +154,5 @@ public class AtnaServer implements SyslogServer {
             log.info("AtnaServer$ShutdownHook.run EXIT");
         }
     }
+
 }

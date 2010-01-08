@@ -19,7 +19,14 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 
 /**
  * @author Andrew Harrison
@@ -72,12 +79,18 @@ public class MessageSourceEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MessageSourceEntity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MessageSourceEntity)) {
+            return false;
+        }
 
         MessageSourceEntity that = (MessageSourceEntity) o;
 
-        if (getSource() != null ? !getSource().equals(that.getSource()) : that.getSource() != null) return false;
+        if (getSource() != null ? !getSource().equals(that.getSource()) : that.getSource() != null) {
+            return false;
+        }
 
         return true;
     }

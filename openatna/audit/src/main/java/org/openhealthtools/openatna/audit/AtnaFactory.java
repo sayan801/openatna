@@ -19,7 +19,14 @@
 
 package org.openhealthtools.openatna.audit;
 
-import org.openhealthtools.openatna.audit.persistence.dao.*;
+import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.audit.persistence.dao.EntityDao;
+import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ProvisionalDao;
+import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
 import org.openhealthtools.openatna.audit.service.AuditService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -37,11 +44,11 @@ public class AtnaFactory {
     private static AtnaFactory instance;
 
 
-    private AtnaFactory(ApplicationContext context) {
+    private AtnaFactory(final ApplicationContext context) {
         this.context = context;
     }
 
-    private Object getComponent(String value) {
+    private Object getComponent(final String value) {
         return context.getBean(value);
     }
 
@@ -63,7 +70,7 @@ public class AtnaFactory {
         instance = new AtnaFactory(context);
     }
 
-    private static synchronized Object getBean(String id) {
+    private static synchronized Object getBean(final String id) {
         if (instance == null) {
             initialize(null);
         }
@@ -102,5 +109,8 @@ public class AtnaFactory {
         return (AuditService) getBean("auditService");
     }
 
+    public static ProvisionalDao provisionalDao() {
+        return (ProvisionalDao) getBean("provisionalDao");
+    }
 
 }

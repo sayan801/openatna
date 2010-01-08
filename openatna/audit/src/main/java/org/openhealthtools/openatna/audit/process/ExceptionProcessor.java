@@ -21,7 +21,11 @@ package org.openhealthtools.openatna.audit.process;
 
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.audit.AuditException;
-import org.openhealthtools.openatna.audit.log.*;
+import org.openhealthtools.openatna.audit.log.AtnaErrorLogger;
+import org.openhealthtools.openatna.audit.log.AuditErrorLogger;
+import org.openhealthtools.openatna.audit.log.ErrorLogger;
+import org.openhealthtools.openatna.audit.log.PersistenceErrorLogger;
+import org.openhealthtools.openatna.audit.log.SyslogErrorLogger;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.syslog.SyslogException;
 

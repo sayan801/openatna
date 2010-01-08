@@ -22,7 +22,12 @@ package org.openhealthtools.openatna.audit.persistence.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,9 +41,27 @@ import org.openhealthtools.openatna.anom.Timestamp;
 import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
-import org.openhealthtools.openatna.audit.persistence.dao.*;
-import org.openhealthtools.openatna.audit.persistence.model.*;
-import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
+import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
 
 /**
  * Reads an XML file and loads entities into the DB.
@@ -578,8 +601,8 @@ public class DataReader {
                                 Node node = ch.item(j);
                                 if (node instanceof Element) {
                                     Element child = (Element) node;
-                                    boolean enc = child.getAttribute("encoded") != null &&
-                                            child.getAttribute("encoded").equalsIgnoreCase("true");
+                                    boolean enc = child.getAttribute("encoded") != null
+                                            && child.getAttribute("encoded").equalsIgnoreCase("true");
                                     if (child.getLocalName().equals(QUERY)) {
                                         String q = child.getTextContent();
                                         if (q != null) {
@@ -590,6 +613,7 @@ public class DataReader {
                                             try {
                                                 p.setObjectQuery(q.getBytes("UTF-8"));
                                             } catch (UnsupportedEncodingException e) {
+                                                e.printStackTrace();
                                                 // shouldn't happen
                                             }
                                         }
@@ -603,9 +627,11 @@ public class DataReader {
                                                     val = Base64.encodeString(val);
                                                 }
                                                 try {
-                                                    ObjectDetailEntity ode = new ObjectDetailEntity(type, val.getBytes("UTF-8"));
+                                                    ObjectDetailEntity ode
+                                                            = new ObjectDetailEntity(type, val.getBytes("UTF-8"));
                                                     p.addObjectDetail(ode);
                                                 } catch (UnsupportedEncodingException e) {
+                                                    e.printStackTrace();
                                                     // shouldn't happen
                                                 }
                                             }

@@ -188,4 +188,8 @@
     <bean id="entityDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateEntityDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
+
+    <bean id="provisionalDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateProvisionalDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
 </beans>

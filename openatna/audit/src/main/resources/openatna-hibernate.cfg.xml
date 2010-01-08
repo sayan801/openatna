@@ -37,6 +37,6 @@
         <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity"/>
         <mapping class="org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity"/>
         <mapping class="org.openhealthtools.openatna.audit.persistence.model.DetailTypeEntity"/>
-
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.ProvisionalEntity"/>
     </session-factory>
 </hibernate-configuration>

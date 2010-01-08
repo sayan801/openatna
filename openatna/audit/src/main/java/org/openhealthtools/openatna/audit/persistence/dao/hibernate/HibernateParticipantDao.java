@@ -61,8 +61,10 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         return uniqueResult(criteria().add(Restrictions.eq("alternativeUserId", altUserId)));
     }
 
-    public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("participantTypeCodes").add(Restrictions.eq("code", codeEntity.getCode()))
+    public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity)
+            throws AtnaPersistenceException {
+        return list(criteria().createCriteria("participantTypeCodes")
+                .add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
@@ -109,7 +111,8 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
                     if (policies.isAllowNewCodes()) {
                         cd.save(code, policies);
                     } else {
-                        throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                        throw new AtnaPersistenceException(code.toString(),
+                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                     }
                 }
             }
@@ -121,13 +124,12 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
             ParticipantEntity existing = getByUserId(pe.getUserId());
             if (existing != null) {
                 if (policies.isErrorOnDuplicateInsert()) {
-                    throw new AtnaPersistenceException(pe.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_PARTICIPANT);
+                    throw new AtnaPersistenceException(pe.toString(),
+                            AtnaPersistenceException.PersistenceError.DUPLICATE_PARTICIPANT);
                 } else {
                     return;
                 }
             }
-        } else {
-            // from DB - update. All ok?
         }
         currentSession().saveOrUpdate(pe);
     }

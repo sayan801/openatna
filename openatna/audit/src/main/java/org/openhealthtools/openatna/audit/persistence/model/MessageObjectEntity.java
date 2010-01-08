@@ -22,7 +22,14 @@ package org.openhealthtools.openatna.audit.persistence.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 @Entity
@@ -96,15 +103,28 @@ public class MessageObjectEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MessageObjectEntity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MessageObjectEntity)) {
+            return false;
+        }
 
         MessageObjectEntity that = (MessageObjectEntity) o;
 
-        if (details != null ? !details.equals(that.details) : that.details != null) return false;
-        if (object != null ? !object.equals(that.object) : that.object != null) return false;
-        if (objectDataLifeCycle != null ? !objectDataLifeCycle.equals(that.objectDataLifeCycle) : that.objectDataLifeCycle != null) return false;
-        if (objectQuery != null ? !objectQuery.equals(that.objectQuery) : that.objectQuery != null) return false;
+        if (details != null ? !details.equals(that.details) : that.details != null) {
+            return false;
+        }
+        if (object != null ? !object.equals(that.object) : that.object != null) {
+            return false;
+        }
+        if (objectDataLifeCycle != null ? !objectDataLifeCycle.equals(that.objectDataLifeCycle)
+                : that.objectDataLifeCycle != null) {
+            return false;
+        }
+        if (objectQuery != null ? !objectQuery.equals(that.objectQuery) : that.objectQuery != null) {
+            return false;
+        }
 
         return true;
     }

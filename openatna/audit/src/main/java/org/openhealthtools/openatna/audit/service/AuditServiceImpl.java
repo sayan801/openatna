@@ -56,7 +56,7 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
 
 public class AuditServiceImpl implements AuditService {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.service.AuditServiceImpl");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.service.AuditServiceImpl");
 
     private ServerConfiguration serverConfig;
     private ServiceConfiguration serviceConfig = new ServiceConfiguration();
@@ -82,7 +82,8 @@ public class AuditServiceImpl implements AuditService {
             List<String> ap = processors.get(phase);
             for (String atnaProcessor : ap) {
                 try {
-                    AtnaProcessor proc = (AtnaProcessor) Class.forName(atnaProcessor, true, getClass().getClassLoader()).newInstance();
+                    AtnaProcessor proc = (AtnaProcessor) Class.forName(atnaProcessor, true,
+                            getClass().getClassLoader()).newInstance();
                     chain.addNext(proc, phase);
                 } catch (Exception e) {
                     log.warn("Could not load processor " + atnaProcessor);

@@ -43,7 +43,10 @@ import org.openhealthtools.openatna.audit.persistence.util.EntityConverter;
 
 public class CodeLoader {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.util.CodeLoader");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.util.CodeLoader");
+
+    private CodeLoader() {
+    }
 
     public static void main(String[] args) {
         URL codes = CodeLoader.class.getResource("/conf/atnacodes.xml");

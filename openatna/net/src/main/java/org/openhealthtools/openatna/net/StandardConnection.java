@@ -19,36 +19,43 @@
  */
 package org.openhealthtools.openatna.net;
 
-import java.net.Socket;
 import java.io.IOException;
+import java.net.Socket;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
-/** A standard non encrypted tcp connection.
- * 
+/**
+ * A standard non encrypted tcp connection.
+ * <p/>
  * This should not be created directly but rather, requested from the ConnectionFactory.
- * 
- * @see ConnectionFactory
+ *
  * @author Josh Flachsbart
+ * @see ConnectionFactory
  */
 public class StandardConnection extends GenericConnection {
-	private static final Logger LOG = Logger.getLogger(StandardConnection.class.getName());
 
-	/** Used by the factory to create a connection. */
-	public StandardConnection(IConnectionDescription connectionDescription) {
-		super(connectionDescription);
-	}
-	
-	/** Used by factory to start the connection. */
-	public void connect() {
-		try {
-			socket = new Socket(description.getHostname(), description.getPort());
-			// TODO add ATNA logging message, perhaps in finally?
-		} catch (IOException e) {
-			LOG.error("Failed to create a socket on hostname:" + description.getHostname() 
-					+" port:" + description.getPort(), e);
-			socket = null;
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.StandardConnection");
+
+    /**
+     * Used by the factory to create a connection.
+     */
+    public StandardConnection(IConnectionDescription connectionDescription) {
+        super(connectionDescription);
+    }
+
+    /**
+     * Used by factory to start the connection.
+     */
+    public void connect() {
+        try {
+            socket = new Socket(description.getHostname(), description.getPort());
+            // TODO add ATNA logging message, perhaps in finally?
+        } catch (IOException e) {
+            log.error("Failed to create a socket on hostname:" + description.getHostname()
+                    + " port:" + description.getPort(), e);
+            socket = null;
 		}
 	}
 }

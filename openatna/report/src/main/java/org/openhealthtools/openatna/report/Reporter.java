@@ -20,6 +20,7 @@
 package org.openhealthtools.openatna.report;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -317,7 +318,7 @@ public class Reporter {
 
     public static void main(String[] args) {
         try {
-            InputStream in = Reporter.class.getResourceAsStream("/rc.xml");
+            InputStream in = new FileInputStream(args[0]);//Reporter.class.getResourceAsStream("/rc.xml");
             ReportConfig rc = ReportConfig.fromXml(in);
             Reporter r = new Reporter(rc);
             System.out.println(r.report());

@@ -64,7 +64,8 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
     }
 
     public List<? extends SourceEntity> getByCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("sourceTypeCodes").add(Restrictions.eq("code", codeEntity.getCode()))
+        return list(criteria().createCriteria("sourceTypeCodes")
+                .add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
@@ -82,7 +83,8 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                 SourceCodeEntity code = arr[i];
                 CodeEntity ce = cd.find(code);
                 if (!(ce instanceof SourceCodeEntity)) {
-                    throw new AtnaPersistenceException(ce.toString(), AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    throw new AtnaPersistenceException(ce.toString(),
+                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                 }
                 code = (SourceCodeEntity) ce;
                 if (code.getVersion() != null) {
@@ -91,7 +93,8 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                     if (policies.isAllowNewCodes()) {
                         cd.save(code, policies);
                     } else {
-                        throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                        throw new AtnaPersistenceException(code.toString(),
+                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                     }
                 }
             }
@@ -102,13 +105,12 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
             SourceEntity existing = getBySourceId(entity.getSourceId());
             if (existing != null) {
                 if (policies.isErrorOnDuplicateInsert()) {
-                    throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
+                    throw new AtnaPersistenceException(entity.toString(),
+                            AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
                 } else {
                     return;
                 }
             }
-        } else {
-            // from DB - update. All ok?
         }
         currentSession().saveOrUpdate(entity);
     }

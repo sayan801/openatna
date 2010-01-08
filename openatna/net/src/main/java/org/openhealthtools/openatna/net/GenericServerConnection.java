@@ -19,13 +19,14 @@
  */
 package org.openhealthtools.openatna.net;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import org.apache.log4j.Logger;
 
-import java.net.ServerSocket;
-import java.io.IOException;
-
-/** An abstract implementation of IServerConnection which does a number of items required by all connections. <p />
- *
+/**
+ * An abstract implementation of IServerConnection which does a number of items required by all connections. <p />
+ * <p/>
  * To make a new type of connection which requires these features simply extend this class
  * and implement the additionally required features.  Remember that the connect call is
  * where the socket (or other connection type) should be made.
@@ -33,11 +34,17 @@ import java.io.IOException;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public abstract class GenericServerConnection implements IServerConnection {
-    /** The actual connection. */
+    /**
+     * The actual connection.
+     */
     protected ServerSocket ssocket = null;
-    /** The description of the connection. This includes everything needed to connect. */
+    /**
+     * The description of the connection. This includes everything needed to connect.
+     */
     protected IConnectionDescription description = null;
-    /** Package level logger for debugging only. */
+    /**
+     * Package level logger for debugging only.
+     */
     protected static final Logger LOG = Logger.getLogger(GenericServerConnection.class.getPackage().getName());
 
     public GenericServerConnection(IConnectionDescription connectionDescription) {
@@ -56,7 +63,9 @@ public abstract class GenericServerConnection implements IServerConnection {
      */
     public boolean isServerConnectionValid() {
         boolean isValid = false;
-        if (ssocket != null) isValid = ssocket.isBound();
+        if (ssocket != null) {
+            isValid = ssocket.isBound();
+        }
         return isValid;
     }
 
@@ -65,7 +74,9 @@ public abstract class GenericServerConnection implements IServerConnection {
      */
     public ServerSocket getServerSocket() {
         ServerSocket returnVal = null;
-        if (isServerConnectionValid()) returnVal = ssocket;
+        if (isServerConnectionValid()) {
+            returnVal = ssocket;
+        }
         // TODO add logging message.
         return returnVal;
     }
@@ -75,16 +86,22 @@ public abstract class GenericServerConnection implements IServerConnection {
      */
     public void closeServerConnection() {
         if (isServerConnectionValid()) {
-            try { ssocket.close(); }
-            catch (IOException e) { ; } // TODO add logging message.
+            try {
+                ssocket.close();
+            }
+            catch (IOException e) {
+                ;
+            } // TODO add logging message.
             // TODO add ATNA message?
         }
         ssocket = null;
     }
 
-    /** This function must be instantiated by the subclasses
+    /**
+     * This function must be instantiated by the subclasses
      * because it generates all the actual server sockets when the
-     * connection is made.*/
+     * connection is made.
+     */
     public abstract void connect();
 
 }

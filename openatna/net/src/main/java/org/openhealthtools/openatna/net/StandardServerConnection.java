@@ -19,33 +19,40 @@
  */
 package org.openhealthtools.openatna.net;
 
-import java.net.ServerSocket;
 import java.io.IOException;
+import java.net.ServerSocket;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-/** A standard non encrypted tcp server connection.
- *
+/**
+ * A standard non encrypted tcp server connection.
+ * <p/>
  * This should not be created directly but rather, requested from the ConnectionFactory.
  *
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public class StandardServerConnection extends GenericServerConnection {
-	private static final Logger LOG = Logger.getLogger(StandardServerConnection.class.getName());
 
-	/** Used by the factory to create a connection. */
-	public StandardServerConnection(IConnectionDescription connectionDescription) {
-		super(connectionDescription);
-	}
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.StandardServerConnection");
 
-	/** Used by factory to start the connection. */
-	public void connect() {
-		try {
-			ssocket = new ServerSocket(description.getPort());
+    /**
+     * Used by the factory to create a connection.
+     */
+    public StandardServerConnection(IConnectionDescription connectionDescription) {
+        super(connectionDescription);
+    }
+
+    /**
+     * Used by factory to start the connection.
+     */
+    public void connect() {
+        try {
+            ssocket = new ServerSocket(description.getPort());
             // TODO add ATNA logging message, perhaps in finally?
-		} catch (IOException e) {
-			LOG.error("Failed to create a server socket on port:" + description.getPort(), e);
-			ssocket = null;
+        } catch (IOException e) {
+            LOG.error("Failed to create a server socket on port:" + description.getPort(), e);
+            ssocket = null;
 		}
 	}
 }

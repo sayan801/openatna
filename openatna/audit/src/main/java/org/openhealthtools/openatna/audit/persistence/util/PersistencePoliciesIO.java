@@ -26,7 +26,11 @@ import java.io.OutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
@@ -56,6 +60,9 @@ public class PersistencePoliciesIO {
     public static final String ALLOW_UNKNOWN_DETAIL_TYPES = "allowUnknownDetailTypes";
     public static final String ALLOW_MODIFY_MESSAGES = "allowModifyMessages";
     public static final String ERROR_ON_DUPLICATE_INSERT = "errorOnDuplicateInsert";
+
+    private PersistencePoliciesIO() {
+    }
 
     public static void write(OutputStream out, PersistencePolicies policies) throws IOException {
         Document doc = newDocument();
@@ -92,8 +99,8 @@ public class PersistencePoliciesIO {
 
     public static PersistencePolicies read(Element parent) throws IOException {
         if (!parent.getTagName().equals(POLICIES)) {
-            throw new IOException("unknown element. Got " + parent.getTagName() +
-                    " but expected " + POLICIES);
+            throw new IOException("unknown element. Got " + parent.getTagName()
+                    + " but expected " + POLICIES);
         }
         PersistencePolicies pp = new PersistencePolicies();
         NodeList ch = parent.getChildNodes();
@@ -169,10 +176,11 @@ public class PersistencePoliciesIO {
         Transformer t = null;
         try {
             t = tf.newTransformer();
-            if (indent)
+            if (indent) {
                 t.setOutputProperty(OutputKeys.INDENT, "yes");
-            else
+            } else {
                 t.setOutputProperty(OutputKeys.INDENT, "no");
+            }
             t.setOutputProperty(OutputKeys.METHOD, "xml");
             t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         } catch (TransformerConfigurationException tce) {

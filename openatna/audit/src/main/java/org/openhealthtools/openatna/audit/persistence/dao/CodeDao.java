@@ -37,23 +37,30 @@ public interface CodeDao extends Dao {
 
     public CodeEntity getById(Long id) throws AtnaPersistenceException;
 
-    public List<? extends CodeEntity> getByType(CodeEntity.CodeType type) throws AtnaPersistenceException;
+    public List<? extends CodeEntity> getByType(CodeEntity.CodeType type)
+            throws AtnaPersistenceException;
 
     public CodeEntity getByCode(String code) throws AtnaPersistenceException;
 
     public List<? extends CodeEntity> getByCodeSystem(String codeSystem) throws AtnaPersistenceException;
 
-    public List<? extends CodeEntity> getByCodeSystemName(String codeSystemName) throws AtnaPersistenceException;
+    public List<? extends CodeEntity> getByCodeSystemName(String codeSystemName)
+            throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem) throws AtnaPersistenceException;
+    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem)
+            throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName) throws AtnaPersistenceException;
+    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName)
+            throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem, String codeSystemName) throws AtnaPersistenceException;
+    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem,
+                                                      String codeSystemName) throws AtnaPersistenceException;
 
-    public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type) throws AtnaPersistenceException;
+    public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type)
+            throws AtnaPersistenceException;
 
-    public List<? extends CodeEntity> getBySystemNameAndType(String codeSystemName, CodeEntity.CodeType type) throws AtnaPersistenceException;
+    public List<? extends CodeEntity> getBySystemNameAndType(String codeSystemName, CodeEntity.CodeType type)
+            throws AtnaPersistenceException;
 
     public List<? extends CodeEntity> getAll() throws AtnaPersistenceException;
 

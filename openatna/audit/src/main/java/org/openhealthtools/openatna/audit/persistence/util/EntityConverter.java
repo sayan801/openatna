@@ -22,9 +22,37 @@ package org.openhealthtools.openatna.audit.persistence.util;
 import java.util.List;
 import java.util.Set;
 
-import org.openhealthtools.openatna.anom.*;
-import org.openhealthtools.openatna.audit.persistence.model.*;
-import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.AtnaMessageObject;
+import org.openhealthtools.openatna.anom.AtnaMessageParticipant;
+import org.openhealthtools.openatna.anom.AtnaObject;
+import org.openhealthtools.openatna.anom.AtnaObjectDetail;
+import org.openhealthtools.openatna.anom.AtnaParticipant;
+import org.openhealthtools.openatna.anom.AtnaSource;
+import org.openhealthtools.openatna.anom.EventAction;
+import org.openhealthtools.openatna.anom.EventOutcome;
+import org.openhealthtools.openatna.anom.NetworkAccessPoint;
+import org.openhealthtools.openatna.anom.ObjectDataLifecycle;
+import org.openhealthtools.openatna.anom.ObjectType;
+import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
+import org.openhealthtools.openatna.audit.persistence.model.DetailTypeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
+
 
 /**
  * Converts between ANOM objects and persistable objects.
@@ -37,11 +65,14 @@ import org.openhealthtools.openatna.audit.persistence.model.codes.*;
 
 public class EntityConverter {
 
+    private EntityConverter() {
+    }
 
     public static MessageEntity createMessage(AtnaMessage message) {
 
         CodeEntity code = createCode(message.getEventCode(), CodeEntity.CodeType.EVENT_ID);
-        MessageEntity ent = new MessageEntity((EventIdCodeEntity) code, new Integer(message.getEventOutcome().value()));
+        MessageEntity ent = new MessageEntity((EventIdCodeEntity) code,
+                new Integer(message.getEventOutcome().value()));
         ent.setEventDateTime(message.getEventDateTime());
         if (message.getEventActionCode() != null) {
             ent.setEventActionCode(message.getEventActionCode().value());
@@ -100,8 +131,8 @@ public class EntityConverter {
         MessageParticipantEntity e = new MessageParticipantEntity();
         e.setParticipant(createParticipant(participant.getParticipant()));
         e.setUserIsRequestor(participant.isUserIsRequestor());
-        if (participant.getNetworkAccessPointId() != null &&
-                participant.getNetworkAccessPointType() != null) {
+        if (participant.getNetworkAccessPointId() != null
+                && participant.getNetworkAccessPointType() != null) {
             NetworkAccessPointEntity na = new NetworkAccessPointEntity();
             na.setIdentifier(participant.getNetworkAccessPointId());
             na.setType((short) participant.getNetworkAccessPointType().value());

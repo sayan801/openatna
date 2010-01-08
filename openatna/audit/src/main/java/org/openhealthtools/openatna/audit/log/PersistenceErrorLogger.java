@@ -37,9 +37,13 @@ import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 
 public class PersistenceErrorLogger {
 
-    static Log log = LogFactory.getLog("ATNA.PERSISTENCE_ERROR_LOG");
+    private static Log log = LogFactory.getLog("ATNA.PERSISTENCE_ERROR_LOG");
 
-    private static List<ErrorHandler<AtnaPersistenceException>> handlers = new ArrayList<ErrorHandler<AtnaPersistenceException>>();
+    private static List<ErrorHandler<AtnaPersistenceException>> handlers
+            = new ArrayList<ErrorHandler<AtnaPersistenceException>>();
+
+    private PersistenceErrorLogger() {
+    }
 
     public static void addErrorHandler(ErrorHandler<AtnaPersistenceException> handler) {
         handlers.add(handler);

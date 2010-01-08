@@ -128,4 +128,5 @@ public class PersistencePolicies {
     public void setAllowModifyObjects(boolean allowModifyObjects) {
         this.allowModifyObjects = allowModifyObjects;
     }
+
 }

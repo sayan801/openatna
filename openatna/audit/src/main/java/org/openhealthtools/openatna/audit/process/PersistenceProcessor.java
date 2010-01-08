@@ -39,7 +39,7 @@ import org.openhealthtools.openatna.audit.service.AuditService;
 
 public class PersistenceProcessor implements AtnaProcessor {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.PersistenceProcessor");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.PersistenceProcessor");
 
 
     public void process(ProcessContext context) throws Exception {

@@ -30,9 +30,37 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.anom.*;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaException;
+import org.openhealthtools.openatna.anom.AtnaIOFactory;
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.AtnaMessageObject;
+import org.openhealthtools.openatna.anom.AtnaMessageParticipant;
+import org.openhealthtools.openatna.anom.AtnaObject;
+import org.openhealthtools.openatna.anom.AtnaObjectDetail;
+import org.openhealthtools.openatna.anom.AtnaParticipant;
+import org.openhealthtools.openatna.anom.AtnaSource;
+import org.openhealthtools.openatna.anom.EventAction;
+import org.openhealthtools.openatna.anom.EventOutcome;
+import org.openhealthtools.openatna.anom.NetworkAccessPoint;
+import org.openhealthtools.openatna.anom.ObjectDataLifecycle;
+import org.openhealthtools.openatna.anom.ObjectType;
+import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
+import org.openhealthtools.openatna.anom.ProvisionalMessage;
 
 /**
  * @author Andrew Harrison
@@ -52,7 +80,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         try {
             jc = JAXBContext.newInstance("org.openhealthtools.openatna.jaxb21");
         } catch (JAXBException e) {
-            // this is fatal and out fault
+            // this is fatal and our fault
             throw new RuntimeException("Error creating JAXB context:", e);
         }
     }
@@ -62,24 +90,26 @@ public class JaxbIOFactory implements AtnaIOFactory {
             throw new AtnaException("Could not create Jaxb Context");
         }
         try {
+            Document doc = newDocument(in);
+            if (doc.getDocumentElement().getTagName().equalsIgnoreCase("IHEYr4")) {
+                return createProv(doc);
+            }
             Unmarshaller u = jc.createUnmarshaller();
-            AuditMessage a = (AuditMessage) u.unmarshal(in);
+            AuditMessage a = (AuditMessage) u.unmarshal(doc);
             AtnaMessage jm = null;
             AtnaException ae = null;
             try {
                 jm = createMessage(a);
             } catch (AtnaException e) {
                 ae = e;
-
             }
             try {
-                if (log.isDebugEnabled()) {
+                if (log.isInfoEnabled()) {
                     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                    /*AuditMessage jmessage = createMessage(jm);*/
                     Marshaller marshaller = jc.createMarshaller();
                     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                     marshaller.marshal(a, bout);
-                    log.debug("Received Audit Message:\n" + new String(bout.toByteArray()));
+                    log.info("\n" + new String(bout.toByteArray()));
                 }
 
             } catch (JAXBException e) {
@@ -92,6 +122,52 @@ public class JaxbIOFactory implements AtnaIOFactory {
         } catch (JAXBException e) {
             throw new AtnaException(e);
         }
+    }
+
+    private Document newDocument(InputStream stream) throws IOException {
+        Document doc = null;
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            doc = db.parse(stream);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        return doc;
+    }
+
+    private StreamResult transform(Document doc, OutputStream out) throws IOException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer t = null;
+        try {
+            t = tf.newTransformer();
+            t.setOutputProperty(OutputKeys.INDENT, "no");
+            t.setOutputProperty(OutputKeys.METHOD, "xml");
+            t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        } catch (TransformerConfigurationException tce) {
+            assert (false);
+        }
+        DOMSource doms = new DOMSource(doc);
+        StreamResult sr = new StreamResult(out);
+        try {
+            t.transform(doms, sr);
+        } catch (TransformerException te) {
+            throw new IOException(te.getMessage());
+        }
+        return sr;
+    }
+
+    private AtnaMessage createProv(Document doc) throws IOException {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        transform(doc, bout);
+        byte[] bytes = bout.toByteArray();
+        if (log.isInfoEnabled()) {
+            log.info("\n" + new String(bytes));
+        }
+        return new ProvisionalMessage(bytes);
     }
 
     public void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException {

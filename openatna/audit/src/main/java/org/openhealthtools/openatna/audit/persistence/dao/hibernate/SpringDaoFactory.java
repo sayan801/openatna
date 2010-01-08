@@ -19,7 +19,14 @@
 
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
-import org.openhealthtools.openatna.audit.persistence.dao.*;
+import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.audit.persistence.dao.DaoFactory;
+import org.openhealthtools.openatna.audit.persistence.dao.EntityDao;
+import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
