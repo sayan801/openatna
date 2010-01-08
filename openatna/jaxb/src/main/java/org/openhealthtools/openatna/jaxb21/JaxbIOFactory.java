@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -58,9 +59,11 @@ import org.openhealthtools.openatna.anom.EventAction;
 import org.openhealthtools.openatna.anom.EventOutcome;
 import org.openhealthtools.openatna.anom.NetworkAccessPoint;
 import org.openhealthtools.openatna.anom.ObjectDataLifecycle;
+import org.openhealthtools.openatna.anom.ObjectDescription;
 import org.openhealthtools.openatna.anom.ObjectType;
 import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
 import org.openhealthtools.openatna.anom.ProvisionalMessage;
+import org.openhealthtools.openatna.anom.SopClass;
 
 /**
  * @author Andrew Harrison
@@ -281,6 +284,30 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (obj.getParticipantObjectTypeCodeRole() != null) {
             ao.setObjectTypeCodeRole(ObjectTypeCodeRole.getRole(obj.getParticipantObjectTypeCodeRole()));
         }
+        List<ParticipantObjectDescriptionType> descs = obj.getParticipantObjectDescription();
+        for (ParticipantObjectDescriptionType desc : descs) {
+            ObjectDescription od = new ObjectDescription();
+            List<ParticipantObjectDescriptionType.MPPS> mpps = desc.getMPPS();
+            for (ParticipantObjectDescriptionType.MPPS mpp : mpps) {
+                od.addMppsUid(mpp.getUID());
+            }
+            List<ParticipantObjectDescriptionType.Accession> accs = desc.getAccession();
+            for (ParticipantObjectDescriptionType.Accession acc : accs) {
+                od.addAccessionNumber(acc.getNumber());
+            }
+            List<ParticipantObjectDescriptionType.SOPClass> sops = desc.getSOPClass();
+            for (ParticipantObjectDescriptionType.SOPClass sop : sops) {
+                SopClass sc = new SopClass();
+                sc.setUid(sop.getUID());
+                sc.setNumberOfInstances(sop.getNumberOfInstances().intValue());
+                List<ParticipantObjectDescriptionType.SOPClass.Instance> insts = sop.getInstance();
+                for (ParticipantObjectDescriptionType.SOPClass.Instance inst : insts) {
+                    sc.addInstanceUid(inst.getUID());
+                }
+                od.addSopClass(sc);
+            }
+            ao.addObjectDescription(od);
+        }
         AtnaMessageObject ret = new AtnaMessageObject(ao);
         List<TypeValuePairType> pairs = obj.getParticipantObjectDetail();
         for (TypeValuePairType pair : pairs) {
@@ -293,6 +320,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (obj.getParticipantObjectDataLifeCycle() != null) {
             ret.setObjectDataLifeCycle(ObjectDataLifecycle.getLifecycle(obj.getParticipantObjectDataLifeCycle()));
         }
+
         return ret;
     }
 
@@ -327,6 +355,37 @@ public class JaxbIOFactory implements AtnaIOFactory {
             pair.setType(detail.getType());
             pair.setValue(detail.getValue());
             ret.getParticipantObjectDetail().add(pair);
+        }
+        List<ObjectDescription> descs = obj.getObject().getDescriptions();
+        for (ObjectDescription desc : descs) {
+            ParticipantObjectDescriptionType dt = new ParticipantObjectDescriptionType();
+            List<String> uids = desc.getMppsUids();
+            for (String uid : uids) {
+                ParticipantObjectDescriptionType.MPPS mpps = new ParticipantObjectDescriptionType.MPPS();
+                mpps.setUID(uid);
+                dt.getMPPS().add(mpps);
+            }
+            List<String> nums = desc.getAccessionNumbers();
+            for (String num : nums) {
+                ParticipantObjectDescriptionType.Accession acc = new ParticipantObjectDescriptionType.Accession();
+                acc.setNumber(num);
+                dt.getAccession().add(acc);
+            }
+            List<SopClass> sops = desc.getSopClasses();
+            for (SopClass sop : sops) {
+                ParticipantObjectDescriptionType.SOPClass sc = new ParticipantObjectDescriptionType.SOPClass();
+                sc.setNumberOfInstances(new BigInteger(Integer.toString(sop.getNumberOfInstances())));
+                sc.setUID(sop.getUid());
+                List<String> insts = sop.getInstanceUids();
+                for (String inst : insts) {
+                    ParticipantObjectDescriptionType.SOPClass.Instance i =
+                            new ParticipantObjectDescriptionType.SOPClass.Instance();
+                    i.setUID(inst);
+                    sc.getInstance().add(i);
+                }
+                dt.getSOPClass().add(sc);
+            }
+            ret.getParticipantObjectDescription().add(dt);
         }
         return ret;
     }

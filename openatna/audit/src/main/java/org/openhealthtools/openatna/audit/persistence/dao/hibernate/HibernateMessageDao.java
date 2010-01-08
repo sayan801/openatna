@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -63,6 +65,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> implements MessageDao {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateMessageDao");
+
 
     public HibernateMessageDao(SessionFactory sessionFactory) {
         super(MessageEntity.class, sessionFactory);
@@ -180,6 +185,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
      * @throws AtnaPersistenceException
      */
     public void save(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException {
+
         normalize(messageEntity, policies);
         currentSession().saveOrUpdate(messageEntity);
     }

@@ -37,8 +37,7 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "sop_classes")
-public class SopClassEntity {
-
+public class SopClassEntity extends PersistentEntity {
 
     private Long id;
     private Integer version;
@@ -90,7 +89,7 @@ public class SopClassEntity {
         this.instanceUids = instanceUids;
     }
 
-    public List<String> getInstanceUidsAsList() {
+    public List<String> instanceUidsAsList() {
         String uids = getInstanceUids();
         String[] vals = uids.split(" ");
         List<String> ret = new ArrayList<String>();
@@ -103,10 +102,10 @@ public class SopClassEntity {
     }
 
     public void addInstanceUid(String uid) {
-        if (instanceUids.length() == 0) {
-            instanceUids = uid;
+        if (getInstanceUids().length() == 0) {
+            setInstanceUids(uid);
         } else {
-            instanceUids += " " + uid;
+            setInstanceUids(getInstanceUids() + " " + uid);
         }
     }
 
@@ -132,6 +131,23 @@ public class SopClassEntity {
         }
 
         return true;
+    }
+
+    public String toString() {
+        return new StringBuilder("[").append(getClass().getName())
+                .append(" id=")
+                .append(getId())
+                .append(", version=")
+                .append(getVersion())
+                .append(", instanceUids=")
+                .append(getInstanceUids())
+                .append(", numberOfInstances=")
+                .append(getNumberOfInstances())
+                .append(", uid=")
+                .append(getUid())
+                .append("]")
+                .toString();
+
     }
 
     @Override

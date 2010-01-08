@@ -21,6 +21,8 @@ package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.AtnaFactory;
@@ -41,6 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> implements ObjectDao {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateObjectDao");
+
 
     public HibernateObjectDao(SessionFactory sessionFactory) {
         super(ObjectEntity.class, sessionFactory);
@@ -83,7 +88,6 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
 
     // TODO - check for INCONSISTENT_REPRESENTATION, e.g sensitivity
     public void save(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
-
         CodeDao cd = AtnaFactory.codeDao();
         ObjectIdTypeCodeEntity code = entity.getObjectIdTypeCode();
         if (code != null) {
