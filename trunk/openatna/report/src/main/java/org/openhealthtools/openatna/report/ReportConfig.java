@@ -29,7 +29,11 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
@@ -77,6 +81,7 @@ public class ReportConfig extends HashMap<String, Object> {
     public static final String PARTICIPANTS = "PARTICIPANTS";
     public static final String OBJECTS = "OBJECTS";
     public static final String NETWORK_ACCESS_POINTS = "NETWORK_ACCESS_POINTS";
+    public static final String PROVISIONAL_MESSAGES = "PROVISIONAL_MESSAGES";
     public static final String ALL_SYSTEM = "ALL_SYSTEM";
     public static final String ALL = "ALL";
 
@@ -289,10 +294,11 @@ public class ReportConfig extends HashMap<String, Object> {
         Transformer t = null;
         try {
             t = tf.newTransformer();
-            if (indent)
+            if (indent) {
                 t.setOutputProperty(OutputKeys.INDENT, "yes");
-            else
+            } else {
                 t.setOutputProperty(OutputKeys.INDENT, "no");
+            }
             t.setOutputProperty(OutputKeys.METHOD, "xml");
             t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         } catch (TransformerConfigurationException tce) {

@@ -236,6 +236,8 @@ public class Reporter {
             return AtnaFactory.sourceDao();
         } else if (target.equals("NapReport")) {
             return AtnaFactory.networkAccessPointDao();
+        } else if (target.equals("ProvisionalReport")) {
+            return AtnaFactory.provisionalDao();
         }
         return null;
     }
@@ -260,6 +262,8 @@ public class Reporter {
             return "SourceReport";
         } else if (target.equals(ReportConfig.NETWORK_ACCESS_POINTS)) {
             return "NapReport";
+        } else if (target.equals(ReportConfig.PROVISIONAL_MESSAGES)) {
+            return "ProvisionalReport";
         }
         return null;
     }
@@ -283,6 +287,8 @@ public class Reporter {
             return "MessageParticipantReport";
         } else if (s.equals("MessageSourceEntity")) {
             return "MessageSourceReport";
+        } else if (s.equals("ProvisionalEntity")) {
+            return "ProvisionalReport";
         }
         return null;
     }
@@ -297,7 +303,8 @@ public class Reporter {
             "ObjectEntity",
             "MessageObjectEntity",
             "NetworkAccessPointEntity",
-            "ObjectDetailEntity"
+            "ObjectDetailEntity",
+            "ProvisionalEntity"
     };
 
     private String guessReportFromHql(String hql) {
