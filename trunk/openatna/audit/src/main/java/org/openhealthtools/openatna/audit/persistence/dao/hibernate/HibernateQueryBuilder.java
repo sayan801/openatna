@@ -98,6 +98,11 @@ public class HibernateQueryBuilder {
                 path.add("object");
                 s = "objectId";
                 break;
+            case OBJECT_NAME:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectName";
+                break;
             case OBJECT_TYPE_CODE:
                 path.add("messageObjects");
                 path.add("object");
@@ -136,6 +141,11 @@ public class HibernateQueryBuilder {
                 path.add("participant");
                 s = "userId";
                 break;
+            case PARTICIPANT_NAME:
+                path.add("messageParticipants");
+                path.add("participant");
+                s = "userName";
+                break;
             case PARTICIPANT_TYPE_CODE:
                 path.add("messageParticipants");
                 path.add("participant");
@@ -158,6 +168,11 @@ public class HibernateQueryBuilder {
                 path.add("messageSources");
                 path.add("source");
                 s = "sourceId";
+                break;
+            case SOURCE_ENTERPRISE_ID:
+                path.add("messageSources");
+                path.add("source");
+                s = "enterpriseSiteId";
                 break;
             case SOURCE_TYPE_CODE:
                 path.add("messageSources");
