@@ -29,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 5, 2009: 1:26:08 PM
+ * @version 1.0.0
  * @date $Date:$ modified by $Author:$
  */
 
