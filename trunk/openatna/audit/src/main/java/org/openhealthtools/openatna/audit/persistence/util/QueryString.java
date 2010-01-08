@@ -19,9 +19,18 @@
 
 package org.openhealthtools.openatna.audit.persistence.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.openhealthtools.openatna.anom.*;
+import org.openhealthtools.openatna.anom.EventAction;
+import org.openhealthtools.openatna.anom.EventOutcome;
+import org.openhealthtools.openatna.anom.NetworkAccessPoint;
+import org.openhealthtools.openatna.anom.ObjectType;
+import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
+import org.openhealthtools.openatna.anom.Timestamp;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
 
 /**
@@ -51,7 +60,10 @@ import org.openhealthtools.openatna.audit.persistence.model.Query;
 
 public class QueryString {
 
-    public static char[] escaped = {'"', '\\'};
+    public static final char[] ESCAPED = {'"', '\\'};
+
+    private QueryString() {
+    }
 
     public static String unescape(String param) {
         boolean afterBaskslash = false;
@@ -63,7 +75,7 @@ public class QueryString {
             } else {
                 if (afterBaskslash) {
                     boolean toescape = false;
-                    for (char c1 : escaped) {
+                    for (char c1 : ESCAPED) {
                         if (c == c1) {
                             toescape = true;
                             break;
@@ -84,7 +96,7 @@ public class QueryString {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < param.length(); i++) {
             char c = param.charAt(i);
-            for (char c1 : escaped) {
+            for (char c1 : ESCAPED) {
                 if (c == c1) {
                     sb.append('\\');
                     break;
@@ -96,21 +108,26 @@ public class QueryString {
     }
 
     private static Object getObjectForType(Query.Target target, String value) {
-        if (value.equalsIgnoreCase("true") ||
-                value.equalsIgnoreCase("false")) {
+        if (value.equalsIgnoreCase("true")
+                || value.equalsIgnoreCase("false")) {
             return new Boolean(value.toLowerCase());
         }
         switch (target) {
             case EVENT_ACTION:
-                return EventAction.getAction(value);
+                //return EventAction.getAction(value);
+                return value;
             case EVENT_OUTCOME:
-                return EventOutcome.getOutcome(Integer.parseInt(value));
+                //return EventOutcome.getOutcome(Integer.parseInt(value));
+                return Integer.parseInt(value);
             case OBJECT_TYPE:
-                return ObjectType.getType(Integer.parseInt(value));
+                //return ObjectType.getType(Integer.parseInt(value));
+                return Integer.parseInt(value);
             case OBJECT_TYPE_ROLE:
-                return ObjectTypeCodeRole.getRole(Integer.parseInt(value));
+                //return ObjectTypeCodeRole.getRole(Integer.parseInt(value));
+                return Integer.parseInt(value);
             case NETWORK_ACCESS_POINT_TYPE:
-                return NetworkAccessPoint.getAccessPoint(Integer.parseInt(value));
+                //return NetworkAccessPoint.getAccessPoint(Integer.parseInt(value));
+                return Integer.parseInt(value);
             case EVENT_TIME:
                 return Timestamp.parseToDate(value);
             default:
@@ -224,7 +241,7 @@ public class QueryString {
                     if (afterBackslash) {
                         afterBackslash = false;
                         boolean shouldBeEscaped = false;
-                        for (char c1 : escaped) {
+                        for (char c1 : ESCAPED) {
                             if (c == c1) {
                                 shouldBeEscaped = true;
                                 break;
@@ -261,8 +278,8 @@ public class QueryString {
     }
 
     private static Query buildQuery(List<String> targets, List<String> conditions, List<String> values) {
-        if (targets.size() != conditions.size() &&
-                conditions.size() != values.size()) {
+        if (targets.size() != conditions.size()
+                && conditions.size() != values.size()) {
             throw new IllegalArgumentException("targets, conditions and values are not the same size");
         }
         Query query = new Query();

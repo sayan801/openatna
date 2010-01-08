@@ -50,8 +50,14 @@ public class PhaseProcessor implements AtnaProcessor {
     }
 
     public void process(ProcessContext context) throws Exception {
+        if (context.getState() == ProcessContext.State.ABORTED) {
+            return;
+        }
         for (AtnaProcessor processor : processors) {
             processor.process(context);
+            if (context.getState() == ProcessContext.State.ABORTED) {
+                return;
+            }
         }
     }
 

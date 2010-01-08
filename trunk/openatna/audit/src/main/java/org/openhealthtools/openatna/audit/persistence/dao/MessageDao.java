@@ -25,7 +25,11 @@ import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
-import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
 
 /**
  * Class Description Here...
@@ -45,7 +49,8 @@ public interface MessageDao extends Dao {
 
     public List<? extends MessageEntity> getByEventId(EventIdCodeEntity idEntity) throws AtnaPersistenceException;
 
-    public List<? extends MessageEntity> getByEventType(EventTypeCodeEntity typeEntity) throws AtnaPersistenceException;
+    public List<? extends MessageEntity> getByEventType(EventTypeCodeEntity typeEntity)
+            throws AtnaPersistenceException;
 
     public List<? extends MessageEntity> getByEventOutcome(Integer outcome) throws AtnaPersistenceException;
 
@@ -56,19 +61,22 @@ public interface MessageDao extends Dao {
 
     public List<? extends MessageEntity> getByParticipantAltUserId(String id) throws AtnaPersistenceException;
 
-    public List<? extends MessageEntity> getByParticipantCode(ParticipantCodeEntity codeEntity) throws AtnaPersistenceException;
+    public List<? extends MessageEntity> getByParticipantCode(ParticipantCodeEntity codeEntity)
+            throws AtnaPersistenceException;
 
 
     public List<? extends MessageEntity> getByAuditSourceId(String id) throws AtnaPersistenceException;
 
     public List<? extends MessageEntity> getByAuditSourceEnterpriseId(String id) throws AtnaPersistenceException;
 
-    public List<? extends MessageEntity> getByAuditSourceCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException;
+    public List<? extends MessageEntity> getByAuditSourceCode(SourceCodeEntity codeEntity)
+            throws AtnaPersistenceException;
 
 
     public List<? extends MessageEntity> getByObjectId(String id) throws AtnaPersistenceException;
 
-    public List<? extends MessageEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity) throws AtnaPersistenceException;
+    public List<? extends MessageEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity)
+            throws AtnaPersistenceException;
 
     public List<? extends MessageEntity> getByObjectTypeCode(Short code) throws AtnaPersistenceException;
 
@@ -80,6 +88,5 @@ public interface MessageDao extends Dao {
     public void save(MessageEntity messageEntity, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(MessageEntity messageEntity) throws AtnaPersistenceException;
-
 
 }

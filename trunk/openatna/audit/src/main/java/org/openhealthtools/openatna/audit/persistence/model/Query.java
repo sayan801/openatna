@@ -19,8 +19,13 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
 
 /**
  * Allows construction of queries based on a few operators.
@@ -197,12 +202,18 @@ public class Query {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
 
             ConditionalValue that = (ConditionalValue) o;
 
-            if (conditional != that.conditional) return false;
+            if (conditional != that.conditional) {
+                return false;
+            }
 
             return true;
         }

@@ -38,9 +38,12 @@ import org.openhealthtools.openatna.anom.AtnaMessage;
 
 public class AtnaErrorLogger {
 
-    static Log log = LogFactory.getLog("ATNA.ATNA_ERROR_LOG");
+    private static Log log = LogFactory.getLog("ATNA.ATNA_ERROR_LOG");
 
     private static List<ErrorHandler<AtnaException>> handlers = new ArrayList<ErrorHandler<AtnaException>>();
+
+    private AtnaErrorLogger() {
+    }
 
     public static void addErrorHandler(ErrorHandler<AtnaException> handler) {
         handlers.add(handler);

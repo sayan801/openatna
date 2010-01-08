@@ -19,7 +19,16 @@
 
 package org.openhealthtools.openatna.audit.persistence.model.codes;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
 
 
@@ -52,13 +61,16 @@ public abstract class CodeEntity extends PersistentEntity {
     private Long id;
     private Integer version;
 
-    protected CodeType type;
+    private CodeType type;
 
     private String code;
     private String codeSystem;
     private String codeSystemName;
     private String displayName;
     private String originalText;
+
+    private CodeEntity() {
+    }
 
     protected CodeEntity(CodeType type) {
         this.type = type;
@@ -82,7 +94,8 @@ public abstract class CodeEntity extends PersistentEntity {
         this.codeSystemName = codeSystemName;
     }
 
-    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName, String displayName) {
+    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName,
+                         String displayName) {
         this.type = type;
         this.code = code;
         this.codeSystem = codeSystem;
@@ -90,7 +103,8 @@ public abstract class CodeEntity extends PersistentEntity {
         this.displayName = displayName;
     }
 
-    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
+    protected CodeEntity(CodeType type, String code, String codeSystem, String codeSystemName,
+                         String displayName, String originalText) {
         this.type = type;
         this.code = code;
         this.codeSystem = codeSystem;
@@ -228,18 +242,32 @@ public abstract class CodeEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CodeEntity)) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CodeEntity)) {
+            return false;
+        }
         CodeEntity that = (CodeEntity) o;
 
-        if (code != null ? !code.equals(that.code) : that.code != null) return false;
-        if (codeSystem != null ? !codeSystem.equals(that.codeSystem) : that.codeSystem != null) return false;
-        if (codeSystemName != null ? !codeSystemName.equals(that.codeSystemName) : that.codeSystemName != null) return false;
-        if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
-        if (originalText != null ? !originalText.equals(that.originalText) : that.originalText != null) return false;
-        if (type != that.type) return false;
-
+        if (code != null ? !code.equals(that.code) : that.code != null) {
+            return false;
+        }
+        if (codeSystem != null ? !codeSystem.equals(that.codeSystem) : that.codeSystem != null) {
+            return false;
+        }
+        if (codeSystemName != null ? !codeSystemName.equals(that.codeSystemName) : that.codeSystemName != null) {
+            return false;
+        }
+        if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) {
+            return false;
+        }
+        if (originalText != null ? !originalText.equals(that.originalText) : that.originalText != null) {
+            return false;
+        }
+        if (type != that.type) {
+            return false;
+        }
         return true;
     }
 
@@ -253,6 +281,7 @@ public abstract class CodeEntity extends PersistentEntity {
         result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
         return result;
     }
+
 
     public String toString() {
         return new StringBuilder("[").append(getClass().getName())

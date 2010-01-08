@@ -20,5 +20,6 @@ DROP TABLE participants CASCADE;
 DROP TABLE participants_to_codes CASCADE;
 DROP TABLE sources CASCADE;
 DROP TABLE sources_to_codes CASCADE;
+DROP TABLE provisional_messages CASCADE;
 
 

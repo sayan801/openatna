@@ -37,9 +37,12 @@ import org.openhealthtools.openatna.syslog.SyslogException;
 
 public class SyslogErrorLogger {
 
-    static Log log = LogFactory.getLog("ATNA.SYSLOG_ERROR_LOG");
+    private static Log log = LogFactory.getLog("ATNA.SYSLOG_ERROR_LOG");
 
     private static List<ErrorHandler<SyslogException>> handlers = new ArrayList<ErrorHandler<SyslogException>>();
+
+    private SyslogErrorLogger() {
+    }
 
     public static void addErrorHandler(ErrorHandler<SyslogException> handler) {
         handlers.add(handler);

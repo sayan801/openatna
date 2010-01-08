@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.audit.persistence.dao.EntityDao;
-import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
+import org.openhealthtools.openatna.audit.persistence.dao.ProvisionalDao;
+import org.openhealthtools.openatna.audit.persistence.model.ProvisionalEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -35,17 +35,27 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @Transactional(rollbackFor = AtnaPersistenceException.class)
-public class HibernateEntityDao extends AbstractHibernateDao<PersistentEntity> implements EntityDao {
+public class HibernateProvisionalDao extends AbstractHibernateDao<ProvisionalEntity> implements ProvisionalDao {
 
-    public HibernateEntityDao(SessionFactory sessionFactory) {
-        super(PersistentEntity.class, sessionFactory);
+
+    public HibernateProvisionalDao(SessionFactory sessionFactory) {
+        super(ProvisionalEntity.class, sessionFactory);
     }
 
-    public List<? extends PersistentEntity> query(String query) throws AtnaPersistenceException {
-        return list(createQuery(query));
+    public ProvisionalEntity getById(Long id) throws AtnaPersistenceException {
+        return get(id);
     }
 
-    public String[] getSupportedQueryDialects() {
-        return new String[]{"HQL"};
+    public List<? extends ProvisionalEntity> getAll() throws AtnaPersistenceException {
+        return all();
     }
+
+    public void save(ProvisionalEntity pe) throws AtnaPersistenceException {
+        currentSession().saveOrUpdate(pe);
+    }
+
+    public void delete(ProvisionalEntity pe) throws AtnaPersistenceException {
+        currentSession().delete(pe);
+    }
+
 }

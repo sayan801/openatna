@@ -36,9 +36,12 @@ import org.apache.commons.logging.LogFactory;
 
 public class ErrorLogger {
 
-    static Log log = LogFactory.getLog("ATNA.ERROR_LOG");
+    private static Log log = LogFactory.getLog("ATNA.ERROR_LOG");
 
     private static List<ErrorHandler<Throwable>> handlers = new ArrayList<ErrorHandler<Throwable>>();
+
+    private ErrorLogger() {
+    }
 
     public static void addErrorHandler(ErrorHandler<Throwable> handler) {
         handlers.add(handler);
@@ -56,5 +59,4 @@ public class ErrorLogger {
         sb.append("** ERROR:").append(e.getClass().getName()).append("**\n");
         log.error(sb.toString(), e);
     }
-
 }

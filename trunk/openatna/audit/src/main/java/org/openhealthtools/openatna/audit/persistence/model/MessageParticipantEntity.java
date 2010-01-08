@@ -20,7 +20,13 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 
 @Entity
@@ -80,15 +86,27 @@ public class MessageParticipantEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MessageParticipantEntity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MessageParticipantEntity)) {
+            return false;
+        }
 
         MessageParticipantEntity that = (MessageParticipantEntity) o;
 
-        if (getNetworkAccessPoint() != null ? !getNetworkAccessPoint().equals(that.getNetworkAccessPoint()) : that.getNetworkAccessPoint() != null)
+        if (getNetworkAccessPoint() != null ? !getNetworkAccessPoint().equals(that.getNetworkAccessPoint())
+                : that.getNetworkAccessPoint() != null) {
             return false;
-        if (getParticipant() != null ? !getParticipant().equals(that.getParticipant()) : that.getParticipant() != null) return false;
-        if (userIsRequestor != null ? !userIsRequestor.equals(that.userIsRequestor) : that.userIsRequestor != null) return false;
+        }
+        if (getParticipant() != null ? !getParticipant().equals(that.getParticipant())
+                : that.getParticipant() != null) {
+            return false;
+        }
+        if (userIsRequestor != null ? !userIsRequestor.equals(that.userIsRequestor)
+                : that.userIsRequestor != null) {
+            return false;
+        }
 
         return true;
     }

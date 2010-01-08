@@ -21,7 +21,18 @@ package org.openhealthtools.openatna.audit.process;
 
 import java.util.List;
 
-import org.openhealthtools.openatna.anom.*;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaException;
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.AtnaMessageObject;
+import org.openhealthtools.openatna.anom.AtnaMessageParticipant;
+import org.openhealthtools.openatna.anom.AtnaObject;
+import org.openhealthtools.openatna.anom.AtnaObjectDetail;
+import org.openhealthtools.openatna.anom.AtnaSource;
+import org.openhealthtools.openatna.anom.NetworkAccessPoint;
+import org.openhealthtools.openatna.anom.ObjectType;
+import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
+
 
 /**
  * Does some basic validation on message contents and sets a unique id on the message
@@ -140,10 +151,12 @@ public class ValidationProcessor implements AtnaProcessor {
 
     private void validateParticipant(AtnaMessageParticipant participant) throws AtnaException {
         if (participant.getParticipant() == null) {
-            throw new AtnaException("no active participant defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
+            throw new AtnaException("no active participant defined",
+                    AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
         }
         if (participant.getParticipant().getUserId() == null) {
-            throw new AtnaException("no active participant user id defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT_ID);
+            throw new AtnaException("no active participant user id defined",
+                    AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT_ID);
         }
         List<AtnaCode> codes = participant.getParticipant().getRoleIDCodes();
         for (AtnaCode code : codes) {
@@ -154,16 +167,19 @@ public class ValidationProcessor implements AtnaProcessor {
         NetworkAccessPoint nap = participant.getNetworkAccessPointType();
         String napId = participant.getNetworkAccessPointId();
         if (nap != null && napId == null) {
-            throw new AtnaException("no network access point id defined", AtnaException.AtnaError.NO_NETWORK_ACCESS_POINT_ID);
+            throw new AtnaException("no network access point id defined",
+                    AtnaException.AtnaError.NO_NETWORK_ACCESS_POINT_ID);
         }
         if (nap == null && napId != null) {
-            throw new AtnaException("no network access point type defined", AtnaException.AtnaError.NO_NETWORK_ACCESS_POINT_TYPE);
+            throw new AtnaException("no network access point type defined",
+                    AtnaException.AtnaError.NO_NETWORK_ACCESS_POINT_TYPE);
         }
     }
 
     private void validateSource(AtnaSource source) throws AtnaException {
         if (source.getSourceId() == null) {
-            throw new AtnaException("no audit source id defined", AtnaException.AtnaError.NO_AUDIT_SOURCE_ID);
+            throw new AtnaException("no audit source id defined",
+                    AtnaException.AtnaError.NO_AUDIT_SOURCE_ID);
         }
         List<AtnaCode> codes = source.getSourceTypeCodes();
         for (AtnaCode code : codes) {
@@ -175,14 +191,17 @@ public class ValidationProcessor implements AtnaProcessor {
 
     private void validateObject(AtnaMessageObject object) throws AtnaException {
         if (object.getObject() == null) {
-            throw new AtnaException("no participant object defined", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT);
+            throw new AtnaException("no participant object defined",
+                    AtnaException.AtnaError.NO_PARTICIPANT_OBJECT);
         }
         AtnaObject obj = object.getObject();
         if (obj.getObjectId() == null) {
-            throw new AtnaException("no participant object id defined", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID);
+            throw new AtnaException("no participant object id defined",
+                    AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID);
         }
         if (obj.getObjectIdTypeCode() == null || obj.getObjectIdTypeCode().getCode() == null) {
-            throw new AtnaException("invalid object id type code", AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
+            throw new AtnaException("invalid object id type code",
+                    AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
         }
         if (obj.getObjectTypeCode() != null) {
             validateObjectIdTypeCode(obj.getObjectIdTypeCode(), obj.getObjectTypeCode());
@@ -194,7 +213,8 @@ public class ValidationProcessor implements AtnaProcessor {
         List<AtnaObjectDetail> details = object.getObjectDetails();
         for (AtnaObjectDetail detail : details) {
             if (detail.getType() == null || detail.getValue() == null || detail.getValue().length == 0) {
-                throw new AtnaException("invalid object id type code", AtnaException.AtnaError.INVALID_OBJECT_DETAIL);
+                throw new AtnaException("invalid object id type code",
+                        AtnaException.AtnaError.INVALID_OBJECT_DETAIL);
             }
         }
     }
@@ -245,23 +265,26 @@ public class ValidationProcessor implements AtnaProcessor {
     }
 
     private void validateObjectIdTypeCode(AtnaCode code, ObjectType type) throws AtnaException {
-        if (code.getCodeType().equals(AtnaCode.OBJECT_ID_TYPE) &&
-                code.getCodeSystemName() != null && code.getCodeSystemName().equalsIgnoreCase("RFC-3881")) {
+        if (code.getCodeType().equals(AtnaCode.OBJECT_ID_TYPE)
+                && code.getCodeSystemName() != null && code.getCodeSystemName().equalsIgnoreCase("RFC-3881")) {
             String s = code.getCode();
             switch (type) {
                 case PERSON:
                     if (!isInArray(s, personIds)) {
-                        throw new AtnaException("Invalid combination of id type and Object type. Code:" + s + " type:" + type);
+                        throw new AtnaException("Invalid combination of id type and Object type. Code:"
+                                + s + " type:" + type);
                     }
                     break;
                 case ORGANIZATION:
                     if (!isInArray(s, organisationIds)) {
-                        throw new AtnaException("Invalid combination of id type and Object type. Code:" + s + " type:" + type);
+                        throw new AtnaException("Invalid combination of id type and Object type. Code:"
+                                + s + " type:" + type);
                     }
                     break;
                 case SYSTEM_OBJECT:
                     if (!isInArray(s, systemObjectIds)) {
-                        throw new AtnaException("Invalid combination of id type and Object type. Code:" + s + " type:" + type);
+                        throw new AtnaException("Invalid combination of id type and Object type. Code:"
+                                + s + " type:" + type);
                     }
                     break;
                 case OTHER:

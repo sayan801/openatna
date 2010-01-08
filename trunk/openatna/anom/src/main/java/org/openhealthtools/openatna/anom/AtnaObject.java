@@ -42,6 +42,7 @@ public class AtnaObject implements Serializable {
     private String objectId;
     private ObjectTypeCodeRole objectTypeCodeRole;
     private String objectSensitivity;
+    private List<ObjectDescription> descriptions = new ArrayList<ObjectDescription>();
 
     public AtnaObject(String objectId, AtnaCode objectIdTypeCode) {
         this.objectId = objectId;
@@ -118,18 +119,36 @@ public class AtnaObject implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaObject)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AtnaObject)) {
+            return false;
+        }
 
         AtnaObject that = (AtnaObject) o;
 
-        if (objectDetailTypes != null ? !objectDetailTypes.equals(that.objectDetailTypes) : that.objectDetailTypes != null) return false;
-        if (objectIdTypeCode != null ? !objectIdTypeCode.equals(that.objectIdTypeCode) : that.objectIdTypeCode != null) return false;
-        if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) return false;
-        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
-        if (objectSensitivity != null ? !objectSensitivity.equals(that.objectSensitivity) : that.objectSensitivity != null) return false;
-        if (objectTypeCode != that.objectTypeCode) return false;
-        if (objectTypeCodeRole != that.objectTypeCodeRole) return false;
+        if (objectDetailTypes != null ? !objectDetailTypes.equals(that.objectDetailTypes) : that.objectDetailTypes != null) {
+            return false;
+        }
+        if (objectIdTypeCode != null ? !objectIdTypeCode.equals(that.objectIdTypeCode) : that.objectIdTypeCode != null) {
+            return false;
+        }
+        if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) {
+            return false;
+        }
+        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) {
+            return false;
+        }
+        if (objectSensitivity != null ? !objectSensitivity.equals(that.objectSensitivity) : that.objectSensitivity != null) {
+            return false;
+        }
+        if (objectTypeCode != that.objectTypeCode) {
+            return false;
+        }
+        if (objectTypeCodeRole != that.objectTypeCodeRole) {
+            return false;
+        }
 
         return true;
     }

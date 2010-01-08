@@ -35,8 +35,10 @@ import org.openhealthtools.openatna.audit.persistence.util.DataReader;
 
 public class EntityLoader {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.util.EntityLoader");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.util.EntityLoader");
 
+    private EntityLoader() {
+    }
 
     public static void main(String[] args) {
         URL codes = CodeLoader.class.getResource("/conf/entities.xml");

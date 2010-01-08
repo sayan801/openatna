@@ -19,7 +19,13 @@
 
 package org.openhealthtools.openatna.audit.service;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +42,7 @@ import org.openhealthtools.openatna.syslog.LogMessage;
 
 public class ServiceConfiguration {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.service.ServiceConfiguration");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.service.ServiceConfiguration");
 
     private PersistencePolicies persistencePolicies = new PersistencePolicies();
     private Class<? extends LogMessage> logMessageClass;

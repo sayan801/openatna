@@ -74,7 +74,8 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
         return all();
     }
 
-    public List<? extends ObjectEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends ObjectEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity)
+            throws AtnaPersistenceException {
         return list(criteria().createCriteria("objectIdTypeCode").add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
@@ -95,11 +96,13 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
                     cd.save(code, policies);
                     entity.setObjectIdTypeCode(code);
                 } else {
-                    throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    throw new AtnaPersistenceException(code.toString(),
+                            AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                 }
             }
         } else {
-            throw new AtnaPersistenceException(code.toString(), AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+            throw new AtnaPersistenceException(code.toString(),
+                    AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
         }
 
         if (entity.getVersion() == null) {
@@ -107,13 +110,12 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
             ObjectEntity existing = getByObjectId(entity.getObjectId());
             if (existing != null) {
                 if (policies.isErrorOnDuplicateInsert()) {
-                    throw new AtnaPersistenceException(entity.toString(), AtnaPersistenceException.PersistenceError.DUPLICATE_OBJECT);
+                    throw new AtnaPersistenceException(entity.toString(),
+                            AtnaPersistenceException.PersistenceError.DUPLICATE_OBJECT);
                 } else {
                     return;
                 }
             }
-        } else {
-            // from DB - update. All ok?
         }
         currentSession().saveOrUpdate(entity);
     }

@@ -37,15 +37,18 @@ public interface NetworkAccessPointDao extends Dao {
 
     public NetworkAccessPointEntity getById(Long id) throws AtnaPersistenceException;
 
-    public NetworkAccessPointEntity getByTypeAndIdentifier(Short type, String identifier) throws AtnaPersistenceException;
+    public NetworkAccessPointEntity getByTypeAndIdentifier(Short type, String identifier)
+            throws AtnaPersistenceException;
 
     public List<? extends NetworkAccessPointEntity> getByType(Short type) throws AtnaPersistenceException;
 
-    public List<? extends NetworkAccessPointEntity> getByIdentifier(String identifier) throws AtnaPersistenceException;
+    public List<? extends NetworkAccessPointEntity> getByIdentifier(String identifier)
+            throws AtnaPersistenceException;
 
     public List<? extends NetworkAccessPointEntity> getAll() throws AtnaPersistenceException;
 
-    public void save(NetworkAccessPointEntity nap, PersistencePolicies policies) throws AtnaPersistenceException;
+    public void save(NetworkAccessPointEntity nap, PersistencePolicies policies)
+            throws AtnaPersistenceException;
 
     public void delete(NetworkAccessPointEntity nap) throws AtnaPersistenceException;
 

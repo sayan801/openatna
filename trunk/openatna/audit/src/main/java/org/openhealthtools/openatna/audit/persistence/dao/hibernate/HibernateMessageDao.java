@@ -30,9 +30,28 @@ import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
-import org.openhealthtools.openatna.audit.persistence.dao.*;
-import org.openhealthtools.openatna.audit.persistence.model.*;
-import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
+import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
+import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
+import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
+import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.Query;
+import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -69,7 +88,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
-    public List<? extends MessageEntity> getByEventType(EventTypeCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends MessageEntity> getByEventType(EventTypeCodeEntity codeEntity)
+            throws AtnaPersistenceException {
         return list(criteria().createCriteria("eventTypeCodes").add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
@@ -85,14 +105,17 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
     }
 
     public List<? extends MessageEntity> getByParticipantUserId(String id) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("messageParticipants").createCriteria("participant").add(Restrictions.eq("userId", id)));
+        return list(criteria().createCriteria("messageParticipants").createCriteria("participant")
+                .add(Restrictions.eq("userId", id)));
     }
 
     public List<? extends MessageEntity> getByParticipantAltUserId(String id) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("messageParticipants").createCriteria("participant").add(Restrictions.eq("altUserId", id)));
+        return list(criteria().createCriteria("messageParticipants").createCriteria("participant")
+                .add(Restrictions.eq("altUserId", id)));
     }
 
-    public List<? extends MessageEntity> getByParticipantCode(ParticipantCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends MessageEntity> getByParticipantCode(ParticipantCodeEntity codeEntity)
+            throws AtnaPersistenceException {
         return list(criteria().createCriteria("messageParticipants").createCriteria("participant")
                 .createCriteria("participantTypeCodes")
                 .add(Restrictions.eq("code", codeEntity.getCode()))
@@ -102,15 +125,18 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
     }
 
     public List<? extends MessageEntity> getByAuditSourceId(String id) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("messageSources").createCriteria("source").add(Restrictions.eq("sourceId", id)));
+        return list(criteria().createCriteria("messageSources").createCriteria("source")
+                .add(Restrictions.eq("sourceId", id)));
     }
 
     public List<? extends MessageEntity> getByAuditSourceEnterpriseId(String id) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("messageSources").createCriteria("source").add(Restrictions.eq("enterpriseSiteId", id)));
+        return list(criteria().createCriteria("messageSources").createCriteria("source")
+                .add(Restrictions.eq("enterpriseSiteId", id)));
 
     }
 
-    public List<? extends MessageEntity> getByAuditSourceCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends MessageEntity> getByAuditSourceCode(SourceCodeEntity codeEntity)
+            throws AtnaPersistenceException {
         return list(criteria().createCriteria("messageSources").createCriteria("source")
                 .createCriteria("sourceTypeCodes")
                 .add(Restrictions.eq("code", codeEntity.getCode()))
@@ -119,10 +145,12 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
     }
 
     public List<? extends MessageEntity> getByObjectId(String id) throws AtnaPersistenceException {
-        return list(criteria().createCriteria("messageObjects").createCriteria("object").add(Restrictions.eq("objectId", id)));
+        return list(criteria().createCriteria("messageObjects").createCriteria("object")
+                .add(Restrictions.eq("objectId", id)));
     }
 
-    public List<? extends MessageEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends MessageEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity)
+            throws AtnaPersistenceException {
         return list(criteria().createCriteria("messageObjects").createCriteria("object")
                 .createCriteria("objectIdTypeCode")
                 .add(Restrictions.eq("code", codeEntity.getCode()))
@@ -156,7 +184,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         currentSession().saveOrUpdate(messageEntity);
     }
 
-    // TODO: will this remove everything?
+    //TODO: will this remove everything?
     public void delete(MessageEntity messageEntity) throws AtnaPersistenceException {
         currentSession().delete(messageEntity);
     }
@@ -282,7 +310,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
     }
 
-    private void saveParticipantCodes(ParticipantEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
+    private void saveParticipantCodes(ParticipantEntity pe, PersistencePolicies policies)
+            throws AtnaPersistenceException {
         Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
         if (codes.size() > 0) {
             ParticipantCodeEntity[] arr = codes.toArray(new ParticipantCodeEntity[codes.size()]);
@@ -395,8 +424,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             ao.setObject(existing);
             Set<ObjectDetailEntity> details = ao.getDetails();
             for (ObjectDetailEntity detail : details) {
-                if (!existing.containsDetailType(detail.getType()) &&
-                        !policies.isAllowUnknownDetailTypes()) {
+                if (!existing.containsDetailType(detail.getType())
+                        && !policies.isAllowUnknownDetailTypes()) {
                     throw new AtnaPersistenceException("bad object detail key.",
                             AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
                 }

@@ -11,7 +11,11 @@ package org.openhealthtools.openatna.jaxb21;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -130,7 +134,8 @@ import javax.xml.bind.annotation.*;
         "participantObjectIDTypeCode",
         "participantObjectName",
         "participantObjectQuery",
-        "participantObjectDetail"
+        "participantObjectDetail",
+        "participantObjectDescription"
 })
 public class ParticipantObjectIdentificationType {
 
@@ -142,6 +147,8 @@ public class ParticipantObjectIdentificationType {
     protected byte[] participantObjectQuery;
     @XmlElement(name = "ParticipantObjectDetail")
     protected List<TypeValuePairType> participantObjectDetail;
+    @XmlElement(name = "ParticipantObjectDescription")
+    protected List<ParticipantObjectDescriptionType> participantObjectDescription;
     @XmlAttribute(name = "ParticipantObjectID", required = true)
     protected String participantObjectID;
     @XmlAttribute(name = "ParticipantObjectTypeCode")
@@ -238,6 +245,34 @@ public class ParticipantObjectIdentificationType {
             participantObjectDetail = new ArrayList<TypeValuePairType>();
         }
         return this.participantObjectDetail;
+    }
+
+
+    /**
+     * Gets the value of the participantObjectDescription property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the participantObjectDescription property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getParticipantObjectDescription().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ParticipantObjectDescriptionType }
+     */
+    public List<ParticipantObjectDescriptionType> getParticipantObjectDescription() {
+        if (participantObjectDescription == null) {
+            participantObjectDescription = new ArrayList<ParticipantObjectDescriptionType>();
+        }
+        return this.participantObjectDescription;
     }
 
     /**

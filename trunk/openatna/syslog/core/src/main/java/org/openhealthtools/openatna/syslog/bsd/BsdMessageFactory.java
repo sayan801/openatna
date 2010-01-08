@@ -31,7 +31,11 @@ import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.syslog.*;
+import org.openhealthtools.openatna.syslog.Constants;
+import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
 /**
  * Reads in data and creates BSD style syslog messages
@@ -188,19 +192,6 @@ public class BsdMessageFactory extends SyslogMessageFactory {
                 tag = new String(buff.array(), 0, buff.position(), Constants.ENC_UTF8);
             }
 
-
-            /*// we cheat here. Well-formatted application messages may have some space before them which officially is part of the
-            // content in BSD, but may not be part of the app log.
-            // Here we consume any space chararcters before passing the stream to the LogMessage.
-            // NOTE: this logic may be misconstrued!! it is subject to change.
-            while(curr < max) {
-                c = (byte) pin.read();
-                curr++;
-                if(c != ' ') {
-                    pin.unread(c);
-                    break;
-                }
-            }*/
             LogMessage logMessage = getLogMessage(tag);
             String encoding = readBom(pin, logMessage.getExpectedEncoding());
             logMessage.read(pin, encoding);

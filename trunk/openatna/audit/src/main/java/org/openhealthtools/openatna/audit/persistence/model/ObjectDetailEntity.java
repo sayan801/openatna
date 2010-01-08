@@ -20,7 +20,11 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 @Entity
@@ -88,13 +92,21 @@ public class ObjectDetailEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ObjectDetailEntity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ObjectDetailEntity)) {
+            return false;
+        }
 
         ObjectDetailEntity that = (ObjectDetailEntity) o;
 
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (value != null ? !value.equals(that.value) : that.value != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) {
+            return false;
+        }
+        if (value != null ? !value.equals(that.value) : that.value != null) {
+            return false;
+        }
 
         return true;
     }

@@ -19,7 +19,12 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +58,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class ProcessorChain {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.ProcessorChain");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.ProcessorChain");
 
     public static enum PHASE {
         PRE_VERIFY,
@@ -61,12 +66,13 @@ public class ProcessorChain {
         POST_PERSIST,
     }
 
+    private ProvisionalProcessor prov = new ProvisionalProcessor();
     private ExceptionProcessor except = new ExceptionProcessor();
     private ValidationProcessor validator = new ValidationProcessor();
     private PersistenceProcessor persist = new PersistenceProcessor();
-    PhaseProcessor preVerify = new PhaseProcessor();
-    PhaseProcessor postVerify = new PhaseProcessor();
-    PhaseProcessor postPersist = new PhaseProcessor();
+    private PhaseProcessor preVerify = new PhaseProcessor();
+    private PhaseProcessor postVerify = new PhaseProcessor();
+    private PhaseProcessor postPersist = new PhaseProcessor();
     private boolean validate;
     private Map<String, Object> contextProperties = new HashMap<String, Object>();
 
@@ -136,16 +142,29 @@ public class ProcessorChain {
         context.addProperties(Collections.unmodifiableMap(contextProperties));
         List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
         try {
+            prov.process(context);
+            if (context.getState() == ProcessContext.State.ABORTED) {
+                return;
+            }
             except.process(context);
             done.add(except);
+            if (context.getState() == ProcessContext.State.ABORTED) {
+                return;
+            }
             preVerify.process(context);
             done.add(preVerify);
+            if (context.getState() == ProcessContext.State.ABORTED) {
+                return;
+            }
             if (validate) {
                 validator.process(context);
                 done.add(validator);
             }
             postVerify.process(context);
             done.add(postVerify);
+            if (context.getState() == ProcessContext.State.ABORTED) {
+                return;
+            }
             if (context.getState() != ProcessContext.State.PERSISTED) {
                 persist.process(context);
                 done.add(persist);

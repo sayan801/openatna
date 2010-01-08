@@ -45,7 +45,7 @@ import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
 public class TcpServer {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.TcpServer");
+    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.TcpServer");
 
 
     private AtnaServer atnaServer;
@@ -104,8 +104,8 @@ public class TcpServer {
         private String logSocket(Socket socket) {
             InetSocketAddress local = (InetSocketAddress) socket.getLocalSocketAddress();
             InetSocketAddress addr = (InetSocketAddress) socket.getRemoteSocketAddress();
-            return "TCP data received from:" + addr.getHostName() + ":" + addr.getPort() +
-                    " to:" + local.getHostName() + ":" + local.getPort();
+            return "TCP data received from:" + addr.getHostName() + ":" + addr.getPort()
+                    + " to:" + local.getHostName() + ":" + local.getPort();
         }
     }
 

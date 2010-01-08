@@ -62,7 +62,6 @@ public class AuditException extends Exception {
 
     private AtnaMessage atnaMessage;
     private AuditError error = AuditError.UNDEFINED;
-    
 
     public AuditException(String s, AtnaMessage message, AuditError error) {
         super(s);

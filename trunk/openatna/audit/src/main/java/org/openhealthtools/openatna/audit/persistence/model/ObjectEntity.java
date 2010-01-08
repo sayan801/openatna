@@ -23,7 +23,16 @@ package org.openhealthtools.openatna.audit.persistence.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
 
 
@@ -142,31 +151,44 @@ public class ObjectEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ObjectEntity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ObjectEntity)) {
+            return false;
+        }
 
         ObjectEntity that = (ObjectEntity) o;
 
-        //if (getObjectDetailTypes() != null ? !getObjectDetailTypes().equals(that.getObjectDetailTypes()) : that.getObjectDetailTypes() != null) return false;
-        if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) return false;
-        //if (getObjectIdTypeCode() != null ? !getObjectIdTypeCode().equals(that.getObjectIdTypeCode()) : that.getObjectIdTypeCode() != null) return false;
-        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
-        if (objectSensitivity != null ? !objectSensitivity.equals(that.objectSensitivity) : that.objectSensitivity != null) return false;
-        if (objectTypeCode != null ? !objectTypeCode.equals(that.objectTypeCode) : that.objectTypeCode != null) return false;
-        if (objectTypeCodeRole != null ? !objectTypeCodeRole.equals(that.objectTypeCodeRole) : that.objectTypeCodeRole != null) return false;
+        if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) {
+            return false;
+        }
+        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) {
+            return false;
+        }
+        if (objectSensitivity != null ? !objectSensitivity.equals(that.objectSensitivity)
+                : that.objectSensitivity != null) {
+            return false;
+        }
+        if (objectTypeCode != null ? !objectTypeCode.equals(that.objectTypeCode)
+                : that.objectTypeCode != null) {
+            return false;
+        }
+        if (objectTypeCodeRole != null ? !objectTypeCodeRole.equals(that.objectTypeCodeRole)
+                : that.objectTypeCodeRole != null) {
+            return false;
+        }
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        //int result = getObjectIdTypeCode() != null ? getObjectIdTypeCode().hashCode() : 0;
         int result = (objectName != null ? objectName.hashCode() : 0);
         result = 31 * result + (objectId != null ? objectId.hashCode() : 0);
         result = 31 * result + (objectTypeCode != null ? objectTypeCode.hashCode() : 0);
         result = 31 * result + (objectTypeCodeRole != null ? objectTypeCodeRole.hashCode() : 0);
         result = 31 * result + (objectSensitivity != null ? objectSensitivity.hashCode() : 0);
-        //result = 31 * result + (getObjectDetailTypes() != null ? getObjectDetailTypes().hashCode() : 0);
         return result;
     }
 

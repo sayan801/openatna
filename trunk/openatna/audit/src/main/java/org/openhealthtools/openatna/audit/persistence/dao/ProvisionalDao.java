@@ -17,28 +17,27 @@
  * Cardiff University - intial API and implementation
  */
 
-package org.openhealthtools.openatna.dist.test;
+package org.openhealthtools.openatna.audit.persistence.dao;
 
-import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
-import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
+import java.util.List;
+
+import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.model.ProvisionalEntity;
 
 /**
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 30, 2009: 10:11:53 PM
- * @date $Date:$ modified by $Author:$
+ * @version 1.0.0
+ * @date Jan 8, 2010: 9:48:15 AM
  */
+public interface ProvisionalDao {
 
-public class JaxbLogMessage extends AtnaLogMessage {
+    public ProvisionalEntity getById(Long id) throws AtnaPersistenceException;
 
-    public JaxbLogMessage() {
-        super(new JaxbIOFactory());
-    }
+    public void delete(ProvisionalEntity pe) throws AtnaPersistenceException;
 
-    public JaxbLogMessage(AtnaMessage message) {
-        super(message, new JaxbIOFactory());
-    }
+    public List<? extends ProvisionalEntity> getAll() throws AtnaPersistenceException;
+
+    public void save(ProvisionalEntity pe) throws AtnaPersistenceException;
 
 
 }

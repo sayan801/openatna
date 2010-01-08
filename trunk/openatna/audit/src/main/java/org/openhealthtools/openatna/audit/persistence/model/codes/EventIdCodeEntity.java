@@ -57,9 +57,10 @@ public class EventIdCodeEntity extends CodeEntity {
         super(CodeType.EVENT_ID, code, codeSystem, codeSystemName, displayName);
     }
 
-    public EventIdCodeEntity(String code, String codeSystem, String codeSystemName, String displayName, String originalText) {
+    public EventIdCodeEntity(String code, String codeSystem, String codeSystemName,
+                             String displayName, String originalText) {
         super(CodeType.EVENT_ID, code, codeSystem, codeSystemName, displayName, originalText);
     }
 
-
 }
+

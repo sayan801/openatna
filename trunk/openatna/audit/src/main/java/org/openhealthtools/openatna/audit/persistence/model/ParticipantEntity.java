@@ -22,7 +22,17 @@ package org.openhealthtools.openatna.audit.persistence.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
 
 /**
@@ -124,16 +134,25 @@ public class ParticipantEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ParticipantEntity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ParticipantEntity)) {
+            return false;
+        }
 
         ParticipantEntity that = (ParticipantEntity) o;
 
-        if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId) : that.alternativeUserId != null) return false;
-        //if (getParticipantTypeCodes() != null ? !getParticipantTypeCodes().equals(that.getParticipantTypeCodes()) : that.getParticipantTypeCodes() != null)
-        //    return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
+        if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId)
+                : that.alternativeUserId != null) {
+            return false;
+        }
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) {
+            return false;
+        }
+        if (userName != null ? !userName.equals(that.userName) : that.userName != null) {
+            return false;
+        }
 
         return true;
     }
@@ -143,7 +162,6 @@ public class ParticipantEntity extends PersistentEntity {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (alternativeUserId != null ? alternativeUserId.hashCode() : 0);
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        //result = 31 * result + (getParticipantTypeCodes() != null ? getParticipantTypeCodes().hashCode() : 0);
         return result;
     }
 
