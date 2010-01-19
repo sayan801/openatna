@@ -59,7 +59,8 @@ public abstract class ClientTest {
         messages.add(fac.read(in));
         in = ClientTest.class.getResourceAsStream("/msgs/dicom.xml");
         messages.add(fac.read(in));
-
+        in = ClientTest.class.getResourceAsStream("/msgs/dup.xml");
+        messages.add(fac.read(in));
         return messages;
     }
 }

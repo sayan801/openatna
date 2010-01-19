@@ -24,19 +24,15 @@
 <!-- For IHE Actor -->
 
 <Configuration>
-    <!--<StandardConnection name="arr-udp">
-         <HostName>localhost</HostName>
-         <Port>2863</Port>
-     </StandardConnection>-->
 
     <SecureConnection name="arr-tls">
         <HostName>localhost</HostName>
         <Port>2862</Port>
 
         <!-- Trust and Keystore -->
-        <KeyStore>certs/serverKeyStore</KeyStore>
+        <KeyStore>certs/OpenATNA_2010_Keystore.jks</KeyStore>
         <KeyPass>password</KeyPass>
-        <TrustStore>certs/clientKeyStore</TrustStore>
+        <TrustStore>certs/OpenATNA_2010_Truststore.jks</TrustStore>
         <TrustPass>password</TrustPass>
     </SecureConnection>
 

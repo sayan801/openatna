@@ -209,6 +209,7 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
         secureSocket.setEnabledProtocols(new String[]{"TLSv1"});
         String[] strings = {"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA",
                 "SSL_RSA_WITH_3DES_EDE_CBC_SHA", "SSL_RSA_WITH_DES_CBC_SHA"};
+        //String[] strings = {"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA"};
         secureSocket.setEnabledCipherSuites(strings);
         // Useful debugging information:
         //secureSocket.setSoTimeout(1000);
@@ -302,5 +303,5 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
             log.error("I/O problem creating server socket.", e);
         }
         return ss;
-	}
+    }
 }

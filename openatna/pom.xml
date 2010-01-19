@@ -111,6 +111,7 @@
         <module>all</module>
         <module>net</module>
         <module>report</module>
+        <module>web</module>
     </modules>
 
     <!-- Properties defined by OpenATNA -->

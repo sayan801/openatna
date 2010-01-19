@@ -50,6 +50,9 @@ public class HibernateQueryBuilder {
         List<String> path = new ArrayList<String>();
         String s = null;
         switch (target) {
+            case RESULT:
+                s = "result";
+                break;
             case EVENT_ACTION:
                 s = "eventActionCode";
                 break;
@@ -207,6 +210,12 @@ public class HibernateQueryBuilder {
         Object val = value.getValue();
 
         switch (con) {
+            case MAX_NUM:
+                c.setMaxResults((Integer) val);
+                break;
+            case START_OFFSET:
+                c.setFirstResult((Integer) val);
+                break;
             case AFTER:
                 c.add(Restrictions.ge(name, val));
                 break;

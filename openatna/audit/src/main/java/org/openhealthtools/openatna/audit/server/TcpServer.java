@@ -140,6 +140,7 @@ public class TcpServer {
                         int length;
                         try {
                             length = Integer.parseInt(new String(b, 0, count));
+                            log.debug("length of incoming message:" + length);
                         } catch (NumberFormatException e) {
                             maxErr--;
                             atnaServer.notifyException(new SyslogException(e, b));
@@ -154,6 +155,7 @@ public class TcpServer {
                             }
                             len += curr;
                         }
+                        log.debug("read in " + len + " bytes to convert to message.");
                         SyslogMessage msg = null;
                         try {
                             msg = createMessage(bytes);
@@ -174,7 +176,7 @@ public class TcpServer {
         }
 
         private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
-            log.debug("creating message from bytes: " + new String(bytes));
+            log.debug("creating message from bytes: " + new String(bytes, "UTF-8"));
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
 
