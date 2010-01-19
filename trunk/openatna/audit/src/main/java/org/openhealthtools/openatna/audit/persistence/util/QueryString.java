@@ -113,20 +113,17 @@ public class QueryString {
             return new Boolean(value.toLowerCase());
         }
         switch (target) {
+            case RESULT:
+                return Integer.parseInt(value);
             case EVENT_ACTION:
-                //return EventAction.getAction(value);
                 return value;
             case EVENT_OUTCOME:
-                //return EventOutcome.getOutcome(Integer.parseInt(value));
                 return Integer.parseInt(value);
             case OBJECT_TYPE:
-                //return ObjectType.getType(Integer.parseInt(value));
                 return Integer.parseInt(value);
             case OBJECT_TYPE_ROLE:
-                //return ObjectTypeCodeRole.getRole(Integer.parseInt(value));
                 return Integer.parseInt(value);
             case NETWORK_ACCESS_POINT_TYPE:
-                //return NetworkAccessPoint.getAccessPoint(Integer.parseInt(value));
                 return Integer.parseInt(value);
             case EVENT_TIME:
                 return Timestamp.parseToDate(value);

@@ -147,7 +147,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         Transformer t = null;
         try {
             t = tf.newTransformer();
-            t.setOutputProperty(OutputKeys.INDENT, "no");
+            t.setOutputProperty(OutputKeys.INDENT, "yes");
             t.setOutputProperty(OutputKeys.METHOD, "xml");
             t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         } catch (TransformerConfigurationException tce) {

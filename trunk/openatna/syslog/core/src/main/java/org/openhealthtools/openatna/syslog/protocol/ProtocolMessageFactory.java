@@ -19,15 +19,25 @@
 
 package org.openhealthtools.openatna.syslog.protocol;
 
-import org.openhealthtools.openatna.syslog.*;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.syslog.Constants;
+import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
 /**
  * generates RFC 5424 messages from a stream.
@@ -39,6 +49,9 @@ import java.nio.ByteBuffer;
  */
 
 public class ProtocolMessageFactory extends SyslogMessageFactory {
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.syslog.protocol.ProtocolMessageFactory");
+
 
     public static final char VERSION_CHAR = '1';
 
@@ -197,6 +210,11 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
     public static Date createDate(String date) throws SyslogException {
         Matcher m = DATE.matcher(date);
         if (m.find()) {
+
+            log.debug("date groups{" + m.group(1) + "}{" + m.group(2) + "}{" + m.group(3) + "}{" +
+                    m.group(4) + "}{" + m.group(5) + "}{" + m.group(6) + "}{" +
+                    m.group(7) + "}{" + m.group(8) + "}{" + m.group(9) + "}{" +
+                    m.group(10) + "}{" + m.group(11) + "}{" + m.group(12) + "}");
             Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             int hoff = 0, moff = 0, doff = -1;
             if (m.group(9) != null) {
@@ -204,9 +222,11 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
                 hoff = doff * (m.group(10) != null ? Integer.parseInt(m.group(10)) : 0);
                 moff = doff * (m.group(11) != null ? Integer.parseInt(m.group(11)) : 0);
             } else {
+                /*
+                TODO
                 if (m.group(12) == null) {
                     throw new SyslogException("Invalid Date Format");
-                }
+                }*/
             }
             c.set(Calendar.YEAR, Integer.parseInt(m.group(1)));
             c.set(Calendar.MONTH, m.group(2) != null ? Integer.parseInt(m.group(2)) - 1 : 0);
@@ -241,28 +261,42 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
         sb.append(c.get(Calendar.YEAR));
         sb.append('-');
         int f = c.get(Calendar.MONTH);
-        if (f < 9) sb.append('0');
+        if (f < 9) {
+            sb.append('0');
+        }
         sb.append(f + 1);
         sb.append('-');
         f = c.get(Calendar.DATE);
-        if (f < 10) sb.append('0');
+        if (f < 10) {
+            sb.append('0');
+        }
         sb.append(f);
         sb.append('T');
         f = c.get(Calendar.HOUR_OF_DAY);
-        if (f < 10) sb.append('0');
+        if (f < 10) {
+            sb.append('0');
+        }
         sb.append(f);
         sb.append(':');
         f = c.get(Calendar.MINUTE);
-        if (f < 10) sb.append('0');
+        if (f < 10) {
+            sb.append('0');
+        }
         sb.append(f);
         sb.append(':');
         f = c.get(Calendar.SECOND);
-        if (f < 10) sb.append('0');
+        if (f < 10) {
+            sb.append('0');
+        }
         sb.append(f);
         sb.append('.');
         f = c.get(Calendar.MILLISECOND);
-        if (f < 100) sb.append('0');
-        if (f < 10) sb.append('0');
+        if (f < 100) {
+            sb.append('0');
+        }
+        if (f < 10) {
+            sb.append('0');
+        }
         sb.append(f);
         sb.append('Z');
         return sb.toString();

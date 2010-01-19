@@ -29,13 +29,12 @@ import org.openhealthtools.openatna.anom.AtnaMessageParticipant;
 import org.openhealthtools.openatna.anom.AtnaObject;
 import org.openhealthtools.openatna.anom.AtnaObjectDetail;
 import org.openhealthtools.openatna.anom.AtnaSource;
-import org.openhealthtools.openatna.anom.NetworkAccessPoint;
 import org.openhealthtools.openatna.anom.ObjectType;
 import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
 
 
 /**
- * Does some basic validation on message contents and sets a unique id on the message
+ * Does some basic validation on message contents
  * <p/>
  *
  * @author Andrew Harrison
@@ -164,7 +163,7 @@ public class ValidationProcessor implements AtnaProcessor {
                 throw new AtnaException("no code defined", AtnaException.AtnaError.INVALID_CODE);
             }
         }
-        NetworkAccessPoint nap = participant.getNetworkAccessPointType();
+        /*NetworkAccessPoint nap = participant.getNetworkAccessPointType();
         String napId = participant.getNetworkAccessPointId();
         if (nap != null && napId == null) {
             throw new AtnaException("no network access point id defined",
@@ -173,7 +172,7 @@ public class ValidationProcessor implements AtnaProcessor {
         if (nap == null && napId != null) {
             throw new AtnaException("no network access point type defined",
                     AtnaException.AtnaError.NO_NETWORK_ACCESS_POINT_TYPE);
-        }
+        }*/
     }
 
     private void validateSource(AtnaSource source) throws AtnaException {
@@ -200,7 +199,7 @@ public class ValidationProcessor implements AtnaProcessor {
                     AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID);
         }
         if (obj.getObjectIdTypeCode() == null || obj.getObjectIdTypeCode().getCode() == null) {
-            throw new AtnaException("invalid object id type code",
+            throw new AtnaException("no object id type code",
                     AtnaException.AtnaError.NO_PARTICIPANT_OBJECT_ID_TYPE_CODE);
         }
         if (obj.getObjectTypeCode() != null) {
@@ -213,7 +212,7 @@ public class ValidationProcessor implements AtnaProcessor {
         List<AtnaObjectDetail> details = object.getObjectDetails();
         for (AtnaObjectDetail detail : details) {
             if (detail.getType() == null || detail.getValue() == null || detail.getValue().length == 0) {
-                throw new AtnaException("invalid object id type code",
+                throw new AtnaException("invalid object detail",
                         AtnaException.AtnaError.INVALID_OBJECT_DETAIL);
             }
         }

@@ -47,7 +47,7 @@ public class BsdClientTest0 extends ClientTest {
                 BsdMessage m = new BsdMessage(10, 5, "127.0.0.1", new JaxbLogMessage(message), "ATNALOG");
 
                 byte[] bytes = m.toByteArray();
-                DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("localhost", 2863));
+                DatagramPacket packet = new DatagramPacket(bytes, bytes.length, new InetSocketAddress("10.243.0.153", 2863));
                 DatagramSocket socket = new DatagramSocket();
                 socket.send(packet);
             }

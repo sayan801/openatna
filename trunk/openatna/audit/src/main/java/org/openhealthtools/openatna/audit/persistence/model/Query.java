@@ -84,7 +84,11 @@ public class Query {
         OBJECT_TYPE_ROLE,
         OBJECT_SENSITIVITY,
         NETWORK_ACCESS_POINT_ID,
-        NETWORK_ACCESS_POINT_TYPE;
+        NETWORK_ACCESS_POINT_TYPE,
+
+        // result target
+        // currently this accepts MAX_NUM and START_OFFSET as conditionals
+        RESULT;
     }
 
     public static enum Conditional {
@@ -99,7 +103,21 @@ public class Query {
         LESS_THAN_OR_EQUAL,
         NOT_EQUAL,
         NULLITY,
-        ORDER
+        ORDER,
+
+        // query result parameters - both ints
+        MAX_NUM,
+        START_OFFSET
+    }
+
+    public boolean hasConditionals() {
+        if (map.keySet().size() == 0) {
+            return false;
+        }
+        if (map.keySet().size() == 1 && map.keySet().contains(Target.RESULT)) {
+            return false;
+        }
+        return true;
     }
 
     public Query addConditional(Conditional c, Object value, Target target) {
@@ -183,6 +201,16 @@ public class Query {
 
     public Query orderDescending(Target target) {
         addConditional(Conditional.ORDER, Boolean.FALSE, target);
+        return this;
+    }
+
+    public Query setMaxResults(Integer results) {
+        addConditional(Conditional.MAX_NUM, results, Target.RESULT);
+        return this;
+    }
+
+    public Query setStartOffset(Integer results) {
+        addConditional(Conditional.START_OFFSET, results, Target.RESULT);
         return this;
     }
 

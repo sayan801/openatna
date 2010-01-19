@@ -19,11 +19,14 @@
 
 package org.openhealthtools.openatna.anom;
 
-import java.util.GregorianCalendar;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.Date;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 /**
  * taken from jackrabbit:
@@ -37,6 +40,9 @@ import java.text.DecimalFormat;
 
 public class Timestamp {
 
+    private static DateFormat df = new SimpleDateFormat("yyy-MM-dd HH:mm:ss.SSS");
+
+
     /**
      * misc. numeric formats used in formatting
      */
@@ -46,8 +52,13 @@ public class Timestamp {
 
     public static Date parseToDate(String text) {
         Calendar c = parse(text);
-        if(c != null) {
+        if (c != null) {
             return c.getTime();
+        }
+        try {
+            return df.parse(text);
+        } catch (ParseException e) {
+
         }
         return null;
     }

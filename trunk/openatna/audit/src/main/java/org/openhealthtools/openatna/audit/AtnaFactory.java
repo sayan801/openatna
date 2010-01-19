@@ -70,7 +70,7 @@ public class AtnaFactory {
         instance = new AtnaFactory(context);
     }
 
-    private static synchronized Object getBean(final String id) {
+    public static synchronized Object getBean(final String id) {
         if (instance == null) {
             initialize(null);
         }

@@ -21,6 +21,8 @@ package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
@@ -50,6 +52,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implements CodeDao {
 
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateCodeDao");
+
 
     public HibernateCodeDao(SessionFactory sessionFactory) {
         super(CodeEntity.class, sessionFactory);
@@ -65,6 +69,30 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
 
     public CodeEntity getByCode(String code) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("code", code)));
+    }
+
+    public CodeEntity getByCodeAndType(CodeEntity.CodeType type, String code) throws AtnaPersistenceException {
+        // first see if someone was lazy and didn't use the name of the RFC
+        CodeEntity ce = uniqueResult(criteria()
+                .add(Restrictions.eq("type", type))
+                .add(Restrictions.eq("code", code))
+                .add(Restrictions.eq("codeSystemName", "RFC-3881")));
+        if (ce != null) {
+            return ce;
+        }
+        // look for codes with an empty system name
+        ce = uniqueResult(criteria()
+                .add(Restrictions.eq("type", type))
+                .add(Restrictions.eq("code", code))
+                .add(Restrictions.eq("codeSystemName", "")));
+        if (ce != null) {
+            return ce;
+        }
+        // look for codes with a null system name
+        return uniqueResult(criteria()
+                .add(Restrictions.eq("type", type))
+                .add(Restrictions.eq("code", code))
+                .add(Restrictions.isNull("codeSystemName")));
     }
 
     public List<? extends CodeEntity> getByCodeSystem(String codeSystem) throws AtnaPersistenceException {
@@ -135,6 +163,14 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         currentSession().delete(ce);
     }
 
+    /**
+     * This does an ever decreasingly strict search. It will match against a matching code
+     * and a system name as a last resort.
+     *
+     * @param code
+     * @return
+     * @throws AtnaPersistenceException
+     */
     public CodeEntity get(CodeEntity code) throws AtnaPersistenceException {
         String c = code.getCode();
         String sys = code.getCodeSystem();
@@ -143,17 +179,29 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
             throw new AtnaPersistenceException("no code in code entity",
                     AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
         }
-        if (sys == null && name == null) {
-            return null;
+        if ((sys == null || sys.length() == 0) && (name == null || name.length() == 0)) {
+            return getByCodeAndType(code.getType(), c);
         }
-        if (sys != null && name != null) {
-            return getByCodeAndSystemAndSystemName(code.getType(), c, sys, name);
+        CodeEntity ret = null;
+        if ((sys != null && sys.length() > 0 && (name != null && name.length() > 0))) {
+            ret = getByCodeAndSystemAndSystemName(code.getType(), c, sys, name);
         }
-        if (sys != null) {
-            return getByCodeAndSystem(code.getType(), c, sys);
-        } else {
-            return getByCodeAndSystemName(code.getType(), c, name);
+        if (ret != null) {
+            return ret;
         }
+        if (sys != null && sys.length() > 0) {
+            ret = getByCodeAndSystem(code.getType(), c, sys);
+        }
+        if (ret != null) {
+            return ret;
+        }
+        if (name != null && name.length() > 0) {
+            ret = getByCodeAndSystemName(code.getType(), c, name);
+        }
+        if (ret != null) {
+            return ret;
+        }
+        return ret;
     }
 
     private Class fromCodeType(CodeEntity.CodeType type) {
