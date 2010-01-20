@@ -7,7 +7,7 @@
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 
 
-    <bean name="/*.*" class="org.openhealthtools.openatna.web.MessageController">
+    <bean name="/*.html" class="org.openhealthtools.openatna.web.MessageController">
         <property name="messageDao" ref="messageDao"/>
     </bean>
 
