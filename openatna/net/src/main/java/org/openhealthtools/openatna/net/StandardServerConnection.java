@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,6 +53,6 @@ public class StandardServerConnection extends GenericServerConnection {
         } catch (IOException e) {
             LOG.error("Failed to create a server socket on port:" + description.getPort(), e);
             ssocket = null;
-		}
-	}
+        }
+    }
 }

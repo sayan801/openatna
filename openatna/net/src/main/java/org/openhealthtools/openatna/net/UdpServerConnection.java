@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class UdpServerConnection implements IUdpServerConnection {
 
-	private static Log log = LogFactory.getLog(UdpServerConnection.class);
+    private static Log log = LogFactory.getLog(UdpServerConnection.class);
     private IConnectionDescription description;
     private DatagramSocket socket;
     private final int DEFAULT_MAX_TRANSMISSION_UNIT = 32786;
@@ -48,15 +48,16 @@ public class UdpServerConnection implements IUdpServerConnection {
         return socket != null && socket.isBound();
     }
 
-    
+
     /* (non-Javadoc)
-     * @see org.openhealthtools.openatna.net.IUdpServerConnection#getServerSocket()
-     */
+    * @see org.openhealthtools.openatna.net.IUdpServerConnection#getServerSocket()
+    */
     public DatagramSocket getServerSocket() {
-    	DatagramSocket returnVal = null;
-        if (isServerConnectionValid()) 
-        	returnVal = socket;
-        
+        DatagramSocket returnVal = null;
+        if (isServerConnectionValid()) {
+            returnVal = socket;
+        }
+
         return returnVal;
     }
 
@@ -73,9 +74,9 @@ public class UdpServerConnection implements IUdpServerConnection {
      * @see org.openhealthtools.openatna.net.IUdpServerConnection#getMaxTransmissionUnit()
      */
     public int getMaxTransmissionUnit() {
-    	int ret = DEFAULT_MAX_TRANSMISSION_UNIT;
-    	
-    	PropertySet udpProps = description.getPropertySet("UdpProperties");
+        int ret = DEFAULT_MAX_TRANSMISSION_UNIT;
+
+        PropertySet udpProps = description.getPropertySet("UdpProperties");
         if (udpProps == null) {
             return ret;
         }
@@ -88,7 +89,7 @@ public class UdpServerConnection implements IUdpServerConnection {
             }
         }
 
-    	return ret;
+        return ret;
     }
 
     /* (non-Javadoc)
@@ -101,16 +102,16 @@ public class UdpServerConnection implements IUdpServerConnection {
     /* (non-Javadoc)
      * @see org.openhealthtools.openatna.net.IUdpServerConnection#connect()
      */
-	public void connect() {
+    public void connect() {
         int port = description.getPort();
         String addr = description.getHostname();
-		try {
-	        socket = new DatagramSocket(port, InetAddress.getByName(addr));
-		}catch(SocketException e) {
-			log.error("UDP socket Connection Error", e);
-		}catch(UnknownHostException e){
-			log.error("Unknown host for UDP socket", e);
-		}
-		
-	}
+        try {
+            socket = new DatagramSocket(port, InetAddress.getByName(addr));
+        } catch (SocketException e) {
+            log.error("UDP socket Connection Error", e);
+        } catch (UnknownHostException e) {
+            log.error("Unknown host for UDP socket", e);
+        }
+
+    }
 }

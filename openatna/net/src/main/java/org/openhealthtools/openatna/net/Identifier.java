@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package org.openhealthtools.openatna.net;
 
 /**
  * This class represents an ID assigning authority in an IHE affinity domain.
- * 
+ *
  * @author Jim Firby
  */
 public class Identifier {
@@ -38,18 +38,25 @@ public class Identifier {
      * may have a symbolic namespace name, or a universal ID and a universal ID type,
      * or both.
      *
-     * @param namespace The symbokic name for the assigning authority
-     * @param universal The universal ID for the assigning authority
+     * @param namespace     The symbokic name for the assigning authority
+     * @param universal     The universal ID for the assigning authority
      * @param universalType The universal ID type
      */
     public Identifier(String namespace, String universal, String universalType) {
-        if (namespace != null) namespaceId = namespace.trim();
-        if (universal != null) universalId = universal.trim();
-        if (universalType != null) universalIdType = universalType.trim();
+        if (namespace != null) {
+            namespaceId = namespace.trim();
+        }
+        if (universal != null) {
+            universalId = universal.trim();
+        }
+        if (universalType != null) {
+            universalIdType = universalType.trim();
+        }
         if (universalId != null) {
             universalKey = universalId;
-            if (universalIdType != null)
+            if (universalIdType != null) {
                 universalKey = universalKey + "&" + universalIdType;
+            }
         }
     }
 
@@ -68,10 +75,11 @@ public class Identifier {
      * @param namespace The symbolic namespace ID
      */
     public void setNamespaceId(String namespace) {
-        if (namespace != null) 
-        	this.namespaceId = namespace.trim();
-        else
-        	this.namespaceId = null;
+        if (namespace != null) {
+            this.namespaceId = namespace.trim();
+        } else {
+            this.namespaceId = null;
+        }
     }
 
     /**
@@ -89,15 +97,17 @@ public class Identifier {
      * @param universal The universal ID
      */
     public void setUniversalId(String universal) {
-        if (universal != null) 
-        	universalId = universal.trim();
-        else
-        	universalId = null;
-        
+        if (universal != null) {
+            universalId = universal.trim();
+        } else {
+            universalId = null;
+        }
+
         if (universalId != null) {
             universalKey = universalId;
-            if (universalIdType != null)
+            if (universalIdType != null) {
                 universalKey = universalKey + "&" + universalIdType;
+            }
         }
     }
 
@@ -116,15 +126,17 @@ public class Identifier {
      * @param univeralIdType The universal ID type
      */
     public void setUniversalIdType(String universalIdType) {
-        if (universalIdType != null) 
-        	this.universalIdType = universalIdType.trim();
-        else
-        	this.universalIdType = null;
-        
+        if (universalIdType != null) {
+            this.universalIdType = universalIdType.trim();
+        } else {
+            this.universalIdType = null;
+        }
+
         if (universalId != null) {
             universalKey = universalId;
-            if (universalIdType != null)
+            if (universalIdType != null) {
                 universalKey = universalKey + "&" + universalIdType;
+            }
         }
     }
 
@@ -136,13 +148,15 @@ public class Identifier {
      */
     public String getAuthorityNameString() {
         StringBuffer sb = new StringBuffer();
-        if (namespaceId != null) sb.append(namespaceId);
+        if (namespaceId != null) {
+            sb.append(namespaceId);
+        }
         if (universalId != null) {
             sb.append('&');
-        	sb.append(universalId);
+            sb.append(universalId);
             if (universalIdType != null) {
                 sb.append('&');
-            	sb.append(universalIdType);
+                sb.append(universalIdType);
             }
         }
         return sb.toString();
@@ -174,12 +188,15 @@ public class Identifier {
      */
     public int hashCode() {
         int result = 17;
-        if (namespaceId != null)
-            result = 37*result +  namespaceId.hashCode();
-        if (universalId != null)
-            result = 37*result +  universalId.hashCode();
-        if (universalIdType != null)
-            result = 37*result + universalIdType.hashCode();
+        if (namespaceId != null) {
+            result = 37 * result + namespaceId.hashCode();
+        }
+        if (universalId != null) {
+            result = 37 * result + universalId.hashCode();
+        }
+        if (universalIdType != null) {
+            result = 37 * result + universalIdType.hashCode();
+        }
 
         return result;
     }

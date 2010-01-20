@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ public class ObjectList {
 
     /**
      * Creates an ObjectList
+     *
      * @param name
      */
     public ObjectList(String name) {
@@ -58,10 +59,11 @@ public class ObjectList {
 
     /**
      * Adds an object entry to this object list
+     *
      * @param entry
      */
     public void addListEntry(ObjectEntry entry) {
-        objects.add( entry );
+        objects.add(entry);
     }
 
     /**
@@ -77,7 +79,7 @@ public class ObjectList {
     /**
      * This classes defines an Object in the ObjectEntry.
      */
- /*   public static class ObjectEntry {
+    /*   public static class ObjectEntry {
         private HashMap<String, String> values = new HashMap<String, String>();
 
         public ObjectEntry() {}

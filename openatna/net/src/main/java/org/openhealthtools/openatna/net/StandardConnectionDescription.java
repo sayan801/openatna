@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -590,10 +590,10 @@ public class StandardConnectionDescription implements IConnectionDescription {
                 if (identifiers == null) {
                     identifiers = new Hashtable<String, Pair>();
                 }
-				identifiers.put(name.toLowerCase(), new Pair(type, authority));
-			} else {
-				log.debug("Adding identifier with no name to connection: " + this.name);
-			}
-		}
-	}
+                identifiers.put(name.toLowerCase(), new Pair(type, authority));
+            } else {
+                log.debug("Adding identifier with no name to connection: " + this.name);
+            }
+        }
+    }
 }

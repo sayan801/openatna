@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,9 +49,13 @@ public class StringUtil {
      * @return The trimmed string, or null if the string is empty
      */
     public static final String trimString(String s) {
-        if (s == null) return null;
+        if (s == null) {
+            return null;
+        }
         String trimmed = s.trim();
-        if (trimmed.equals("")) return null;
+        if (trimmed.equals("")) {
+            return null;
+        }
         return trimmed;
     }
 
@@ -64,7 +68,9 @@ public class StringUtil {
      * @return the string concatenation of the list
      */
     public static final String toString(List<String> list, String delimiter, String elementWrapper) {
-        if (list == null || list.size() == 0) return null;
+        if (list == null || list.size() == 0) {
+            return null;
+        }
 
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < list.size(); i++) {
@@ -88,7 +94,9 @@ public class StringUtil {
      * @return the string concatenation of the list
      */
     public static final String toString(List<String> list, String delimiter) {
-        if (list == null || list.size() == 0) return null;
+        if (list == null || list.size() == 0) {
+            return null;
+        }
 
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < list.size(); i++) {
@@ -109,7 +117,9 @@ public class StringUtil {
      * @return the string concatenation of the string array
      */
     public static final String toString(String[] array, String delimiter) {
-        if (array == null || array.length == 0) return null;
+        if (array == null || array.length == 0) {
+            return null;
+        }
 
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < array.length; i++) {
