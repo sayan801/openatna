@@ -1,0 +1,143 @@
+body, td {
+    padding: 10px 10px 10px 10px;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-size: 0.8em;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+a:link {
+    color: #000000;
+}
+
+a:visited {
+    color: #000000;
+}
+
+a:active, a:hover {
+    color: #6600ff;
+}
+
+th {
+    background-color: #ccccff;
+    font-weight: normal;
+}
+
+td, th {
+    padding: 0.2em;
+}
+
+fieldset {
+    border: 0px solid #6666ff;
+    width: 50em;
+    margin-top: 5px;
+}
+
+input {
+    margin-right: 4em;
+    width: 12em;
+}
+
+select {
+    margin-right: 4em;
+    width: 12em;
+}
+
+legend {
+    padding: 2px 6px;
+    font-weight: bold;
+}
+
+.header, .longHeader, .headerContent, .longHeaderContent, .headerLink {
+    width: 20em;
+    float: left;
+    padding: 0.2em;
+    overflow: hidden;
+    font-weight: normal;
+}
+
+.header, .longHeader, .headerLink, .fullHeader {
+    background: #ccccff;
+    font-weight: bold;
+}
+
+.main {
+    margin: 0px auto;
+    width: 84em;
+}
+
+.obj {
+    background: #ffe0e0;
+}
+
+.evt {
+    background: #e9e9ff;
+}
+
+.objHeader {
+    background: #ffc4c4;
+}
+
+.src {
+    background: #e7ffff;
+}
+
+.srcHeader {
+    background: #aceeff;
+}
+
+.prt {
+    background: #ffdeff;
+}
+
+.prtHeader {
+    background: #efb0ff;
+}
+
+.longHeader, .longHeaderContent {
+    width: 40.35em;
+}
+
+.fullHeader {
+    width: 80.74em;
+}
+
+.headerLink {
+    width: 1.5em;
+}
+
+table {
+    width: 50em;
+}
+
+.content, .subContent {
+    clear: left;
+    float: left;
+    width: 84em;
+}
+
+.subContent {
+    width: 82em;
+}
+
+form {
+    width: 60em;
+}
+
+.hidden {
+    visibility: hidden;
+    display: none;
+    float: left;
+    clear: left;
+    margin-left: 1em;
+}
+
+.subHeader {
+    font-style: italic;
+
+}
+
+
