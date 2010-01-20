@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,23 +68,30 @@ public final class Pair implements Serializable {
       */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (!(obj instanceof Pair))
+        }
+        if (!(obj instanceof Pair)) {
             return false;
+        }
         final Pair other = (Pair) obj;
         if (_first == null) {
-            if (other._first != null)
+            if (other._first != null) {
                 return false;
-        } else if (!_first.equals(other._first))
+            }
+        } else if (!_first.equals(other._first)) {
             return false;
+        }
         if (_second == null) {
-            if (other._second != null)
+            if (other._second != null) {
                 return false;
-        } else if (!_second.equals(other._second))
+            }
+        } else if (!_second.equals(other._second)) {
             return false;
+        }
         return true;
     }
 

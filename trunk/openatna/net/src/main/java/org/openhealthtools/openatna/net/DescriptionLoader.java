@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -958,24 +958,24 @@ public class DescriptionLoader {
      * @param node The XML DOM node holding the text
      * @return The text
      */
-	private static String getNodeAsText(Node node) {
+    private static String getNodeAsText(Node node) {
         if (!node.hasChildNodes()) {
             return null;
         }
-		Text nodeTextContents = (Text) node.getFirstChild();
-		return nodeTextContents.getData();
-	}
+        Text nodeTextContents = (Text) node.getFirstChild();
+        return nodeTextContents.getData();
+    }
 
-	/**
+    /**
      * Get the text included within an XML DOM element as an integer
      *
      * @param node The XML DOM node holding the text
      * @return The text converted to an integer.
      */
-	private static int getNodeAsInt(Node node) {
-		Text nodeTextContents = (Text) node.getFirstChild();
-		String value = nodeTextContents.getData();
-		return Integer.parseInt(value);
+    private static int getNodeAsInt(Node node) {
+        Text nodeTextContents = (Text) node.getFirstChild();
+        String value = nodeTextContents.getData();
+        return Integer.parseInt(value);
 	}
 
 }
