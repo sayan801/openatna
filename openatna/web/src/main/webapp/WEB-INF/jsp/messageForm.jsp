@@ -1,6 +1,6 @@
 <%--
 
- * Copyright (c) 2010 University of Cardiff and others.
+ * Copyright (c) 2009-2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
