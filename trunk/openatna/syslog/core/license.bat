@@ -1,0 +1,2 @@
+@rem Run this command to update and format copyright header
+mvn license:format -Dyear=2009-2010 -Dcompany="University of Cardiff and others" -Dcontributor1="University of Cardiff - initial API and implementation" -Dcontributor2=""

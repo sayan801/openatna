@@ -59,6 +59,28 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>${project.parent.basedir}/header.txt</header>
+                    <excludes>
+                        <exclude>**/header.txt</exclude>
+                        <exclude>**/*.log</exclude>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>**/*.bat</exclude>
+                        <exclude>**/*.list</exclude>
+                    </excludes>
+		            <executions>
+		                <execution>
+		                    <goals>
+		                        <goal>check</goal>
+		                    </goals>
+		                </execution>
+		            </executions>                    
+                </configuration>
+            </plugin>            
         </plugins>
     </build>
 
@@ -80,6 +102,24 @@
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>appfuse</id>
+            <url>http://static.appfuse.org/repository</url>
+        </pluginRepository>
+		<pluginRepository>
+		    <id>mc-release</id>
+		    <name>Local Maven repository of releases</name>
+		    <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+		    <snapshots>
+		        <enabled>false</enabled>
+		    </snapshots>
+		    <releases>
+		        <enabled>true</enabled>
+		    </releases>
+		</pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
