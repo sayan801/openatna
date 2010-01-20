@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,22 @@
 
 package org.openhealthtools.openatna.syslog.message;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
-
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * W3C DOM implementation of the LogMessage interface.

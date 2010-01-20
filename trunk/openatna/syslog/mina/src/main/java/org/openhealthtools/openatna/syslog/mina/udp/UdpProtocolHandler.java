@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@
 
 package org.openhealthtools.openatna.syslog.mina.udp;
 
+import java.io.InputStream;
+import java.util.logging.Logger;
+
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandlerAdapter;
@@ -26,9 +29,6 @@ import org.apache.mina.common.IoSession;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-
-import java.io.InputStream;
-import java.util.logging.Logger;
 
 /**
  * Class Description Here...

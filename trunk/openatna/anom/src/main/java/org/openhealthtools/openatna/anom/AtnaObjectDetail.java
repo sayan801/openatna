@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,13 +57,21 @@ public class AtnaObjectDetail implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AtnaObjectDetail that = (AtnaObjectDetail) o;
 
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (!Arrays.equals(value, that.value)) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) {
+            return false;
+        }
+        if (!Arrays.equals(value, that.value)) {
+            return false;
+        }
 
         return true;
     }

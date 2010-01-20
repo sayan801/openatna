@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 package org.openhealthtools.openatna.syslog.test.tls.ssl;
 
 
-import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,12 +27,23 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 
 /**
@@ -42,7 +52,7 @@ import java.util.logging.Logger;
 public class AuthSSLSocketFactory {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.test.tls.ssl.AuthSSLSocketFactory");
-    
+
     private KeystoreDetails details = null;
     private KeystoreDetails truststore = null;
 
@@ -95,7 +105,9 @@ public class AuthSSLSocketFactory {
             String password = details.getKeystorePassword();
             keystore.load(is, password != null ? password.toCharArray() : null);
         } finally {
-            if (is != null) is.close();
+            if (is != null) {
+                is.close();
+            }
         }
         return keystore;
     }
@@ -138,13 +150,15 @@ public class AuthSSLSocketFactory {
         if (keystore == null) {
             throw new IllegalArgumentException("Keystore may not be null");
         }
-        TrustManagerFactory tmfactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());//TrustManagerFactory.getInstance(algorithm);
+        TrustManagerFactory tmfactory =
+                TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());//TrustManagerFactory.getInstance(algorithm);
         tmfactory.init(keystore);
         TrustManager[] trustmanagers = tmfactory.getTrustManagers();
         for (int i = 0; i < trustmanagers.length; i++) {
 
             if (trustmanagers[i] instanceof X509TrustManager) {
-                return new TrustManager[]{new AuthSSLX509TrustManager((X509TrustManager) trustmanagers[i], defaultTrustManager, truststore.getAuthorizedDNs())};
+                return new TrustManager[]{
+                        new AuthSSLX509TrustManager((X509TrustManager) trustmanagers[i], defaultTrustManager, truststore.getAuthorizedDNs())};
             }
         }
         return trustmanagers;

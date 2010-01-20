@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 
 package org.openhealthtools.openatna.syslog.test.udp;
 
+import java.io.IOException;
+
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
@@ -26,8 +28,6 @@ import org.openhealthtools.openatna.syslog.message.XmlLogMessage;
 import org.openhealthtools.openatna.syslog.mina.udp.UdpConfig;
 import org.openhealthtools.openatna.syslog.mina.udp.UdpServer;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-
-import java.io.IOException;
 
 /**
  * runs a UDP 5426 server.

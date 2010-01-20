@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.openhealthtools.openatna.anom.*;
+import org.openhealthtools.openatna.anom.AtnaCode;
+import org.openhealthtools.openatna.anom.AtnaException;
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.AtnaMessageObject;
+import org.openhealthtools.openatna.anom.AtnaMessageParticipant;
+import org.openhealthtools.openatna.anom.AtnaObject;
+import org.openhealthtools.openatna.anom.AtnaObjectDetail;
+import org.openhealthtools.openatna.anom.AtnaParticipant;
+import org.openhealthtools.openatna.anom.AtnaSource;
+import org.openhealthtools.openatna.anom.EventOutcome;
 import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

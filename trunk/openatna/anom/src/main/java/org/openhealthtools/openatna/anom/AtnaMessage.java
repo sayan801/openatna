@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@
 package org.openhealthtools.openatna.anom;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Audit message interface
@@ -186,18 +190,38 @@ public class AtnaMessage implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaMessage)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AtnaMessage)) {
+            return false;
+        }
 
         AtnaMessage that = (AtnaMessage) o;
-        if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) return false;
-        if (eventCode != null ? !eventCode.equals(that.eventCode) : that.eventCode != null) return false;
-        if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) return false;
-        if (eventOutcome != that.eventOutcome) return false;
-        if (eventTypeCodes != null ? !eventTypeCodes.equals(that.eventTypeCodes) : that.eventTypeCodes != null) return false;
-        if (objects != null ? !objects.equals(that.objects) : that.objects != null) return false;
-        if (participants != null ? !participants.equals(that.participants) : that.participants != null) return false;
-        if (sources != null ? !sources.equals(that.sources) : that.sources != null) return false;
+        if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) {
+            return false;
+        }
+        if (eventCode != null ? !eventCode.equals(that.eventCode) : that.eventCode != null) {
+            return false;
+        }
+        if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) {
+            return false;
+        }
+        if (eventOutcome != that.eventOutcome) {
+            return false;
+        }
+        if (eventTypeCodes != null ? !eventTypeCodes.equals(that.eventTypeCodes) : that.eventTypeCodes != null) {
+            return false;
+        }
+        if (objects != null ? !objects.equals(that.objects) : that.objects != null) {
+            return false;
+        }
+        if (participants != null ? !participants.equals(that.participants) : that.participants != null) {
+            return false;
+        }
+        if (sources != null ? !sources.equals(that.sources) : that.sources != null) {
+            return false;
+        }
 
         return true;
     }

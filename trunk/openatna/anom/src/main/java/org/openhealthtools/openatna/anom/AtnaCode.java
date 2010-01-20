@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,17 +92,33 @@ public class AtnaCode implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaCode)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AtnaCode)) {
+            return false;
+        }
 
         AtnaCode atnaCode = (AtnaCode) o;
 
-        if (!code.equals(atnaCode.code)) return false;
-        if (codeSystem != null ? !codeSystem.equals(atnaCode.codeSystem) : atnaCode.codeSystem != null) return false;
-        if (codeSystemName != null ? !codeSystemName.equals(atnaCode.codeSystemName) : atnaCode.codeSystemName != null) return false;
-        if (!codeType.equals(atnaCode.codeType)) return false;
-        if (displayName != null ? !displayName.equals(atnaCode.displayName) : atnaCode.displayName != null) return false;
-        if (originalText != null ? !originalText.equals(atnaCode.originalText) : atnaCode.originalText != null) return false;
+        if (!code.equals(atnaCode.code)) {
+            return false;
+        }
+        if (codeSystem != null ? !codeSystem.equals(atnaCode.codeSystem) : atnaCode.codeSystem != null) {
+            return false;
+        }
+        if (codeSystemName != null ? !codeSystemName.equals(atnaCode.codeSystemName) : atnaCode.codeSystemName != null) {
+            return false;
+        }
+        if (!codeType.equals(atnaCode.codeType)) {
+            return false;
+        }
+        if (displayName != null ? !displayName.equals(atnaCode.displayName) : atnaCode.displayName != null) {
+            return false;
+        }
+        if (originalText != null ? !originalText.equals(atnaCode.originalText) : atnaCode.originalText != null) {
+            return false;
+        }
 
         return true;
     }

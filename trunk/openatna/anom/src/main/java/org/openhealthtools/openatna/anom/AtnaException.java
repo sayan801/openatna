@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ package org.openhealthtools.openatna.anom;
 
 public class AtnaException extends Exception {
 
-	private static final long serialVersionUID = -8359738447751397693L;
+    private static final long serialVersionUID = -8359738447751397693L;
 
-	public static enum AtnaError {
+    public static enum AtnaError {
 
         UNDEFINED,
         NO_MESSAGE,

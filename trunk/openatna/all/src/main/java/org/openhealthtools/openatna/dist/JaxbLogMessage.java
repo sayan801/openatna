@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@
 
 package org.openhealthtools.openatna.dist;
 
-import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
+import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
 
 /**
  * @author Andrew Harrison
