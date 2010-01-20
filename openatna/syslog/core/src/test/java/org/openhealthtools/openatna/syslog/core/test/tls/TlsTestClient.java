@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,21 @@
 
 package org.openhealthtools.openatna.syslog.core.test.tls;
 
-import org.openhealthtools.openatna.syslog.protocol.*;
-import org.openhealthtools.openatna.syslog.message.StringLogMessage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.core.test.tls.ssl.KeystoreDetails;
 import org.openhealthtools.openatna.syslog.core.test.tls.ssl.AuthSSLSocketFactory;
-
-import java.util.*;
-import java.net.URL;
-import java.net.Socket;
-import java.io.OutputStream;
-import java.io.IOException;
+import org.openhealthtools.openatna.syslog.core.test.tls.ssl.KeystoreDetails;
+import org.openhealthtools.openatna.syslog.message.StringLogMessage;
+import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
+import org.openhealthtools.openatna.syslog.protocol.SdParam;
+import org.openhealthtools.openatna.syslog.protocol.StructuredElement;
 
 /**
  * Tests TLS 5424 server. This sends multiple log messages concatenated.
@@ -54,7 +57,9 @@ public class TlsTestClient {
             KeystoreDetails key = new KeystoreDetails(uu.toString(), "clientStorePass", "myClientCert", "password");
             AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
 
-            ProtocolMessage sl = new ProtocolMessage(10, 5, "2009-08-14T14:12:23.115Z", "localhost", new StringLogMessage("<atna></atna>"), "IHE_XDS", "ATNALOG", "1234");
+            ProtocolMessage sl =
+                    new ProtocolMessage(10, 5, "2009-08-14T14:12:23.115Z", "localhost", new StringLogMessage("<atna></atna>"), "IHE_XDS", "ATNALOG",
+                            "1234");
             List<SdParam> params = new ArrayList<SdParam>();
             params.add(new SdParam("param1", "param value\\=1"));
             params.add(new SdParam("param2", "param value] 2"));

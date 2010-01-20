@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,16 @@
 package org.openhealthtools.openatna.syslog.protocol;
 
 
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.Constants;
-
-import java.util.*;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.openhealthtools.openatna.syslog.Constants;
+import org.openhealthtools.openatna.syslog.SyslogException;
 
 /**
  * A structured element as defined by RFC 5424
@@ -87,6 +90,7 @@ public class StructuredElement implements Serializable {
 
     /**
      * returns a copy
+     *
      * @return
      */
     public List<SdParam> getParams() {
@@ -153,9 +157,9 @@ public class StructuredElement implements Serializable {
     /**
      * reads in structured data and leaves the stream positioned after the space at the end of the data, i.e.
      * ready to read the payload.
-     *
+     * <p/>
      * This reads up to 1024 characters. This limit is arbitrary. It is imposed to reduce the risk
-     * of badly formed or malicious messages from using too many resources. 
+     * of badly formed or malicious messages from using too many resources.
      * state:
      * 0 - not in element
      * 1 - inElement
@@ -282,7 +286,7 @@ public class StructuredElement implements Serializable {
                                 params.add(new SdParam(currName, new String(buff.array(), 0, buff.position(), Constants.ENC_UTF8)));
                                 buff.clear();
                                 state = 6;
-                            } else if(c == '\\') {
+                            } else if (c == '\\') {
 
                                 afterBackslash = true;
                             } else {
@@ -343,13 +347,21 @@ public class StructuredElement implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         StructuredElement that = (StructuredElement) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (params != null ? !params.equals(that.params) : that.params != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        }
+        if (params != null ? !params.equals(that.params) : that.params != null) {
+            return false;
+        }
 
         return true;
     }

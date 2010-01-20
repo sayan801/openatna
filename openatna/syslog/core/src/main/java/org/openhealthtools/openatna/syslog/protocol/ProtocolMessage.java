@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@
 package org.openhealthtools.openatna.syslog.protocol;
 
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +51,8 @@ public class ProtocolMessage<M> extends SyslogMessage {
     private List<StructuredElement> structuredElement = new ArrayList<StructuredElement>();
 
 
-    public ProtocolMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message, String appName, String messageId, String procId) throws SyslogException {
+    public ProtocolMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message, String appName, String messageId,
+                           String procId) throws SyslogException {
         super(facility, severity, timestamp, hostName, message);
         if (timestamp == null) {
             timestamp = "-";
@@ -60,7 +65,8 @@ public class ProtocolMessage<M> extends SyslogMessage {
         this.procId = procId;
     }
 
-    public ProtocolMessage(int facility, int severity, String hostName, LogMessage<M> message, String appName, String messageId, String procId) throws SyslogException {
+    public ProtocolMessage(int facility, int severity, String hostName, LogMessage<M> message, String appName, String messageId, String procId)
+            throws SyslogException {
         this(facility, severity, ProtocolMessageFactory.formatDate(new Date()), hostName, message, appName, messageId, procId);
     }
 

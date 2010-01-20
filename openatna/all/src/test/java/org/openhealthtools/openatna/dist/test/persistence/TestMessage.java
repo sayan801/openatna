@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,20 @@ import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.audit.persistence.model.*;
-import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
 import org.openhealthtools.openatna.audit.persistence.util.Base64;
 import org.junit.Test;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,15 +105,27 @@ public class AtnaMessageObject implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaMessageObject)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AtnaMessageObject)) {
+            return false;
+        }
 
         AtnaMessageObject that = (AtnaMessageObject) o;
 
-        if (object != null ? !object.equals(that.object) : that.object != null) return false;
-        if (objectDataLifeCycle != that.objectDataLifeCycle) return false;
-        if (objectDetails != null ? !objectDetails.equals(that.objectDetails) : that.objectDetails != null) return false;
-        if (!Arrays.equals(objectQuery, that.objectQuery)) return false;
+        if (object != null ? !object.equals(that.object) : that.object != null) {
+            return false;
+        }
+        if (objectDataLifeCycle != that.objectDataLifeCycle) {
+            return false;
+        }
+        if (objectDetails != null ? !objectDetails.equals(that.objectDetails) : that.objectDetails != null) {
+            return false;
+        }
+        if (!Arrays.equals(objectQuery, that.objectQuery)) {
+            return false;
+        }
 
         return true;
     }

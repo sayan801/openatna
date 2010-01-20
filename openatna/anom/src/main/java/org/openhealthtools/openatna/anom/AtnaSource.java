@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,14 +79,24 @@ public class AtnaSource implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaSource)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AtnaSource)) {
+            return false;
+        }
 
         AtnaSource that = (AtnaSource) o;
 
-        if (enterpriseSiteId != null ? !enterpriseSiteId.equals(that.enterpriseSiteId) : that.enterpriseSiteId != null) return false;
-        if (sourceId != null ? !sourceId.equals(that.sourceId) : that.sourceId != null) return false;
-        if (sourceTypeCodes != null ? !sourceTypeCodes.equals(that.sourceTypeCodes) : that.sourceTypeCodes != null) return false;
+        if (enterpriseSiteId != null ? !enterpriseSiteId.equals(that.enterpriseSiteId) : that.enterpriseSiteId != null) {
+            return false;
+        }
+        if (sourceId != null ? !sourceId.equals(that.sourceId) : that.sourceId != null) {
+            return false;
+        }
+        if (sourceTypeCodes != null ? !sourceTypeCodes.equals(that.sourceTypeCodes) : that.sourceTypeCodes != null) {
+            return false;
+        }
 
         return true;
     }

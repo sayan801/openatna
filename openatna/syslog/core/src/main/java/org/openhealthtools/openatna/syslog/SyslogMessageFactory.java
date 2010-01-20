@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package org.openhealthtools.openatna.syslog;
 
-import org.openhealthtools.openatna.syslog.message.StringLogMessage;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.openhealthtools.openatna.syslog.message.StringLogMessage;
 
 /**
  * The SyslogMessageFactory is the super class of message factories. It
@@ -46,7 +46,7 @@ import java.util.Map;
  * method. NOTE this means that LogMessage implementations must have a default constructor because they are
  * instantiated using Class.newInstance(). The SyslogListener
  * <p/>
- *
+ * <p/>
  * <p/>
  * To set the type of message the server expects, use the setFactory(SyslogMessageFactory factory) method which
  * defines the SyslogMessageFactory that will be used to parse incoming data and generate a SyslogMessage.

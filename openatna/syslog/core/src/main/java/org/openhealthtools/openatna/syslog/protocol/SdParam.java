@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@
 
 package org.openhealthtools.openatna.syslog.protocol;
 
-import org.openhealthtools.openatna.syslog.SyslogException;
-
 import java.io.Serializable;
+
+import org.openhealthtools.openatna.syslog.SyslogException;
 
 
 /**
@@ -39,10 +39,10 @@ public class SdParam implements Serializable {
     private String value;
 
     public SdParam(String name, String value) throws SyslogException {
-        if(name == null || name.length() == 0) {
+        if (name == null || name.length() == 0) {
             throw new SyslogException("no name defined");
         }
-        if(value == null || value.length() == 0) {
+        if (value == null || value.length() == 0) {
             throw new SyslogException("no value defined");
         }
         this.name = name;
@@ -59,13 +59,21 @@ public class SdParam implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SdParam sdParam = (SdParam) o;
 
-        if (name != null ? !name.equals(sdParam.name) : sdParam.name != null) return false;
-        if (value != null ? !value.equals(sdParam.value) : sdParam.value != null) return false;
+        if (name != null ? !name.equals(sdParam.name) : sdParam.name != null) {
+            return false;
+        }
+        if (value != null ? !value.equals(sdParam.value) : sdParam.value != null) {
+            return false;
+        }
 
         return true;
     }

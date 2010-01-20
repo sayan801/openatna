@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
-import org.openhealthtools.openatna.syslog.transport.TransportConfig;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
-import java.util.Map;
+import org.openhealthtools.openatna.syslog.transport.TransportConfig;
 
 /**
  * Class Description Here...
@@ -56,8 +56,8 @@ public class TlsConfig extends TransportConfig {
 
     public int getPort() {
         Integer port = (Integer) getProperty("port");
-        if(port == null) {
-           port = 8443;
+        if (port == null) {
+            port = 8443;
         }
         return port;
     }

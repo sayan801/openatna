@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,15 +89,27 @@ public class AtnaParticipant implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AtnaParticipant)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AtnaParticipant)) {
+            return false;
+        }
 
         AtnaParticipant that = (AtnaParticipant) o;
 
-        if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId) : that.alternativeUserId != null) return false;
-        if (roleIdCodes != null ? !roleIdCodes.equals(that.roleIdCodes) : that.roleIdCodes != null) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
+        if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId) : that.alternativeUserId != null) {
+            return false;
+        }
+        if (roleIdCodes != null ? !roleIdCodes.equals(that.roleIdCodes) : that.roleIdCodes != null) {
+            return false;
+        }
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) {
+            return false;
+        }
+        if (userName != null ? !userName.equals(that.userName) : that.userName != null) {
+            return false;
+        }
 
         return true;
     }

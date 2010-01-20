@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 University of Cardiff and others.
+ * Copyright (c) 2010 University of Cardiff and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +21,15 @@ package org.openhealthtools.openatna.web;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ui.ModelMap;
+import org.openhealthtools.openatna.anom.Timestamp;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
-import org.openhealthtools.openatna.anom.Timestamp;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * @author Andrew Harrison
@@ -53,11 +50,11 @@ public class MessageController extends MultiActionController {
     }
 
     public ModelAndView query(HttpServletRequest request,
-                             HttpServletResponse response, QueryBean queryBean) throws Exception {
+                              HttpServletResponse response, QueryBean queryBean) throws Exception {
 
         ModelMap modelMap = new ModelMap();
         Query q = createQuery(queryBean);
-        if(q.hasConditionals()) {
+        if (q.hasConditionals()) {
             modelMap.addAttribute("messages", messageDao.getByQuery(q));
         } else {
             modelMap.addAttribute("messages", new ArrayList());
@@ -68,16 +65,16 @@ public class MessageController extends MultiActionController {
 
     private Query createQuery(QueryBean bean) {
         Query query = new Query();
-        if(bean.getEventIdCode() != null && bean.getEventIdCode().length() > 0) {
+        if (bean.getEventIdCode() != null && bean.getEventIdCode().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getEventIdCode(), Query.Target.EVENT_ID_CODE);
         }
-        if(bean.getEventOutcome() != null && bean.getEventOutcome().length() > 0) {
+        if (bean.getEventOutcome() != null && bean.getEventOutcome().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, Integer.parseInt(bean.getEventOutcome()), Query.Target.EVENT_OUTCOME);
         }
-        if(bean.getObjectId() != null && bean.getObjectId().length() > 0) {
+        if (bean.getObjectId() != null && bean.getObjectId().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getObjectId(), Query.Target.PARTICIPANT_ID);
         }
-        if(bean.getSourceId() != null && bean.getSourceId().length() > 0) {
+        if (bean.getSourceId() != null && bean.getSourceId().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getSourceId(), Query.Target.SOURCE_ID);
         }
         if (bean.getParticipantId() != null && bean.getParticipantId().length() > 0) {
@@ -89,7 +86,7 @@ public class MessageController extends MultiActionController {
         if (bean.getEventTime() != null && bean.getEventTime().length() > 0) {
             Date ts = Timestamp.parseToDate(bean.getEventTime());
 
-            if(ts != null) {
+            if (ts != null) {
                 query.addConditional(Query.Conditional.EQUALS, ts, Query.Target.EVENT_TIME);
             }
         }
@@ -100,5 +97,4 @@ public class MessageController extends MultiActionController {
     }
 
 
-    
 }
