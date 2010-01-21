@@ -18,7 +18,7 @@
  *    -
  */
 
-package org.openhealthtools.openatna.dist.test;
+package org.openhealthtools.openatna.all;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
@@ -27,7 +27,7 @@ import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
 /**
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 30, 2009: 10:11:53 PM
+ * @created Oct 21, 2009: 8:51:43 PM
  * @date $Date:$ modified by $Author:$
  */
 
@@ -40,6 +40,4 @@ public class JaxbLogMessage extends AtnaLogMessage {
     public JaxbLogMessage(AtnaMessage message) {
         super(message, new JaxbIOFactory());
     }
-
-
 }

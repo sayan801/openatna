@@ -18,7 +18,7 @@
  *    -
  */
 
-package org.openhealthtools.openatna.dist.test;
+package org.openhealthtools.openatna.all.test;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

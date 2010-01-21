@@ -34,7 +34,7 @@
         </copy>
         <jar destfile="build/openatna-${version}.jar">
             <manifest>
-                <attribute name="Main-Class" value="org.openhealthtools.openatna.dist.Server"/>
+                <attribute name="Main-Class" value="org.openhealthtools.openatna.all.Server"/>
                 <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
             </manifest>
             <fileset dir="stage" includes="**/**"/>
