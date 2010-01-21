@@ -296,8 +296,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
             }
         } else {
-            saveParticipantCodes(pe, policies);
-            existing.setParticipantTypeCodes(pe.getParticipantTypeCodes());
+            //saveParticipantCodes(pe, policies);
+            //existing.setParticipantTypeCodes(pe.getParticipantTypeCodes());
             ap.setParticipant(existing);
         }
         NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
@@ -370,7 +370,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
             }
         } else {
-            saveSourceCodes(se, policies);
+            //saveSourceCodes(se, policies);
             as.setSource(existing);
         }
     }
@@ -427,7 +427,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
             }
         } else {
-            saveObjectCode(oe, policies);
+            //saveObjectCode(oe, policies);
             ao.setObject(existing);
             Set<ObjectDetailEntity> details = ao.getDetails();
             for (ObjectDetailEntity detail : details) {
