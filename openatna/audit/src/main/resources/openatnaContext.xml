@@ -71,12 +71,12 @@
         <!--
 
         *******************************************************************************************
-        NOTE: This class is not on the audit module build classpath but comes with the dist module
+        NOTE: This class is not on the audit module build classpath but comes with the all module
         insert your preferred Log message class here
         *******************************************************************************************
 
         -->
-        <property name="logMessageClass" value="org.openhealthtools.openatna.dist.JaxbLogMessage"/>
+        <property name="logMessageClass" value="org.openhealthtools.openatna.all.JaxbLogMessage"/>
 
         <!--<property name="validationProcessor" value="false"/>-->
         <!--

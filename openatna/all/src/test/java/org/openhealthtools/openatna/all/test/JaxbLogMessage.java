@@ -18,28 +18,28 @@
  *    -
  */
 
-package org.openhealthtools.openatna.dist;
+package org.openhealthtools.openatna.all.test;
 
-import java.io.IOException;
-
-import org.openhealthtools.openatna.audit.AtnaFactory;
-import org.openhealthtools.openatna.audit.service.AuditService;
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
+import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
 
 /**
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Oct 21, 2009: 7:09:08 PM
+ * @created Sep 30, 2009: 10:11:53 PM
  * @date $Date:$ modified by $Author:$
  */
 
-public class Server {
+public class JaxbLogMessage extends AtnaLogMessage {
 
-    public static void main(String[] args) {
-        AuditService service = AtnaFactory.auditService();
-        try {
-            service.start();
-        } catch (IOException e) {
-            throw new RuntimeException("IO Error starting service:", e);
-        }
+    public JaxbLogMessage() {
+        super(new JaxbIOFactory());
     }
+
+    public JaxbLogMessage(AtnaMessage message) {
+        super(message, new JaxbIOFactory());
+    }
+
+
 }
