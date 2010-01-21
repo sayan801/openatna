@@ -15,8 +15,9 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *
+ *    -
  */
+
 package org.openhealthtools.openatna.net;
 
 import java.io.File;
@@ -976,6 +977,6 @@ public class DescriptionLoader {
         Text nodeTextContents = (Text) node.getFirstChild();
         String value = nodeTextContents.getData();
         return Integer.parseInt(value);
-	}
+    }
 
 }

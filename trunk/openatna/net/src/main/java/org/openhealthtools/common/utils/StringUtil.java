@@ -15,8 +15,9 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *
+ *    -
  */
+
 package org.openhealthtools.common.utils;
 
 import java.util.List;

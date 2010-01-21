@@ -15,8 +15,9 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *
+ *    -
  */
+
 package org.openhealthtools.openatna.net;
 
 import java.util.Hashtable;
@@ -129,8 +130,8 @@ public class EnumMap {
      * @param codeValue The IHE code value
      * @return The Misys Connect enum value
      */
-	public Enum getEnumValue(String codeValue) {
-		return inverse.get(codeValue);
+    public Enum getEnumValue(String codeValue) {
+        return inverse.get(codeValue);
 	}
 	
 	
