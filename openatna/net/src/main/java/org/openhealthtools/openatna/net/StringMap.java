@@ -15,8 +15,9 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *
+ *    -
  */
+
 package org.openhealthtools.openatna.net;
 
 import java.util.Hashtable;
@@ -108,7 +109,7 @@ public class StringMap {
      * @return The Misys string for this code value
      */
     public String getStringValue(String codeValue) {
-		return inverse.get(codeValue);
-	}
-	
+        return inverse.get(codeValue);
+    }
+
 }

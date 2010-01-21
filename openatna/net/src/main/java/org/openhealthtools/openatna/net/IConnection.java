@@ -15,8 +15,9 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *
+ *    -
  */
+
 package org.openhealthtools.openatna.net;
 
 import java.io.InputStream;
@@ -85,5 +86,5 @@ public interface IConnection {
     /**
      * Connects the connection.  Only called by the factory.
      */
-	public void connect();
+    public void connect();
 }

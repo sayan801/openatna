@@ -15,8 +15,9 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *
+ *    -
  */
+
 package org.openhealthtools.openatna.net;
 
 import java.util.Hashtable;
@@ -209,15 +210,15 @@ public class CodeSet {
         String displayName = null;
         String codingScheme = null;
         String ext = null;
-	}
-	
-	/**
+    }
+
+    /**
      * Get a set of CodeSet keys
      *
      * @return the set of codeSet keys.
      */
-	public Set<Pair> getCodeSetKeys() {
-		return entries.keySet();
+    public Set<Pair> getCodeSetKeys() {
+        return entries.keySet();
 	}
 
 }
