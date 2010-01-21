@@ -57,100 +57,111 @@
                 </configuration>
             </plugin>
             <plugin>
-				<inherited>false</inherited>
+                <inherited>false</inherited>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
-				<version>1.5.0</version>
-				
+                <version>1.5.0</version>
+
                 <configuration>
-					<properties>
-						<year>2009-2010</year>
-					</properties>
+                    <properties>
+                        <year>2009-2010</year>
+                    </properties>
                     <header>${basedir}/header.txt</header>
-					<failIfMissing>true</failIfMissing>
-					<aggregate>true</aggregate>
-                    <excludes>
-                        <exclude>**/header.txt</exclude>
-                        <exclude>**/*.log</exclude>
-						<exclude>*.log</exclude>
-                        <exclude>**/*.xml</exclude>
-                        <exclude>**/*.properties</exclude>
-                        <exclude>**/*.bat</exclude>
-                        <exclude>**/*.list</exclude>
-						<exclude>**/*.sh</exclude>
-						<exclude>**/*.jrxml</exclude>
-						<exclude>**/*.jks</exclude>
-						<exclude>**/*.p12</exclude>
-						<exclude>**/openatna/jaxb21/*</exclude>
-						<exclude>**/build/**</exclude>
-                    </excludes>
-        			<mapping>
-					    <java>JAVADOC_STYLE</java>
-					    <groovy>JAVADOC_STYLE</groovy>
-					    <js>JAVADOC_STYLE</js>
-					    <css>JAVADOC_STYLE</css>
-					    <xml>XML_STYLE</xml>
-					    <dtd>XML_STYLE</dtd>
-					    <xsd>XML_STYLE</xsd>
-					    <html>XML_STYLE</html>
-					    <htm>XML_STYLE</htm>
-						<jrxml>XML_STYLE</jrxml>
-					    <xsl>XML_STYLE</xsl>
-					    <fml>XML_STYLE</fml>
-					    <apt>DOUBLETILDE_STYLE</apt>
-					    <properties>SCRIPT_STYLE</properties>
-						<log>SCRIPT_STYLE</log>
-					    <sh>SCRIPT_STYLE</sh>
-					    <txt>TEXT</txt>
-					    <bat>BATCH</bat>
-					    <cmd>BATCH</cmd>
-					    <sql>DOUBLEDASHES_STYLE</sql>
-					    <jsp>DYNASCRIPT_STYLE</jsp>
-					    <ftl>FTL</ftl>
-					    <xhtml>XML_STYLE</xhtml>
-					    <vm>SHARPSTAR_STYLE</vm>
-					    <jspx>XML_STYLE</jspx>
-					</mapping>
+                    <failIfMissing>true</failIfMissing>
+                    <aggregate>true</aggregate>
+
+                    <mapping>
+                        <java>JAVADOC_STYLE</java>
+                        <groovy>JAVADOC_STYLE</groovy>
+                        <js>JAVADOC_STYLE</js>
+                        <css>JAVADOC_STYLE</css>
+                        <xml>XML_STYLE</xml>
+                        <dtd>XML_STYLE</dtd>
+                        <xsd>XML_STYLE</xsd>
+                        <html>XML_STYLE</html>
+                        <htm>XML_STYLE</htm>
+                        <jrxml>XML_STYLE</jrxml>
+                        <xsl>XML_STYLE</xsl>
+                        <fml>XML_STYLE</fml>
+                        <apt>DOUBLETILDE_STYLE</apt>
+                        <properties>SCRIPT_STYLE</properties>
+                        <log>SCRIPT_STYLE</log>
+                        <sh>SCRIPT_STYLE</sh>
+                        <txt>TEXT</txt>
+                        <bat>BATCH</bat>
+                        <cmd>BATCH</cmd>
+                        <sql>DOUBLEDASHES_STYLE</sql>
+                        <jsp>DYNASCRIPT_STYLE</jsp>
+                        <ftl>FTL</ftl>
+                        <xhtml>XML_STYLE</xhtml>
+                        <vm>SHARPSTAR_STYLE</vm>
+                        <jspx>XML_STYLE</jspx>
+                    </mapping>
                 </configuration>
-				<executions>
-	                <execution>
-						<id>cardiff</id>
-						<configuration>
-							<properties>
-								<company>University of Cardiff and others</company>
-								<contributor1>University of Cardiff - initial API and implementation</contributor1>
-								<contributor2>-</contributor2>
-							</properties>
-							<excludes>
-								<exclude>**/openatna/net/*</exclude>
-								<exclude>**/common/utils/*</exclude>
-							</excludes>
-						</configuration>
-						<phase>install</phase>
-	                    <goals>
-	                        <goal>format</goal>
-	                    </goals>
-	                </execution>
-					<execution>
-						<id>moss</id>
-						<configuration>
-							<properties>
-								<company>Misys Open Source Solutions (MOSS) and others</company>
-								<contributor1>Misys Open Source Solutions - initial API and implementation</contributor1>
-								<contributor2>-</contributor2>
-							</properties>
-							<includes>
-								<include>**/openatna/net/*</include>
-								<include>**/common/utils/*</include>
-							</includes>
-						</configuration>
-						<phase>install</phase>
-	                    <goals>
-	                        <goal>format</goal>
-	                    </goals>
-	                </execution>
-	            </executions>
-            </plugin>            
+                <executions>
+                    <execution>
+                        <id>cardiff</id>
+                        <configuration>
+                            <properties>
+                                <company>University of Cardiff and others</company>
+                                <contributor1>University of Cardiff - initial API and implementation</contributor1>
+                                <contributor2>-</contributor2>
+                            </properties>
+                            <excludes>
+                                <exclude>**/header.txt</exclude>
+                                <exclude>**/*.log</exclude>
+                                <exclude>**/*.xml</exclude>
+                                <exclude>**/*.properties</exclude>
+                                <exclude>**/*.bat</exclude>
+                                <exclude>**/*.list</exclude>
+                                <exclude>**/*.sh</exclude>
+                                <exclude>**/*.jrxml</exclude>
+                                <exclude>**/*.jks</exclude>
+                                <exclude>**/*.p12</exclude>
+                                <exclude>**/openatna/jaxb21/*</exclude>
+                                <exclude>**/build/**</exclude>
+                                <exclude>**/openatna/net/*</exclude>
+                                <exclude>**/common/utils/*</exclude>
+                            </excludes>
+                        </configuration>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>moss</id>
+                        <configuration>
+                            <properties>
+                                <company>Misys Open Source Solutions (MOSS) and others</company>
+                                <contributor1>Misys Open Source Solutions - initial API and implementation</contributor1>
+                                <contributor2>-</contributor2>
+                            </properties>
+                            <excludes>
+                                <exclude>**/header.txt</exclude>
+                                <exclude>**/*.log</exclude>
+                                <exclude>**/*.xml</exclude>
+                                <exclude>**/*.properties</exclude>
+                                <exclude>**/*.bat</exclude>
+                                <exclude>**/*.list</exclude>
+                                <exclude>**/*.sh</exclude>
+                                <exclude>**/*.jks</exclude>
+                                <exclude>**/*.p12</exclude>
+                                <exclude>**/openatna/jaxb21/*</exclude>
+                                <exclude>**/build/**</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/openatna/net/*</include>
+                                <include>**/common/utils/*</include>
+                            </includes>
+                        </configuration>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -178,17 +189,17 @@
             <id>appfuse</id>
             <url>http://static.appfuse.org/repository</url>
         </pluginRepository>
-		<pluginRepository>
-		    <id>mc-release</id>
-		    <name>Local Maven repository of releases</name>
-		    <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-		    <snapshots>
-		        <enabled>false</enabled>
-		    </snapshots>
-		    <releases>
-		        <enabled>true</enabled>
-		    </releases>
-		</pluginRepository>
+        <pluginRepository>
+            <id>mc-release</id>
+            <name>Local Maven repository of releases</name>
+            <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
     </pluginRepositories>
 
     <dependencies>
