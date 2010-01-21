@@ -18,7 +18,7 @@
  *    -
  */
 
-package org.openhealthtools.openatna.dist.test.ssl;
+package org.openhealthtools.openatna.all.test.ssl;
 
 import java.util.ArrayList;
 import java.util.List;

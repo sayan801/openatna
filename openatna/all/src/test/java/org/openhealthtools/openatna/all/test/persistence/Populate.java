@@ -18,7 +18,7 @@
  *    -
  */
 
-package org.openhealthtools.openatna.dist.test.persistence;
+package org.openhealthtools.openatna.all.test.persistence;
 
 import java.io.InputStream;
 

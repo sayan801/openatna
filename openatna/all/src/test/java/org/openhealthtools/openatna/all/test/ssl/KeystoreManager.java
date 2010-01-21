@@ -18,7 +18,7 @@
  *    -
  */
 
-package org.openhealthtools.openatna.dist.test.ssl;
+package org.openhealthtools.openatna.all.test.ssl;
 
 import java.io.File;
 import java.io.FileInputStream;
