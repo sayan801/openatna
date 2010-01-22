@@ -33,6 +33,7 @@ import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
 import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,21 +103,27 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
         if (codes.size() > 0) {
             ParticipantCodeEntity[] arr = codes.toArray(new ParticipantCodeEntity[codes.size()]);
-            CodeDao cd = AtnaFactory.codeDao();
+            CodeDao dao = AtnaFactory.codeDao();
             for (int i = 0; i < arr.length; i++) {
                 ParticipantCodeEntity code = arr[i];
-                code = (ParticipantCodeEntity) cd.find(code);
-                if (code.getVersion() != null) {
-                    arr[i] = (code);
-                } else {
+                CodeEntity codeEnt = dao.get(code);
+                if (codeEnt == null) {
                     if (policies.isAllowNewCodes()) {
-                        cd.save(code, policies);
+                        dao.save(code, policies);
                     } else {
                         throw new AtnaPersistenceException(code.toString(),
                                 AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
                     }
+                } else {
+                    if (codeEnt instanceof ParticipantCodeEntity) {
+                        arr[i] = ((ParticipantCodeEntity) codeEnt);
+                    } else {
+                        throw new AtnaPersistenceException("code is defined but is of a different type.",
+                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
+                    }
                 }
             }
+
             pe.setParticipantTypeCodes(new HashSet<ParticipantCodeEntity>(Arrays.asList(arr)));
         }
 

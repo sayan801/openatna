@@ -32,6 +32,7 @@ import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
 import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,20 +90,23 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
 
     // TODO - check for INCONSISTENT_REPRESENTATION, e.g sensitivity
     public void save(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
-        CodeDao cd = AtnaFactory.codeDao();
         ObjectIdTypeCodeEntity code = entity.getObjectIdTypeCode();
         if (code != null) {
-            entity.setObjectIdTypeCode(null);
-            code = (ObjectIdTypeCodeEntity) cd.find(code);
-            if (code.getVersion() != null) {
-                entity.setObjectIdTypeCode(code);
-            } else {
+            CodeDao dao = AtnaFactory.codeDao();
+            CodeEntity existing = dao.get(code);
+            if (existing == null) {
                 if (policies.isAllowNewCodes()) {
-                    cd.save(code, policies);
-                    entity.setObjectIdTypeCode(code);
+                    dao.save(code, policies);
                 } else {
-                    throw new AtnaPersistenceException(code.toString(),
+                    throw new AtnaPersistenceException("no or unknown object id type code defined.",
                             AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                }
+            } else {
+                if (existing instanceof ObjectIdTypeCodeEntity) {
+                    entity.setObjectIdTypeCode((ObjectIdTypeCodeEntity) existing);
+                } else {
+                    throw new AtnaPersistenceException("code is defined but is of a different type.",
+                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                 }
             }
         } else {

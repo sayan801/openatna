@@ -78,24 +78,24 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
     public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<SourceCodeEntity> codes = entity.getSourceTypeCodes();
         if (codes.size() > 0) {
-            CodeDao cd = AtnaFactory.codeDao();
+            CodeDao dao = AtnaFactory.codeDao();
             SourceCodeEntity[] arr = codes.toArray(new SourceCodeEntity[codes.size()]);
             for (int i = 0; i < arr.length; i++) {
                 SourceCodeEntity code = arr[i];
-                CodeEntity ce = cd.find(code);
-                if (!(ce instanceof SourceCodeEntity)) {
-                    throw new AtnaPersistenceException(ce.toString(),
-                            AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
-                }
-                code = (SourceCodeEntity) ce;
-                if (code.getVersion() != null) {
-                    arr[i] = code;
-                } else {
+                CodeEntity codeEnt = dao.get(code);
+                if (codeEnt == null) {
                     if (policies.isAllowNewCodes()) {
-                        cd.save(code, policies);
+                        dao.save(code, policies);
                     } else {
                         throw new AtnaPersistenceException(code.toString(),
                                 AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
+                    }
+                } else {
+                    if (codeEnt instanceof SourceCodeEntity) {
+                        arr[i] = ((SourceCodeEntity) codeEnt);
+                    } else {
+                        throw new AtnaPersistenceException("code is defined but is of a different type.",
+                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
                     }
                 }
             }
