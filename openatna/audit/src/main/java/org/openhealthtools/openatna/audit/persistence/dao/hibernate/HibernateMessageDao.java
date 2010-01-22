@@ -289,15 +289,12 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         ParticipantEntity existing = dao.getByUserId(pe.getUserId());
         if (existing == null) {
             if (policies.isAllowNewParticipants()) {
-                saveParticipantCodes(pe, policies);
                 dao.save(pe, policies);
             } else {
                 throw new AtnaPersistenceException("unknown participant.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
             }
         } else {
-            //saveParticipantCodes(pe, policies);
-            //existing.setParticipantTypeCodes(pe.getParticipantTypeCodes());
             ap.setParticipant(existing);
         }
         NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
@@ -317,34 +314,6 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
     }
 
-    private void saveParticipantCodes(ParticipantEntity pe, PersistencePolicies policies)
-            throws AtnaPersistenceException {
-        Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
-        if (codes.size() > 0) {
-            ParticipantCodeEntity[] arr = codes.toArray(new ParticipantCodeEntity[codes.size()]);
-            CodeDao dao = AtnaFactory.codeDao();
-            for (int i = 0; i < arr.length; i++) {
-                ParticipantCodeEntity code = arr[i];
-                CodeEntity codeEnt = dao.get(code);
-                if (codeEnt == null) {
-                    if (policies.isAllowNewCodes()) {
-                        dao.save(code, policies);
-                    } else {
-                        throw new AtnaPersistenceException(code.toString(),
-                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-                    }
-                } else {
-                    if (codeEnt instanceof ParticipantCodeEntity) {
-                        arr[i] = ((ParticipantCodeEntity) codeEnt);
-                    } else {
-                        throw new AtnaPersistenceException("code is defined but is of a different type.",
-                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
-                    }
-                }
-            }
-            pe.setParticipantTypeCodes(new HashSet<ParticipantCodeEntity>(Arrays.asList(arr)));
-        }
-    }
 
     private void normalize(MessageSourceEntity as, PersistencePolicies policies) throws AtnaPersistenceException {
         if (as.getSource() == null) {
@@ -362,46 +331,16 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         SourceEntity existing = dao.getBySourceId(se.getSourceId());
         if (existing == null) {
             if (policies.isAllowNewSources()) {
-                saveSourceCodes(se, policies);
                 dao.save(se, policies);
-
             } else {
                 throw new AtnaPersistenceException("no audit source defined.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
             }
         } else {
-            //saveSourceCodes(se, policies);
             as.setSource(existing);
         }
     }
 
-    private void saveSourceCodes(SourceEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
-        Set<SourceCodeEntity> codes = pe.getSourceTypeCodes();
-        if (codes.size() > 0) {
-            CodeDao dao = AtnaFactory.codeDao();
-            SourceCodeEntity[] arr = codes.toArray(new SourceCodeEntity[codes.size()]);
-            for (int i = 0; i < arr.length; i++) {
-                SourceCodeEntity code = arr[i];
-                CodeEntity codeEnt = dao.get(code);
-                if (codeEnt == null) {
-                    if (policies.isAllowNewCodes()) {
-                        dao.save(code, policies);
-                    } else {
-                        throw new AtnaPersistenceException(code.toString(),
-                                AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-                    }
-                } else {
-                    if (codeEnt instanceof SourceCodeEntity) {
-                        arr[i] = ((SourceCodeEntity) codeEnt);
-                    } else {
-                        throw new AtnaPersistenceException("code is defined but is of a different type.",
-                                AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
-                    }
-                }
-            }
-            pe.setSourceTypeCodes(new HashSet<SourceCodeEntity>(Arrays.asList(arr)));
-        }
-    }
 
     private void normalize(MessageObjectEntity ao, PersistencePolicies policies) throws AtnaPersistenceException {
         if (ao.getObject() == null) {
@@ -415,19 +354,16 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             }
         }
         ObjectEntity oe = ao.getObject();
-
         ObjectDao dao = AtnaFactory.objectDao();
         ObjectEntity existing = dao.getByObjectId(oe.getObjectId());
         if (existing == null) {
             if (policies.isAllowNewObjects()) {
-                saveObjectCode(oe, policies);
                 dao.save(oe, policies);
             } else {
                 throw new AtnaPersistenceException("no object defined.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
             }
         } else {
-            //saveObjectCode(oe, policies);
             ao.setObject(existing);
             Set<ObjectDetailEntity> details = ao.getDetails();
             for (ObjectDetailEntity detail : details) {
@@ -440,24 +376,4 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
     }
 
-    private void saveObjectCode(ObjectEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
-        ObjectIdTypeCodeEntity oe = entity.getObjectIdTypeCode();
-        CodeDao dao = AtnaFactory.codeDao();
-        CodeEntity existing = dao.get(oe);
-        if (existing == null) {
-            if (policies.isAllowNewCodes()) {
-                dao.save(oe, policies);
-            } else {
-                throw new AtnaPersistenceException("no or unknown object id type code defined.",
-                        AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
-            }
-        } else {
-            if (existing instanceof ObjectIdTypeCodeEntity) {
-                entity.setObjectIdTypeCode((ObjectIdTypeCodeEntity) existing);
-            } else {
-                throw new AtnaPersistenceException("code is defined but is of a different type.",
-                        AtnaPersistenceException.PersistenceError.WRONG_CODE_TYPE);
-            }
-        }
-    }
 }
