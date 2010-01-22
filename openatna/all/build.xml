@@ -26,6 +26,9 @@
         <delete dir="build/conf"/>
         <copy todir="build" overwrite="yes">
             <fileset dir="../audit/src/main/resources/" excludes="*.cfg.xml,sql/**"/>
+            <filterset begintoken="@" endtoken="@">
+                <filter token="log.message.class" value="org.openhealthtools.openatna.all.JaxbLogMessage"/>
+            </filterset>
         </copy>
         <delete file="build/openatna-${version}.jar"/>
         <mkdir dir="stage"/>

@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 
 
-     Copyright(c) 2009 University of Cardiff and others
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-     implied. See the License for the specific language governing
-     permissions and limitations under the License.
-
-
--->
-<!--
-
-
-****************************************************************************************************
-*                                                                                                  *
-* NOTE: This file should be considered an example, as opposed to a working copy,                   *
-* in particular because of the dependency on a LogMessageClass in the serviceConfig bean           *
-* This is currently set to the JaxbLogMessage that comes in the all/ module, which this module     *
-* does not depend on.                                                                              *
-*                                                                                                  *
-****************************************************************************************************
+*****************************************************************************************************
+*                                                             										*
+* NOTE: This file is an example, as opposed to a working copy,                   					*
+* until the logMessageClass property in the serviceConfig bean                                 		*
+* has been set, i.e. the place holder variable log.message.class            				        *
+* surrounded by @ symbols has been replaced															*
+*                                                                       							*
+*****************************************************************************************************
 
 
 
@@ -68,13 +50,12 @@
         <property name="persistencePolicies" ref="persistencePolicies"/>
         <!--
 
-        *******************************************************************************************
-        NOTE: This class is not on the audit module build classpath but comes with the all module
-        insert your preferred Log message class here
-        *******************************************************************************************
+        *******************************************************************
+        NOTE: Make sure the value of logMessageClass is not a place holder.
+        *******************************************************************
 
         -->
-        <property name="logMessageClass" value="org.openhealthtools.openatna.all.JaxbLogMessage"/>
+        <property name="logMessageClass" value="@log.message.class@"/>
 
         <!--<property name="validationProcessor" value="false"/>-->
         <!--
