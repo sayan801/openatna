@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -92,19 +93,20 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (jc == null) {
             throw new AtnaException("Could not create Jaxb Context");
         }
+        Document doc = null;
         try {
-            Document doc = newDocument(in);
+            doc = newDocument(in);
             if (doc.getDocumentElement().getTagName().equalsIgnoreCase("IHEYr4")) {
                 return createProv(doc);
             }
             Unmarshaller u = jc.createUnmarshaller();
             AuditMessage a = (AuditMessage) u.unmarshal(doc);
-            AtnaMessage jm = null;
+            AtnaMessage am = null;
             AtnaException ae = null;
             try {
-                jm = createMessage(a);
+                am = createMessage(a);
             } catch (AtnaException e) {
-                ae = e;
+                ae = new AtnaException(e, fromDoc(doc));
             }
             try {
                 if (log.isInfoEnabled()) {
@@ -121,10 +123,27 @@ public class JaxbIOFactory implements AtnaIOFactory {
             if (ae != null) {
                 throw ae;
             }
-            return jm;
+            return am;
         } catch (JAXBException e) {
-            throw new AtnaException(e);
+            throw new AtnaException(e, fromDoc(doc));
         }
+    }
+
+    private String fromDoc(Document doc) {
+        if (doc != null) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            try {
+                transform(doc, bout);
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+            try {
+                return new String(bout.toByteArray(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                return e.getMessage();
+            }
+        }
+        return "no XML document available";
     }
 
     private Document newDocument(InputStream stream) throws IOException {

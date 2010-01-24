@@ -25,7 +25,8 @@ package org.openhealthtools.openatna.anom;
  * (de)serialization.
  * <p/>
  * This may contain a message, but this is not guaranteed, as the exception may have
- * been thrown before a message was available.
+ * been thrown before a message was available. In this case, it may contain a string representation
+ * of the xml, or an exception message if even this was not retrievable.
  * <p/>
  * Therefore, the message may be null
  *
@@ -67,6 +68,7 @@ public class AtnaException extends Exception {
     }
 
     private AtnaMessage message;
+    private String xmlDoc;
     private AtnaError error = AtnaError.UNDEFINED;
 
     public AtnaException(String s) {
@@ -121,6 +123,20 @@ public class AtnaException extends Exception {
         super(throwable);
         this.message = message;
         this.error = error;
+    }
+
+    public AtnaException(Throwable throwable, String xmlDoc) {
+        super(throwable);
+        this.xmlDoc = xmlDoc;
+    }
+
+    public AtnaException(String message, String xmlDoc) {
+        super(message);
+        this.xmlDoc = xmlDoc;
+    }
+
+    public String getXmlDoc() {
+        return xmlDoc;
     }
 
     public AtnaMessage getAtnaMessage() {

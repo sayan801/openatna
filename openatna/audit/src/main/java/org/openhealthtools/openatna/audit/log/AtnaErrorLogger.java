@@ -63,7 +63,12 @@ public class AtnaErrorLogger {
         sb.append("** ATNA ERROR:").append(error).append("**\n");
         AtnaMessage msg = e.getAtnaMessage();
         if (msg == null) {
-            sb.append("no message available.\n");
+            String xml = e.getXmlDoc();
+            if (xml == null) {
+                sb.append("no message available.\n");
+            } else {
+                sb.append("string message is:\n").append(xml);
+            }
         } else {
             sb.append("message is:\n")
                     .append(msg);
