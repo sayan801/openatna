@@ -5,7 +5,7 @@
 
 <project name="openatna-dist" default="dist" basedir=".">
 
-    <property name="version" value="0.1"/>
+    <!--<property name="v" value="${project.version}"/>-->
 
     <target name="dist">
         <echo>Ant version is ${ant.java.version}</echo>
@@ -19,7 +19,7 @@
             </fileset>
         </path>
 
-        <manifestclasspath property="manifest.classpath.prop" jarfile="build/openatna-${version}.jar">
+        <manifestclasspath property="manifest.classpath.prop" jarfile="build/openatna-${project.version}.jar">
             <classpath refid="jar.class.path"/>
         </manifestclasspath>
 
@@ -30,12 +30,12 @@
                 <filter token="log.message.class" value="org.openhealthtools.openatna.all.JaxbLogMessage"/>
             </filterset>
         </copy>
-        <delete file="build/openatna-${version}.jar"/>
+        <delete file="build/openatna-${project.version}.jar"/>
         <mkdir dir="stage"/>
         <copy todir="stage" overwrite="yes">
             <fileset dir="target/classes" includes="**/*.class"/>
         </copy>
-        <jar destfile="build/openatna-${version}.jar">
+        <jar destfile="build/openatna-${project.version}.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.openhealthtools.openatna.all.Server"/>
                 <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>

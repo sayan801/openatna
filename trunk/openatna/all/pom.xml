@@ -9,7 +9,6 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <artifactId>openatna-all</artifactId>
-
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>OpenATNA All</name>
@@ -25,22 +24,22 @@
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>syslog-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-anom</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-audit</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-jaxb</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -59,6 +58,7 @@
                                 <phase>install</phase>
                                 <configuration>
                                     <tasks>
+                                        <property name="project.version" value="${project.version}"/>
                                         <ant dir="."/>
                                     </tasks>
                                 </configuration>
@@ -71,6 +71,7 @@
                                 <phase>clean</phase>
                                 <configuration>
                                     <tasks>
+                                        <property name="project.version" value="${project.version}"/>
                                         <ant dir="." target="clean"/>
                                     </tasks>
                                 </configuration>
