@@ -71,7 +71,6 @@ public class ParticipantEntity extends PersistentEntity {
         addParticipantTypeCode(code);
     }
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

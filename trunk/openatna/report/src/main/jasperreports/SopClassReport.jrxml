@@ -22,7 +22,7 @@
            pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
 
-    <field name="uid" class="java.lang.String">
+    <field name="sopId" class="java.lang.String">
         <fieldDescription>uid</fieldDescription>
     </field>
     <field name="numberOfInstances" class="java.lang.Integer">
@@ -52,7 +52,7 @@
                 <textField isStretchWithOverflow="true">
                     <reportElement x="20" y="15" width="95" height="15" style="Arial_Normal_Small"/>
                     <textFieldExpression class="java.lang.String">
-                        $F{uid}
+                        $F{sopId}
                     </textFieldExpression>
                 </textField>
                 <textField isStretchWithOverflow="true">

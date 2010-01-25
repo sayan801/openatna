@@ -88,7 +88,7 @@ public class MessageEntity extends PersistentEntity {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "event_types_to_codes",
+            name = "event_types_codes",
             joinColumns = {@JoinColumn(name = "event_type")},
             inverseJoinColumns = @JoinColumn(name = "code")
     )
@@ -139,6 +139,9 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "messages_mparticipants", joinColumns = {@JoinColumn(name = "message_id",
+            referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "participant_id", referencedColumnName = "id")})
     public Set<MessageParticipantEntity> getMessageParticipants() {
         return messageParticipants;
     }
@@ -152,6 +155,9 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "messages_msources", joinColumns = {@JoinColumn(name = "message_id",
+            referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "source_id", referencedColumnName = "id")})
     public Set<MessageSourceEntity> getMessageSources() {
         return messageSources;
     }
@@ -165,6 +171,9 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "messages_mobjects", joinColumns = {@JoinColumn(name = "message_id",
+            referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "object_id", referencedColumnName = "id")})
     public Set<MessageObjectEntity> getMessageObjects() {
         return messageObjects;
     }

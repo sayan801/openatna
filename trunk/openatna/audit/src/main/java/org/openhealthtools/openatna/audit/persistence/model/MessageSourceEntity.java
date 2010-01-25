@@ -39,7 +39,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "message_sources")
-
 public class MessageSourceEntity extends PersistentEntity {
 
 
@@ -70,6 +69,7 @@ public class MessageSourceEntity extends PersistentEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
+
     public SourceEntity getSource() {
         return source;
     }

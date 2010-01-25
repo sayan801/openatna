@@ -239,7 +239,7 @@ public class EntityConverter {
             List<SopClass> sc = desc.getSopClasses();
             for (SopClass sopClass : sc) {
                 SopClassEntity sce = new SopClassEntity();
-                sce.setUid(sopClass.getUid());
+                sce.setSopId(sopClass.getUid());
                 sce.setNumberOfInstances(sopClass.getNumberOfInstances());
                 List<String> instances = sopClass.getInstanceUids();
                 for (String instance : instances) {
@@ -282,7 +282,7 @@ public class EntityConverter {
             for (SopClassEntity sop : sops) {
                 SopClass sc = new SopClass();
                 sc.setNumberOfInstances(sop.getNumberOfInstances());
-                sc.setUid(sop.getUid());
+                sc.setUid(sop.getSopId());
                 List<String> instances = sop.instanceUidsAsList();
                 for (String instance : instances) {
                     sc.addInstanceUid(instance);
