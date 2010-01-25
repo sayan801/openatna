@@ -46,7 +46,6 @@
                         <artifactId>xercesImpl</artifactId>
                         <version>2.9.1</version>
                     </dependency>
-
                 </dependencies>
             </plugin>
         </plugins>
@@ -55,7 +54,7 @@
         <dependency>
             <groupId>org.openhealthtools.openatna</groupId>
             <artifactId>openatna-audit</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>jasperreports</groupId>

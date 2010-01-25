@@ -23,7 +23,9 @@ package org.openhealthtools.openatna.net;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 /**
  * An abstract implementation of IServerConnection which does a number of items required by all connections. <p />
@@ -46,7 +48,8 @@ public abstract class GenericServerConnection implements IServerConnection {
     /**
      * Package level logger for debugging only.
      */
-    protected static final Logger LOG = Logger.getLogger(GenericServerConnection.class.getPackage().getName());
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net");
 
     public GenericServerConnection(IConnectionDescription connectionDescription) {
         description = connectionDescription;

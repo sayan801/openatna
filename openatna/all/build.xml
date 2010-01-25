@@ -5,8 +5,6 @@
 
 <project name="openatna-dist" default="dist" basedir=".">
 
-    <!--<property name="v" value="${project.version}"/>-->
-
     <target name="dist">
         <echo>Ant version is ${ant.java.version}</echo>
         <copy todir="build/lib" overwrite="yes">

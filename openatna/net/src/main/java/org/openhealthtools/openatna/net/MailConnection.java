@@ -37,7 +37,8 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.cms.RecipientId;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
@@ -47,7 +48,8 @@ import org.bouncycastle.mail.smime.SMIMESigned;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 
 public class MailConnection {
-    protected final static Logger log = Logger.getLogger(MailConnection.class);
+
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.MailConnection");
 
     IConnectionDescription description = null;
     PropertySet smtp = null;
