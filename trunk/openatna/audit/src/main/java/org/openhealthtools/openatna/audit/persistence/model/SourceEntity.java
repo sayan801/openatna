@@ -87,7 +87,7 @@ public class SourceEntity extends PersistentEntity {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "sources_to_codes",
+            name = "sources_codes",
             joinColumns = {@JoinColumn(name = "source")},
             inverseJoinColumns = @JoinColumn(name = "code")
     )
