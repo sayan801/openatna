@@ -31,6 +31,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -128,6 +130,9 @@ public class ObjectDescriptionEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "descriptions_sop_classes", joinColumns = {@JoinColumn(name = "description_id",
+            referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "sop_class_id", referencedColumnName = "id")})
     public Set<SopClassEntity> getSopClasses() {
         return sopClasses;
     }

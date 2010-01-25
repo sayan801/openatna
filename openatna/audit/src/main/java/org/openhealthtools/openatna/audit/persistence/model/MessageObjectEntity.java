@@ -25,9 +25,12 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -63,7 +66,8 @@ public class MessageObjectEntity extends PersistentEntity {
         this.id = id;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+
     public ObjectEntity getObject() {
         return object;
     }
@@ -90,6 +94,9 @@ public class MessageObjectEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "mobjects_details", joinColumns = {@JoinColumn(name = "object_id",
+            referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "detail_id", referencedColumnName = "id")})
     public Set<ObjectDetailEntity> getDetails() {
         return details;
     }

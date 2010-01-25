@@ -43,7 +43,7 @@ public class SopClassEntity extends PersistentEntity {
     private Long id;
     private Integer version;
 
-    private String uid;
+    private String sopId;
     private Integer numberOfInstances = 0;
     private String instanceUids = "";
 
@@ -66,12 +66,12 @@ public class SopClassEntity extends PersistentEntity {
         this.version = version;
     }
 
-    public String getUid() {
-        return uid;
+    public String getSopId() {
+        return sopId;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setSopId(String sopId) {
+        this.sopId = sopId;
     }
 
     public Integer getNumberOfInstances() {
@@ -127,7 +127,7 @@ public class SopClassEntity extends PersistentEntity {
         if (numberOfInstances != null ? !numberOfInstances.equals(that.numberOfInstances) : that.numberOfInstances != null) {
             return false;
         }
-        if (uid != null ? !uid.equals(that.uid) : that.uid != null) {
+        if (sopId != null ? !sopId.equals(that.sopId) : that.sopId != null) {
             return false;
         }
 
@@ -144,8 +144,8 @@ public class SopClassEntity extends PersistentEntity {
                 .append(getInstanceUids())
                 .append(", numberOfInstances=")
                 .append(getNumberOfInstances())
-                .append(", uid=")
-                .append(getUid())
+                .append(", sopId=")
+                .append(getSopId())
                 .append("]")
                 .toString();
 
@@ -153,7 +153,7 @@ public class SopClassEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = uid != null ? uid.hashCode() : 0;
+        int result = sopId != null ? sopId.hashCode() : 0;
         result = 31 * result + (numberOfInstances != null ? numberOfInstances.hashCode() : 0);
         result = 31 * result + (instanceUids != null ? instanceUids.hashCode() : 0);
         return result;

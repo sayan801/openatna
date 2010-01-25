@@ -30,6 +30,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -121,6 +123,9 @@ public class ObjectEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "objects_descriptions", joinColumns = {@JoinColumn(name = "object_id",
+            referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "description_id", referencedColumnName = "id")})
     public Set<ObjectDescriptionEntity> getObjectDescriptions() {
         return objectDescriptions;
     }

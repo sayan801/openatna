@@ -7,7 +7,7 @@
     -->
     <property key="outputFileName" type="string">report</property>
     <!--<property key="groupingField" type="string">type</property>-->
-    <property key="query" type="string">SOURCE_ID EQUALS "0" RESULT MAX_NUM "10"</property>
+    <property key="query" type="string">MESSAGES</property>
     <!--<property key="outputType" type="string">HTML</property>-->
     <property key="outputDirectory" type="string">/Users/scmabh/ATNAreports</property>
     <!-- target is useful for HQL queries. This should one of the targets array in ReportConfig
