@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class StandardServerConnection extends GenericServerConnection {
 
+
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.StandardServerConnection");
 
     /**
@@ -52,7 +53,7 @@ public class StandardServerConnection extends GenericServerConnection {
             ssocket = new ServerSocket(description.getPort());
             // TODO add ATNA logging message, perhaps in finally?
         } catch (IOException e) {
-            LOG.error("Failed to create a server socket on port:" + description.getPort(), e);
+            log.error("Failed to create a server socket on port:" + description.getPort(), e);
             ssocket = null;
         }
     }
