@@ -2,7 +2,7 @@
 
 DROP TABLE codes CASCADE;
 DROP TABLE detail_types CASCADE;
-DROP TABLE event_types_to_codes CASCADE;
+DROP TABLE event_types_codes CASCADE;
 DROP TABLE message_objects CASCADE;
 DROP TABLE mobjects_details CASCADE;
 DROP TABLE message_participants CASCADE;
@@ -19,9 +19,9 @@ DROP TABLE objects CASCADE;
 DROP TABLE objects_detail_types CASCADE;
 
 DROP TABLE participants CASCADE;
-DROP TABLE participants_to_codes CASCADE;
+DROP TABLE participants_codes CASCADE;
 DROP TABLE sources CASCADE;
-DROP TABLE sources_to_codes CASCADE;
+DROP TABLE sources_codes CASCADE;
 
 DROP TABLE provisional_messages CASCADE;
 

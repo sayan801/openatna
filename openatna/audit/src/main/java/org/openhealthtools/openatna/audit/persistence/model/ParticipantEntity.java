@@ -116,7 +116,7 @@ public class ParticipantEntity extends PersistentEntity {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "participants_to_codes",
+            name = "participants_codes",
             joinColumns = {@JoinColumn(name = "participant")},
             inverseJoinColumns = @JoinColumn(name = "code")
     )
