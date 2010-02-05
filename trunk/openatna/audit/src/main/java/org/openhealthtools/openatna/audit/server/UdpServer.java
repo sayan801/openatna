@@ -126,6 +126,8 @@ public class UdpServer {
                 atnaServer.notifyException(new SyslogException(e));
             }
             if (msg != null) {
+                InetSocketAddress addr = (InetSocketAddress) packet.getSocketAddress();
+                msg.setSourceIp(addr.getAddress().getHostAddress());
                 atnaServer.notifyListeners(msg);
             }
         }

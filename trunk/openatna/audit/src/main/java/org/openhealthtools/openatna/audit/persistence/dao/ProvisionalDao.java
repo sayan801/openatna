@@ -38,6 +38,8 @@ public interface ProvisionalDao {
 
     public List<? extends ProvisionalEntity> getAll() throws AtnaPersistenceException;
 
+    public List<? extends ProvisionalEntity> getAll(int offset, int amount) throws AtnaPersistenceException;
+
     public void save(ProvisionalEntity pe) throws AtnaPersistenceException;
 
 

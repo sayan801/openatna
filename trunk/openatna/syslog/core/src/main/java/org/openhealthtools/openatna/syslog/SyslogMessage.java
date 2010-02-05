@@ -41,6 +41,7 @@ public abstract class SyslogMessage<M> implements Serializable {
     private String timestamp = "";
     private String hostName = "";
     private LogMessage<M> message;
+    private String sourceIp;
 
     protected SyslogMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message) {
         this.facility = facility;
@@ -68,6 +69,14 @@ public abstract class SyslogMessage<M> implements Serializable {
 
     public LogMessage<M> getMessage() {
         return message;
+    }
+
+    public String getSourceIp() {
+        return sourceIp;
+    }
+
+    public void setSourceIp(String sourceIp) {
+        this.sourceIp = sourceIp;
     }
 
     public abstract void write(OutputStream out) throws IOException;

@@ -75,6 +75,10 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
         return all();
     }
 
+    public List<? extends SourceEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
         Set<SourceCodeEntity> codes = entity.getSourceTypeCodes();
         if (codes.size() > 0) {

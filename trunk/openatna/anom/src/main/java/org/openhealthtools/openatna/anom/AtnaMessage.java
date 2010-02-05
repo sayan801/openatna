@@ -45,6 +45,7 @@ public class AtnaMessage implements Serializable {
     private EventAction eventActionCode;
     private EventOutcome eventOutcome;
     private Date eventDateTime;
+    private String sourceAddress;
 
     private Long messageId;
 
@@ -68,6 +69,14 @@ public class AtnaMessage implements Serializable {
 
     public void setMessageId(Long messageId) {
         this.messageId = messageId;
+    }
+
+    public String getSourceAddress() {
+        return sourceAddress;
+    }
+
+    public void setSourceAddress(String sourceAddress) {
+        this.sourceAddress = sourceAddress;
     }
 
     public List<AtnaCode> getEventTypeCodes() {

@@ -36,6 +36,63 @@ public class QueryBean {
     private String eventTypeCode;
     private String eventAction;
     private String eventTime;
+    private String startDate;
+    private String startHour;
+    private String startMin;
+
+    private String endDate;
+    private String endHour;
+    private String endMin;
+    private String sourceAddress;
+
+    public String getSourceAddress() {
+        return sourceAddress;
+    }
+
+    public void setSourceAddress(String sourceAddress) {
+        this.sourceAddress = sourceAddress;
+    }
+
+    public String getStartHour() {
+        return startHour;
+    }
+
+    public void setStartHour(String startHour) {
+        this.startHour = startHour;
+    }
+
+    public String getStartMin() {
+        return startMin;
+    }
+
+    public void setStartMin(String startMin) {
+        this.startMin = startMin;
+    }
+
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getEndHour() {
+        return endHour;
+    }
+
+    public void setEndHour(String endHour) {
+        this.endHour = endHour;
+    }
+
+    public String getEndMin() {
+        return endMin;
+    }
+
+    public void setEndMin(String endMin) {
+        this.endMin = endMin;
+    }
 
     public String getSourceId() {
         return sourceId;
@@ -100,4 +157,13 @@ public class QueryBean {
     public void setEventTypeCode(String eventTypeCode) {
         this.eventTypeCode = eventTypeCode;
     }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
 }

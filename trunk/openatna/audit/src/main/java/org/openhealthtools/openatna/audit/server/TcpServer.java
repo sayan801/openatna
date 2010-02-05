@@ -92,6 +92,10 @@ public class TcpServer {
                     Socket s = server.accept();
                     log.debug(logSocket(s));
                     atnaServer.execute(new WorkerThread(s));
+                } catch (NullPointerException e) {
+                    throw (e);
+                } catch (RuntimeException e) {
+                    throw (e);
                 } catch (SocketException e) {
                     log.debug("Socket closed.");
                 } catch (IOException e) {
@@ -165,6 +169,8 @@ public class TcpServer {
                             atnaServer.notifyException(new SyslogException(e, bytes));
                         }
                         if (msg != null) {
+                            InetSocketAddress addr = (InetSocketAddress) socket.getRemoteSocketAddress();
+                            msg.setSourceIp(addr.getAddress().getHostAddress());
                             atnaServer.notifyListeners(msg);
                         }
                     }

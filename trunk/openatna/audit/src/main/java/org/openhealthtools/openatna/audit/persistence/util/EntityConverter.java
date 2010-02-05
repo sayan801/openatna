@@ -79,6 +79,9 @@ public class EntityConverter {
         MessageEntity ent = new MessageEntity((EventIdCodeEntity) code,
                 new Integer(message.getEventOutcome().value()));
         ent.setEventDateTime(message.getEventDateTime());
+        if (message.getSourceAddress() != null) {
+            ent.setSourceAddress(message.getSourceAddress());
+        }
         if (message.getEventActionCode() != null) {
             ent.setEventActionCode(message.getEventActionCode().value());
         }
@@ -109,6 +112,9 @@ public class EntityConverter {
         AtnaMessage msg = new AtnaMessage(evtid, EventOutcome.getOutcome(entity.getEventOutcome()));
         msg.setMessageId(entity.getId());
         msg.setEventDateTime(entity.getEventDateTime());
+        if (entity.getSourceAddress() != null) {
+            msg.setSourceAddress(entity.getSourceAddress());
+        }
         if (entity.getEventActionCode() != null) {
             msg.setEventActionCode(EventAction.getAction(entity.getEventActionCode()));
         }

@@ -193,6 +193,10 @@ public class JaxbIOFactory implements AtnaIOFactory {
     }
 
     public void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException {
+        write(message, out, true);
+    }
+
+    public void write(AtnaMessage message, OutputStream out, boolean includeDeclaration) throws AtnaException, IOException {
         if (jc == null) {
             throw new AtnaException("Could not create Jaxb Context");
         }
@@ -202,6 +206,9 @@ public class JaxbIOFactory implements AtnaIOFactory {
         try {
             AuditMessage jmessage = createMessage(message);
             Marshaller marshaller = jc.createMarshaller();
+            if (!includeDeclaration) {
+                marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+            }
             marshaller.marshal(jmessage, out);
             if (log.isDebugEnabled()) {
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

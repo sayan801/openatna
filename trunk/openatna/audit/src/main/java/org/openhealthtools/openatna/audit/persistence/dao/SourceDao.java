@@ -45,6 +45,8 @@ public interface SourceDao {
 
     public List<? extends SourceEntity> getAll() throws AtnaPersistenceException;
 
+    public List<? extends SourceEntity> getAll(int offset, int amount) throws AtnaPersistenceException;
+
     public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(SourceEntity entity) throws AtnaPersistenceException;

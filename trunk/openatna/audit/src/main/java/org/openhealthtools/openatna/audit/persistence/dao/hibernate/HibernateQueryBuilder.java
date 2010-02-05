@@ -60,6 +60,9 @@ public class HibernateQueryBuilder {
             case EVENT_OUTCOME:
                 s = "eventOutcome";
                 break;
+            case SOURCE_ADDRESS:
+                s = "sourceAddress";
+                break;
             case EVENT_TIME:
                 s = "eventDateTime";
                 break;

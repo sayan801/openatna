@@ -48,6 +48,8 @@ public interface NetworkAccessPointDao extends Dao {
 
     public List<? extends NetworkAccessPointEntity> getAll() throws AtnaPersistenceException;
 
+    public List<? extends NetworkAccessPointEntity> getAll(int offset, int amount) throws AtnaPersistenceException;
+
     public void save(NetworkAccessPointEntity nap, PersistencePolicies policies)
             throws AtnaPersistenceException;
 

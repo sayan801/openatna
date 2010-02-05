@@ -88,10 +88,18 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         return all();
     }
 
+    public List<? extends MessageEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     public List<? extends MessageEntity> getByEventId(EventIdCodeEntity codeEntity) throws AtnaPersistenceException {
         return list(criteria().createCriteria("eventId").add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
+    }
+
+    public List<? extends MessageEntity> getBySourceAddress(String address) throws AtnaPersistenceException {
+        return list(criteria().add(Restrictions.eq("sourceAddress", address)));
     }
 
     public List<? extends MessageEntity> getByEventType(EventTypeCodeEntity codeEntity)
