@@ -66,6 +66,7 @@ public class MessageEntity extends PersistentEntity {
     private String eventActionCode;
     private Date eventDateTime;
     private Integer eventOutcome;
+    private String sourceAddress;
 
     public MessageEntity() {
     }
@@ -119,6 +120,14 @@ public class MessageEntity extends PersistentEntity {
 
     public void setEventActionCode(String eventActionCode) {
         this.eventActionCode = eventActionCode;
+    }
+
+    public String getSourceAddress() {
+        return sourceAddress;
+    }
+
+    public void setSourceAddress(String sourceAddress) {
+        this.sourceAddress = sourceAddress;
     }
 
     @Temporal(TemporalType.TIMESTAMP)

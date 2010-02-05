@@ -20,6 +20,8 @@
 
 package org.openhealthtools.openatna.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -41,6 +43,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 public class MessageController extends MultiActionController {
 
     private MessageDao messageDao;
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public MessageDao getMessageDao() {
         return messageDao;
@@ -91,8 +94,38 @@ public class MessageController extends MultiActionController {
                 query.addConditional(Query.Conditional.EQUALS, ts, Query.Target.EVENT_TIME);
             }
         }
+        Date startDate = null;
+        if (bean.getStartDate() != null && bean.getStartDate().length() > 0) {
+            String date = bean.getStartDate();
+            try {
+                startDate = format.parse(date + " " + bean.getStartHour() + ":" + bean.getStartMin());
+                query.after(startDate);
+            } catch (ParseException e) {
+
+            }
+
+        }
+        if (bean.getEndDate() != null && bean.getEndDate().length() > 0) {
+            String date = bean.getEndDate();
+            try {
+                Date dt = format.parse(date + " " + bean.getEndHour() + ":" + bean.getEndMin());
+                if (startDate != null) {
+                    if (dt.after(startDate)) {
+                        query.before(dt);
+                    }
+                } else {
+                    query.before(dt);
+                }
+            } catch (ParseException e) {
+
+            }
+
+        }
         if (bean.getEventTypeCode() != null && bean.getEventTypeCode().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getEventTypeCode(), Query.Target.EVENT_TYPE_CODE);
+        }
+        if (bean.getSourceAddress() != null && bean.getSourceAddress().length() > 0) {
+            query.addConditional(Query.Conditional.EQUALS, bean.getSourceAddress(), Query.Target.SOURCE_ADDRESS);
         }
         return query;
     }

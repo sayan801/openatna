@@ -27,6 +27,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 
 /**
  * Base Hibernate Dao class
@@ -73,6 +74,10 @@ public abstract class AbstractHibernateDao<E> {
 
     protected List<? extends E> all() {
         return list(criteria());
+    }
+
+    protected List<? extends E> all(int offset, int amount) {
+        return list(criteria().addOrder(Order.asc("id")).setFirstResult(offset).setMaxResults(amount));
     }
 
     public Class<? extends E> getEntityClass() {

@@ -46,6 +46,7 @@ public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
     public void messageArrived(SyslogMessage<AtnaMessage> message) {
         LogMessage<AtnaMessage> msg = message.getMessage();
         AtnaMessage atnaMessage = msg.getMessageObject();
+        atnaMessage.setSourceAddress(message.getSourceIp());
         service.process(atnaMessage);
     }
 

@@ -50,6 +50,10 @@ public class HibernateProvisionalDao extends AbstractHibernateDao<ProvisionalEnt
         return all();
     }
 
+    public List<? extends ProvisionalEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     public void save(ProvisionalEntity pe) throws AtnaPersistenceException {
         currentSession().saveOrUpdate(pe);
     }

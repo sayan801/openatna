@@ -79,6 +79,10 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         return all();
     }
 
+    public List<? extends ParticipantEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     /**
      * This checks for any codes that are NOT in the DB.
      * Codes that are considered to be in the DB should not be added again,

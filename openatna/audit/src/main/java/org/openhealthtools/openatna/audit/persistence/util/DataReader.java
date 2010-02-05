@@ -75,68 +75,6 @@ import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEnti
 
 public class DataReader {
 
-    public static final String ENTITIES = "entities";
-
-    public static final String CODES = "codes";
-    public static final String SOURCES = "sources";
-    public static final String PARTICIPANTS = "participants";
-    public static final String OBJECTS = "objects";
-    public static final String NETWORK_ACCESS_POINTS = "netPoints";
-
-    public static final String ID = "id";
-
-    public static final String CODE_EVENT_ID = "EventId";
-    public static final String CODE_EVENT_TYPE = "EventType";
-    public static final String CODE_OBJ_ID_TYPE = "ObjectIdType";
-    public static final String CODE_PARTICIPANT_TYPE = "ParticipantRoleType";
-    public static final String CODE_SOURCE = "SourceType";
-
-    public static final String CODE = "code";
-    public static final String CODE_SYSTEM = "codeSystem";
-    public static final String CODE_SYSTEM_NAME = "codingScheme";
-    public static final String DISPLAY_NAME = "display";
-    public static final String ORIGINAL_TEXT = "originalText";
-
-    public static final String NETWORK_ACCESS_POINT = "netPoint";
-    public static final String NETWORK_ACCESS_POINT_ID = "netId";
-
-
-    public static final String SOURCE_ID = "sourceId";
-    public static final String SOURCE_TYPE = "sourceType";
-    public static final String SOURCE = "source";
-    public static final String OBJECT = "object";
-    public static final String PARTICIPANT = "participant";
-
-    public static final String USER_ID = "userId";
-    public static final String ALT_USER_ID = "altUserId";
-    public static final String USER_NAME = "userName";
-    public static final String PARTICIPANT_TYPE = "participantType";
-
-    public static final String ENT_SITE_ID = "enterpriseSiteId";
-
-    public static final String OBJECT_ID = "objectId";
-    public static final String OBJECT_TYPE_CODE = "objectTypeCode";
-    public static final String OBJECT_TYPE_CODE_ROLE = "objectTypeCodeRole";
-    public static final String OBJECT_SENSITIVITY = "sensitivity";
-    public static final String OBJECT_ID_TYPE = "objectIdType";
-    public static final String OBJECT_NAME = "objectName";
-    public static final String OBJECT_DETAIL_KEY = "objectDetailKey";
-    public static final String KEY = "key";
-
-    public static final String TYPE = "type";
-    public static final String VALUE = "value";
-    public static final String REF = "ref";
-
-    public static final String MESSAGE = "message";
-    public static final String EVT_ACTION = "eventAction";
-    public static final String EVT_OUTCOME = "eventOutcome";
-    public static final String EVT_TIME = "eventTime";
-    public static final String EVT_ID = "eventId";
-    public static final String EVT_TYPE = "eventType";
-
-    public static final String DETAIL = "detail";
-    public static final String QUERY = "query";
-
 
     private Document doc;
 
@@ -161,6 +99,7 @@ public class DataReader {
             throw new RuntimeException("Could not load data file");
         }
     }
+
 
     public void parse() throws AtnaPersistenceException {
         readDoc();
@@ -242,16 +181,16 @@ public class DataReader {
 
     private void readDoc() {
         Element el = doc.getDocumentElement();
-        if (el.getLocalName().equals(ENTITIES)) {
+        if (el.getLocalName().equals(DataConstants.ENTITIES)) {
             NodeList children = el.getChildNodes();
             for (int i = 0; i < children.getLength(); i++) {
                 Node n = children.item(i);
                 if (n instanceof Element) {
                     Element e = (Element) n;
                     String name = (e).getLocalName();
-                    if (name.equalsIgnoreCase(CODES)) {
+                    if (name.equalsIgnoreCase(DataConstants.CODES)) {
                         readCodes(e);
-                    } else if (name.equalsIgnoreCase(NETWORK_ACCESS_POINTS)) {
+                    } else if (name.equalsIgnoreCase(DataConstants.NETWORK_ACCESS_POINTS)) {
                         readNaps(e);
                     }
                 }
@@ -261,11 +200,11 @@ public class DataReader {
                 if (n instanceof Element) {
                     Element e = (Element) n;
                     String name = (e).getLocalName();
-                    if (name.equalsIgnoreCase(SOURCES)) {
+                    if (name.equalsIgnoreCase(DataConstants.SOURCES)) {
                         readSources(e);
-                    } else if (name.equalsIgnoreCase(PARTICIPANTS)) {
+                    } else if (name.equalsIgnoreCase(DataConstants.PARTICIPANTS)) {
                         readParts(e);
-                    } else if (name.equalsIgnoreCase(OBJECTS)) {
+                    } else if (name.equalsIgnoreCase(DataConstants.OBJECTS)) {
                         readObjects(e);
                     }
                 }
@@ -275,7 +214,7 @@ public class DataReader {
                 if (n instanceof Element) {
                     Element e = (Element) n;
                     String name = (e).getLocalName();
-                    if (name.equalsIgnoreCase(MESSAGE)) {
+                    if (name.equalsIgnoreCase(DataConstants.MESSAGE)) {
                         readMessage(e);
                     }
                 }
@@ -291,7 +230,7 @@ public class DataReader {
             Node n = children.item(i);
             if (n instanceof Element) {
                 Element e = (Element) n;
-                if (e.getTagName().equalsIgnoreCase("CodeType")) {
+                if (e.getTagName().equalsIgnoreCase(DataConstants.CODE_TYPE)) {
                     String type = e.getAttribute("name");
                     if (type != null) {
                         readCodeTypes(e, type);
@@ -306,7 +245,7 @@ public class DataReader {
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
-                if (((Element) n).getTagName().equalsIgnoreCase(CODE)) {
+                if (((Element) n).getTagName().equalsIgnoreCase(DataConstants.CODE)) {
                     readCode((Element) n, type);
                 }
             }
@@ -317,43 +256,43 @@ public class DataReader {
     private void readCode(Element el, String type) {
 
         CodeEntity entity = null;
-        if (type.equalsIgnoreCase(CODE_EVENT_ID)) {
+        if (type.equalsIgnoreCase(DataConstants.CODE_EVENT_ID)) {
             entity = new EventIdCodeEntity();
-        } else if (type.equalsIgnoreCase(CODE_EVENT_TYPE)) {
+        } else if (type.equalsIgnoreCase(DataConstants.CODE_EVENT_TYPE)) {
             entity = new EventTypeCodeEntity();
-        } else if (type.equalsIgnoreCase(CODE_OBJ_ID_TYPE)) {
+        } else if (type.equalsIgnoreCase(DataConstants.CODE_OBJ_ID_TYPE)) {
             entity = new ObjectIdTypeCodeEntity();
-        } else if (type.equalsIgnoreCase(CODE_PARTICIPANT_TYPE)) {
+        } else if (type.equalsIgnoreCase(DataConstants.CODE_PARTICIPANT_TYPE)) {
             entity = new ParticipantCodeEntity();
-        } else if (type.equalsIgnoreCase(CODE_SOURCE)) {
+        } else if (type.equalsIgnoreCase(DataConstants.CODE_SOURCE)) {
             entity = new SourceCodeEntity();
         }
         if (entity == null) {
             return;
         }
-        String code = el.getAttribute(CODE);
+        String code = el.getAttribute(DataConstants.CODE);
         if (nill(code)) {
             System.out.println("no code defined in coded value. Not loading...");
             return;
         }
         entity.setCode(code);
-        String sys = el.getAttribute(CODE_SYSTEM);
-        String name = el.getAttribute(CODE_SYSTEM_NAME);
-        String dis = el.getAttribute(DISPLAY_NAME);
-        String orig = el.getAttribute(ORIGINAL_TEXT);
+        String sys = el.getAttribute(DataConstants.CODE_SYSTEM);
+        String name = el.getAttribute(DataConstants.CODE_SYSTEM_NAME);
+        String dis = el.getAttribute(DataConstants.DISPLAY_NAME);
+        String orig = el.getAttribute(DataConstants.ORIGINAL_TEXT);
         entity.setCodeSystem(nill(sys) ? null : sys);
         entity.setCodeSystemName(nill(name) ? null : name);
         entity.setDisplayName(nill(dis) ? null : dis);
         entity.setOriginalText(nill(orig) ? null : orig);
-        if (type.equals(CODE_EVENT_ID)) {
+        if (type.equals(DataConstants.CODE_EVENT_ID)) {
             evtIds.put(code, entity);
-        } else if (type.equals(CODE_EVENT_TYPE)) {
+        } else if (type.equals(DataConstants.CODE_EVENT_TYPE)) {
             evtTypes.put(code, entity);
-        } else if (type.equals(CODE_OBJ_ID_TYPE)) {
+        } else if (type.equals(DataConstants.CODE_OBJ_ID_TYPE)) {
             objTypes.put(code, entity);
-        } else if (type.equals(CODE_PARTICIPANT_TYPE)) {
+        } else if (type.equals(DataConstants.CODE_PARTICIPANT_TYPE)) {
             partTypes.put(code, entity);
-        } else if (type.equals(CODE_SOURCE)) {
+        } else if (type.equals(DataConstants.CODE_SOURCE)) {
             sourceTypes.put(code, entity);
         }
     }
@@ -363,15 +302,15 @@ public class DataReader {
         NodeList children = codes.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(NETWORK_ACCESS_POINT)) {
+            if (n instanceof Element && n.getLocalName().equals(DataConstants.NETWORK_ACCESS_POINT)) {
                 readNap((Element) n);
             }
         }
     }
 
     private void readNap(Element el) {
-        String netId = el.getAttribute(NETWORK_ACCESS_POINT_ID);
-        String type = el.getAttribute(TYPE);
+        String netId = el.getAttribute(DataConstants.NETWORK_ACCESS_POINT_ID);
+        String type = el.getAttribute(DataConstants.TYPE);
         if (nill(netId) || nill(type)) {
             System.out.println("no identifier or type defined in network access point. Not loading...");
             return;
@@ -379,35 +318,35 @@ public class DataReader {
         NetworkAccessPointEntity e = new NetworkAccessPointEntity();
         e.setIdentifier(netId);
         e.setType(new Short(type));
-        naps.put(id(el), e);
+        naps.put(netId, e);
     }
 
     private void readSources(Element codes) {
         NodeList children = codes.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(SOURCE)) {
+            if (n instanceof Element && n.getLocalName().equals(DataConstants.SOURCE)) {
                 readSource((Element) n);
             }
         }
     }
 
     private void readSource(Element el) {
-        String sourceId = el.getAttribute(SOURCE_ID);
+        String sourceId = el.getAttribute(DataConstants.SOURCE_ID);
         if (nill(sourceId)) {
             System.out.println("No Source id set. Not loading...");
             return;
         }
-        String ent = el.getAttribute(ENT_SITE_ID);
+        String ent = el.getAttribute(DataConstants.ENT_SITE_ID);
         SourceEntity e = new SourceEntity();
         e.setSourceId(sourceId);
         e.setEnterpriseSiteId(nill(ent) ? null : ent);
         NodeList children = el.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(SOURCE_TYPE)) {
+            if (n instanceof Element && n.getLocalName().equals(DataConstants.SOURCE_TYPE)) {
                 Element ch = (Element) n;
-                String ref = ch.getAttribute(CODE);
+                String ref = ch.getAttribute(DataConstants.CODE);
                 if (nill(ref)) {
                     continue;
                 }
@@ -417,26 +356,26 @@ public class DataReader {
                 }
             }
         }
-        sources.put(id(el), e);
+        sources.put(sourceId, e);
     }
 
     private void readParts(Element codes) {
         NodeList children = codes.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(PARTICIPANT)) {
+            if (n instanceof Element && n.getLocalName().equals(DataConstants.PARTICIPANT)) {
                 readPart((Element) n);
             }
         }
     }
 
     private void readPart(Element el) {
-        String partId = el.getAttribute(USER_ID);
+        String partId = el.getAttribute(DataConstants.USER_ID);
         if (nill(partId)) {
             System.out.println("no active participant id defined. Not loading...");
         }
-        String name = el.getAttribute(USER_NAME);
-        String alt = el.getAttribute(ALT_USER_ID);
+        String name = el.getAttribute(DataConstants.USER_NAME);
+        String alt = el.getAttribute(DataConstants.ALT_USER_ID);
         ParticipantEntity e = new ParticipantEntity();
         e.setUserId(partId);
         e.setUserName(nill(name) ? null : name);
@@ -444,9 +383,9 @@ public class DataReader {
         NodeList children = el.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(PARTICIPANT_TYPE)) {
+            if (n instanceof Element && n.getLocalName().equals(DataConstants.PARTICIPANT_TYPE)) {
                 Element ch = (Element) n;
-                String ref = ch.getAttribute(CODE);
+                String ref = ch.getAttribute(DataConstants.CODE);
                 if (nill(ref)) {
                     continue;
                 }
@@ -456,28 +395,28 @@ public class DataReader {
                 }
             }
         }
-        parts.put(id(el), e);
+        parts.put(partId, e);
     }
 
     private void readObjects(Element codes) {
         NodeList children = codes.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element && n.getLocalName().equals(OBJECT)) {
+            if (n instanceof Element && n.getLocalName().equals(DataConstants.OBJECT)) {
                 readObject((Element) n);
             }
         }
     }
 
     private void readObject(Element el) {
-        String obId = el.getAttribute(OBJECT_ID);
+        String obId = el.getAttribute(DataConstants.OBJECT_ID);
         if (nill(obId)) {
             System.out.println("no participating object id defined. Not loading...");
         }
-        String name = el.getAttribute(OBJECT_NAME);
-        String type = el.getAttribute(OBJECT_TYPE_CODE);
-        String role = el.getAttribute(OBJECT_TYPE_CODE_ROLE);
-        String sens = el.getAttribute(OBJECT_SENSITIVITY);
+        String name = el.getAttribute(DataConstants.OBJECT_NAME);
+        String type = el.getAttribute(DataConstants.OBJECT_TYPE_CODE);
+        String role = el.getAttribute(DataConstants.OBJECT_TYPE_CODE_ROLE);
+        String sens = el.getAttribute(DataConstants.OBJECT_SENSITIVITY);
         ObjectEntity e = new ObjectEntity();
         e.setObjectId(obId);
         e.setObjectName(nill(name) ? null : name);
@@ -490,8 +429,8 @@ public class DataReader {
             if (n instanceof Element) {
                 Element ele = (Element) n;
 
-                if (ele.getLocalName().equals(OBJECT_ID_TYPE)) {
-                    String ref = ele.getAttribute(CODE);
+                if (ele.getLocalName().equals(DataConstants.OBJECT_ID_TYPE)) {
+                    String ref = ele.getAttribute(DataConstants.CODE);
                     if (nill(ref)) {
                         System.out.println("no object id type defined. Not loading...");
                         return;
@@ -503,8 +442,8 @@ public class DataReader {
                         System.out.println("no object id type defined. Not loading...");
                         return;
                     }
-                } else if (ele.getLocalName().equals(OBJECT_DETAIL_KEY)) {
-                    String key = ele.getAttribute(KEY);
+                } else if (ele.getLocalName().equals(DataConstants.OBJECT_DETAIL_KEY)) {
+                    String key = ele.getAttribute(DataConstants.KEY);
                     if (key != null) {
                         e.addObjectDetailType(key);
                     }
@@ -515,13 +454,13 @@ public class DataReader {
             System.out.println("no object id type defined. Not loading...");
             return;
         }
-        objects.put(id(el), e);
+        objects.put(obId, e);
     }
 
     public void readMessage(Element el) {
-        String action = el.getAttribute(EVT_ACTION);
-        String outcome = el.getAttribute(EVT_OUTCOME);
-        String time = el.getAttribute(EVT_TIME);
+        String action = el.getAttribute(DataConstants.EVT_ACTION);
+        String outcome = el.getAttribute(DataConstants.EVT_OUTCOME);
+        String time = el.getAttribute(DataConstants.EVT_TIME);
         Date ts = null;
         if (time != null) {
             ts = Timestamp.parseToDate(time);
@@ -541,8 +480,8 @@ public class DataReader {
             Node n = children.item(i);
             if (n instanceof Element) {
                 Element ele = (Element) n;
-                if (ele.getLocalName().equals(EVT_ID)) {
-                    String ref = ele.getAttribute(CODE);
+                if (ele.getLocalName().equals(DataConstants.EVT_ID)) {
+                    String ref = ele.getAttribute(DataConstants.CODE);
                     if (nill(ref)) {
                         System.out.println("no event id type defined. Not loading...");
                         return;
@@ -554,16 +493,16 @@ public class DataReader {
                         System.out.println("no event id type defined. Not loading...");
                         return;
                     }
-                } else if (ele.getLocalName().equals(EVT_TYPE)) {
-                    String ref = ele.getAttribute(CODE);
+                } else if (ele.getLocalName().equals(DataConstants.EVT_TYPE)) {
+                    String ref = ele.getAttribute(DataConstants.CODE);
                     if (!nill(ref)) {
                         CodeEntity code = evtTypes.get(ref);
                         if (code != null && code instanceof EventTypeCodeEntity) {
                             ent.addEventTypeCode((EventTypeCodeEntity) code);
                         }
                     }
-                } else if (ele.getLocalName().equals(PARTICIPANT)) {
-                    String ref = ele.getAttribute(REF);
+                } else if (ele.getLocalName().equals(DataConstants.PARTICIPANT)) {
+                    String ref = ele.getAttribute(DataConstants.REF);
                     if (!nill(ref)) {
                         ParticipantEntity pe = parts.get(ref);
                         if (pe != null) {
@@ -582,8 +521,8 @@ public class DataReader {
                             ent.addMessageParticipant(p);
                         }
                     }
-                } else if (ele.getLocalName().equals(SOURCE)) {
-                    String ref = ele.getAttribute(REF);
+                } else if (ele.getLocalName().equals(DataConstants.SOURCE)) {
+                    String ref = ele.getAttribute(DataConstants.REF);
                     if (!nill(ref)) {
                         SourceEntity se = sources.get(ref);
                         if (se != null) {
@@ -591,8 +530,8 @@ public class DataReader {
                             ent.addMessageSource(p);
                         }
                     }
-                } else if (ele.getLocalName().equals(OBJECT)) {
-                    String ref = ele.getAttribute(REF);
+                } else if (ele.getLocalName().equals(DataConstants.OBJECT)) {
+                    String ref = ele.getAttribute(DataConstants.REF);
                     if (!nill(ref)) {
                         ObjectEntity oe = objects.get(ref);
                         if (oe != null) {
@@ -604,7 +543,7 @@ public class DataReader {
                                     Element child = (Element) node;
                                     boolean enc = child.getAttribute("encoded") != null
                                             && child.getAttribute("encoded").equalsIgnoreCase("true");
-                                    if (child.getLocalName().equals(QUERY)) {
+                                    if (child.getLocalName().equals(DataConstants.QUERY)) {
                                         String q = child.getTextContent();
                                         if (q != null) {
                                             q = q.trim();
@@ -618,8 +557,8 @@ public class DataReader {
                                                 // shouldn't happen
                                             }
                                         }
-                                    } else if (child.getLocalName().equals(DETAIL)) {
-                                        String type = child.getAttribute(TYPE);
+                                    } else if (child.getLocalName().equals(DataConstants.DETAIL)) {
+                                        String type = child.getAttribute(DataConstants.TYPE);
                                         if (type != null) {
                                             String val = child.getTextContent();
                                             if (val != null) {
@@ -674,7 +613,7 @@ public class DataReader {
     }
 
     private String id(Element el) {
-        String id = el.getAttribute(ID);
+        String id = el.getAttribute(DataConstants.ID);
         if (id == null) {
             id = UUID.randomUUID().toString();
         }

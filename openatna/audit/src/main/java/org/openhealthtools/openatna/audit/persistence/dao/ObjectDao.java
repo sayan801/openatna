@@ -49,6 +49,8 @@ public interface ObjectDao {
 
     public List<? extends ObjectEntity> getAll() throws AtnaPersistenceException;
 
+    public List<? extends ObjectEntity> getAll(int offset, int amount) throws AtnaPersistenceException;
+
     public List<? extends ObjectEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity code)
             throws AtnaPersistenceException;
 

@@ -68,6 +68,10 @@ public class HibernateNetworkAccessPointDao extends AbstractHibernateDao<Network
         return all();
     }
 
+    public List<? extends NetworkAccessPointEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     public void save(NetworkAccessPointEntity nap, PersistencePolicies policies) throws AtnaPersistenceException {
         if (worthSaving(nap) && !isDuplicate(nap, policies)) {
             currentSession().saveOrUpdate(nap);

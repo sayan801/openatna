@@ -144,6 +144,10 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         return all();
     }
 
+    public List<? extends CodeEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     /**
      * this will only save new codes (based on on code, system and system name), or update codes that have
      * been drawn from the DB. Once a code is stored, it cannot have its code, system or system name changed.

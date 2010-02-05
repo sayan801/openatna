@@ -48,7 +48,11 @@ public interface MessageDao extends Dao {
 
     public List<? extends MessageEntity> getAll() throws AtnaPersistenceException;
 
+    public List<? extends MessageEntity> getAll(int offset, int amount) throws AtnaPersistenceException;
+
     public List<? extends MessageEntity> getByEventId(EventIdCodeEntity idEntity) throws AtnaPersistenceException;
+
+    public List<? extends MessageEntity> getBySourceAddress(String address) throws AtnaPersistenceException;
 
     public List<? extends MessageEntity> getByEventType(EventTypeCodeEntity typeEntity)
             throws AtnaPersistenceException;

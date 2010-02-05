@@ -57,6 +57,7 @@ public class Query {
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
 
     public static enum Target {
+        SOURCE_ADDRESS,
         EVENT_TIME,
         EVENT_ID_CODE,
         EVENT_ID_CODE_SYSTEM,

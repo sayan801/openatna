@@ -37,4 +37,5 @@ public interface AtnaIOFactory {
 
     public abstract void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException;
 
+    public abstract void write(AtnaMessage message, OutputStream out, boolean includeDeclaration) throws AtnaException, IOException;
 }

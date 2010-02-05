@@ -50,6 +50,8 @@ public interface ParticipantDao extends Dao {
 
     public List<? extends ParticipantEntity> getAll() throws AtnaPersistenceException;
 
+    public List<? extends ParticipantEntity> getAll(int offset, int amount) throws AtnaPersistenceException;
+
     public void save(ParticipantEntity ap, PersistencePolicies policies) throws AtnaPersistenceException;
 
     public void delete(ParticipantEntity ap) throws AtnaPersistenceException;

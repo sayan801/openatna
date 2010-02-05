@@ -48,7 +48,7 @@ public class TlsClientTest0 extends ClientTest {
     //@Test
     public void testMessages() {
         try {
-            URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/OpenATNA_2010_Keystore.jks");
+            URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
             KeystoreDetails trust = new KeystoreDetails(u.toString(), "password", "myServerCert");
             URL uu = Thread.currentThread().getContextClassLoader().getResource("testcerts/clientKeyStore");
             KeystoreDetails key = new KeystoreDetails(uu.toString(), "password", "myClientCert", "password");

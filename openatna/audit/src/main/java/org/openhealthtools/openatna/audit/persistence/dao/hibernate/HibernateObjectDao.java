@@ -81,6 +81,10 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
         return all();
     }
 
+    public List<? extends ObjectEntity> getAll(int offset, int amount) throws AtnaPersistenceException {
+        return all(offset, amount);
+    }
+
     public List<? extends ObjectEntity> getByObjectIdTypeCode(ObjectIdTypeCodeEntity codeEntity)
             throws AtnaPersistenceException {
         return list(criteria().createCriteria("objectIdTypeCode").add(Restrictions.eq("code", codeEntity.getCode()))
