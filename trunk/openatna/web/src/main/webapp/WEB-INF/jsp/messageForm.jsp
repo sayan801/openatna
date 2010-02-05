@@ -30,7 +30,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" title="Default">
     <link rel="stylesheet" type="text/css" href="css/smoothness/jquery-ui-1.7.2.custom.css" title="Default">
 
-    <script type="text/javascript" language="javascript" src="js/jquery-1.4.1.min.js"></script>
+    <script type="text/javascript" language="javascript" src="js/jquery-1.3.2.min.js"></script>
     <script type="text/javascript" language="javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
 
     <script type="text/javascript" language="javascript">
