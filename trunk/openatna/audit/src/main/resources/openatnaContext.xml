@@ -43,6 +43,7 @@
         <property name="allowNewSources" value="true"/>
         <property name="allowUnknownDetailTypes" value="true"/>
         <property name="allowNewCodes" value="true"/>
+        <property name="persistErrors" value="true"/>
 
     </bean>
 
@@ -169,6 +170,10 @@
     </bean>
 
     <bean id="provisionalDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateProvisionalDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+
+    <bean id="errorDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateErrorDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 </beans>
