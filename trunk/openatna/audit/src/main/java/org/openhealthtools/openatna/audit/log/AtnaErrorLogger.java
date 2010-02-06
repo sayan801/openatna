@@ -60,12 +60,7 @@ public class AtnaErrorLogger {
         StringBuilder sb = new StringBuilder("===> ATNA EXCEPTION THROWN\n");
         AtnaException.AtnaError error = e.getError();
         sb.append("** ATNA ERROR:").append(error).append("**\n");
-        byte[] xml = e.getXmlDoc();
-        if (xml == null) {
-            sb.append("no message available.\n");
-        } else {
-            sb.append("string message is:\n").append(new String(xml));
-        }
+
         log.error(sb.toString(), e);
     }
 

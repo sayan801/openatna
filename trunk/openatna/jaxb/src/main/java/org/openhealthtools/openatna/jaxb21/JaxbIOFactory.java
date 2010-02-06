@@ -92,9 +92,9 @@ public class JaxbIOFactory implements AtnaIOFactory {
         if (jc == null) {
             throw new AtnaException("Could not create Jaxb Context");
         }
-        Document doc = null;
+
         try {
-            doc = newDocument(in);
+            Document doc = newDocument(in);
             if (doc.getDocumentElement().getTagName().equalsIgnoreCase("IHEYr4")) {
                 return createProv(doc);
             }
@@ -105,7 +105,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
             try {
                 am = createMessage(a);
             } catch (AtnaException e) {
-                ae = new AtnaException(e, fromDoc(doc));
+                ae = e;
             }
             try {
                 if (log.isInfoEnabled()) {
@@ -124,39 +124,8 @@ public class JaxbIOFactory implements AtnaIOFactory {
             }
             return am;
         } catch (Exception e) {
-            byte[] xml = "no message available".getBytes();
-            if (doc == null) {
-                try {
-                    // try to rescue as much data as possible
-                    if (in.markSupported()) {
-                        in.mark(0);
-                        in.reset();
-                    }
-                    byte[] bs = new byte[in.available()];
-
-                    xml = bs;
-                } catch (IOException e1) {
-                    System.out.println("JaxbIOFactory.read io exception thrown " + e1.getMessage());
-                    xml = e1.getMessage().getBytes();
-                }
-            } else {
-                xml = fromDoc(doc);
-            }
-            throw new AtnaException(e, xml);
+            throw new AtnaException(e, AtnaException.AtnaError.INVALID_MESSAGE);
         }
-    }
-
-    private byte[] fromDoc(Document doc) {
-        if (doc != null) {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            try {
-                transform(doc, bout);
-            } catch (IOException e) {
-                return e.getMessage().getBytes();
-            }
-            return bout.toByteArray();
-        }
-        return "no XML document available".getBytes();
     }
 
     private Document newDocument(InputStream stream) throws IOException {
