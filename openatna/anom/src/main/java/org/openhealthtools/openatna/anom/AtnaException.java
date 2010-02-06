@@ -67,8 +67,7 @@ public class AtnaException extends Exception {
 
     }
 
-    private AtnaMessage message;
-    private String xmlDoc;
+    private byte[] xmlDoc = "no message available".getBytes();
     private AtnaError error = AtnaError.UNDEFINED;
 
     public AtnaException(String s) {
@@ -83,64 +82,42 @@ public class AtnaException extends Exception {
         this(throwable, AtnaError.UNDEFINED);
     }
 
-    public AtnaException(String s, AtnaMessage message) {
-        this(s, message, AtnaError.UNDEFINED);
-    }
-
     public AtnaException(String s, Throwable throwable, AtnaMessage message) {
         this(s, throwable, message, AtnaError.UNDEFINED);
-    }
-
-    public AtnaException(Throwable throwable, AtnaMessage message) {
-        this(throwable, message, AtnaError.UNDEFINED);
-    }
-
-    public AtnaException(String s, AtnaError error) {
-        this(s, (AtnaMessage) null, error);
     }
 
     public AtnaException(String s, Throwable throwable, AtnaError error) {
         this(s, throwable, null, error);
     }
 
-    public AtnaException(Throwable throwable, AtnaError error) {
-        this(throwable, null, error);
-    }
 
-    public AtnaException(String s, AtnaMessage message, AtnaError error) {
+    public AtnaException(String s, AtnaError error) {
         super(s);
-        this.message = message;
         this.error = error;
     }
 
     public AtnaException(String s, Throwable throwable, AtnaMessage message, AtnaError error) {
         super(s, throwable);
-        this.message = message;
         this.error = error;
     }
 
-    public AtnaException(Throwable throwable, AtnaMessage message, AtnaError error) {
+    public AtnaException(Throwable throwable, AtnaError error) {
         super(throwable);
-        this.message = message;
         this.error = error;
     }
 
-    public AtnaException(Throwable throwable, String xmlDoc) {
+    public AtnaException(Throwable throwable, byte[] xmlDoc) {
         super(throwable);
         this.xmlDoc = xmlDoc;
     }
 
-    public AtnaException(String message, String xmlDoc) {
+    public AtnaException(String message, byte[] xmlDoc) {
         super(message);
         this.xmlDoc = xmlDoc;
     }
 
-    public String getXmlDoc() {
+    public byte[] getXmlDoc() {
         return xmlDoc;
-    }
-
-    public AtnaMessage getAtnaMessage() {
-        return message;
     }
 
     public AtnaError getError() {

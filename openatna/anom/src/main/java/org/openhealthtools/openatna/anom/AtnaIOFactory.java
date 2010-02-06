@@ -20,7 +20,6 @@
 
 package org.openhealthtools.openatna.anom;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -33,9 +32,9 @@ import java.io.OutputStream;
 
 public interface AtnaIOFactory {
 
-    public abstract AtnaMessage read(InputStream in) throws AtnaException, IOException;
+    public abstract AtnaMessage read(InputStream in) throws AtnaException;
 
-    public abstract void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException;
+    public abstract void write(AtnaMessage message, OutputStream out) throws AtnaException;
 
-    public abstract void write(AtnaMessage message, OutputStream out, boolean includeDeclaration) throws AtnaException, IOException;
+    public abstract void write(AtnaMessage message, OutputStream out, boolean includeDeclaration) throws AtnaException;
 }

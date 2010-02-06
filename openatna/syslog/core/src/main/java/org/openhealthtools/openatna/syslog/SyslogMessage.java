@@ -21,7 +21,6 @@
 package org.openhealthtools.openatna.syslog;
 
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 
@@ -79,7 +78,7 @@ public abstract class SyslogMessage<M> implements Serializable {
         this.sourceIp = sourceIp;
     }
 
-    public abstract void write(OutputStream out) throws IOException;
+    public abstract void write(OutputStream out) throws SyslogException;
 
-    public abstract byte[] toByteArray() throws IOException;
+    public abstract byte[] toByteArray() throws SyslogException;
 }

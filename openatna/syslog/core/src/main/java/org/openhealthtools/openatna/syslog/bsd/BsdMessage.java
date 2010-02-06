@@ -30,6 +30,7 @@ import java.util.Date;
 
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.message.StringLogMessage;
@@ -75,34 +76,39 @@ public class BsdMessage<M> extends SyslogMessage {
         return sb.toString();
     }
 
-    public void write(OutputStream out) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out, Constants.ENC_UTF8);
-        writer.write(getHeader());
-        //writer.write(" ");
-        writer.flush();
-        getMessage().write(out);
-        writer.flush();
+    public void write(OutputStream out) throws SyslogException {
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(out, Constants.ENC_UTF8);
+            writer.write(getHeader());
+            writer.flush();
+            getMessage().write(out);
+            writer.flush();
+        } catch (IOException e) {
+            throw new SyslogException(e);
+        }
     }
 
-    public byte[] toByteArray() throws IOException {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        StringBuilder sb = new StringBuilder();
-        sb.append(getHeader());
-        //sb.append(" ");
-        bout.write(sb.toString().getBytes(Constants.ENC_UTF8));
-        getMessage().write(bout);
-        return bout.toByteArray();
+    public byte[] toByteArray() throws SyslogException {
+        try {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            StringBuilder sb = new StringBuilder();
+            sb.append(getHeader());
+            bout.write(sb.toString().getBytes(Constants.ENC_UTF8));
+            getMessage().write(bout);
+            return bout.toByteArray();
+        } catch (IOException e) {
+            throw new SyslogException(e);
+        }
     }
 
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getHeader());
-        //sb.append(" ");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
             getMessage().write(bout);
-        } catch (IOException e) {
+        } catch (SyslogException e) {
             assert false;
         }
         try {

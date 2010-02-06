@@ -22,6 +22,7 @@ package org.openhealthtools.openatna.audit;
 
 import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
 import org.openhealthtools.openatna.audit.persistence.dao.EntityDao;
+import org.openhealthtools.openatna.audit.persistence.dao.ErrorDao;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
 import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
@@ -108,6 +109,10 @@ public class AtnaFactory {
 
     public static AuditService auditService() {
         return (AuditService) getBean("auditService");
+    }
+
+    public static ErrorDao errorDao() {
+        return (ErrorDao) getBean("errorDao");
     }
 
     public static ProvisionalDao provisionalDao() {

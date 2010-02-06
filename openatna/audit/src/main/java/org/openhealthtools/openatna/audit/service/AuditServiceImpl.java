@@ -152,7 +152,7 @@ public class AuditServiceImpl implements AuditService {
     }
 
 
-    public void process(AtnaMessage message) {
+    public void process(AtnaMessage message) throws Exception {
         ProcessContext context = new ProcessContext(message);
         chain.process(context);
     }

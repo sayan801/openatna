@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -89,7 +88,7 @@ public class JaxbIOFactory implements AtnaIOFactory {
         }
     }
 
-    public AtnaMessage read(InputStream in) throws AtnaException, IOException {
+    public AtnaMessage read(InputStream in) throws AtnaException {
         if (jc == null) {
             throw new AtnaException("Could not create Jaxb Context");
         }
@@ -124,26 +123,40 @@ public class JaxbIOFactory implements AtnaIOFactory {
                 throw ae;
             }
             return am;
-        } catch (JAXBException e) {
-            throw new AtnaException(e, fromDoc(doc));
+        } catch (Exception e) {
+            byte[] xml = "no message available".getBytes();
+            if (doc == null) {
+                try {
+                    // try to rescue as much data as possible
+                    if (in.markSupported()) {
+                        in.mark(0);
+                        in.reset();
+                    }
+                    byte[] bs = new byte[in.available()];
+
+                    xml = bs;
+                } catch (IOException e1) {
+                    System.out.println("JaxbIOFactory.read io exception thrown " + e1.getMessage());
+                    xml = e1.getMessage().getBytes();
+                }
+            } else {
+                xml = fromDoc(doc);
+            }
+            throw new AtnaException(e, xml);
         }
     }
 
-    private String fromDoc(Document doc) {
+    private byte[] fromDoc(Document doc) {
         if (doc != null) {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             try {
                 transform(doc, bout);
             } catch (IOException e) {
-                return e.getMessage();
+                return e.getMessage().getBytes();
             }
-            try {
-                return new String(bout.toByteArray(), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                return e.getMessage();
-            }
+            return bout.toByteArray();
         }
-        return "no XML document available";
+        return "no XML document available".getBytes();
     }
 
     private Document newDocument(InputStream stream) throws IOException {
@@ -154,9 +167,9 @@ public class JaxbIOFactory implements AtnaIOFactory {
             DocumentBuilder db = dbf.newDocumentBuilder();
             doc = db.parse(stream);
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            throw new IOException(e.getMessage());
         } catch (SAXException e) {
-            e.printStackTrace();
+            throw new IOException(e.getMessage());
         }
         return doc;
     }
@@ -192,11 +205,11 @@ public class JaxbIOFactory implements AtnaIOFactory {
         return new ProvisionalMessage(bytes);
     }
 
-    public void write(AtnaMessage message, OutputStream out) throws AtnaException, IOException {
+    public void write(AtnaMessage message, OutputStream out) throws AtnaException {
         write(message, out, true);
     }
 
-    public void write(AtnaMessage message, OutputStream out, boolean includeDeclaration) throws AtnaException, IOException {
+    public void write(AtnaMessage message, OutputStream out, boolean includeDeclaration) throws AtnaException {
         if (jc == null) {
             throw new AtnaException("Could not create Jaxb Context");
         }

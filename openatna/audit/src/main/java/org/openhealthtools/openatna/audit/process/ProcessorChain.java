@@ -138,10 +138,11 @@ public class ProcessorChain {
         return this;
     }
 
-    public void process(ProcessContext context) {
+    public void process(ProcessContext context) throws Exception {
         long before = System.currentTimeMillis();
         context.addProperties(Collections.unmodifiableMap(contextProperties));
         List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
+        Exception ex = null;
         try {
             prov.process(context);
             if (context.getState() == ProcessContext.State.ABORTED) {
@@ -178,12 +179,16 @@ public class ProcessorChain {
             postPersist.process(context);
             done.add(postPersist);
         } catch (Exception e) {
+            ex = e;
             context.setState(ProcessContext.State.ERROR);
             context.setThrowable(e);
             rewind(done, context);
         }
         long now = System.currentTimeMillis();
         log.debug("message processing time:" + (now - before));
+        if (ex != null) {
+            throw ex;
+        }
     }
 
     private void rewind(List<AtnaProcessor> completed, ProcessContext context) {

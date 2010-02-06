@@ -101,10 +101,32 @@ public class UdpClientTest0 extends ClientTest {
         }
     }
 
+    @Test
+    public void testBadProvMessage() {
+        try {
+            ProvisionalMessage message = new ProvisionalMessage(badProv.getBytes("UTF-8"));
+            ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new ProvLogMessage(message), "Spartacus", "PDQIN", "777");
+            InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
+            DatagramSocket s = new DatagramSocket();
+            byte[] bytes = sl.toByteArray();
+            DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, addr);
+            s.send(packet);
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SyslogException e) {
+            e.printStackTrace();
+        }
+    }
+
     String prov = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
             "<IHEYr4>Stuff we don't care about</IHEYr4>";
 
-    static class ProvLogMessage implements LogMessage<ProvisionalMessage> {
+
+    String badProv = "This is a bad message";
+
+
+    protected static class ProvLogMessage implements LogMessage<ProvisionalMessage> {
 
         private ProvisionalMessage msg;
 
@@ -116,12 +138,16 @@ public class UdpClientTest0 extends ClientTest {
             return "UTF-8";
         }
 
-        public void read(InputStream in, String encoding) throws IOException {
+        public void read(InputStream in, String encoding) throws SyslogException {
         }
 
-        public void write(OutputStream out) throws IOException {
-            out.write(msg.getContent());
-            out.flush();
+        public void write(OutputStream out) throws SyslogException {
+            try {
+                out.write(msg.getContent());
+                out.flush();
+            } catch (IOException e) {
+                throw new SyslogException(e);
+            }
         }
 
         public ProvisionalMessage getMessageObject() {

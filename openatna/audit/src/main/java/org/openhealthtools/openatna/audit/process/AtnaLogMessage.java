@@ -20,16 +20,15 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.anom.AtnaIOFactory;
 import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.audit.log.AtnaErrorLogger;
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
 
 /**
  * A wrapper for an AtnaIOFactory that ties in with Syslog.
@@ -74,36 +73,27 @@ public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
         return Constants.ENC_UTF8;
     }
 
-    public void read(InputStream in, String encoding) throws IOException {
+    public void read(InputStream in, String encoding) throws SyslogException {
         try {
             message = factory.read(in);
         } catch (AtnaException e) {
-            processReadError(e);
+            throw new SyslogException(e.getMessage(), e, e.getXmlDoc());
         }
     }
 
-    public void write(OutputStream out) throws IOException {
+    public void write(OutputStream out) throws SyslogException {
         if (getMessageObject() == null) {
-            throw new IOException("no AtnaMessage to write out.");
+            throw new SyslogException("no AtnaMessage to write out.");
         }
         try {
             factory.write(getMessageObject(), out);
         } catch (AtnaException e) {
-            processWriteError(e);
+            throw new SyslogException(e.getMessage(), e, e.getXmlDoc());
         }
     }
 
     public AtnaMessage getMessageObject() {
         return message;
-    }
-
-
-    protected void processReadError(AtnaException e) {
-        AtnaErrorLogger.log(e);
-    }
-
-    protected void processWriteError(AtnaException e) {
-        AtnaErrorLogger.log(e);
     }
 
 }
