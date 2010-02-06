@@ -120,7 +120,7 @@ public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
         }
         e = e.getCause();
         while (e != null) {
-            sb.append("Caused by:\n");
+            sb.append("\n\tCaused by:\n");
             els = e.getStackTrace();
             for (StackTraceElement el : els) {
                 sb.append(el.toString()).append("\n\t");

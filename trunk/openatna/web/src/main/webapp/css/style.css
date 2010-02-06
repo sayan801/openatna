@@ -166,10 +166,8 @@ table.smalltable {
 }
 
 .scrollContent {
-    width: 81em;
-    height: 5em;
-    overflow: auto;
-    border: 1px solid #dedede;
+    width: 81em; /*overflow: auto;*/
+/*border: 1px solid #dedede;*/
 }
 
 form {
