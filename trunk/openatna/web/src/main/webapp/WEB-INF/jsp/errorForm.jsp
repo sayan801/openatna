@@ -65,8 +65,11 @@
 <form:form action="errors.html" commandName="queryBean">
 <fieldset>
 <legend>Constraints</legend>
-<table class="smalltable">
-
+<table>
+<tr>
+    <td>Source IP (required):</td>
+    <td><form:input path="sourceAddress"/></td>
+</tr>
 <tr>
     <td>Start Date :</td>
     <td><form:input path="startDate" id="enddatepicker"/></td>
@@ -266,10 +269,7 @@
         </form:select>
     </td>
 </tr>
-<tr>
-    <td>Source IP (required):</td>
-    <td><form:input path="sourceAddress"/></td>
-</tr>
+
 <tr>
     <td><input type="submit" value="List"></td>
     <td></td>
