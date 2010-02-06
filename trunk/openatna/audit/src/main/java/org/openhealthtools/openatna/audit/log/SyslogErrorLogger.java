@@ -20,6 +20,7 @@
 
 package org.openhealthtools.openatna.audit.log;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,11 +62,13 @@ public class SyslogErrorLogger {
         byte[] bytes = e.getBytes();
         if (bytes.length == 0) {
             sb.append("no bytes available.\n");
-        } else if (bytes.length > 8096) {
-            sb.append("too many bytes (" + bytes.length + ") to report.\n");
         } else {
-            sb.append("bytes are:\n")
-                    .append(new String(bytes));
+            try {
+                sb.append("bytes are:\n")
+                        .append(new String(bytes, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                assert false;
+            }
         }
         log.error(sb.toString(), e);
     }

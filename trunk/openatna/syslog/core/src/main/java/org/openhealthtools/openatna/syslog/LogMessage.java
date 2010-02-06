@@ -20,7 +20,6 @@
 
 package org.openhealthtools.openatna.syslog;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -42,9 +41,9 @@ public interface LogMessage<M extends Object> {
 
     public String getExpectedEncoding();
 
-    public void read(InputStream in, String encoding) throws IOException;
+    public void read(InputStream in, String encoding) throws SyslogException;
 
-    public void write(OutputStream out) throws IOException;
+    public void write(OutputStream out) throws SyslogException;
 
     public M getMessageObject();
 }

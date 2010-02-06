@@ -107,38 +107,46 @@ public class ProtocolMessage<M> extends SyslogMessage {
         return sb.toString();
     }
 
-    public void write(OutputStream out) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out, Constants.ENC_UTF8);
-        writer.write(getHeader());
-        if (structuredElement.size() > 0) {
-            for (StructuredElement element : structuredElement) {
-                writer.write(element.toString());
+    public void write(OutputStream out) throws SyslogException {
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(out, Constants.ENC_UTF8);
+            writer.write(getHeader());
+            if (structuredElement.size() > 0) {
+                for (StructuredElement element : structuredElement) {
+                    writer.write(element.toString());
+                }
+            } else {
+                writer.write("-");
             }
-        } else {
-            writer.write("-");
+            writer.write(" ");
+            writer.flush();
+            getMessage().write(out);
+            writer.flush();
+        } catch (IOException e) {
+            throw new SyslogException(e);
         }
-        writer.write(" ");
-        writer.flush();
-        getMessage().write(out);
-        writer.flush();
     }
 
-    public byte[] toByteArray() throws IOException {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    public byte[] toByteArray() throws SyslogException {
+        try {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(getHeader());
-        if (structuredElement.size() > 0) {
-            for (StructuredElement element : structuredElement) {
-                sb.append(element.toString());
+            StringBuilder sb = new StringBuilder();
+            sb.append(getHeader());
+            if (structuredElement.size() > 0) {
+                for (StructuredElement element : structuredElement) {
+                    sb.append(element.toString());
+                }
+            } else {
+                sb.append("-");
             }
-        } else {
-            sb.append("-");
+            sb.append(" ");
+            bout.write(sb.toString().getBytes(Constants.ENC_UTF8));
+            getMessage().write(bout);
+            return bout.toByteArray();
+        } catch (IOException e) {
+            throw new SyslogException(e);
         }
-        sb.append(" ");
-        bout.write(sb.toString().getBytes(Constants.ENC_UTF8));
-        getMessage().write(bout);
-        return bout.toByteArray();
     }
 
 
@@ -156,7 +164,7 @@ public class ProtocolMessage<M> extends SyslogMessage {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
             getMessage().write(bout);
-        } catch (IOException e) {
+        } catch (SyslogException e) {
             assert false;
         }
         try {

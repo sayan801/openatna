@@ -31,6 +31,7 @@ import org.openhealthtools.openatna.all.test.ssl.AuthSSLSocketFactory;
 import org.openhealthtools.openatna.all.test.ssl.KeystoreDetails;
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.ProvisionalMessage;
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
@@ -106,4 +107,32 @@ public class TlsClientTest0 extends ClientTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testBadMessage() {
+        try {
+            URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
+            KeystoreDetails trust = new KeystoreDetails(u.toString(), "password", "myServerCert");
+            URL uu = Thread.currentThread().getContextClassLoader().getResource("testcerts/clientKeyStore");
+            KeystoreDetails key = new KeystoreDetails(uu.toString(), "password", "myClientCert", "password");
+            AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
+            SSLSocket s = (SSLSocket) f.createSecureSocket("localhost", 2862);
+            OutputStream out = s.getOutputStream();
+            ProvisionalMessage message = new ProvisionalMessage("This is a bad message".getBytes("UTF-8"));
+            ProtocolMessage sl = new ProtocolMessage(10, 5, "localhost", new UdpClientTest0.ProvLogMessage(message), "IHE_CLIENT", "ATNALOG", "1234");
+            byte[] bytes = sl.toByteArray();
+            out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
+            out.write(bytes);
+            out.flush();
+            out.close();
+            s.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SyslogException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

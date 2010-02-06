@@ -23,6 +23,7 @@ package org.openhealthtools.openatna.audit.server;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -88,8 +89,9 @@ public class TcpServer {
         public void run() {
 
             while (running && !interrupted()) {
+                Socket s = null;
                 try {
-                    Socket s = server.accept();
+                    s = server.accept();
                     log.debug(logSocket(s));
                     atnaServer.execute(new WorkerThread(s));
                 } catch (NullPointerException e) {
@@ -99,9 +101,17 @@ public class TcpServer {
                 } catch (SocketException e) {
                     log.debug("Socket closed.");
                 } catch (IOException e) {
-                    atnaServer.notifyException(new SyslogException(e));
+                    SyslogException ex = new SyslogException(e.getMessage(), e);
+                    if (s != null) {
+                        ex.setSourceIp(((InetSocketAddress) s.getRemoteSocketAddress()).getAddress().getHostAddress());
+                    }
+                    atnaServer.notifyException(ex);
                 } catch (Exception e) {
-                    atnaServer.notifyException(new SyslogException(e));
+                    SyslogException ex = new SyslogException(e.getMessage(), e);
+                    if (s != null) {
+                        ex.setSourceIp(((InetSocketAddress) s.getRemoteSocketAddress()).getAddress().getHostAddress());
+                    }
+                    atnaServer.notifyException(ex);
                 }
             }
         }
@@ -148,7 +158,9 @@ public class TcpServer {
                             log.debug("length of incoming message:" + length);
                         } catch (NumberFormatException e) {
                             maxErr--;
-                            atnaServer.notifyException(new SyslogException(e, b));
+                            SyslogException ex = new SyslogException(e, b);
+                            ex.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
+                            atnaServer.notifyException(ex);
                             continue;
                         }
                         byte[] bytes = new byte[length];
@@ -166,7 +178,9 @@ public class TcpServer {
                             msg = createMessage(bytes);
                         } catch (SyslogException e) {
                             maxErr--;
-                            atnaServer.notifyException(new SyslogException(e, bytes));
+                            e.setBytes(bytes);
+                            e.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
+                            atnaServer.notifyException(e);
                         }
                         if (msg != null) {
                             InetSocketAddress addr = (InetSocketAddress) socket.getRemoteSocketAddress();
@@ -177,13 +191,19 @@ public class TcpServer {
                 }
 
             } catch (IOException e) {
-                atnaServer.notifyException(new SyslogException(e));
+                SyslogException ex = new SyslogException(e);
+                ex.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
+                atnaServer.notifyException(ex);
             }
 
         }
 
-        private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
-            log.debug("creating message from bytes: " + new String(bytes, "UTF-8"));
+        private SyslogMessage createMessage(byte[] bytes) throws SyslogException {
+            try {
+                log.debug("creating message from bytes: " + new String(bytes, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+
+            }
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
 

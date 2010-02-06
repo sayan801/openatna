@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
 
 /**
  * Simple string implementation of LogMessage.
@@ -63,21 +64,27 @@ public class StringLogMessage implements LogMessage<String> {
         return expectedEncoding;
     }
 
-    public void read(InputStream in, String encoding) throws IOException {
-
-        byte[] bytes = new byte[8198];
-        StringBuilder sb = new StringBuilder();
-        int c;
-        while ((c = in.read(bytes)) != -1) {
-            sb.append(new String(bytes, 0, c, encoding));
+    public void read(InputStream in, String encoding) throws SyslogException {
+        try {
+            byte[] bytes = new byte[8198];
+            StringBuilder sb = new StringBuilder();
+            int c;
+            while ((c = in.read(bytes)) != -1) {
+                sb.append(new String(bytes, 0, c, encoding));
+            }
+            this.payload = sb.toString();
+        } catch (IOException e) {
+            throw new SyslogException(e);
         }
-        this.payload = sb.toString();
     }
 
-    public void write(OutputStream out) throws IOException {
-        //ProtocolMessageFactory.writeUtf8Bom(out);
-        out.write(payload.getBytes());
-        out.flush();
+    public void write(OutputStream out) throws SyslogException {
+        try {
+            out.write(payload.getBytes());
+            out.flush();
+        } catch (IOException e) {
+            throw new SyslogException(e, payload.getBytes());
+        }
     }
 
     public String getMessageObject() {

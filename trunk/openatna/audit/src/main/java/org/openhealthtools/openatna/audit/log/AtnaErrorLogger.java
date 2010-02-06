@@ -26,7 +26,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaException;
-import org.openhealthtools.openatna.anom.AtnaMessage;
 
 /**
  * This class logs errors at the ATNA message parsing layer.
@@ -61,17 +60,11 @@ public class AtnaErrorLogger {
         StringBuilder sb = new StringBuilder("===> ATNA EXCEPTION THROWN\n");
         AtnaException.AtnaError error = e.getError();
         sb.append("** ATNA ERROR:").append(error).append("**\n");
-        AtnaMessage msg = e.getAtnaMessage();
-        if (msg == null) {
-            String xml = e.getXmlDoc();
-            if (xml == null) {
-                sb.append("no message available.\n");
-            } else {
-                sb.append("string message is:\n").append(xml);
-            }
+        byte[] xml = e.getXmlDoc();
+        if (xml == null) {
+            sb.append("no message available.\n");
         } else {
-            sb.append("message is:\n")
-                    .append(msg);
+            sb.append("string message is:\n").append(new String(xml));
         }
         log.error(sb.toString(), e);
     }

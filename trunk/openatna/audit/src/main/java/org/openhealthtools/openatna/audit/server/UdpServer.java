@@ -114,16 +114,17 @@ public class UdpServer {
 
         public void run() {
             SyslogMessage msg = null;
+            byte[] data = "no data".getBytes();
             try {
-                byte[] data = new byte[packet.getLength()];
+                data = new byte[packet.getLength()];
                 log.debug(logPacket(packet));
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, data.length);
                 log.debug("creating message from bytes:" + new String(data));
                 msg = createMessage(data);
             } catch (SyslogException e) {
+                e.setBytes(data);
+                e.setSourceIp(((InetSocketAddress) packet.getSocketAddress()).getAddress().getHostAddress());
                 atnaServer.notifyException(e);
-            } catch (IOException e) {
-                atnaServer.notifyException(new SyslogException(e));
             }
             if (msg != null) {
                 InetSocketAddress addr = (InetSocketAddress) packet.getSocketAddress();
@@ -132,7 +133,7 @@ public class UdpServer {
             }
         }
 
-        private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
+        private SyslogMessage createMessage(byte[] bytes) throws SyslogException {
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
     }

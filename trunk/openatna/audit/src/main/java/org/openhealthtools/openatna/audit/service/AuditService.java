@@ -70,7 +70,7 @@ public interface AuditService {
      *
      * @return
      */
-    public void process(AtnaMessage message);
+    public void process(AtnaMessage message) throws Exception;
 
     /**
      * get the ServiceConfig

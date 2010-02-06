@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.openhealthtools.openatna.anom.AtnaException;
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.bsd.BsdMessage;
 import org.junit.Test;
 
@@ -55,6 +56,8 @@ public class BsdClientTest0 extends ClientTest {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (AtnaException e) {
+            e.printStackTrace();
+        } catch (SyslogException e) {
             e.printStackTrace();
         }
     }

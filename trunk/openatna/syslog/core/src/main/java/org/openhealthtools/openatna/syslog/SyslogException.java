@@ -51,6 +51,7 @@ public class SyslogException extends Exception {
 
     private byte[] bytes;
     private SyslogError error;
+    private String sourceIp;
 
     public SyslogException(String s) {
         this(s, new byte[0], SyslogError.UNDEFINED);
@@ -98,7 +99,19 @@ public class SyslogException extends Exception {
         return bytes;
     }
 
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
     public SyslogError getError() {
         return error;
+    }
+
+    public String getSourceIp() {
+        return sourceIp;
+    }
+
+    public void setSourceIp(String sourceIp) {
+        this.sourceIp = sourceIp;
     }
 }

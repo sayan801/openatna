@@ -7,8 +7,12 @@
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 
 
-    <bean name="/*.html" class="org.openhealthtools.openatna.web.MessageController">
+    <bean name="/query.html" class="org.openhealthtools.openatna.web.MessageController">
         <property name="messageDao" ref="messageDao"/>
+    </bean>
+
+    <bean name="/errors.html" class="org.openhealthtools.openatna.web.ErrorController">
+        <property name="errorDao" ref="errorDao"/>
     </bean>
 
 </beans>

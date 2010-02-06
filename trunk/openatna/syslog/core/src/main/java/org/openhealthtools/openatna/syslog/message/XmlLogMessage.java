@@ -20,7 +20,6 @@
 
 package org.openhealthtools.openatna.syslog.message;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -36,6 +35,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
 
 /**
  * W3C DOM implementation of the LogMessage interface.
@@ -62,7 +62,7 @@ public class XmlLogMessage implements LogMessage<Document> {
         return encoding;
     }
 
-    public void read(InputStream in, String encoding) throws IOException {
+    public void read(InputStream in, String encoding) throws SyslogException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setNamespaceAware(true);
@@ -74,13 +74,13 @@ public class XmlLogMessage implements LogMessage<Document> {
                 this.encoding = enc;
             }
         } catch (Exception e) {
-            throw new IOException(e.getMessage());
+            throw new SyslogException(e);
         }
     }
 
-    public void write(OutputStream out) throws IOException {
+    public void write(OutputStream out) throws SyslogException {
         if (doc == null) {
-            throw new IOException("Document is null. cannot write it out");
+            throw new SyslogException("Document is null. cannot write it out");
         }
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer t = null;
@@ -97,7 +97,7 @@ public class XmlLogMessage implements LogMessage<Document> {
         try {
             t.transform(doms, sr);
         } catch (TransformerException te) {
-            throw new IOException(te.getMessage());
+            throw new SyslogException(te);
         }
     }
 

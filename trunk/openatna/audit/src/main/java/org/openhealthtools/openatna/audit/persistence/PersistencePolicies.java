@@ -38,6 +38,7 @@ public class PersistencePolicies {
     private boolean allowUnknownDetailTypes;
     private boolean allowModifyMessages;
     private boolean errorOnDuplicateInsert;
+    private boolean persistErrors;
 
 
     public boolean isAllowNewCodes() {
@@ -104,5 +105,11 @@ public class PersistencePolicies {
         this.errorOnDuplicateInsert = errorOnDuplicateInsert;
     }
 
+    public boolean isPersistErrors() {
+        return persistErrors;
+    }
 
+    public void setPersistErrors(boolean persistErrors) {
+        this.persistErrors = persistErrors;
+    }
 }
