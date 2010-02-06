@@ -77,7 +77,7 @@ public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
         try {
             message = factory.read(in);
         } catch (AtnaException e) {
-            throw new SyslogException(e.getMessage(), e, e.getXmlDoc());
+            throw new SyslogException(e.getMessage(), e);
         }
     }
 
@@ -88,7 +88,7 @@ public abstract class AtnaLogMessage implements LogMessage<AtnaMessage> {
         try {
             factory.write(getMessageObject(), out);
         } catch (AtnaException e) {
-            throw new SyslogException(e.getMessage(), e, e.getXmlDoc());
+            throw new SyslogException(e.getMessage(), e);
         }
     }
 

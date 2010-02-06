@@ -63,11 +63,11 @@ public class AtnaException extends Exception {
         NO_PARTICIPANT_OBJECT_ID_TYPE_CODE,
         INVALID_OBJECT_DETAIL,
 
-        INVALID_CODE
+        INVALID_CODE,
+        INVALID_MESSAGE
 
     }
 
-    private byte[] xmlDoc = "no message available".getBytes();
     private AtnaError error = AtnaError.UNDEFINED;
 
     public AtnaException(String s) {
@@ -104,20 +104,6 @@ public class AtnaException extends Exception {
     public AtnaException(Throwable throwable, AtnaError error) {
         super(throwable);
         this.error = error;
-    }
-
-    public AtnaException(Throwable throwable, byte[] xmlDoc) {
-        super(throwable);
-        this.xmlDoc = xmlDoc;
-    }
-
-    public AtnaException(String message, byte[] xmlDoc) {
-        super(message);
-        this.xmlDoc = xmlDoc;
-    }
-
-    public byte[] getXmlDoc() {
-        return xmlDoc;
     }
 
     public AtnaError getError() {
