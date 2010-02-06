@@ -29,5 +29,5 @@ DROP TABLE object_descriptions CASCADE;
 DROP TABLE descriptions_sop_classes CASCADE;
 DROP TABLE objects_descriptions CASCADE;
 DROP TABLE sop_classes CASCADE;
-
+DROP TABLE errors CASCADE;
 
