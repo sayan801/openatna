@@ -30,7 +30,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -86,11 +85,7 @@ public class SourceEntity extends PersistentEntity {
     }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "sources_codes",
-            joinColumns = {@JoinColumn(name = "source")},
-            inverseJoinColumns = @JoinColumn(name = "code")
-    )
+    @JoinTable(name = "sources_codes")
     public Set<SourceCodeEntity> getSourceTypeCodes() {
         return sourceTypeCodes;
     }

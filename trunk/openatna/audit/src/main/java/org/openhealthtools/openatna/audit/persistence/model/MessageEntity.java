@@ -33,7 +33,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -88,11 +87,7 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "event_types_codes",
-            joinColumns = {@JoinColumn(name = "event_type")},
-            inverseJoinColumns = @JoinColumn(name = "code")
-    )
+    @JoinTable(name = "event_types_codes")
     public Set<EventTypeCodeEntity> getEventTypeCodes() {
         return eventTypeCodes;
     }
@@ -148,9 +143,7 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "messages_mparticipants", joinColumns = {@JoinColumn(name = "message_id",
-            referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "participant_id", referencedColumnName = "id")})
+    @JoinTable(name = "messages_mparticipants")
     public Set<MessageParticipantEntity> getMessageParticipants() {
         return messageParticipants;
     }
@@ -164,9 +157,7 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "messages_msources", joinColumns = {@JoinColumn(name = "message_id",
-            referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "source_id", referencedColumnName = "id")})
+    @JoinTable(name = "messages_msources")
     public Set<MessageSourceEntity> getMessageSources() {
         return messageSources;
     }
@@ -180,9 +171,7 @@ public class MessageEntity extends PersistentEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "messages_mobjects", joinColumns = {@JoinColumn(name = "message_id",
-            referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "object_id", referencedColumnName = "id")})
+    @JoinTable(name = "messages_mobjects")
     public Set<MessageObjectEntity> getMessageObjects() {
         return messageObjects;
     }
@@ -197,6 +186,7 @@ public class MessageEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
+        System.out.println("MessageEntity.equals");
         if (this == o) {
             return true;
         }
@@ -205,7 +195,9 @@ public class MessageEntity extends PersistentEntity {
         }
 
         MessageEntity that = (MessageEntity) o;
-
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        }
         if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) {
             return false;
         }
@@ -230,7 +222,7 @@ public class MessageEntity extends PersistentEntity {
                 : that.getMessageParticipants() != null) {
             return false;
         }
-        if (messageSources != null ? !getMessageSources().equals(that.getMessageSources())
+        if (getMessageSources() != null ? !getMessageSources().equals(that.getMessageSources())
                 : that.getMessageSources() != null) {
             return false;
         }
@@ -248,6 +240,7 @@ public class MessageEntity extends PersistentEntity {
         result = 31 * result + (eventActionCode != null ? eventActionCode.hashCode() : 0);
         result = 31 * result + (eventDateTime != null ? eventDateTime.hashCode() : 0);
         result = 31 * result + (eventOutcome != null ? eventOutcome.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
 

@@ -51,6 +51,9 @@ public class HibernateQueryBuilder {
         List<String> path = new ArrayList<String>();
         String s = null;
         switch (target) {
+            case ID:
+                s = "id";
+                break;
             case RESULT:
                 s = "result";
                 break;
@@ -216,9 +219,11 @@ public class HibernateQueryBuilder {
         switch (con) {
             case MAX_NUM:
                 c.setMaxResults((Integer) val);
+                System.out.println("HibernateQueryBuilder.createConditional max results=" + val);
                 break;
             case START_OFFSET:
                 c.setFirstResult((Integer) val);
+                System.out.println("HibernateQueryBuilder.createConditional first result=" + val);
                 break;
             case AFTER:
                 c.add(Restrictions.ge(name, val));
@@ -288,6 +293,7 @@ public class HibernateQueryBuilder {
                 createConditional(node, value, tp.getTarget());
             }
         }
+
         return root.getCriteria();
     }
 

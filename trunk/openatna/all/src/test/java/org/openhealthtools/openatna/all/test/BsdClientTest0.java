@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.Date;
 import java.util.List;
 
 import org.openhealthtools.openatna.anom.AtnaException;
@@ -46,6 +47,12 @@ public class BsdClientTest0 extends ClientTest {
         try {
             List<AtnaMessage> messages = getMessages();
             for (AtnaMessage message : messages) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                message.setEventDateTime(new Date());
                 BsdMessage m = new BsdMessage(10, 5, "127.0.0.1", new JaxbLogMessage(message), "ATNALOG");
 
                 byte[] bytes = m.toByteArray();

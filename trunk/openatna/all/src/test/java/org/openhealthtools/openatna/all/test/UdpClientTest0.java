@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.Date;
 import java.util.List;
 
 import org.openhealthtools.openatna.anom.AtnaException;
@@ -66,6 +67,12 @@ public class UdpClientTest0 extends ClientTest {
         try {
             List<AtnaMessage> messages = getMessages();
             for (AtnaMessage message : messages) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                message.setEventDateTime(new Date());
                 ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new JaxbLogMessage(message), "Spartacus", "PDQIN", "777");
                 InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
                 DatagramSocket s = new DatagramSocket();

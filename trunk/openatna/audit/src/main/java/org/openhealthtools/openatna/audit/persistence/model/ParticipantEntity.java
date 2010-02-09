@@ -29,7 +29,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -115,11 +114,7 @@ public class ParticipantEntity extends PersistentEntity {
     }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "participants_codes",
-            joinColumns = {@JoinColumn(name = "participant")},
-            inverseJoinColumns = @JoinColumn(name = "code")
-    )
+    @JoinTable(name = "participants_codes")
     public Set<ParticipantCodeEntity> getParticipantTypeCodes() {
         return participantTypeCodes;
     }
