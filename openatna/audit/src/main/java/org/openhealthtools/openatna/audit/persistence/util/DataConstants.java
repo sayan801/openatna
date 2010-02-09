@@ -77,6 +77,7 @@ public class DataConstants {
     public static final String VALUE = "value";
     public static final String REF = "ref";
     public static final String MESSAGE = "message";
+    public static final String MESSAGES = "messages";
     public static final String EVT_ACTION = "eventAction";
     public static final String EVT_OUTCOME = "eventOutcome";
     public static final String EVT_TIME = "eventTime";
@@ -84,4 +85,12 @@ public class DataConstants {
     public static final String EVT_TYPE = "eventType";
     public static final String DETAIL = "detail";
     public static final String QUERY = "query";
+
+    public static final String ERRORS = "errors";
+    public static final String ERROR = "error";
+    public static final String SOURCE_IP = "sourceIpAddress";
+    public static final String ERROR_STACKTRACE = "stackTrace";
+    public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String ERROR_TIMESTAMP = "errorTimestamp";
+    public static final String ERROR_PAYLOAD = "errorPayload";
 }

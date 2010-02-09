@@ -126,6 +126,7 @@
                 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hib.hbm2ddl.auto}</prop>
                 <prop key="hibernate.connection.release_mode">after_transaction</prop>
+                <prop key="hibernate.show_sql">false</prop>
             </props>
         </property>
     </bean>
