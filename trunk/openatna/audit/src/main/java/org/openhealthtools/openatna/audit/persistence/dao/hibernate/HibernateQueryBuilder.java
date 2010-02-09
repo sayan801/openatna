@@ -219,11 +219,9 @@ public class HibernateQueryBuilder {
         switch (con) {
             case MAX_NUM:
                 c.setMaxResults((Integer) val);
-                System.out.println("HibernateQueryBuilder.createConditional max results=" + val);
                 break;
             case START_OFFSET:
                 c.setFirstResult((Integer) val);
-                System.out.println("HibernateQueryBuilder.createConditional first result=" + val);
                 break;
             case AFTER:
                 c.add(Restrictions.ge(name, val));
