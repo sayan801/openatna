@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd" [
+        ]>
+
+<jasperReport
+        name="AuditReport"
+        pageWidth="595"
+        pageHeight="842"
+        columnWidth="515"
+        columnSpacing="0"
+        leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0"
+        whenNoDataType="NoPages"
+        isTitleNewPage="false"
+        isSummaryNewPage="false">
+    <import value="org.openhealthtools.openatna.report.EntityDataSource"/>
+
+    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique"
+           pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Bold_Small" isBold="true" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+
+    <parameter name="inputDirectory" class="java.lang.String"/>
+
+    <field name="objectId" class="java.lang.String">
+        <fieldDescription>objectId</fieldDescription>
+    </field>
+    <field name="objectName" class="java.lang.String">
+        <fieldDescription>objectName</fieldDescription>
+    </field>
+    <field name="objectTypeCode" class="java.lang.Short">
+        <fieldDescription>objectTypeCode</fieldDescription>
+    </field>
+    <field name="objectTypeCodeRole" class="java.lang.Short">
+        <fieldDescription>objectTypeCodeRole</fieldDescription>
+    </field>
+    <field name="objectIdTypeCode" class="org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity">
+        <fieldDescription>objectIdTypeCode</fieldDescription>
+    </field>
+    <field name="objectSensitivity" class="java.lang.String">
+        <fieldDescription>objectSensitivity</fieldDescription>
+    </field>
+    <field name="objectDescriptions" class="java.util.Set">
+        <fieldDescription>objectDescriptions</fieldDescription>
+    </field>
+
+
+    <detail>
+        <band height="60">
+            <frame>
+                <reportElement x="0" y="0" width="520" height="60" style="Arial_Normal_Small"/>
+                <staticText>
+                    <reportElement x="5" y="0" width="100" height="15" style="Arial_Bold_Small" forecolor="#2c5519"/>
+                    <text><![CDATA[Participating Object]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Id]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="120" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Name]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="220" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Type Code]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="320" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Type Code Role]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="420" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Sensitivity]]></text>
+                </staticText>
+
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="20" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.String">
+                        $F{objectId}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="120" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.String">
+                        $F{objectName}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="220" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.Short">
+                        $F{objectTypeCode}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="320" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.Short">
+                        $F{objectTypeCodeRole}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="420" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.String">
+                        $F{objectSensitivity}
+                    </textFieldExpression>
+                </textField>
+
+                <subreport>
+                    <reportElement positionType="Float" x="5" y="45" backcolor="#ff9900" width="510" height="0" isRemoveLineWhenBlank="true"/>
+                    <dataSourceExpression>new EntityDataSource($F{objectIdTypeCode})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/CodeReport.jasper"</subreportExpression>
+                </subreport>
+
+                <staticText>
+                    <reportElement positionType="Float" x="10" y="45" width="95" height="15" style="Arial_Small_Italic"
+                                   forecolor="#2c5519">
+                        <printWhenExpression>$F{objectDescriptions}.size() > 0</printWhenExpression>
+                    </reportElement>
+                    <text><![CDATA[Object Descriptions]]></text>
+                </staticText>
+                <subreport>
+                    <reportElement positionType="Float" x="5" y="60" backcolor="#ff9900" width="510" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{objectDescriptions})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/DescriptionReport.jasper"</subreportExpression>
+                </subreport>
+            </frame>
+        </band>
+    </detail>
+
+</jasperReport>

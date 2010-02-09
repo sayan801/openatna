@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE vars [
+<!ENTITY atna "OpenATNA">
+<!ENTITY version "0.1">
+]>
+<sect1 xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xl="http://www.w3.org/1999/xlink">
+    <title>&atna; Quick Start</title>
+    <para>This document provides a a quick start guide to &atna;. &atna; is currently
+        developed at Cardiff University and Misys Open Source Systems. It is released under the
+            <link xl:show="new" xl:href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2
+            Licence</link>. The description of the code in this document describes &atna;
+            <emphasis>as it stands at the time of writing</emphasis> (October 2009). The code is
+        still in a pre version 1.0 state. </para>
+    <para/>
+    <sect2>
+        <title>Useful Links</title>
+        <itemizedlist>
+            <listitem>
+                <para>The code is available from <link xl:show="new"
+                        xl:href="https://openatna.projects.openhealthtools.org/svn/openatna/trunk"/>
+                    and can be downloaded using a Subversion client.</para>
+            </listitem>
+            <listitem>
+                <para> The project homepage is at <link xl:show="new"
+                        xl:href="https://openatna.projects.openhealthtools.org/">
+                        https://openatna.projects.openhealthtools.org/</link>. </para>
+            </listitem>
+            <listitem>
+                <para>Apache's Maven build system: <link xl:show="new"
+                        xl:href="http://maven.apache.org/"/></para>
+            </listitem>
+            <listitem>
+                <para>Postgres downloads page: <link xl:show="new"
+                        xl:href="http://www.postgresql.org/download/"/></para>
+            </listitem>
+        </itemizedlist>
+        <!--<para>
+            <emphasis>Contacts:</emphasis>
+        </para>
+        <para>a.b.harrison &lt;at&gt; cs.cf.ac.uk</para>
+        <para>i.r.kelley &lt;at&gt; cs.cf.ac.uk</para>-->
+    </sect2>
+    <sect2 xml:id="sect-message">
+        <title>Install and Build</title>
+        <para>Prerequisites: <itemizedlist><listitem><para>a Subversion (svn)
+                    client</para></listitem><listitem><para>Java 1.5
+                        minimum</para></listitem><listitem><para>Apache's
+                        Maven</para></listitem><listitem><para>Postgres
+                RDBMS</para></listitem></itemizedlist></para>
+        <para>First, set up your database. OpenATNA is tested against Postres 8.4. Currently not
+            other databases are supported out of the box, but will be soon. Once you have Postgres
+            installed, create a user called "openatna" with the password "openatna". Postgres usually comes
+            with PGAdmin which allows you to do this in a gui. From the command line, it would look
+            like this:
+            <programlisting>
+psql -d template1 -U postgres
+Password for user postgres: 
+psql (8.4.0)
+Type "help" for help.
+
+template1=# CREATE USER openatna WITH PASSWORD 'openatna';
+            </programlisting></para>
+        <para>Next, create the data base, also called 'openatna'. On the command line:
+            <programlisting>
+template1=# CREATE DATABASE openatna
+WITH OWNER = openatna
+ENCODING = 'UTF8'
+LC_COLLATE = 'C'
+LC_CTYPE = 'C'
+CONNECTION LIMIT = -1;
+            </programlisting></para>
+        <para> To install OpenATNA, open a terminal window and download the code using svn:
+            <programlisting>svn co https://openatna.projects.openhealthtools.org/svn/openatna/trunk openatna</programlisting>
+            This will create a directory called "openatna" in the directory from which you opened
+            the terminal window.</para>
+        <para> change directory into the new "openatna" directory.
+            <programlisting>cd openatna</programlisting> You should see two sub directories:
+                        <itemizedlist><listitem><para>www</para></listitem><listitem><para>openatna</para></listitem></itemizedlist>
+            change directory to the "openatna" sub-directory. You should see a bunch of directories
+            and a file called "pom.xml". The pom file is what maven uses to build the project. </para>
+        <para> now build the project using maven by typing:
+            <programlisting>mvn install</programlisting></para>
+        <para> To create a project for eclipse type:
+            <programlisting>mvn eclipse:eclipse</programlisting> To create one for intellij, type:
+            <programlisting>mvn idea:idea</programlisting> These commands will create project files
+            for your IDE. </para>
+        <para> The code is compiled and packaged into modules. The "all" directory contains a module
+            that generates a useable version of OpenATNA. Change directory into the all/build
+            folder. You should see a jar file called openatna-&version;.jar. This is the
+            executable jar file. The dependencies are in the lib/ directory. To run OpenATNA, type:
+            <programlisting>java -jar openatna-&version;.jar</programlisting> from the all/build
+            directory. You should see something similar to:
+            <programlisting>
+12:56:56,056 DEBUG [PropertiesLoader] Loaded openatna.properties from:file:.../all/build/openatna.properties
+12:56:59,233 DEBUG [TcpServer] TLS Server running on port:2862
+12:56:59,262 DEBUG [UdpServer] UDP Server running on port:2863
+            </programlisting>
+            This has started two servers. The first is a secured TCP server socket. The second is an
+            unsecured UDP connection. The port numbers are not completely random - "ATNA" on your
+            mobile phone is 2862.</para>
+    </sect2>
+    <sect2>
+        <title>Configuration</title>
+        <para>The configuration files for OpenATNA are in the all/build directory. Their purpose is
+            described below. They allow you change the configuration of OpenATNA without
+            re-compiling, although they do require that you shut the servers down, and restart them
+            so the chages can take effect. To kill the servers, hit Control + C.
+                    <note><para>Remember! The all/build directory is generated during the build. Any
+                    changes you make to configuration files will be lost if you run "mvn install"
+                    again. To make permanent changes that will survive the build, edit the
+                    corresponding files in the <emphasis role="bold"
+                        >openatna/audit/src/main/resources/</emphasis> directory.</para></note>
+            <itemizedlist><listitem><para>
+                        <emphasis role="bold">commons-logging.properties</emphasis> - This sets the
+                        logging system to use. The default is Log4J. </para></listitem><listitem><para>
+                        <emphasis role="bold">log4j.xml</emphasis> - This is the configuration for
+                        the Log4J logging system. If you saw the output above when you ran the
+                        servers, then the default level for logging to the console is set to DEBUG.
+                        You can change this by editing the log4j.xml file, specifically the
+                        ConsoleAppender threshold:
+                        <programlisting>
+&lt;appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    &lt;param name="Target" value="System.out"/>
+    &lt;param name="Threshold" value="DEBUG"/>
+    &lt;layout class="org.apache.log4j.PatternLayout">
+        &lt;!-- The default pattern: Date Priority [Category] Message\n -->
+        &lt;param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+    &lt;/layout>
+&lt;/appender>
+                     </programlisting>
+                        Change the Threshold value to "INFO" or "WARN" to output less messages,
+                        e.g.:
+                        <programlisting>
+&lt;param name="Threshold" value="INFO"/>
+                        </programlisting></para></listitem>
+                <listitem><para><emphasis role="bold">openatna.properties</emphasis> - These are the
+                        core properties of OpenATNA. They point to the conf directory (more in a
+                        second) and also define the database connection values, for example the
+                        username and password of the role that connects to the database. Edit this
+                        file if you want to use a different username, or have made the atna password
+                        a little more secure :-).</para><para>Once you have built OpenATNA once, you
+                        can change the value of the hib.hbm2ddl.auto property value to
+                        "none".</para>
+                    <para/>
+                </listitem>
+                <listitem><para><emphasis role="bold">openatnaContext.xml</emphasis> - This
+                is the Spring configuration file for OpenATNA. This is read at start up to wire up
+                the various components. Editing this file gives you fine-grained control over the
+                components.</para>
+                </listitem>
+                <listitem><para>If you have run the servers, you will also see an <emphasis
+                            role="bold">openatna.log</emphasis> file. This receives the log messages
+                        from Log4J and will not grow beyond 1/2 MB in size.</para></listitem>
+                <listitem><para>The <emphasis role="bold">conf</emphasis> directory - this contains
+                        the actors, their connection parameters, and another directory called
+                            <emphasis role="bold">certs/</emphasis> which contains dummy
+                        certificates for testing secure nodes. </para></listitem>
+                <listitem><para><emphasis role="bold">conf/IheActors.xml</emphasis> - contains the
+                        Audit Record Repository (ARR) actor definition. This contains references to
+                        the two connections it uses (TLS and UDP).</para></listitem>
+                <listitem><para><emphasis role="bold">conf/ArrConnections.xml</emphasis> - contains
+                        the Audit Record Repository (ARR) connection definitions. These specify the
+                        port numbers and in the case of the secured TCP connection, the certificates
+                        to use during exchanges. These values reference the keystores stored in the
+                            <emphasis role="bold">conf/certs/</emphasis> directory. When you want to
+                        use real certificates in real keystores, put those keystores in the
+                            <emphasis role="bold">conf/certs/</emphasis> directory, and reference
+                        them in the secure connection definition. </para></listitem>
+                <listitem><para><emphasis role="bold">conf/atnacodes.xml</emphasis> - Contains codes
+                        used by ATNA. You can add codes here according to the type of the code. When
+                        the default build runs, i.e. when you type "mvn install" from the openatna
+                        directory, then the codes in this file will be loaded into the database. If
+                        you want to add codes to the database that are not in this file, first add
+                        the codes to the file using the syntax of the file, then change directory to
+                        the all/ directory under the openatna directory, and type:
+                        <programlisting>ant populateCodes</programlisting> This will read in the
+                        file and store any codes not already in the database. This requires that you
+                        have Ant installed independently of Maven, and on your $PATH environment
+                        variable. </para></listitem>
+                <listitem><para><emphasis role="bold">conf/entities.xml</emphasis> - Contains codes
+                        and entities to load into the database. This file contains Codes, as well as
+                        ATNA entities that you may want to load into the data base, for example
+                        network access points, participant objects, active participants and audit
+                        sources. You can also define "pre-cooked" audit messages to load into the
+                        data base. Please read the comments on the entities.xml files for details of
+                        the syntax of the file. To load the contents in the data base, change
+                        directory to the all/ directory under the openatna directory, and type:
+                        <programlisting>ant populateEntities</programlisting> This will read in the
+                        file and store the entities in the data base. This requires that you have
+                        Ant installed independently of Maven, and on your $PATH environment
+                        variable. <note><para>The syntax of the atnacodes.xml and the entities.xml
+                                code definitions is subtly different with regard to the codes
+                                element. In the atnacode.xml, the "Codes" element is the top level
+                                XML element. In the entities.xml file, the "entities" element is the
+                                top level XML element, and the "Codes" element is inside
+                                this.</para>
+                        </note>
+                    </para></listitem>
+            </itemizedlist></para>
+
+    </sect2>
+    <sect2>
+        <title>Testing</title>
+        <para> You can test against the server by running the clients in the "test" directory of the all module. These
+            are JUnit tests and are probably easiest to run inside your IDE. The classes that are
+            designed to run against the server are: <itemizedlist>
+                <listitem><para>
+                        <emphasis role="bold"
+                            >org.openhealthtools.openatna.dist.test.TlsClientTest0</emphasis> sends
+                        six messages to the ARR using TLS and Syslog RFC 5424 style messages. The
+                        first three messages use mutually authentication with message encryption.
+                        The second three messages use mutual authentication without message
+                        encryption. </para></listitem>
+                <listitem><para>
+                        <emphasis role="bold"
+                            >org.openhealthtools.openatna.dist.test.UdpClientTest0</emphasis> sends
+                        three messages to the ARR using UDP and Syslog RFC 5424 style messages.
+                    </para></listitem>
+                <listitem><para>
+                        <emphasis role="bold"
+                            >org.openhealthtools.openatna.dist.test.BsdClientTest0</emphasis> sends
+                        three messages to the ARR using UDP and Syslog BSD style messages.
+                    </para></listitem>
+            </itemizedlist>
+        </para>
+
+    </sect2>
+    <sect2>
+        <title>Adding Message Processors</title>
+        <para>The OpenATNA build allows the addition of externally defined message processors. This can be useful if
+            you want to add functionality beyond the simple default behaviour of OpenATNA when audit
+            messages arrive. The message processing is organized as a chain of
+            org.openhealthtools.openatna.audit.process.AtnaProcessors. These are given a chance at
+            processing the Message on its inward journey. The message chain creates a ProcessContext
+            object that contains the message, a set of configurable properties (a Map), as well as
+            the current state of context.</para>
+        <note><para>Currently, the process of deploying external processors described below requires that you run the build again ("mvn install")
+            after you have followed the above instructions. This means you should edit the IheActors.xml file in the
+            <emphasis role="bold">openatna/audit/src/main/resources/conf/</emphasis> directory, not the one in the
+            <emphasis role="bold">openatna/all/build/conf/</emphasis> directory, and then run "mvn install"</para></note>
+        <para>By default, OpenATNA contains three processors. The first validates the incoming message and sets
+            the context state to VALIDATED if validation succeeds. The second persists the message and sets
+            the context state to PERSISTED. The third logs exceptions that may occur.
+        </para>
+            
+            <para>The AtnaProcessor interface is shown below.</para>
+        <programlisting>
+        public interface AtnaProcessor {
+            
+           /**
+            * process an incoming message wrapped in a context
+            * @param context
+            * @throws Exception
+            */
+            public void process(ProcessContext context) throws Exception;
+            
+           /**
+            * process an exception that has occured further up the processing chain.
+            * When an exception occurs, then processors are invoked in reverse order
+            * with this method. The context will contain a Throwable object which is
+            * the exception that was thrown.
+            * @param context
+            */
+            public void error(ProcessContext context);
+            
+        }            
+        </programlisting>
+        <para>Processors can be associated with a phase of processing. Currently three phases are supported:
+            <itemizedlist>
+                <listitem><para>PRE_VERIFY - processors are invoked before the message has be verified.</para></listitem>
+                <listitem><para>POST_VERIFY - processors are invoked after the message has been verified, but before
+                    it has been persisted. This is the default phase, meaning if no phase attribute is specified,
+                    then the processor will be placed in this phase.</para></listitem>
+                <listitem><para>POST_PERSIST - processors are invoked after the message has been persisted to the data base.</para></listitem>
+            </itemizedlist>
+            If the default validator is used, this is always run at the beginning of the chain so
+            application specific processors know the message has been validated unless they are added as part of
+            the PRE_VERIFY phase. If no processor is
+            added that sets the ProcessContext's state to PERSISTED, then the default
+            PersistenceProcessor is added after the processors defined below within the POST_VERIFY phase.
+            For business logic, it is advisable to add processors to the POST_PERSIST phase because if the processor
+            gets invoked, it can be sure that the message has been validated and persisted without errors.
+            
+        </para>
+        <para>Once you have written your processors, you need to deploy them to OpenATNA so that
+        it is picked up at runtime. If you are integrating OpenATNA with your environment in a environment
+        specific way, then simple add the processors to the environment class path and follow the
+        String XML configuration instructions below. If you are using the default build process described in this
+        document, i.e., running OpenATNA from the command line, then you need to
+        drop the jar into
+        the <emphasis role="bold">openatna/all/ext</emphasis> directory. This allows them to be picked up by the build
+            and added to the executable jar's classpath. You can also add the jar to the <emphasis role="bold">all/build/</emphasis>
+            directory, but be aware that it will be deleted the next time you run "mvn clean".
+            
+        To configure the system to use the processors, you need to edit
+        the <emphasis role="bold">openatnaContext.xml</emphasis> file to add the processors to the processing chain.
+        
+        This involves declaring the full class name of the processors you want to include within a list inside the
+        bean with an id of "serviceConfig". 
+        The snippet below shows an example of the XML should be added as a child of the "serviceConfig" bean.
+        In this example, the processor is added to the POST_PERSIST phase of processing. Multiple processors
+        can be added using the "value" tag.
+        (A commented-out template is already in the file):</para>
+        <programlisting>
+        &lt;property name="postPersistProcessors">
+            &lt;list>
+                &lt;value>org.openhealthtools.openatna.ext.processors.SimpleProcessor&lt;/value>
+            &lt;/list>
+        &lt;/property>
+        </programlisting>
+        <para>To turn off default message validation, add a property named "validationProcessor" to the "serviceConfig"
+            bean, with a value of "false". (A commented out example is the the file).
+            Supplied AtnaProcessors must implement the
+            org.openhealthtools.openatna.audit.process.AtnaProcessor interface and should have a
+            default constructor.
+            </para>
+        
+        <para>If you start the servers again, your processors will be invoked each time a message arrives.</para>
+    </sect2>
+    <sect2>
+        <title>Adding Codes to the runtime.</title>
+        <para>ATNA uses certain CodedValues/CDA CE types. The well-known types are defined in the <emphasis role="bold">
+            atnacodes.xml
+        </emphasis> file and are loaded by default. To add you own, either edit the default codes file, or add
+        other files containing codes. To add new files, edit the <emphasis role="bold">openatnaContext.xml</emphasis>
+        file, in particular the bean with the id "serviceConfig", similar to adding processors. The list of code files
+        is a set of strings that will be used to create URL objects. Below is an example of adding two custom code URLs
+        to the "serviceConfig" bean.
+        
+        <programlisting>
+        &lt;property name="codeUrls">
+            &lt;set>
+                &lt;value>file:/Users/bob/codes/mycodes.xml&lt;/value>
+                &lt;value>http://www.server.com/codes/theircodes.xml&lt;/value>
+            &lt;/set>
+        &lt;/property>    
+        </programlisting>
+            
+        Please refer to the <emphasis role="bold">atnacodes.xml</emphasis> file to understand the XML syntax required by
+            code files.
+        
+        
+        
+        </para>
+    </sect2>
+</sect1>

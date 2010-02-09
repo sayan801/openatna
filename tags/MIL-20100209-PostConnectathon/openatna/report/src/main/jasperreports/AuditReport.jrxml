@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd" [
+        ]>
+
+
+<jasperReport
+        name="AuditReport"
+        pageWidth="595"
+        pageHeight="842"
+        columnWidth="515"
+        columnSpacing="0"
+        leftMargin="40"
+        rightMargin="40"
+        topMargin="50"
+        bottomMargin="50"
+        whenNoDataType="AllSectionsNoDetail"
+        isTitleNewPage="false"
+        isSummaryNewPage="false">
+    <import value="org.openhealthtools.openatna.report.EntityDataSource"/>
+
+    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique"
+           pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <parameter name="query" class="java.lang.String"/>
+    <parameter name="title" class="java.lang.String"/>
+    <parameter name="inputDirectory" class="java.lang.String"/>
+    <parameter name="reportInstance" class="java.lang.String"/>
+    <parameter name="groupingField" class="java.lang.String"/>
+
+    <field name="entity" class="org.openhealthtools.openatna.audit.persistence.model.PersistentEntity">
+        <fieldDescription>entity</fieldDescription>
+    </field>
+
+    <group name="AuditGroup" isStartNewPage="false">
+        <groupExpression>
+            $P{groupingField}
+        </groupExpression>
+        <groupHeader>
+            <band height="15">
+                <line>
+                    <reportElement x="10" y="0" width="520" height="1" forecolor="#2c5519"/>
+                    <graphicElement>
+                        <pen lineWidth="0.5"/>
+                    </graphicElement>
+                </line>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="25">
+                <line>
+                    <reportElement x="0" y="2" width="540" height="1" forecolor="#2c5519"/>
+                    <graphicElement>
+                        <pen lineWidth="0.5"/>
+                    </graphicElement>
+                </line>
+                <staticText>
+                    <reportElement x="20" y="2" width="30" height="15" style="Arial_Normal_Small"/>
+                    <text>Total</text>
+                </staticText>
+                <textField>
+                    <reportElement x="50" y="2" width="100" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.Integer">
+                        $V{AuditGroup_COUNT}
+                    </textFieldExpression>
+                </textField>
+
+            </band>
+        </groupFooter>
+    </group>
+    <title>
+        <band height="60">
+            <line>
+                <reportElement x="0" y="0" width="540" height="0" forecolor="#2c5519"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="10" width="515" height="30" style="Arial_Normal" forecolor="#2c5519"/>
+                <textElement textAlignment="Center" lineSpacing="Single">
+                    <font size="22"/>
+                </textElement>
+                <textFieldExpression>"OpenATNA Report"</textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement x="0" y="40" width="515" height="20" style="Arial_Normal_Small" forecolor="#2c5519"/>
+                <textElement textAlignment="Center" lineSpacing="Single">
+                </textElement>
+                <textFieldExpression>"Query:" + $P{query}</textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <detail>
+        <band height="3">
+            <subreport>
+                <reportElement positionType="Float" x="10" y="0" width="520" height="0" isRemoveLineWhenBlank="true"/>
+                <subreportParameter name="inputDirectory">
+                    <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                </subreportParameter>
+                <dataSourceExpression>new EntityDataSource($F{entity})</dataSourceExpression>
+                <subreportExpression>$P{inputDirectory} + $P{reportInstance} + ".jasper"</subreportExpression>
+            </subreport>
+            <line>
+                <reportElement x="10" y="1" width="520" height="2" forecolor="#2c5519"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="40">
+            <printWhenExpression>$P{IS_IGNORE_PAGINATION}.booleanValue()?Boolean.FALSE:Boolean.TRUE</printWhenExpression>
+            <line>
+                <reportElement x="0" y="10" width="540" height="0"/>
+            </line>
+            <textField>
+                <reportElement x="200" y="20" width="80" height="15"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression class="java.lang.String">
+                    "Page " + String.valueOf($V{PAGE_NUMBER}) + " of"
+                </textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="280" y="20" width="75" height="15"/>
+                <textElement textAlignment="Left"/>
+                <textFieldExpression class="java.lang.String">
+                    " " + String.valueOf($V{PAGE_NUMBER})
+                </textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>
