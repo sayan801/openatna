@@ -186,7 +186,6 @@ public class MessageEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        System.out.println("MessageEntity.equals");
         if (this == o) {
             return true;
         }

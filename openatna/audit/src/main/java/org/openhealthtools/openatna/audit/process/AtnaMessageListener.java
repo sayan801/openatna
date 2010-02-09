@@ -98,7 +98,6 @@ public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
         ErrorEntity ent = new ErrorEntity();
         ent.setErrorTimestamp(new Date());
         if (e.getBytes() != null) {
-            System.out.println("AtnaMessageListener.createEntity bytes:" + new String(e.getBytes()));
             ent.setPayload(e.getBytes());
         }
         if (e.getSourceIp() != null) {
