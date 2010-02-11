@@ -315,13 +315,29 @@
 </form:form>
 
 
+<table>
+    <tr>
+        <td align="left" width="100%">
+            <c:if test="${offset > 0}">
+                <a href="query.html?start=${offset - 1}">Previous</a>
+            </c:if>
+        </td>
+        <td align="right">
+            <c:if test="${fn:length(messages) > 0 && fn:length(messages) == queryBean.maxResults}">
+                <a href="query.html?start=${offset + 1}" class="rightlink">Next</a>
+            </c:if>
+        </td>
+    </tr>
+</table>
+<c:set var="currBean" scope="session" value="${queryBean}"/>
+
 <c:if test="${fn:length(messages) > 0}">
     <c:forEach items="${messages}" var="message" varStatus="status">
         <div class="content">
             <div class="header">Event Time</div>
             <div class="header">Event Action</div>
             <div class="header">Event Outcome</div>
-            <div class="header">Event ID Code</div>
+            <div class="header">Event ID</div>
             <div class="headerLink"><a href="#" onclick="toggle('${message.id}')" id="${message.id}-link">+</a></div>
         </div>
         <div class="content">
