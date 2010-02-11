@@ -115,7 +115,11 @@ public class QueryString {
         }
         switch (target) {
             case RESULT:
-                return Integer.parseInt(value);
+                try {
+                    return Integer.parseInt(value);
+                } catch (NumberFormatException e) {
+                    return value;
+                }
             case EVENT_ACTION:
                 return value;
             case EVENT_OUTCOME:

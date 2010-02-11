@@ -45,6 +45,9 @@ public class QueryBean {
     private String endMin;
     private String sourceAddress;
 
+    private int maxResults = 50;
+    private int startOffset = 0;
+
     public String getSourceAddress() {
         return sourceAddress;
     }
@@ -68,7 +71,6 @@ public class QueryBean {
     public void setStartMin(String startMin) {
         this.startMin = startMin;
     }
-
 
     public String getEndDate() {
         return endDate;
@@ -164,6 +166,44 @@ public class QueryBean {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    public int getMaxResults() {
+        return maxResults;
+    }
+
+    public void setMaxResults(int maxResults) {
+        this.maxResults = maxResults;
+    }
+
+    public int getStartOffset() {
+        return startOffset;
+    }
+
+    public void setStartOffset(int startOffset) {
+        this.startOffset = startOffset;
+    }
+
+    public QueryBean copy() {
+        QueryBean other = new QueryBean();
+        other.setEndDate(getEndDate());
+        other.setEndHour(getEndHour());
+        other.setEndMin(getEndMin());
+        other.setStartDate(getStartDate());
+        other.setStartHour(getStartHour());
+        other.setStartMin(getStartMin());
+        other.setStartOffset(getStartOffset());
+        other.setSourceAddress(getSourceAddress());
+        other.setEventAction(getEventAction());
+        other.setEventIdCode(getEventIdCode());
+        other.setEventTypeCode(getEventTypeCode());
+        other.setEventOutcome(getEventOutcome());
+        other.setEventTime(getEventTime());
+        other.setMaxResults(getMaxResults());
+        other.setObjectId(getObjectId());
+        other.setParticipantId(getParticipantId());
+        other.setSourceId(getSourceId());
+        return other;
     }
 
 }

@@ -60,7 +60,6 @@ public class MessageParticipantEntity extends PersistentEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-
     public ParticipantEntity getParticipant() {
         return participant;
     }

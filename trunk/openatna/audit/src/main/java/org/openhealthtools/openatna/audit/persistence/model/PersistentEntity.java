@@ -32,6 +32,8 @@ import java.io.Serializable;
  */
 public abstract class PersistentEntity implements Serializable {
 
+    public abstract Long getId();
+
     public abstract int hashCode();
 
     public abstract boolean equals(Object other);
