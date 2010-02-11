@@ -54,6 +54,11 @@ td, th {
     padding: 0.2em;
 }
 
+.rightlink {
+
+    padding: 1em;
+}
+
 fieldset {
     border: 1px solid #6666ff;
     width: 81.5em;

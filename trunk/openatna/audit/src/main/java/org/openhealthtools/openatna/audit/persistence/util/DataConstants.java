@@ -26,11 +26,15 @@ package org.openhealthtools.openatna.audit.persistence.util;
  */
 
 public class DataConstants {
+
     public static final String ENTITIES = "entities";
     public static final String CODES = "codes";
     public static final String SOURCES = "sources";
+    public static final String MESSAGE_SOURCES = "messageSources";
+    public static final String MESSAGE_PARTICIPANTS = "messageParticipants";
     public static final String PARTICIPANTS = "participants";
     public static final String OBJECTS = "objects";
+    public static final String MESSAGE_OBJECTS = "messageObjects";
     public static final String NETWORK_ACCESS_POINTS = "netPoints";
     public static final String ID = "id";
     public static final String CODE_TYPE = "CodeType";
