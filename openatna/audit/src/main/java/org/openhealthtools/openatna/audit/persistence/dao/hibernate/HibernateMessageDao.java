@@ -20,6 +20,7 @@
 
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -75,8 +76,11 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
     }
 
     public List<? extends MessageEntity> getByQuery(Query query) throws AtnaPersistenceException {
-        HibernateQueryBuilder builder = new HibernateQueryBuilder(criteria());
+        HibernateQueryBuilder builder = new HibernateQueryBuilder(this);
         Criteria c = builder.build(query);
+        if (c == null) {
+            return new ArrayList<MessageEntity>();
+        }
         return list(c);
     }
 

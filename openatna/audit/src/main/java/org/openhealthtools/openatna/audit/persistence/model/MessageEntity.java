@@ -86,7 +86,7 @@ public class MessageEntity extends PersistentEntity {
         this.id = id;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "event_types_codes")
     public Set<EventTypeCodeEntity> getEventTypeCodes() {
         return eventTypeCodes;

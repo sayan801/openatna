@@ -27,6 +27,8 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.Timestamp;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
@@ -42,6 +44,9 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class MessageController extends MultiActionController {
 
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.web.MessageController");
+
+
     private MessageDao messageDao;
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -55,8 +60,26 @@ public class MessageController extends MultiActionController {
 
     public ModelAndView query(HttpServletRequest request,
                               HttpServletResponse response, QueryBean queryBean) throws Exception {
-
         ModelMap modelMap = new ModelMap();
+        int offset = 0;
+        String start = request.getParameter("start");
+        if (start != null) {
+            try {
+                QueryBean qb = (QueryBean) request.getSession().getAttribute("currBean");
+                if (qb != null) {
+                    queryBean = qb;
+                }
+                offset = Integer.parseInt(start);
+                if (offset < 0) {
+                    offset = 0;
+                }
+
+            } catch (NumberFormatException e) {
+                log.debug("error for start offset value=" + start, e);
+            }
+        }
+        modelMap.addAttribute("offset", offset);
+        queryBean.setStartOffset((offset) * queryBean.getMaxResults());
         Query q = createQuery(queryBean);
         if (q.hasConditionals()) {
             modelMap.addAttribute("messages", messageDao.getByQuery(q));
@@ -127,6 +150,9 @@ public class MessageController extends MultiActionController {
         if (bean.getSourceAddress() != null && bean.getSourceAddress().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getSourceAddress(), Query.Target.SOURCE_ADDRESS);
         }
+        query.setMaxResults(bean.getMaxResults());
+        query.setStartOffset(bean.getStartOffset());
+        query.orderAscending(Query.Target.ID);
         return query;
     }
 

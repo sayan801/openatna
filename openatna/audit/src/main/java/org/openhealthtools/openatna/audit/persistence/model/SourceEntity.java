@@ -24,7 +24,6 @@ package org.openhealthtools.openatna.audit.persistence.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -84,7 +83,7 @@ public class SourceEntity extends PersistentEntity {
         this.version = version;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "sources_codes")
     public Set<SourceCodeEntity> getSourceTypeCodes() {
         return sourceTypeCodes;

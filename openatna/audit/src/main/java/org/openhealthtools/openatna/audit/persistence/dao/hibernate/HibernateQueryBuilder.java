@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
 
@@ -42,173 +44,11 @@ import org.openhealthtools.openatna.audit.persistence.model.Query;
 public class HibernateQueryBuilder {
 
     private Criteria messageCriteria;
+    private Criteria idCriteria;
 
-    public HibernateQueryBuilder(Criteria messageCriteria) {
-        this.messageCriteria = messageCriteria;
-    }
-
-    private TargetPath createPath(Query.Target target) {
-        List<String> path = new ArrayList<String>();
-        String s = null;
-        switch (target) {
-            case ID:
-                s = "id";
-                break;
-            case RESULT:
-                s = "result";
-                break;
-            case EVENT_ACTION:
-                s = "eventActionCode";
-                break;
-            case EVENT_OUTCOME:
-                s = "eventOutcome";
-                break;
-            case SOURCE_ADDRESS:
-                s = "sourceAddress";
-                break;
-            case EVENT_TIME:
-                s = "eventDateTime";
-                break;
-            case EVENT_ID_CODE:
-                path.add("eventId");
-                s = "code";
-                break;
-            case EVENT_ID_CODE_SYSTEM:
-                path.add("eventId");
-                s = "codeSystem";
-                break;
-            case EVENT_ID_CODE_SYSTEM_NAME:
-                path.add("eventId");
-                s = "codeSystemName";
-                break;
-            case EVENT_TYPE_CODE:
-                path.add("eventTypeCodes");
-                s = "code";
-                break;
-            case EVENT_TYPE_CODE_SYSTEM:
-                path.add("eventTypeCodes");
-                s = "codeSystem";
-                break;
-            case EVENT_TYPE_CODE_SYSTEM_NAME:
-                path.add("eventTypeCodes");
-                s = "codeSystemName";
-                break;
-            case NETWORK_ACCESS_POINT_ID:
-                path.add("messageParticipants");
-                path.add("networkAccessPoint");
-                s = "identifier";
-                break;
-            case NETWORK_ACCESS_POINT_TYPE:
-                path.add("messageParticipants");
-                path.add("networkAccessPoint");
-                s = "type";
-                break;
-            case OBJECT_ID:
-                path.add("messageObjects");
-                path.add("object");
-                s = "objectId";
-                break;
-            case OBJECT_NAME:
-                path.add("messageObjects");
-                path.add("object");
-                s = "objectName";
-                break;
-            case OBJECT_TYPE_CODE:
-                path.add("messageObjects");
-                path.add("object");
-                path.add("objectIdTypeCode");
-                s = "code";
-                break;
-            case OBJECT_TYPE_CODE_SYSTEM:
-                path.add("messageObjects");
-                path.add("object");
-                path.add("objectIdTypeCode");
-                s = "codeSystem";
-                break;
-            case OBJECT_TYPE_CODE_SYSTEM_NAME:
-                path.add("messageObjects");
-                path.add("object");
-                path.add("objectIdTypeCode");
-                s = "codeSystemName";
-                break;
-            case OBJECT_TYPE_ROLE:
-                path.add("messageObjects");
-                path.add("object");
-                s = "objectTypeCodeRole";
-                break;
-            case OBJECT_TYPE:
-                path.add("messageObjects");
-                path.add("object");
-                s = "objectTypeCode";
-                break;
-            case OBJECT_SENSITIVITY:
-                path.add("messageObjects");
-                path.add("object");
-                s = "objectSensitivity";
-                break;
-            case PARTICIPANT_ID:
-                path.add("messageParticipants");
-                path.add("participant");
-                s = "userId";
-                break;
-            case PARTICIPANT_NAME:
-                path.add("messageParticipants");
-                path.add("participant");
-                s = "userName";
-                break;
-            case PARTICIPANT_TYPE_CODE:
-                path.add("messageParticipants");
-                path.add("participant");
-                path.add("participantTypeCodes");
-                s = "code";
-                break;
-            case PARTICIPANT_TYPE_CODE_SYSTEM:
-                path.add("messageParticipants");
-                path.add("participant");
-                path.add("participantTypeCodes");
-                s = "codeSystem";
-                break;
-            case PARTICIPANT_TYPE_CODE_SYSTEM_NAME:
-                path.add("messageParticipants");
-                path.add("participant");
-                path.add("participantTypeCodes");
-                s = "codeSystemName";
-                break;
-            case SOURCE_ID:
-                path.add("messageSources");
-                path.add("source");
-                s = "sourceId";
-                break;
-            case SOURCE_ENTERPRISE_ID:
-                path.add("messageSources");
-                path.add("source");
-                s = "enterpriseSiteId";
-                break;
-            case SOURCE_TYPE_CODE:
-                path.add("messageSources");
-                path.add("source");
-                path.add("sourceTypeCodes");
-                s = "code";
-                break;
-            case SOURCE_TYPE_CODE_SYSTEM:
-                path.add("messageSources");
-                path.add("source");
-                path.add("sourceTypeCodes");
-                s = "codeSystem";
-                break;
-            case SOURCE_TYPE_CODE_SYSTEM_NAME:
-                path.add("messageSources");
-                path.add("source");
-                path.add("sourceTypeCodes");
-                s = "codeSystemName";
-                break;
-            default:
-                break;
-        }
-        if (s != null) {
-            return new TargetPath(path, s);
-        }
-        return null;
+    public HibernateQueryBuilder(HibernateMessageDao messageDao) {
+        this.messageCriteria = messageDao.criteria();
+        this.idCriteria = messageDao.criteria();
     }
 
     private void createConditional(CriteriaNode node, Query.ConditionalValue value, String name) {
@@ -218,10 +58,10 @@ public class HibernateQueryBuilder {
 
         switch (con) {
             case MAX_NUM:
-                c.setMaxResults((Integer) val);
+                idCriteria.setMaxResults((Integer) val);
                 break;
             case START_OFFSET:
-                c.setFirstResult((Integer) val);
+                idCriteria.setFirstResult((Integer) val);
                 break;
             case AFTER:
                 c.add(Restrictions.ge(name, val));
@@ -261,13 +101,11 @@ public class HibernateQueryBuilder {
                     c.add(Restrictions.isNotNull(name));
                 }
                 break;
-            case ORDER:
-                b = (Boolean) val;
-                if (b) {
-                    c.addOrder(Order.asc(name));
-                } else {
-                    c.addOrder(Order.desc(name));
-                }
+            case ASC:
+                messageCriteria.addOrder(Order.asc((String) val));
+                break;
+            case DESC:
+                messageCriteria.addOrder(Order.desc((String) val));
                 break;
             default:
                 break;
@@ -275,27 +113,43 @@ public class HibernateQueryBuilder {
 
     }
 
-
+    /**
+     * NOTE: HAVE TO USE TWO QUERIES HERE. There is NO way around that I can see to ensure getting
+     * back both distinct, and correct max results restrictions.
+     *
+     * @param query
+     * @return
+     */
     public Criteria build(Query query) {
-        Map<Query.Target, Set<Query.ConditionalValue>> map = query.getConditionals();
-        CriteriaNode root = new CriteriaNode(messageCriteria, "MESSAGE");
 
+        Map<Query.Target, Set<Query.ConditionalValue>> map = query.getConditionals();
+
+        CriteriaNode root = new CriteriaNode(idCriteria, "MESSAGE");
+        idCriteria.setProjection(Projections.id());
         Set<Query.Target> targets = map.keySet();
         for (Query.Target target : targets) {
-
-            TargetPath tp = createPath(target);
+            Query.TargetPath tp = Query.createPath(target);
             CriteriaNode node = getNode(root, tp);
-
             Set<Query.ConditionalValue> values = map.get(target);
             for (Query.ConditionalValue value : values) {
                 createConditional(node, value, tp.getTarget());
             }
         }
-
-        return root.getCriteria();
+        idCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        idCriteria.addOrder(Order.asc("id"));
+        List<Long> ids = idCriteria.list();
+        if (ids == null || ids.size() == 0) {
+            return null;
+        }
+        if (ids.size() == 1) {
+            messageCriteria.add(Restrictions.eq("id", ids.get(0)));
+        } else {
+            messageCriteria.add(Restrictions.in("id", ids));
+        }
+        return messageCriteria;
     }
 
-    public CriteriaNode getNode(CriteriaNode parent, TargetPath tp) {
+    public CriteriaNode getNode(CriteriaNode parent, Query.TargetPath tp) {
         List<String> paths = tp.getPaths();
         CriteriaNode dest = parent;
         for (String path : paths) {
@@ -320,24 +174,6 @@ public class HibernateQueryBuilder {
             parent.addChild(node);
         }
         return node;
-    }
-
-    private static class TargetPath {
-        private List<String> paths;
-        private String target;
-
-        private TargetPath(List<String> paths, String target) {
-            this.paths = paths;
-            this.target = target;
-        }
-
-        public List<String> getPaths() {
-            return paths;
-        }
-
-        public String getTarget() {
-            return target;
-        }
     }
 
     private static class CriteriaNode {

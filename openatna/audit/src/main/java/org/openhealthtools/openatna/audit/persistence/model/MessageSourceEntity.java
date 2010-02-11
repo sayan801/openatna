@@ -69,7 +69,6 @@ public class MessageSourceEntity extends PersistentEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-
     public SourceEntity getSource() {
         return source;
     }

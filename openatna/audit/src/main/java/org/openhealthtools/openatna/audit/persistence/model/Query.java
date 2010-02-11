@@ -20,10 +20,12 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,6 +57,170 @@ import java.util.Set;
 public class Query {
 
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
+
+    public static TargetPath createPath(Target target) {
+        List<String> path = new ArrayList<String>();
+        String s = null;
+        switch (target) {
+            case ID:
+                s = "id";
+                break;
+            case RESULT:
+                s = "result";
+                break;
+            case EVENT_ACTION:
+                s = "eventActionCode";
+                break;
+            case EVENT_OUTCOME:
+                s = "eventOutcome";
+                break;
+            case SOURCE_ADDRESS:
+                s = "sourceAddress";
+                break;
+            case EVENT_TIME:
+                s = "eventDateTime";
+                break;
+            case EVENT_ID_CODE:
+                path.add("eventId");
+                s = "code";
+                break;
+            case EVENT_ID_CODE_SYSTEM:
+                path.add("eventId");
+                s = "codeSystem";
+                break;
+            case EVENT_ID_CODE_SYSTEM_NAME:
+                path.add("eventId");
+                s = "codeSystemName";
+                break;
+            case EVENT_TYPE_CODE:
+                path.add("eventTypeCodes");
+                s = "code";
+                break;
+            case EVENT_TYPE_CODE_SYSTEM:
+                path.add("eventTypeCodes");
+                s = "codeSystem";
+                break;
+            case EVENT_TYPE_CODE_SYSTEM_NAME:
+                path.add("eventTypeCodes");
+                s = "codeSystemName";
+                break;
+            case NETWORK_ACCESS_POINT_ID:
+                path.add("messageParticipants");
+                path.add("networkAccessPoint");
+                s = "identifier";
+                break;
+            case NETWORK_ACCESS_POINT_TYPE:
+                path.add("messageParticipants");
+                path.add("networkAccessPoint");
+                s = "type";
+                break;
+            case OBJECT_ID:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectId";
+                break;
+            case OBJECT_NAME:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectName";
+                break;
+            case OBJECT_TYPE_CODE:
+                path.add("messageObjects");
+                path.add("object");
+                path.add("objectIdTypeCode");
+                s = "code";
+                break;
+            case OBJECT_TYPE_CODE_SYSTEM:
+                path.add("messageObjects");
+                path.add("object");
+                path.add("objectIdTypeCode");
+                s = "codeSystem";
+                break;
+            case OBJECT_TYPE_CODE_SYSTEM_NAME:
+                path.add("messageObjects");
+                path.add("object");
+                path.add("objectIdTypeCode");
+                s = "codeSystemName";
+                break;
+            case OBJECT_TYPE_ROLE:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectTypeCodeRole";
+                break;
+            case OBJECT_TYPE:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectTypeCode";
+                break;
+            case OBJECT_SENSITIVITY:
+                path.add("messageObjects");
+                path.add("object");
+                s = "objectSensitivity";
+                break;
+            case PARTICIPANT_ID:
+                path.add("messageParticipants");
+                path.add("participant");
+                s = "userId";
+                break;
+            case PARTICIPANT_NAME:
+                path.add("messageParticipants");
+                path.add("participant");
+                s = "userName";
+                break;
+            case PARTICIPANT_TYPE_CODE:
+                path.add("messageParticipants");
+                path.add("participant");
+                path.add("participantTypeCodes");
+                s = "code";
+                break;
+            case PARTICIPANT_TYPE_CODE_SYSTEM:
+                path.add("messageParticipants");
+                path.add("participant");
+                path.add("participantTypeCodes");
+                s = "codeSystem";
+                break;
+            case PARTICIPANT_TYPE_CODE_SYSTEM_NAME:
+                path.add("messageParticipants");
+                path.add("participant");
+                path.add("participantTypeCodes");
+                s = "codeSystemName";
+                break;
+            case SOURCE_ID:
+                path.add("messageSources");
+                path.add("source");
+                s = "sourceId";
+                break;
+            case SOURCE_ENTERPRISE_ID:
+                path.add("messageSources");
+                path.add("source");
+                s = "enterpriseSiteId";
+                break;
+            case SOURCE_TYPE_CODE:
+                path.add("messageSources");
+                path.add("source");
+                path.add("sourceTypeCodes");
+                s = "code";
+                break;
+            case SOURCE_TYPE_CODE_SYSTEM:
+                path.add("messageSources");
+                path.add("source");
+                path.add("sourceTypeCodes");
+                s = "codeSystem";
+                break;
+            case SOURCE_TYPE_CODE_SYSTEM_NAME:
+                path.add("messageSources");
+                path.add("source");
+                path.add("sourceTypeCodes");
+                s = "codeSystemName";
+                break;
+            default:
+                break;
+        }
+        if (s != null) {
+            return new TargetPath(path, s);
+        }
+        return null;
+    }
 
     public static enum Target {
         ID,
@@ -106,7 +272,8 @@ public class Query {
         LESS_THAN_OR_EQUAL,
         NOT_EQUAL,
         NULLITY,
-        ORDER,
+        ASC,
+        DESC,
 
         // query result parameters - both ints
         MAX_NUM,
@@ -197,13 +364,13 @@ public class Query {
         return Collections.unmodifiableMap(map);
     }
 
-    public Query orderAscending(Target target) {
-        addConditional(Conditional.ORDER, Boolean.TRUE, target);
+    public Query orderAscending(Target value) {
+        addConditional(Conditional.ASC, createPath(value).toString(), Target.RESULT);
         return this;
     }
 
-    public Query orderDescending(Target target) {
-        addConditional(Conditional.ORDER, Boolean.FALSE, target);
+    public Query orderDescending(Target value) {
+        addConditional(Conditional.DESC, createPath(value).toString(), Target.RESULT);
         return this;
     }
 
@@ -277,4 +444,30 @@ public class Query {
     }
 
 
+    public static class TargetPath {
+        private List<String> paths;
+        private String target;
+
+        private TargetPath(List<String> paths, String target) {
+            this.paths = paths;
+            this.target = target;
+        }
+
+        public List<String> getPaths() {
+            return paths;
+        }
+
+        public String getTarget() {
+            return target;
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (String path : paths) {
+                sb.append(path).append(".");
+            }
+            sb.append(target);
+            return sb.toString();
+        }
+    }
 }

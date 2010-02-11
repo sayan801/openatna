@@ -21,13 +21,17 @@
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * Base Hibernate Dao class
@@ -77,7 +81,23 @@ public abstract class AbstractHibernateDao<E> {
     }
 
     protected List<? extends E> all(int offset, int amount) {
-        return list(criteria().addOrder(Order.asc("id")).setFirstResult(offset).setMaxResults(amount));
+        Criteria messageCriteria = criteria();
+        Criteria idCriteria = criteria()
+                .setProjection(Projections.id())
+                .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY)
+                .addOrder(Order.asc("id"))
+                .setFirstResult(offset)
+                .setMaxResults(amount);
+        List<Long> ids = idCriteria.list();
+        if (ids == null || ids.size() == 0) {
+            return new ArrayList<E>();
+        }
+        if (ids.size() == 1) {
+            messageCriteria.add(Restrictions.eq("id", ids.get(0)));
+        } else {
+            messageCriteria.add(Restrictions.in("id", ids));
+        }
+        return list(messageCriteria);
     }
 
     public Class<? extends E> getEntityClass() {

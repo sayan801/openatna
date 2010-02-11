@@ -65,7 +65,7 @@ public class MessageObjectEntity extends PersistentEntity {
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     public ObjectEntity getObject() {
         return object;
     }

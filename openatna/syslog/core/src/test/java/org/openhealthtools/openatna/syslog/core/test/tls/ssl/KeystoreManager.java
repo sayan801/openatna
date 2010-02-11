@@ -245,7 +245,7 @@ public class KeystoreManager {
     public KeystoreDetails getKeyFileForHost(String host) {
         KeystoreDetails def = null;
         for (KeystoreDetails keystoreDetails : allKeys.values()) {
-            System.out.println("KeystoreManager.getKeyFileForHost getting next key authority:" + keystoreDetails.getAuthority());
+            log.fine("KeystoreManager.getKeyFileForHost getting next key authority:" + keystoreDetails.getAuthority());
             String auth = keystoreDetails.getAuthority();
             if (auth != null) {
                 if (auth.endsWith("*")) {
