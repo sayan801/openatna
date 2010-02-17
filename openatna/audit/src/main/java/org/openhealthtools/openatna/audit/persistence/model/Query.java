@@ -20,6 +20,7 @@
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -54,7 +55,9 @@ import java.util.Set;
  * @date $Date:$ modified by $Author:$
  */
 
-public class Query {
+public class Query implements Serializable {
+
+    private static final long serialVersionUID = 9210675605754512907L;
 
     private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
 
