@@ -387,7 +387,9 @@ public class Query implements Serializable {
         return this;
     }
 
-    public static class ConditionalValue {
+    public static class ConditionalValue implements Serializable {
+        private static final long serialVersionUID = 3791598321976795625L;
+
         private Conditional conditional;
         private Object value;
 
@@ -447,7 +449,9 @@ public class Query implements Serializable {
     }
 
 
-    public static class TargetPath {
+    public static class TargetPath implements Serializable  {
+        private static final long serialVersionUID = -1595557753673966358L;
+
         private List<String> paths;
         private String target;
 
