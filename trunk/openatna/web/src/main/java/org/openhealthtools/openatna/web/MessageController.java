@@ -90,8 +90,26 @@ public class MessageController extends MultiActionController {
         return new ModelAndView("messageForm", modelMap);
     }
 
+    private String convertStars(String starred) {
+        if (starred.startsWith("*")) {
+            starred = "%" + starred.substring(1);
+        }
+        if (starred.endsWith("*")) {
+            starred = starred.substring(0, starred.length() - 1) + "%";
+        }
+        return starred;
+    }
+
+    private Query.Conditional getConditionalForString(String val) {
+        if (val.startsWith("*") || val.endsWith("*")) {
+            return Query.Conditional.LIKE;
+        }
+        return Query.Conditional.EQUALS;
+    }
+
     private Query createQuery(QueryBean bean) {
         Query query = new Query();
+
         if (bean.getEventIdCode() != null && bean.getEventIdCode().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getEventIdCode(), Query.Target.EVENT_ID_CODE);
         }
@@ -99,13 +117,14 @@ public class MessageController extends MultiActionController {
             query.addConditional(Query.Conditional.EQUALS, Integer.parseInt(bean.getEventOutcome()), Query.Target.EVENT_OUTCOME);
         }
         if (bean.getObjectId() != null && bean.getObjectId().length() > 0) {
-            query.addConditional(Query.Conditional.EQUALS, bean.getObjectId(), Query.Target.OBJECT_ID);
+            query.addConditional(getConditionalForString(bean.getObjectId()), convertStars(bean.getObjectId()), Query.Target.OBJECT_ID);
         }
         if (bean.getSourceId() != null && bean.getSourceId().length() > 0) {
-            query.addConditional(Query.Conditional.EQUALS, bean.getSourceId(), Query.Target.SOURCE_ID);
+            query.addConditional(getConditionalForString(bean.getSourceId()), convertStars(bean.getSourceId()), Query.Target.SOURCE_ID);
         }
         if (bean.getParticipantId() != null && bean.getParticipantId().length() > 0) {
-            query.addConditional(Query.Conditional.EQUALS, bean.getParticipantId(), Query.Target.PARTICIPANT_ID);
+            query.addConditional(getConditionalForString(bean.getParticipantId()), convertStars(bean.getParticipantId()),
+                    Query.Target.PARTICIPANT_ID);
         }
         if (bean.getEventAction() != null && bean.getEventAction().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getEventAction(), Query.Target.EVENT_ACTION);

@@ -45,7 +45,7 @@ public class QueryBean {
     private String endMin;
     private String sourceAddress;
 
-    private int maxResults = 50;
+    private int maxResults = 30;
     private int startOffset = 0;
 
     public String getSourceAddress() {
