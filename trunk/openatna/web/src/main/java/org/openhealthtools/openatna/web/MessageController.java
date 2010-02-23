@@ -99,7 +99,7 @@ public class MessageController extends MultiActionController {
             query.addConditional(Query.Conditional.EQUALS, Integer.parseInt(bean.getEventOutcome()), Query.Target.EVENT_OUTCOME);
         }
         if (bean.getObjectId() != null && bean.getObjectId().length() > 0) {
-            query.addConditional(Query.Conditional.EQUALS, bean.getObjectId(), Query.Target.PARTICIPANT_ID);
+            query.addConditional(Query.Conditional.EQUALS, bean.getObjectId(), Query.Target.OBJECT_ID);
         }
         if (bean.getSourceId() != null && bean.getSourceId().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getSourceId(), Query.Target.SOURCE_ID);
