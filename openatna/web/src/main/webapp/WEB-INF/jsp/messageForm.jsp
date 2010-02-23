@@ -67,7 +67,11 @@
 <legend>Constraints</legend>
 <table>
 <tr>
-    <td colspan="6"><span class="emphed">At least one constraint must be specified</span></td>
+    <td colspan="6"><span class="emphed">At least one constraint must be specified.</span></td>
+</tr>
+<tr>
+    <td colspan="6"><span class="emphed">A '*' can be used for Audit Source Id,
+    Participant Object Id and Active Participant Id to specify the wildcard at the begining and end of values.</span></td>
 </tr>
 <tr>
 
