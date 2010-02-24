@@ -281,46 +281,48 @@
 
 <c:if test="${fn:length(errors) > 0}">
     <c:forEach items="${errors}" var="error" varStatus="status">
-        <div class="content">
-            <div class="header">Time</div>
-            <div class="header">Source IP</div>
-            <div class="header">&nbsp;</div>
-            <div class="header">&nbsp;</div>
-            <div class="headerLink"><a href="#" onclick="toggle('${error.id}')" id="${error.id}-link">+</a></div>
-        </div>
-        <div class="content">
-            <div class="headerContent">${error.time}</div>
-            <div class="headerContent">${error.ip}</div>
-        </div>
-
+        <table cellpadding="3" cellspacing="0">
+            <tr>
+                <td class="header">Time</td>
+                <td class="header">Source IP</td>
+                <td class="header">&nbsp;</td>
+                <td class="header">&nbsp;</td>
+                <td class="headerLink"><a href="#" onclick="toggle('${error.id}')" id="${error.id}-link">+</a></td>
+            </tr>
+            <tr>
+                <td class="headerContent">${error.time}</td>
+                <td class="headerContent">${error.ip}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
         <div class="hidden" id="${error.id}">
-            <div class="subContent">
-                <div class="header evt">Error Message</div>
-                <div class="header evt">&nbsp;</div>
-                <div class="header evt">&nbsp;</div>
-                <div class="header evt">&nbsp;</div>
-            </div>
-            <div class="scrollContent">
-                    ${error.message}
-            </div>
-            <div class="subContent">
-                <div class="header evt">Stack Trace</div>
-                <div class="header evt">&nbsp;</div>
-                <div class="header evt">&nbsp;</div>
-                <div class="header evt">&nbsp;</div>
-            </div>
-            <div class="scrollContent">
-                    ${error.stackTrace}
-            </div>
-            <div class="subContent">
-                <div class="header evt">Payload</div>
-                <div class="header evt">&nbsp;</div>
-                <div class="header evt">&nbsp;</div>
-                <div class="header evt">&nbsp;</div>
-            </div>
-            <div class="scrollContent">
-                    ${error.content}
-            </div>
+            <table cellpadding="3" cellspacing="0">
+                <tr>
+                    <td class="header evt">Error Message</td>
+                <tr>
+                    <td class="innerTable">
+                            ${error.message}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="header evt">Stack Trace</td>
+                </tr>
+                <tr>
+                    <td class="innerTable">
+                            ${error.stackTrace}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="header evt">Payload</td>
+                </tr>
+                <tr>
+                    <td class="innerTable">
+                            ${error.content}
+                    </td>
+                </tr>
+            </table>
         </div>
     </c:forEach>
 
