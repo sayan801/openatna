@@ -24,6 +24,18 @@ body, td {
     font-size: 0.8em;
 }
 
+td {
+    margin: 0px 0px 0px 0px;
+
+}
+
+table {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+
+}
+
 a {
     text-decoration: none;
     color: #6666ff;
@@ -55,7 +67,6 @@ td, th {
 }
 
 .rightlink {
-
     padding: 1em;
 }
 
@@ -86,12 +97,15 @@ legend {
     color: #6666ff;
 }
 
-.header, .longHeader, .headerContent, .longHeaderContent, .headerLink {
+.header, .headerContent, .headerLink {
     width: 20em;
-    float: left;
-    padding: 0.2em;
     overflow: hidden;
     font-weight: normal;
+}
+
+.innerTable {
+    width: 80.5em;
+    overflow: auto;
 }
 
 .header, .longHeader, .headerLink, .fullHeader {
@@ -136,36 +150,12 @@ legend {
     background: #efb0ff;
 }
 
-.longHeader, .longHeaderContent {
-    width: 40.35em;
-}
-
-.fullHeader {
-    width: 80.74em;
-}
-
 .headerLink {
     width: 1.5em;
 }
 
-.content, .subContent, .scrollContent {
-    clear: left;
-    float: left;
-    width: 84em;
-}
-
 .nav {
     padding: 1.3em;
-}
-
-.subContent {
-    width: 82em;
-
-}
-
-.scrollContent {
-    width: 81em; /*overflow: auto;*/
-/*border: 1px solid #dedede;*/
 }
 
 form {
@@ -175,8 +165,8 @@ form {
 .hidden {
 /*visibility: hidden;*/
     display: none;
-    float: left;
-    clear: left;
+    /*float: left;
+    clear: left;*/
     margin-left: 1em;
 }
 

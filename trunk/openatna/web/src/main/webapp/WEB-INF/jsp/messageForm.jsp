@@ -71,7 +71,7 @@
 </tr>
 <tr>
     <td colspan="6"><span class="emphed">A '*' can be used for Audit Source Id,
-    Participant Object Id and Active Participant Id to specify the wildcard at the begining and end of values.</span></td>
+    Participant Object Id and Active Participant Id as a wildcard at the begining and end of values.</span></td>
 </tr>
 <tr>
 
@@ -337,157 +337,165 @@
 
 <c:if test="${fn:length(messages) > 0}">
     <c:forEach items="${messages}" var="message" varStatus="status">
-        <div class="content">
-            <div class="header">Event Time</div>
-            <div class="header">Event Action</div>
-            <div class="header">Event Outcome</div>
-            <div class="header">Event ID</div>
-            <div class="headerLink"><a href="#" onclick="toggle('${message.id}')" id="${message.id}-link">+</a></div>
-        </div>
-        <div class="content">
-            <div class="headerContent">${message.eventDateTime}</div>
-            <div class="headerContent">${message.eventActionCode}</div>
-            <div class="headerContent">${message.eventOutcome}</div>
-            <div class="headerContent">${message.eventId.code}</div>
-        </div>
+        <table cellpadding="3" cellspacing="0">
+            <tr>
+                <td class="header">Event Time</td>
+                <td class="header">Event Action</td>
+                <td class="header">Event Outcome</td>
+                <td class="header">Event ID</td>
+                <td class="headerLink"><a href="#" onclick="toggle('${message.id}')" id="${message.id}-link">+</a></td>
+            </tr>
+            <tr>
+                <td class="headerContent">${message.eventDateTime}</td>
+                <td class="headerContent">${message.eventActionCode}</td>
+                <td class="headerContent">${message.eventOutcome}</td>
+                <td class="headerContent">${message.eventId.code}</td>
+                <td></td>
+            </tr>
+        </table>
 
         <div class="hidden" id="${message.id}">
-            <div class="subContent">
-                <div class="header evt">Event ID Code</div>
-                <div class="header evt"><span class="subHeader">Code System</span></div>
-                <div class="header evt"><span class="subHeader">Code System Name</span></div>
-                <div class="header evt"><span class="subHeader">Display Name</span></div>
-            </div>
-            <div class="subContent">
-                <div class="headerContent">${message.eventId.code}</div>
-                <div class="headerContent">${message.eventId.codeSystem}</div>
-                <div class="headerContent">${message.eventId.codeSystemName}</div>
-                <div class="headerContent">${message.eventId.displayName}</div>
-            </div>
-            <c:if test="${fn:length(message.eventTypeCodes) > 0}">
-                <c:forEach items="${message.eventTypeCodes}" var="evtType">
-                    <div class="subContent">
-                        <div class="header evt">Event Type Code</div>
-                        <div class="header evt"><span class="subHeader">Code System</span></div>
-                        <div class="header evt"><span class="subHeader">Code System Name</span></div>
-                        <div class="header evt"><span class="subHeader">Display Name</span></div>
-                    </div>
-                    <div class="subContent">
-                        <div class="headerContent">${evtType.code}</div>
-                        <div class="headerContent">${evtType.codeSystem}</div>
-                        <div class="headerContent">${evtType.codeSystemName}</div>
-                        <div class="headerContent">${evtType.displayName}</div>
-                    </div>
-                </c:forEach>
-            </c:if>
-            <c:if test="${fn:length(message.messageSources) > 0}">
-                <c:forEach items="${message.messageSources}" var="msgSource">
-                    <div class="subContent">
-                        <div class="longHeader srcHeader">Source ID</div>
-                        <div class="longHeader srcHeader">Enterprise Site ID</div>
-                    </div>
-                    <div class="subContent">
-                        <div class="longHeaderContent">${msgSource.source.sourceId}</div>
-                        <div class="longHeaderContent">${msgSource.source.enterpriseSiteId}</div>
-                    </div>
-                    <c:forEach items="${msgSource.source.sourceTypeCodes}" var="sourceCode">
-                        <div class="subContent">
-                            <div class="header src">Source Type Code</div>
-                            <div class="header src"><span class="subHeader">Code System</span></div>
-                            <div class="header src"><span class="subHeader">Code System Name</span></div>
-                            <div class="header src"><span class="subHeader">Display Name</span></div>
-                        </div>
-                        <div class="subContent">
-                            <div class="headerContent">${sourceCode.code}</div>
-                            <div class="headerContent">${sourceCode.codeSystem}</div>
-                            <div class="headerContent">${sourceCode.codeSystemName}</div>
-                            <div class="headerContent">${sourceCode.displayName}</div>
-                        </div>
+            <table cellpadding="3" cellspacing="0">
+                <tr>
+                    <td class="header evt">Event ID Code</td>
+                    <td class="header evt"><span class="subHeader">Code System</span></td>
+                    <td class="header evt"><span class="subHeader">Code System Name</span></td>
+                    <td class="header evt"><span class="subHeader">Display Name</span></td>
+                </tr>
+                <tr>
+                    <td class="headerContent">${message.eventId.code}</td>
+                    <td class="headerContent">${message.eventId.codeSystem}</td>
+                    <td class="headerContent">${message.eventId.codeSystemName}</td>
+                    <td class="headerContent">${message.eventId.displayName}</td>
+                </tr>
+
+                <c:if test="${fn:length(message.eventTypeCodes) > 0}">
+                    <c:forEach items="${message.eventTypeCodes}" var="evtType">
+
+                        <tr>
+                            <td class="header evt">Event Type Code</td>
+                            <td class="header evt"><span class="subHeader">Code System</span></td>
+                            <td class="header evt"><span class="subHeader">Code System Name</span></td>
+                            <td class="header evt"><span class="subHeader">Display Name</span></td>
+                        </tr>
+                        <tr>
+                            <td class="headerContent">${evtType.code}</td>
+                            <td class="headerContent">${evtType.codeSystem}</td>
+                            <td class="headerContent">${evtType.codeSystemName}</td>
+                            <td class="headerContent">${evtType.displayName}</td>
+                        </tr>
 
                     </c:forEach>
-                </c:forEach>
-            </c:if>
-            <c:if test="${fn:length(message.messageParticipants) > 0}">
-                <c:forEach items="${message.messageParticipants}" var="msgP">
-                    <div class="subContent">
-                        <div class="longHeader prtHeader">User ID</div>
-                        <div class="header prtHeader">Alt User ID</div>
-                        <div class="header prtHeader">User Name</div>
-                    </div>
-                    <div class="subContent">
-                        <div class="longHeaderContent">${msgP.participant.userId}</div>
-                        <div class="headerContent">${msgP.participant.alternativeUserId}</div>
-                        <div class="headerContent">${msgP.participant.userName}</div>
-                    </div>
-                    <c:forEach items="${msgP.participant.participantTypeCodes}" var="pCode">
-                        <div class="subContent">
-                            <div class="header prt">Participant Type Code</div>
-                            <div class="header prt"><span class="subHeader">Code System</span></div>
-                            <div class="header prt"><span class="subHeader">Code System Name</span></div>
-                            <div class="header prt"><span class="subHeader">Display Name</span></div>
-                        </div>
-                        <div class="subContent">
-                            <div class="headerContent">${pCode.code}</div>
-                            <div class="headerContent">${pCode.codeSystem}</div>
-                            <div class="headerContent">${pCode.codeSystemName}</div>
-                            <div class="headerContent">${pCode.displayName}</div>
-                        </div>
+                </c:if>
+                <c:if test="${fn:length(message.messageSources) > 0}">
+                    <c:forEach items="${message.messageSources}" var="msgSource">
+
+                        <tr>
+                            <td colspan="2" class="srcHeader">Source ID</td>
+                            <td colspan="2" class="srcHeader">Enterprise Site ID</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">${msgSource.source.sourceId}</td>
+                            <td colspan="2">${msgSource.source.enterpriseSiteId}</td>
+                        </tr>
+
+                        <c:forEach items="${msgSource.source.sourceTypeCodes}" var="sourceCode">
+                            <tr>
+                                <td class="header src">Source Type Code</td>
+                                <td class="header src"><span class="subHeader">Code System</span></td>
+                                <td class="header src"><span class="subHeader">Code System Name</span></td>
+                                <td class="header src"><span class="subHeader">Display Name</span></td>
+                            </tr>
+                            <tr>
+                                <td class="headerContent">${sourceCode.code}</td>
+                                <td class="headerContent">${sourceCode.codeSystem}</td>
+                                <td class="headerContent">${sourceCode.codeSystemName}</td>
+                                <td class="headerContent">${sourceCode.displayName}</td>
+                            </tr>
+                        </c:forEach>
                     </c:forEach>
-                    <c:if test="${msgP.networkAccessPoint != null}">
-                        <div class="subContent">
-                            <div class="longHeader prt">Network Access Point ID</div>
-                            <div class="longHeader prt"><span class="subHeader">Type</span></div>
+                </c:if>
+                <c:if test="${fn:length(message.messageParticipants) > 0}">
+                    <c:forEach items="${message.messageParticipants}" var="msgP">
+                        <tr>
+                            <td colspan="2" class="prtHeader">User ID</td>
+                            <td class="header prtHeader">Alt User ID</td>
+                            <td class="header prtHeader">User Name</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">${msgP.participant.userId}</td>
+                            <td class="headerContent">${msgP.participant.alternativeUserId}</td>
+                            <td class="headerContent">${msgP.participant.userName}</td>
+                        </tr>
+                        <c:forEach items="${msgP.participant.participantTypeCodes}" var="pCode">
+                            <tr>
+                                <td class="header prt">Participant Type Code</td>
+                                <td class="header prt"><span class="subHeader">Code System</span></td>
+                                <td class="header prt"><span class="subHeader">Code System Name</span></td>
+                                <td class="header prt"><span class="subHeader">Display Name</span></td>
+                            </tr>
+                            <tr>
+                                <td class="headerContent">${pCode.code}</td>
+                                <td class="headerContent">${pCode.codeSystem}</td>
+                                <td class="headerContent">${pCode.codeSystemName}</td>
+                                <td class="headerContent">${pCode.displayName}</td>
+                            </tr>
+                        </c:forEach>
+                        <c:if test="${msgP.networkAccessPoint != null}">
+                            <tr>
+                                <td colspan="2" class="header prt">Network Access Point ID</td>
+                                <td colspan="2" class="header prt"><span class="subHeader">Type</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">${msgP.networkAccessPoint.identifier}</td>
+                                <td colspan="2">${msgP.networkAccessPoint.type}</td>
+                            </tr>
+                        </c:if>
 
-                        </div>
-                        <div class="subContent">
-                            <div class="longHeaderContent">${msgP.networkAccessPoint.identifier}</div>
-                            <div class="longHeaderContent">${msgP.networkAccessPoint.type}</div>
-                        </div>
-                    </c:if>
+                    </c:forEach>
+                </c:if>
 
-                </c:forEach>
-            </c:if>
-
-            <c:if test="${fn:length(message.messageObjects) > 0}">
-                <c:forEach items="${message.messageObjects}" var="msgObj">
-                    <div class="subContent">
-                        <div class="longHeader objHeader">Object ID</div>
-                        <div class="longHeader objHeader">Object Name</div>
-                    </div>
-                    <div class="subContent">
-                        <div class="longHeaderContent">${msgObj.object.objectId}</div>
-                        <div class="longHeaderContent">${msgObj.object.objectName}</div>
-                    </div>
-                    <c:if test="${msgObj.object.objectIdTypeCode != null}">
-                        <div class="subContent">
-                            <div class="header obj">Object ID Type Code</div>
-                            <div class="header obj"><span class="subHeader">Code System</span></div>
-                            <div class="header obj"><span class="subHeader">Code System Name</span></div>
-                            <div class="header obj"><span class="subHeader">Display Name</span></div>
-                        </div>
-                        <div class="subContent">
-                            <div class="headerContent">${msgObj.object.objectIdTypeCode.code}</div>
-                            <div class="headerContent">${msgObj.object.objectIdTypeCode.codeSystem}</div>
-                            <div class="headerContent">${msgObj.object.objectIdTypeCode.codeSystemName}</div>
-                            <div class="headerContent">${msgObj.object.objectIdTypeCode.displayName}</div>
-                        </div>
-                    </c:if>
-                    <div class="subContent">
-                        <div class="header obj">Object Type Code</div>
-                        <div class="header obj">Object Type Code Role</div>
-                        <div class="header obj">Object Sensitivity</div>
-                        <div class="header obj">&nbsp;</div>
-                    </div>
-                    <div class="subContent">
-                        <div class="headerContent">${msgObj.object.objectTypeCode}</div>
-                        <div class="headerContent">${msgObj.object.objectTypeCodeRole}</div>
-                        <div class="headerContent">${msgObj.object.objectSensitivity}</div>
-                    </div>
-                </c:forEach>
-            </c:if>
-
-
+                <c:if test="${fn:length(message.messageObjects) > 0}">
+                    <c:forEach items="${message.messageObjects}" var="msgObj">
+                        <tr>
+                            <td colspan="2" class="objHeader">Object ID</td>
+                            <td colspan="2" class="objHeader">Object Name</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">${msgObj.object.objectId}</td>
+                            <td colspan="2">${msgObj.object.objectName}</td>
+                        </tr>
+                        <c:if test="${msgObj.object.objectIdTypeCode != null}">
+                            <tr>
+                                <td class="header obj">Object ID Type Code</td>
+                                <td class="header obj"><span class="subHeader">Code System</span></td>
+                                <td class="header obj"><span class="subHeader">Code System Name</span></td>
+                                <td class="header obj"><span class="subHeader">Display Name</span></td>
+                            </tr>
+                            <tr>
+                                <td class="headerContent">${msgObj.object.objectIdTypeCode.code}</td>
+                                <td class="headerContent">${msgObj.object.objectIdTypeCode.codeSystem}</td>
+                                <td class="headerContent">${msgObj.object.objectIdTypeCode.codeSystemName}</td>
+                                <td class="headerContent">${msgObj.object.objectIdTypeCode.displayName}</td>
+                            </tr>
+                        </c:if>
+                        <tr>
+                            <td class="header obj">Object Type Code</td>
+                            <td class="header obj">Object Type Code Role</td>
+                            <td class="header obj">Object Sensitivity</td>
+                            <td class="header obj">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="headerContent">${msgObj.object.objectTypeCode}</td>
+                            <td class="headerContent">${msgObj.object.objectTypeCodeRole}</td>
+                            <td class="headerContent">${msgObj.object.objectSensitivity}</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </c:forEach>
+                </c:if>
+            </table>
         </div>
+
     </c:forEach>
 
 </c:if>
