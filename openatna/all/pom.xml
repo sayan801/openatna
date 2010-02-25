@@ -63,7 +63,7 @@
                                 <configuration>
                                     <tasks>
                                         <property name="project.version" value="${project.version}"/>
-                                        <ant dir="."/>
+                                        <ant dir="." target="exec"/>
                                     </tasks>
                                 </configuration>
                                 <goals>
@@ -77,6 +77,65 @@
                                     <tasks>
                                         <property name="project.version" value="${project.version}"/>
                                         <ant dir="." target="clean"/>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>build/lib</outputDirectory>
+                                    <overWriteReleases>true</overWriteReleases>
+                                    <overWriteSnapshots>true</overWriteSnapshots>
+                                    <overWriteIfNewer>true</overWriteIfNewer>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dist</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.3</version>
+                        <executions>
+                            <execution>
+                                <id>ant1</id>
+                                <phase>install</phase>
+                                <configuration>
+                                    <tasks>
+                                        <property name="project.version" value="${project.version}"/>
+                                        <ant dir="." target="dist"/>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>ant2</id>
+                                <phase>clean</phase>
+                                <configuration>
+                                    <tasks>
+                                        <property name="project.version" value="${project.version}"/>
+                                        <ant dir="." target="cleanDist"/>
                                     </tasks>
                                 </configuration>
                                 <goals>
