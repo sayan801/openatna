@@ -70,8 +70,8 @@
     <td colspan="6"><span class="emphed">At least one constraint must be specified.</span></td>
 </tr>
 <tr>
-    <td colspan="6"><span class="emphed">A '*' can be used for</span> Audit Source Id,
-        Participant Object Id, Participant Type Code <span class="emphed">and</span> Active Participant Id <span class="emphed">as a wildcard at the begining and end of values.</span>
+    <td colspan="6"><span class="emphed">A '*' can be used for Ids and Type Codes
+        as a wildcard at the begining and end of values.</span>
     </td>
 </tr>
 <tr>
@@ -303,10 +303,18 @@
     </td>
 </tr>
 <tr>
+    <td>Source Type Code :</td>
+    <td><form:input path="sourceTypeCode"/></td>
+    <td>Participant Type Code :</td>
+    <td><form:input path="participantTypeCode"/></td>
+    <td>Object Type Code :</td>
+    <td><form:input path="objectTypeCode"/></td>
+</tr>
+<tr>
     <td>Source IP :</td>
     <td><form:input path="sourceAddress"/></td>
-    <td>Participant Type Code</td>
-    <td><form:input path="participantTypeCode"/></td>
+    <td></td>
+    <td></td>
     <td></td>
     <td></td>
 </tr>

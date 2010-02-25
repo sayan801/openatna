@@ -41,6 +41,8 @@ public class QueryBean {
     private String startMin;
 
     private String participantTypeCode;
+    private String sourceTypeCode;
+    private String objectTypeCode;
 
     private String endDate;
     private String endHour;
@@ -194,6 +196,22 @@ public class QueryBean {
         this.participantTypeCode = participantTypeCode;
     }
 
+    public String getSourceTypeCode() {
+        return sourceTypeCode;
+    }
+
+    public void setSourceTypeCode(String sourceTypeCode) {
+        this.sourceTypeCode = sourceTypeCode;
+    }
+
+    public String getObjectTypeCode() {
+        return objectTypeCode;
+    }
+
+    public void setObjectTypeCode(String objectTypeCode) {
+        this.objectTypeCode = objectTypeCode;
+    }
+
     public QueryBean copy() {
         QueryBean other = new QueryBean();
         other.setEndDate(getEndDate());
@@ -214,6 +232,8 @@ public class QueryBean {
         other.setParticipantId(getParticipantId());
         other.setSourceId(getSourceId());
         other.setParticipantTypeCode(getParticipantTypeCode());
+        other.setSourceTypeCode(getSourceTypeCode());
+        other.setObjectTypeCode(getObjectTypeCode());
         return other;
     }
 

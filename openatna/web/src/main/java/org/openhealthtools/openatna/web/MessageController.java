@@ -126,6 +126,14 @@ public class MessageController extends MultiActionController {
             query.addConditional(getConditionalForString(bean.getParticipantTypeCode()), convertStars(bean.getParticipantTypeCode()),
                     Query.Target.PARTICIPANT_TYPE_CODE);
         }
+        if (bean.getSourceTypeCode() != null && bean.getSourceTypeCode().length() > 0) {
+            query.addConditional(getConditionalForString(bean.getSourceTypeCode()), convertStars(bean.getSourceTypeCode()),
+                    Query.Target.SOURCE_TYPE_CODE);
+        }
+        if (bean.getObjectTypeCode() != null && bean.getObjectTypeCode().length() > 0) {
+            query.addConditional(getConditionalForString(bean.getObjectTypeCode()), convertStars(bean.getObjectTypeCode()),
+                    Query.Target.OBJECT_TYPE_CODE);
+        }
         if (bean.getParticipantId() != null && bean.getParticipantId().length() > 0) {
             query.addConditional(getConditionalForString(bean.getParticipantId()), convertStars(bean.getParticipantId()),
                     Query.Target.PARTICIPANT_ID);
