@@ -70,8 +70,9 @@
     <td colspan="6"><span class="emphed">At least one constraint must be specified.</span></td>
 </tr>
 <tr>
-    <td colspan="6"><span class="emphed">A '*' can be used for Audit Source Id,
-    Participant Object Id and Active Participant Id as a wildcard at the begining and end of values.</span></td>
+    <td colspan="6"><span class="emphed">A '*' can be used for</span> Audit Source Id,
+        Participant Object Id, Participant Type Code <span class="emphed">and</span> Active Participant Id <span class="emphed">as a wildcard at the begining and end of values.</span>
+    </td>
 </tr>
 <tr>
 
@@ -197,7 +198,6 @@
     <td><form:input path="endDate" id="startdatepicker"/></td>
 </tr>
 <tr>
-
     <td>Event Action :</td>
     <td><form:select path="eventAction">
         <form:option value="" label="Select"/>
@@ -305,8 +305,8 @@
 <tr>
     <td>Source IP :</td>
     <td><form:input path="sourceAddress"/></td>
-    <td></td>
-    <td></td>
+    <td>Participant Type Code</td>
+    <td><form:input path="participantTypeCode"/></td>
     <td></td>
     <td></td>
 </tr>
@@ -339,11 +339,11 @@
     <c:forEach items="${messages}" var="message" varStatus="status">
         <table cellpadding="3" cellspacing="0">
             <tr>
-                <td class="header">Event Time</td>
+                <td class="header leftSide">Event Time</td>
                 <td class="header">Event Action</td>
                 <td class="header">Event Outcome</td>
                 <td class="header">Event ID</td>
-                <td class="headerLink"><a href="#" onclick="toggle('${message.id}')" id="${message.id}-link">+</a></td>
+                <td class="headerLink rightSide"><a href="#" onclick="toggle('${message.id}')" id="${message.id}-link">+</a></td>
             </tr>
             <tr>
                 <td class="headerContent">${message.eventDateTime}</td>
@@ -357,10 +357,10 @@
         <div class="hidden" id="${message.id}">
             <table cellpadding="3" cellspacing="0">
                 <tr>
-                    <td class="header evt">Event ID Code</td>
+                    <td class="header evt leftSide">Event ID Code</td>
                     <td class="header evt"><span class="subHeader">Code System</span></td>
                     <td class="header evt"><span class="subHeader">Code System Name</span></td>
-                    <td class="header evt"><span class="subHeader">Display Name</span></td>
+                    <td class="header evt rightSide"><span class="subHeader">Display Name</span></td>
                 </tr>
                 <tr>
                     <td class="headerContent">${message.eventId.code}</td>
@@ -373,10 +373,10 @@
                     <c:forEach items="${message.eventTypeCodes}" var="evtType">
 
                         <tr>
-                            <td class="header evt">Event Type Code</td>
+                            <td class="header evt leftSide">Event Type Code</td>
                             <td class="header evt"><span class="subHeader">Code System</span></td>
                             <td class="header evt"><span class="subHeader">Code System Name</span></td>
-                            <td class="header evt"><span class="subHeader">Display Name</span></td>
+                            <td class="header evt rightSide"><span class="subHeader">Display Name</span></td>
                         </tr>
                         <tr>
                             <td class="headerContent">${evtType.code}</td>
@@ -391,8 +391,8 @@
                     <c:forEach items="${message.messageSources}" var="msgSource">
 
                         <tr>
-                            <td colspan="2" class="srcHeader">Source ID</td>
-                            <td colspan="2" class="srcHeader">Enterprise Site ID</td>
+                            <td colspan="2" class="srcHeader leftSide">Source ID</td>
+                            <td colspan="2" class="srcHeader rightSide">Enterprise Site ID</td>
                         </tr>
                         <tr>
                             <td colspan="2">${msgSource.source.sourceId}</td>
@@ -401,10 +401,10 @@
 
                         <c:forEach items="${msgSource.source.sourceTypeCodes}" var="sourceCode">
                             <tr>
-                                <td class="header src">Source Type Code</td>
+                                <td class="header src leftSide">Source Type Code</td>
                                 <td class="header src"><span class="subHeader">Code System</span></td>
                                 <td class="header src"><span class="subHeader">Code System Name</span></td>
-                                <td class="header src"><span class="subHeader">Display Name</span></td>
+                                <td class="header src rightSide"><span class="subHeader">Display Name</span></td>
                             </tr>
                             <tr>
                                 <td class="headerContent">${sourceCode.code}</td>
@@ -418,9 +418,9 @@
                 <c:if test="${fn:length(message.messageParticipants) > 0}">
                     <c:forEach items="${message.messageParticipants}" var="msgP">
                         <tr>
-                            <td colspan="2" class="prtHeader">User ID</td>
+                            <td colspan="2" class="prtHeader leftSide">User ID</td>
                             <td class="header prtHeader">Alt User ID</td>
-                            <td class="header prtHeader">User Name</td>
+                            <td class="header prtHeader rightSide">User Name</td>
                         </tr>
                         <tr>
                             <td colspan="2">${msgP.participant.userId}</td>
@@ -429,10 +429,10 @@
                         </tr>
                         <c:forEach items="${msgP.participant.participantTypeCodes}" var="pCode">
                             <tr>
-                                <td class="header prt">Participant Type Code</td>
+                                <td class="header prt leftSide">Participant Type Code</td>
                                 <td class="header prt"><span class="subHeader">Code System</span></td>
                                 <td class="header prt"><span class="subHeader">Code System Name</span></td>
-                                <td class="header prt"><span class="subHeader">Display Name</span></td>
+                                <td class="header prt rightSide"><span class="subHeader">Display Name</span></td>
                             </tr>
                             <tr>
                                 <td class="headerContent">${pCode.code}</td>
@@ -443,8 +443,8 @@
                         </c:forEach>
                         <c:if test="${msgP.networkAccessPoint != null}">
                             <tr>
-                                <td colspan="2" class="header prt">Network Access Point ID</td>
-                                <td colspan="2" class="header prt"><span class="subHeader">Type</span></td>
+                                <td colspan="2" class="header prt leftSide">Network Access Point ID</td>
+                                <td colspan="2" class="header prt rightSide"><span class="subHeader">Type</span></td>
                             </tr>
                             <tr>
                                 <td colspan="2">${msgP.networkAccessPoint.identifier}</td>
@@ -458,8 +458,8 @@
                 <c:if test="${fn:length(message.messageObjects) > 0}">
                     <c:forEach items="${message.messageObjects}" var="msgObj">
                         <tr>
-                            <td colspan="2" class="objHeader">Object ID</td>
-                            <td colspan="2" class="objHeader">Object Name</td>
+                            <td colspan="2" class="objHeader leftSide">Object ID</td>
+                            <td colspan="2" class="objHeader rightSide">Object Name</td>
                         </tr>
                         <tr>
                             <td colspan="2">${msgObj.object.objectId}</td>
@@ -467,10 +467,10 @@
                         </tr>
                         <c:if test="${msgObj.object.objectIdTypeCode != null}">
                             <tr>
-                                <td class="header obj">Object ID Type Code</td>
+                                <td class="header obj leftSide">Object ID Type Code</td>
                                 <td class="header obj"><span class="subHeader">Code System</span></td>
                                 <td class="header obj"><span class="subHeader">Code System Name</span></td>
-                                <td class="header obj"><span class="subHeader">Display Name</span></td>
+                                <td class="header obj rightSide"><span class="subHeader">Display Name</span></td>
                             </tr>
                             <tr>
                                 <td class="headerContent">${msgObj.object.objectIdTypeCode.code}</td>
@@ -480,10 +480,10 @@
                             </tr>
                         </c:if>
                         <tr>
-                            <td class="header obj">Object Type Code</td>
+                            <td class="header obj leftSide">Object Type Code</td>
                             <td class="header obj">Object Type Code Role</td>
                             <td class="header obj">Object Sensitivity</td>
-                            <td class="header obj">&nbsp;</td>
+                            <td class="header obj rightSide">&nbsp;</td>
                         </tr>
                         <tr>
                             <td class="headerContent">${msgObj.object.objectTypeCode}</td>
