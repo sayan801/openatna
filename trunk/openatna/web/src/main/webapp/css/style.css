@@ -125,7 +125,7 @@ legend {
     overflow: auto;
 }
 
-.header, .longHeader, .headerLink, .fullHeader {
+.header, .longHeader, .headerLink, .fullHeader, .srcHeader, .objHeader, .prtHeader {
     background: #ccccff;
     font-weight: bold;
 }
