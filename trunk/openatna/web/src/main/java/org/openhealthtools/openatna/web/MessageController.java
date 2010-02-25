@@ -122,6 +122,10 @@ public class MessageController extends MultiActionController {
         if (bean.getSourceId() != null && bean.getSourceId().length() > 0) {
             query.addConditional(getConditionalForString(bean.getSourceId()), convertStars(bean.getSourceId()), Query.Target.SOURCE_ID);
         }
+        if (bean.getParticipantTypeCode() != null && bean.getParticipantTypeCode().length() > 0) {
+            query.addConditional(getConditionalForString(bean.getParticipantTypeCode()), convertStars(bean.getParticipantTypeCode()),
+                    Query.Target.PARTICIPANT_TYPE_CODE);
+        }
         if (bean.getParticipantId() != null && bean.getParticipantId().length() > 0) {
             query.addConditional(getConditionalForString(bean.getParticipantId()), convertStars(bean.getParticipantId()),
                     Query.Target.PARTICIPANT_ID);

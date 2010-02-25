@@ -40,6 +40,8 @@ public class QueryBean {
     private String startHour;
     private String startMin;
 
+    private String participantTypeCode;
+
     private String endDate;
     private String endHour;
     private String endMin;
@@ -184,6 +186,14 @@ public class QueryBean {
         this.startOffset = startOffset;
     }
 
+    public String getParticipantTypeCode() {
+        return participantTypeCode;
+    }
+
+    public void setParticipantTypeCode(String participantTypeCode) {
+        this.participantTypeCode = participantTypeCode;
+    }
+
     public QueryBean copy() {
         QueryBean other = new QueryBean();
         other.setEndDate(getEndDate());
@@ -203,6 +213,7 @@ public class QueryBean {
         other.setObjectId(getObjectId());
         other.setParticipantId(getParticipantId());
         other.setSourceId(getSourceId());
+        other.setParticipantTypeCode(getParticipantTypeCode());
         return other;
     }
 
