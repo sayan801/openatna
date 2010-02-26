@@ -56,8 +56,8 @@
   ------------
 
      JDK Version	
-	 OpenATNA supports JDK 1.5 or higher. Related projects (e.g. OpenXDS) require Java 1.6, so for integration
-	 with these projects 1.6 is required.
+	 OpenATNA supports JDK 1.5 or higher. Related projects (e.g. OpenXDS) require 
+	 Java 1.6, so for integration with these projects 1.6 is required.
                 
 
   Installation and Configuration
@@ -96,7 +96,13 @@
   This software is licensed under the terms you may find in the file 
   named "LICENSE.txt" in this directory.
  
+ 
+  Support
+  ---------
+
+  For commercial support, please contact Kondayya.Mullapudi@misys.com. 
   
+
  
   Thanks for using OpenExcange - OpenATNA.
 
