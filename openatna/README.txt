@@ -1,5 +1,5 @@
 
-                      OpenExchange - OpenXDS 
+                      OpenExchange - OpenATNA
  
 
   What is it? 
@@ -29,7 +29,7 @@
   ------------
   The OpenExchange (OpenATNA, OpenAuth, OpenPIXPDQ and OpenXDS) developement
   has been led by Misys Open Source Solutions (MOSS) and University of Cardiff. 
-  Other contributors include Sysnet International, Topicus Zorg and a few
+  Other contributors include Sysnet International, Topicus Zorg and a number of
   individuals.  
   
 	
@@ -56,13 +56,14 @@
   ------------
 
      JDK Version	
-	 OpenATNA supports JDK 1.6 or higher.   
+	 OpenATNA supports JDK 1.5 or higher. Related projects (e.g. OpenXDS) require Java 1.6, so for integration
+	 with these projects 1.6 is required.
                 
 
   Installation and Configuration
   ------------------------------
 
-  Installation and configuration guide is available on the OpenXDS Project 
+  Installation and configuration guide is available on the OpenATNA Project 
   web site on Open Health Tools (OHT) 
   <https://openatna.projects.openhealthtools.org>.
 
@@ -70,14 +71,14 @@
   Documentation
   -------------
 
-  Documentation is available on the OpenXDS Project web site
+  Documentation is available on the OpenATNA Project web site
   on Open Health Tools (OHT) <https://openatna.projects.openhealthtools.org>.
 
    
   The Latest Version
   ------------------
 
-  Details of the latest version can be found on the OpenXDS Project web site 
+  Details of the latest version can be found on the OpenATNA Project web site
   on Open Health Tools (OHT) <https://openatna.projects.openhealthtools.org>.
 
 
@@ -102,4 +103,4 @@
 				    
 				    Open Health Tools (OHT)  <http://www.openhealthtools.org>
                     Misys Open Source Solutions (MOSS) <http://www.misysoss.com/>
-                    University of Cardiff <http://www.cardiff.ac.uk>
+                    University of Cardiff <http://www.cs.cardiff.ac.uk>
