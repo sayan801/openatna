@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                          <div class="h2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                        <div class="h2">
 <h2>OpenATNA Quick Start</h2>
 
 <p>This document provides a a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a></p></div>.
@@ -106,14 +106,14 @@ java -jar openatna-0.1.jar
 
 <li>log4j.xml - This is the configuration for the Log4J logging system. If you saw the output above when you ran the servers, then the default level for logging to the console is set to DEBUG. You can change this by editing the log4j.xml file, specifically the ConsoleAppender threshold:
 <pre>
-&lt;appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    &lt;param name="Target" value="System.out"/>
-    &lt;param name="Threshold" value="DEBUG"/>
-    &lt;layout class="org.apache.log4j.PatternLayout">
-        &lt;!-- The default pattern: Date Priority [Category] Message\n -->
-        &lt;param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
-    &lt;/layout>
-&lt;/appender>
+<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out"/>
+    <param name="Threshold" value="DEBUG"/>
+    <layout class="org.apache.log4j.PatternLayout">
+        <!-- The default pattern: Date Priority [Category] Message\n -->
+        <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+    </layout>
+</appender>
  </pre>
     
 Change the Threshold value to "INFO" or "WARN" to output less messages, e.g.:
@@ -152,9 +152,27 @@ ant populateEntities
 This will read in the file and store the entities in the data base. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable.
 </li>
 
-
-
 </div>
+
+<div class="h2">
+<h2>Testing</h2>
+
+<p>You can test against the server by running the clients in the "test" directory of the all module. These are JUnit tests and are probably easiest to run inside your IDE. The classes that are designed to run against the server are:</p>
+
+<ul>
+<li>
+<pre>org.openhealthtools.openatna.dist.test.TlsClientTest0</pre> sends six messages to the ARR using TLS and Syslog RFC 5424 style messages. The first three messages use mutually authentication with message encryption. The second three messages use mutual authentication without message encryption.
+</li>
+<li>
+<pre>org.openhealthtools.openatna.dist.test.UdpClientTest0</pre> sends three messages to the ARR using UDP and Syslog RFC 5424 style messages.
+</li>
+<li>
+<pre>org.openhealthtools.openatna.dist.test.BsdClientTest0</pre> sends three messages to the ARR using UDP and Syslog BSD style messages.
+</li>
+
+
+
+</div>              
               
               
               
