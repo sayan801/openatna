@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                        <div class="h2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                      <div class="h2">
 <h2>OpenATNA Quick Start</h2>
 
 <p>This document provides a a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a></p></div>.
@@ -62,9 +62,10 @@ cd openatna
 <p>change directory to the "openatna" sub-directory. You should see a bunch of directories and a file called "pom.xml". The pom file is what maven uses to build the project. </p>
 <p>now build the project using maven by typing: </p>
 <pre>
-mvn -P exec install
+mvn install
 </pre>
 
+<p>This will compile, package to jars and install the code to your local maven repository (typically ~/.m2/repository on a *nix machine)</p>
 <p>To create a project for eclipse type: </p>
 <pre>
 mvn eclipse:eclipse
@@ -75,10 +76,14 @@ mvn idea:idea
 </pre>
 <p>These commands will create project files for your IDE. </p>
 
-<p>The code is compiled and packaged into modules. The "all" directory contains a module that generates a useable version of OpenATNA. Change directory into the all/build folder. You should see a jar file called openatna-0.1.jar. This is the executable jar file. The dependencies are in the lib/ directory. To run OpenATNA, type: </p>
+<p>To create an executable version of OpenATNA use the following command:</p>
+<pre>
+mvn -P exec install
+</pre>
+<p>This will create an executable jar file in the "all" directory. Change directory into the all/build folder. You should see a jar file called openatna-&lt;version&gt;.jar, where &lt;version&gt; is the version you have downlaoded. This is the executable jar file. The dependencies are in the all/build/lib/ directory. To run OpenATNA, type: </p>
 
 <pre>
-java -jar openatna-0.1.jar
+java -jar openatna-&lt;version&gt;.jar
 </pre>
 
 <p>from the all/build directory. You should see something similar to: </p>
@@ -106,19 +111,19 @@ java -jar openatna-0.1.jar
 
 <li>log4j.xml - This is the configuration for the Log4J logging system. If you saw the output above when you ran the servers, then the default level for logging to the console is set to DEBUG. You can change this by editing the log4j.xml file, specifically the ConsoleAppender threshold:
 <pre>
-<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    <param name="Target" value="System.out"/>
-    <param name="Threshold" value="DEBUG"/>
-    <layout class="org.apache.log4j.PatternLayout">
-        <!-- The default pattern: Date Priority [Category] Message\n -->
-        <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
-    </layout>
-</appender>
+&lt;appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender"&gt;
+    &lt;param name="Target" value="System.out"/&gt;
+    &lt;param name="Threshold" value="DEBUG"/&gt;
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+        &lt;!-- The default pattern: Date Priority [Category] Message\n --&gt;
+        &lt;param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/&gt;
+    &lt;/layout&gt;
+&lt;/appender&gt;
  </pre>
     
 Change the Threshold value to "INFO" or "WARN" to output less messages, e.g.:
 
-<param name="Threshold" value="INFO"/>
+&lt;param name="Threshold" value="INFO"/&gt;
 </li>
     
 <li>openatna.properties - These are the core properties of OpenATNA. They point to the conf directory (more in a second) and also define the database connection values, for example the username and password of the role that connects to the database. Edit this file if you want to use a different username, or have made the atna password a little more secure :-).
@@ -173,6 +178,7 @@ This will read in the file and store the entities in the data base. This require
 
 
 </div>              
+              
               
               
               
