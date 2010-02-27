@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><div class="h2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                              <div class="h2">
 <h2>OpenATNA Quick Start</h2>
 
 <p>This document provides a a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a></p></div>.
@@ -24,5 +24,69 @@
 </ul>
 
 
+<p>First, set up your database. OpenATNA is tested against Postres 8.4. Currently not other databases are supported out of the box, but will be soon. Once you have Postgres installed, create a user called "atna" with the password "atna". Postgres usually comes with PGAdmin which allows you to do this in a gui. From the command line, it would look like this: </p>
+<pre>
+psql -d template1 -U postgres 
+Password for user postgres:  psql (8.4.0)
+ Type "help" for help.
+
+template1=# CREATE USER atna WITH PASSWORD 'atna';
+</pre>
+
+<p>Next, create the data base. On the command line: </p>
+<pre>
+template1=# CREATE DATABASE atna WITH OWNER = atna ENCODING = 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;
+</pre>
+
+<p>To install OpenATNA, open a terminal window and download the code using svn: </p>
+
+<pre>
+svn co https://openatna.projects.openhealthtools.org/svn/openatna/trunk openatna
+</pre>
+
+<p>This will create a directory called "openatna" in the directory from which you opened the terminal window.</p>
+<p>change directory into the new "openatna" directory. </p>
+<pre>
+cd openatna
+</pre>
+
+<p>You should see two sub directories: </p>
+<ul><li>www</li>
+<li>openatna</li>
+</ul>
+
+<p>change directory to the "openatna" sub-directory. You should see a bunch of directories and a file called "pom.xml". The pom file is what maven uses to build the project. </p>
+<p>now build the project using maven by typing: </p>
+<pre>
+mvn -P exec install
+</pre>
+
+<p>To create a project for eclipse type: </p>
+<pre>
+mvn eclipse:eclipse
+</pre>
+<p>To create one for intellij, type: </p>
+<pre>
+mvn idea:idea
+</pre>
+<p>These commands will create project files for your IDE. </p>
+
+<p>The code is compiled and packaged into modules. The "all" directory contains a module that generates a useable version of OpenATNA. Change directory into the all/build folder. You should see a jar file called openatna-0.1.jar. This is the executable jar file. The dependencies are in the lib/ directory. To run OpenATNA, type: </p>
+
+<pre>
+java -jar openatna-0.1.jar
+</pre>
+
+<p>from the all/build directory. You should see something similar to: </p>
+
+<pre>
+12:56:59,233 DEBUG [TcpServer] TLS Server running on port:2862
+12:56:59,262 DEBUG [UdpServer] UDP Server running on port:2863
+</pre>
+
+<p>This has started two servers. The first is a secured TCP server socket. The second is an unsecured UDP connection. The port numbers are not completely random - "ATNA" on your mobile phone is 2862.</p>
 </div>
+
+
+
               
