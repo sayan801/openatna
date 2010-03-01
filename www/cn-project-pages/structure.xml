@@ -6,5 +6,11 @@
     <directory>Quick Start</directory>
     <ordinal>1</ordinal>
   </page>
+  <page>
+    <id>WrT4aD</id>
+    <name>Audit Samples</name>
+    <directory>Audit Samples</directory>
+    <ordinal>2</ordinal>
+  </page>
 </structure>
 
