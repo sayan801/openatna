@@ -1,31 +1,113 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                   <div class="h2"><h2>OpenATNA Quick Start</h2><p>This document provides a a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a></p></div>. <div /><div class="h2"><h2>Useful Links</h2><ul><li>The code is available from <a class="link" href="https://openatna.projects.openhealthtools.org/svn/openatna/trunk" target="_blank">https://openatna.projects.openhealthtools.org/svn/openatna/trunk</a> and can be downloaded using a Subversion client.</li><li>Apache's Maven build system: <a class="link" href="http://maven.apache.org/" target="_blank">http://maven.apache.org/</a></li><li>Postgres downloads page: <a class="link" href="http://www.postgresql.org/download/" target="_blank">http://www.postgresql.org/download/</a></li></ul></div><div class="h2"><h2>Install and Build</h2><p>Prerequisites: </p><ul><li>a Subversion (svn) client</li><li>Java 1.5 minimum</li><li>Apache's Maven</li><li>Postgres RDBMS</li></ul><p>First, set up your database. OpenATNA is tested against Postres 8.4. Currently not other databases are supported out of the box, but will be soon. Once you have Postgres installed, create a user called "atna" with the password "atna". Postgres usually comes with PGAdmin which allows you to do this in a gui. From the command line, it would look like this: </p><code>psql -d template1 -U postgres<br/>
-	Password for user postgres:<br/>
-	psql (8.4.0)  Type "help" for help.<br/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<div class="h2">
+	<h2>OpenATNA Quick Start</h2>
+	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
+	</p>
+</div>. <div />
+<div class="h2">
+	<h2>Useful Links</h2>
+	<ul>
+		<li>The code is available from <a class="link" href="https://openatna.projects.openhealthtools.org/svn/openatna/trunk" target="_blank">https://openatna.projects.openhealthtools.org/svn/openatna/trunk</a> and can be downloaded using a Subversion client.</li>
+		<li>Apache's Maven build system: <a class="link" href="http://maven.apache.org/" target="_blank">http://maven.apache.org/</a>
+		</li>
+		<li>Postgres downloads page: <a class="link" href="http://www.postgresql.org/download/" target="_blank">http://www.postgresql.org/download/</a>
+		</li>
+	</ul>
+</div>
+<div class="h2">
+	<h2>Install and Build</h2>
+	<p>Prerequisites: </p>
+	<ul>
+		<li>a Subversion (svn) client</li>
+		<li>Java 1.5 minimum</li>
+		<li>Apache's Maven</li>
+		<li>Postgres RDBMS</li>
+	</ul>
+	<p>First, set up your database. OpenATNA is tested against Postres 8.4. Currently not other databases are supported out of the box, but will be soon. Once you have Postgres installed, create a user called "atna" with the password "atna". Postgres usually comes with PGAdmin which allows you to do this in a gui. From the command line, it would look like this: </p>
+	<p><code>psql -d template1 -U postgres<br />
+	Password for user postgres:<br />
+	psql (8.4.0)  Type "help" for help.<br />
 	template1=# CREATE USER atna WITH PASSWORD 'atna';
-	</code><p>Next, create the data base. On the command line: </p>
-	<code>template1=# CREATE DATABASE atna WITH OWNER = atna<br/>
-		ENCODING = 'UTF8'<br/>
-		LC_COLLATE = 'C'<br/>
-		LC_CTYPE = 'C'<br/>
-		CONNECTION LIMIT = -1; </code>
-		<p>To install OpenATNA, open a terminal window and download the code using svn: </p><code>svn co https://openatna.projects.openhealthtools.org/svn/openatna/trunk openatna </code><p>This will create a directory called "openatna" in the directory from which you opened the terminal window.</p><p>change directory into the new "openatna" directory. </p><code>cd openatna </code><p>You should see two sub directories: </p><ul><li>www</li><li>openatna</li></ul><p>change directory to the "openatna" sub-directory. You should see a bunch of directories and a file called "pom.xml". The pom file is what maven uses to build the project. </p><p>now build the project using maven by typing: </p><code>mvn install </code><p>This will compile, package to jars and install the code to your local maven repository (typically ~/.m2/repository on a *nix machine)</p><p>To create a project for eclipse type: </p><code>mvn eclipse:eclipse </code><p>To create one for intellij, type: </p><code>mvn idea:idea </code><p>These commands will create project files for your IDE. </p><p>To create an executable version of OpenATNA use the following command:</p><code>mvn -P exec install </code><p>This will create an executable jar file in the "all" directory. Change directory into the all/build folder. You should see a jar file called openatna-version.jar, where "version" is the version you have downloaded. This is the executable jar file. The dependencies are in the all/build/lib/ directory. To run OpenATNA, type: </p><code>java -jar openatna-version.jar </code><p>from the all/build directory. You should see something similar to: </p><code>12:56:59,233 DEBUG [TcpServer] TLS Server running on port:2862 12:56:59,262 DEBUG [UdpServer] UDP Server running on port:2863 </code><p>This has started two servers. The first is a secured TCP server socket. The second is an unsecured UDP connection. The port numbers are not completely random - "ATNA" on your mobile phone is 2862.</p></div><div class="h2"><h2>Configuration</h2><p>The configuration files for OpenATNA are in the all/build directory. Their purpose is described below. They allow you change the configuration of OpenATNA without re-compiling, although they do require that you shut the servers down, and restart them so the chages can take effect. To kill the servers, hit Control + C.</p><h3>Note</h3><p>Remember! The all/build directory is generated during the build. Any changes you make to configuration files will be lost if you run "mvn install" again. To make permanent changes that will survive the build, edit the corresponding files in the openatna/audit/src/main/resources/ directory.</p><ul><li>commons-logging.properties - This sets the logging system to use. The default is Log4J.</li><li>log4j.xml - This is the configuration for the Log4J logging system. </li><li>openatna.properties - These are the core properties of OpenATNA. They point to the conf directory (more in a second) and also define the database connection values, for example the username and password of the role that connects to the database. Edit this file if you want to use a different username, or have made the atna password a little more secure :-). Once you have built OpenATNA once, you can change the value of the hib.hbm2ddl.auto property value to "none". </li><li>openatnaContext.xml - This is the Spring configuration file for OpenATNA. This is read at start up to wire up the various components. Editing this file gives you fine-grained control over the components. If you have run the servers, you will also see an openatna.log file. This receives the log messages from Log4J and will not grow beyond 1/2 MB in size. </li><li>The conf directory - this contains the actors, their connection parameters, and another directory called certs/ which contains dummy certificates for testing secure nodes.</li><li>conf/IheActors.xml - contains the Audit Record Repository (ARR) actor definition. This contains references to the two connections it uses (TLS and UDP).</li><li>conf/ArrConnections.xml - contains the Audit Record Repository (ARR) connection definitions. These specify the port numbers and in the case of the secured TCP connection, the certificates to use during exchanges. These values reference the keystores stored in the conf/certs/ directory. When you want to use real certificates in real keystores, put those keystores in the conf/certs/ directory, and reference them in the secure connection definition.</li><li>conf/atnacodes.xml - Contains codes used by ATNA. You can add codes here according to the type of the code. When the default build runs, i.e. when you type "mvn install" from the openatna directory, then the codes in this file will be loaded into the database. If you want to add codes to the database that are not in this file, first add the codes to the file using the syntax of the file, then change directory to the all/ directory under the openatna directory, and type: <code>ant populateCodes This will read in the file and store any codes not already in the database. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. </code></li><li>conf/entities.xml - Contains codes and entities to load into the database. This file contains Codes, as well as ATNA entities that you may want to load into the data base, for example network access points, participant objects, active participants and audit sources. You can also define "pre-cooked" audit messages to load into the data base. Please read the comments on the entities.xml files for details of the syntax of the file. To load the contents in the data base, change directory to the all/ directory under the openatna directory, and type: ant populateEntities This will read in the file and store the entities in the data base. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. </li></ul></div><div class="h2"><h2>Testing</h2><p>You can test against the server by running the clients in the "test" directory of the all module. These are JUnit tests and are probably easiest to run inside your IDE. The classes that are designed to run against the server are:</p><ul><li><code>org.openhealthtools.openatna.dist.test.TlsClientTest0</code>sends six messages to the ARR using TLS and Syslog RFC 5424 style messages. The first set of messages use mutually authentication with message encryption. The second set of messages use mutual authentication without message encryption. </li><li><code>org.openhealthtools.openatna.dist.test.UdpClientTest0</code>sends messages to the ARR using UDP and Syslog RFC 5424 style messages. </li><li><code>org.openhealthtools.openatna.dist.test.BsdClientTest0</code>sends messages to the ARR using UDP and Syslog BSD style messages. </li></ul></div>
+	</code></p>
+	<p>Next, create the data base. On the command line: </p>
+	<p><code>template1=# CREATE DATABASE atna WITH OWNER = atna<br />
+		ENCODING = 'UTF8'<br />
+		LC_COLLATE = 'C'<br />
+		LC_CTYPE = 'C'<br />
+		CONNECTION LIMIT = -1; </code></p>
+	<p>To install OpenATNA, open a terminal window and download the code using svn: </p>
+	<p><code>svn co https://openatna.projects.openhealthtools.org/svn/openatna/trunk openatna </code></p>
+	<p>This will create a directory called "openatna" in the directory from which you opened the terminal window.</p>
+	<p>change directory into the new "openatna" directory. </p>
+	<p><code>cd openatna </code></p>
+	<p>You should see two sub directories: </p>
+	<ul>
+		<li>www</li>
+		<li>openatna</li>
+	</ul>
+	<p>change directory to the "openatna" sub-directory. You should see a bunch of directories and a file called "pom.xml". The pom file is what maven uses to build the project. </p>
+	<p>now build the project using maven by typing: </p>
+	<p><code>mvn install </code></p>
+	<p>This will compile, package to jars and install the code to your local maven repository (typically ~/.m2/repository on a *nix machine)</p>
+	<p>To create a project for eclipse type: </p>
+	<p><code>mvn eclipse:eclipse </code></p>
+	<p>To create one for intellij, type: </p>
+	<p><code>mvn idea:idea </code></p>
+	<p>These commands will create project files for your IDE. </p>
+	<p>To create an executable version of OpenATNA use the following command:</p>
+	<p><code>mvn -P exec install </code></p>
+	<p>This will create an executable jar file in the "all" directory. Change directory into the all/build folder. You should see a jar file called openatna-version.jar, where "version" is the version you have downloaded. This is the executable jar file. The dependencies are in the all/build/lib/ directory. To run OpenATNA, type: </p>
+	<p><code>java -jar openatna-version.jar </code></p>
+	<p>from the all/build directory. You should see something similar to: </p>
+	<p><code>12:56:59,233 DEBUG [TcpServer] TLS Server running on port:2862 12:56:59,262 DEBUG [UdpServer] UDP Server running on port:2863 </code></p>
+	<p>This has started two servers. The first is a secured TCP server socket. The second is an unsecured UDP connection. The port numbers are not completely random - "ATNA" on your mobile phone is 2862.</p>
+</div>
+<div class="h2">
+	<h2>Configuration</h2>
+	<p>The configuration files for OpenATNA are in the all/build directory. Their purpose is described below. They allow you change the configuration of OpenATNA without re-compiling, although they do require that you shut the servers down, and restart them so the chages can take effect. To kill the servers, hit Control + C.</p>
+	<h3>Note</h3>
+	<p>Remember! The all/build directory is generated during the build. Any changes you make to configuration files will be lost if you run "mvn install" again. To make permanent changes that will survive the build, edit the corresponding files in the openatna/audit/src/main/resources/ directory.</p>
+	<ul>
+		<li>commons-logging.properties - This sets the logging system to use. The default is Log4J.</li>
+		<li>log4j.xml - This is the configuration for the Log4J logging system. </li>
+		<li>openatna.properties - These are the core properties of OpenATNA. They point to the conf directory (more in a second) and also define the database connection values, for example the username and password of the role that connects to the database. Edit this file if you want to use a different username, or have made the atna password a little more secure :-). Once you have built OpenATNA once, you can change the value of the hib.hbm2ddl.auto property value to "none". </li>
+		<li>openatnaContext.xml - This is the Spring configuration file for OpenATNA. This is read at start up to wire up the various components. Editing this file gives you fine-grained control over the components. If you have run the servers, you will also see an openatna.log file. This receives the log messages from Log4J and will not grow beyond 1/2 MB in size. </li>
+		<li>The conf directory - this contains the actors, their connection parameters, and another directory called certs/ which contains dummy certificates for testing secure nodes.</li>
+		<li>conf/IheActors.xml - contains the Audit Record Repository (ARR) actor definition. This contains references to the two connections it uses (TLS and UDP).</li>
+		<li>conf/ArrConnections.xml - contains the Audit Record Repository (ARR) connection definitions. These specify the port numbers and in the case of the secured TCP connection, the certificates to use during exchanges. These values reference the keystores stored in the conf/certs/ directory. When you want to use real certificates in real keystores, put those keystores in the conf/certs/ directory, and reference them in the secure connection definition.</li>
+		<li>conf/atnacodes.xml - Contains codes used by ATNA. You can add codes here according to the type of the code. When the default build runs, i.e. when you type "mvn install" from the openatna directory, then the codes in this file will be loaded into the database. If you want to add codes to the database that are not in this file, first add the codes to the file using the syntax of the file, then change directory to the all/ directory under the openatna directory, and type: <code>ant populateCodes This will read in the file and store any codes not already in the database. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. </code>
+		</li>
+		<li>conf/entities.xml - Contains codes and entities to load into the database. This file contains Codes, as well as ATNA entities that you may want to load into the data base, for example network access points, participant objects, active participants and audit sources. You can also define "pre-cooked" audit messages to load into the data base. Please read the comments on the entities.xml files for details of the syntax of the file. To load the contents in the data base, change directory to the all/ directory under the openatna directory, and type: ant populateEntities This will read in the file and store the entities in the data base. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. </li>
+	</ul>
+</div>
+<div class="h2">
+	<h2>Testing</h2>
+	<p>You can test against the server by running the clients in the "test" directory of the all module. These are JUnit tests and are probably easiest to run inside your IDE. The classes that are designed to run against the server are:</p>
+	<ul>
+		<li>
+			<code>org.openhealthtools.openatna.dist.test.TlsClientTest0</code>sends six messages to the ARR using TLS and Syslog RFC 5424 style messages. The first set of messages use mutually authentication with message encryption. The second set of messages use mutual authentication without message encryption. </li>
+		<li>
+			<code>org.openhealthtools.openatna.dist.test.UdpClientTest0</code>sends messages to the ARR using UDP and Syslog RFC 5424 style messages. </li>
+		<li>
+			<code>org.openhealthtools.openatna.dist.test.BsdClientTest0</code>sends messages to the ARR using UDP and Syslog BSD style messages. </li>
+	</ul>
+</div>
 
 <div class="h2">
-<h2>Reporting</h2>
+	<h2>Reporting</h2>
 
-<p>The 'web' module contains a simple servlet for querying the database. During the build (when you run 'mvn install') the Servlet is built and and a war file is created. This war file can be dropped into a Servlet container such as Tomcat. For testing purposes, it can also be run using maven. If you change directory into the 'web' directory and type:</p>
-<code>
+	<p>The 'web' module contains a simple servlet for querying the database. During the build (when you run 'mvn install') the Servlet is built and and a war file is created. This war file can be dropped into a Servlet container such as Tomcat. For testing purposes, it can also be run using maven. If you change directory into the 'web' directory and type:</p>
+	<p><code>
 mvn jetty:run
-</code>
-<p>
+</code></p>
+	<p>
 The Servlet will be launched in the jetty container contained in the build. You can now open your browser and go to:</p>
-<code>
+	<p><code>
 http://localhost:8081/atna
-</code>
-<p>query the repository.</p>
+</code></p>
+	<p>query the repository.</p>
 
 
 
 </div>
-              
-              
+
