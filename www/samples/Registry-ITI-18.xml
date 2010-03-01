@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AuditMessage>
+    <EventIdentification EventOutcomeIndicator="0" EventDateTime="2010-02-25T16:39:36.400-05:00" EventActionCode="E">
+        <EventID codeSystemName="DCM" displayName="Query" code="110112"/>
+        <EventTypeCode codeSystemName="IHE Transactions" displayName="Registry Stored Query" code="ITI-18"/>
+    </EventIdentification>
+    <ActiveParticipant NetworkAccessPointTypeCode="2" NetworkAccessPointID="127.0.0.1" UserIsRequestor="true" UserID="http://www.w3.org/2005/08/addressing/anonymous">
+        <RoleIDCode codeSystemName="DCM" displayName="Source" code="110153"/>
+    </ActiveParticipant>
+    <ActiveParticipant NetworkAccessPointTypeCode="2" NetworkAccessPointID="127.0.0.1" UserIsRequestor="false" UserID="http://localhost:8010/axis2/services/xdsregistryb">
+        <RoleIDCode codeSystemName="DCM" displayName="Destination" code="110152"/>
+    </ActiveParticipant>
+    <AuditSourceIdentification AuditSourceID="MISYS" AuditEnterpriseSiteID="MISYS"/>
+    <ParticipantObjectIdentification ParticipantObjectTypeCodeRole="1" ParticipantObjectTypeCode="1" ParticipantObjectID="4500098^^^&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO">
+        <ParticipantObjectIDTypeCode code="2"/>
+        <ParticipantObjectName>PatientIdentifier</ParticipantObjectName>
+    </ParticipantObjectIdentification>
+    <ParticipantObjectIdentification ParticipantObjectTypeCodeRole="24" ParticipantObjectTypeCode="2" ParticipantObjectID="urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d">
+        <ParticipantObjectIDTypeCode codeSystem="IHE Transactions" displayName="Registry Stored Query" code="ITI-18"/>
+        <ParticipantObjectQuery>PHF1ZXJ5OkFkaG9jUXVlcnlSZXF1ZXN0IHhtbG5zOnF1ZXJ5PSJ1cm46b2FzaXM6bmFtZXM6dGM6ZWJ4bWwtcmVncmVwOnhzZDpxdWVyeTozLjAiPjxxdWVyeTpSZXNwb25zZU9wdGlvbiByZXR1cm5Db21wb3NlZE9iamVjdHM9InRydWUiIHJldHVyblR5cGU9IkxlYWZDbGFzcyIgLz48cmltOkFkaG9jUXVlcnkgeG1sbnM6cmltPSJ1cm46b2FzaXM6bmFtZXM6dGM6ZWJ4bWwtcmVncmVwOnhzZDpyaW06My4wIiBpZD0idXJuOnV1aWQ6MTRkNGRlYmYtOGY5Ny00MjUxLTlhNzQtYTkwMDE2YjBhZjBkIj48cmltOlNsb3QgbmFtZT0iJFhEU0RvY3VtZW50RW50cnlQYXRpZW50SWQiPjxyaW06VmFsdWVMaXN0PjxyaW06VmFsdWU+JzQ1MDAwOTheXl4mYW1wOzEuMy42LjEuNC4xLjIxMzY3LjIwMTAuMS4yLjMwMCZhbXA7SVNPJzwvcmltOlZhbHVlPjwvcmltOlZhbHVlTGlzdD48L3JpbTpTbG90PjxyaW06U2xvdCBuYW1lPSIkWERTRG9jdW1lbnRFbnRyeVN0YXR1cyI+PHJpbTpWYWx1ZUxpc3Q+PHJpbTpWYWx1ZT4oJ3VybjpvYXNpczpuYW1lczp0YzplYnhtbC1yZWdyZXA6U3RhdHVzVHlwZTpBcHByb3ZlZCcpPC9yaW06VmFsdWU+PC9yaW06VmFsdWVMaXN0PjwvcmltOlNsb3Q+PHJpbTpTbG90IG5hbWU9IiRYRFNEb2N1bWVudEVudHJ5Q3JlYXRpb25UaW1lRnJvbSI+PHJpbTpWYWx1ZUxpc3Q+PHJpbTpWYWx1ZT4yMDA5MTExNTAwMDAwMDwvcmltOlZhbHVlPjwvcmltOlZhbHVlTGlzdD48L3JpbTpTbG90PjxyaW06U2xvdCBuYW1lPSIkWERTRG9jdW1lbnRFbnRyeUNyZWF0aW9uVGltZVRvIj48cmltOlZhbHVlTGlzdD48cmltOlZhbHVlPjIwMTAwMjI2MjEzOTAzPC9yaW06VmFsdWU+PC9yaW06VmFsdWVMaXN0PjwvcmltOlNsb3Q+PC9yaW06QWRob2NRdWVyeT48L3F1ZXJ5OkFkaG9jUXVlcnlSZXF1ZXN0Pg==</ParticipantObjectQuery>
+    </ParticipantObjectIdentification>
+</AuditMessage>
