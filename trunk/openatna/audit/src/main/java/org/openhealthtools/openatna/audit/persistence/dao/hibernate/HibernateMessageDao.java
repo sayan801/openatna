@@ -70,6 +70,11 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateMessageDao");
 
+    /**
+     * prefix applied to identifying id of entites that have been updated.
+     */
+    public static final String DEPRECATION_SUFFIX = "-OpenATNA version ";
+
 
     public HibernateMessageDao(SessionFactory sessionFactory) {
         super(MessageEntity.class, sessionFactory);
@@ -225,7 +230,6 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         if (existing == null) {
             if (policies.isAllowNewCodes()) {
                 dao.save(ce, policies);
-
             } else {
                 throw new AtnaPersistenceException("no event id code defined.",
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
@@ -298,7 +302,13 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
         ParticipantEntity pe = ap.getParticipant();
         ParticipantDao dao = AtnaFactory.participantDao();
-        ParticipantEntity existing = dao.getByUserId(pe.getUserId());
+        ParticipantEntity existing = null;
+        if (pe.getAlternativeUserId() != null) {
+            existing = dao.getByAltUserId(pe.getAlternativeUserId());
+        }
+        if (existing == null) {
+            existing = dao.getByUserId(pe.getUserId());
+        }
         if (existing == null) {
             if (policies.isAllowNewParticipants()) {
                 dao.save(pe, policies);
@@ -307,7 +317,11 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
             }
         } else {
-            ap.setParticipant(existing);
+            if (policies.isAllowUpdateParticipants()) {
+                updateParticipant(dao, policies, ap, pe, existing);
+            } else {
+                ap.setParticipant(existing);
+            }
         }
         NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
         if (net != null) {
@@ -323,6 +337,137 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
             } else {
                 ap.setNetworkAccessPoint(there);
             }
+        }
+    }
+
+    private boolean isParticipantEqual(ParticipantEntity update,
+                                       ParticipantEntity existing) {
+        if (!update.getUserId().equals(existing.getUserId())) {
+            return false;
+        }
+        if (update.getAlternativeUserId() != null && !update.getAlternativeUserId().equals(existing.getAlternativeUserId())) {
+            return false;
+        }
+        if (update.getUserName() != null && !update.getUserName().equals(existing.getUserName())) {
+            return false;
+        }
+        if (!update.getParticipantTypeCodes().equals(existing.getParticipantTypeCodes())) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isSourceEqual(SourceEntity update,
+                                  SourceEntity existing) {
+        if (!update.getSourceId().equals(existing.getSourceId())) {
+            return false;
+        }
+        if (update.getEnterpriseSiteId() != null && !update.getEnterpriseSiteId().equals(existing.getEnterpriseSiteId())) {
+            return false;
+        }
+
+        if (!update.getSourceTypeCodes().equals(existing.getSourceTypeCodes())) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isObjectEqual(ObjectEntity update,
+                                  ObjectEntity existing) {
+        if (!update.getObjectId().equals(existing.getObjectId())) {
+            return false;
+        }
+        if (update.getObjectName() != null && !update.getObjectName().equals(existing.getObjectName())) {
+            return false;
+        }
+        if (!update.getObjectIdTypeCode().equals(existing.getObjectIdTypeCode())) {
+            return false;
+        }
+        if (!update.getObjectSensitivity().equals(existing.getObjectSensitivity())) {
+            return false;
+        }
+        if (!update.getObjectTypeCode().equals(existing.getObjectTypeCode())) {
+            return false;
+        }
+        if (!update.getObjectTypeCodeRole().equals(existing.getObjectTypeCodeRole())) {
+            return false;
+        }
+        if (!update.getObjectDetailTypes().equals(existing.getObjectDetailTypes())) {
+            return false;
+        }
+        //TODO: doesn't include SopClasses
+        if (!update.getObjectDescriptions().equals(existing.getObjectDescriptions())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateParticipant(ParticipantDao dao,
+                                   PersistencePolicies policies,
+                                   MessageParticipantEntity ap,
+                                   ParticipantEntity update,
+                                   ParticipantEntity existing)
+            throws AtnaPersistenceException {
+        if (!isParticipantEqual(update, existing)) {
+            update.setVersion(existing.getVersion() + 1);
+            existing.setUserId(existing.getUserId() + DEPRECATION_SUFFIX + existing.getVersion());
+            if (existing.getAlternativeUserId() != null) {
+                existing.setAlternativeUserId(existing.getAlternativeUserId() +
+                        DEPRECATION_SUFFIX + existing.getVersion());
+            }
+            dao.save(existing, policies);
+            dao.save(update, policies);
+            ap.setParticipant(update);
+        } else {
+            ap.setParticipant(existing);
+        }
+    }
+
+    private void updateSource(SourceDao dao,
+                              PersistencePolicies policies,
+                              MessageSourceEntity ap,
+                              SourceEntity update,
+                              SourceEntity existing)
+            throws AtnaPersistenceException {
+        if (!isSourceEqual(update, existing)) {
+            update.setVersion(existing.getVersion() + 1);
+            existing.setSourceId(existing.getSourceId() + DEPRECATION_SUFFIX + existing.getVersion());
+            if (existing.getEnterpriseSiteId() != null) {
+                existing.setEnterpriseSiteId(existing.getEnterpriseSiteId() + DEPRECATION_SUFFIX
+                        + existing.getVersion());
+            }
+            dao.save(existing, policies);
+            dao.save(update, policies);
+            ap.setSource(update);
+        } else {
+            ap.setSource(existing);
+        }
+    }
+
+    private void updateObject(ObjectDao dao,
+                              PersistencePolicies policies,
+                              MessageObjectEntity ap,
+                              ObjectEntity update,
+                              ObjectEntity existing)
+            throws AtnaPersistenceException {
+        if (!isObjectEqual(update, existing)) {
+            update.setVersion(existing.getVersion() + 1);
+            existing.setObjectId(existing.getObjectId() + DEPRECATION_SUFFIX + existing.getVersion());
+            dao.save(existing, policies);
+            dao.save(update, policies);
+            ap.setObject(update);
+            Set<ObjectDetailEntity> details = ap.getDetails();
+            for (ObjectDetailEntity detail : details) {
+                if (!update.containsDetailType(detail.getType())
+                        && !policies.isAllowUnknownDetailTypes()) {
+                    throw new AtnaPersistenceException("bad object detail key.",
+                            AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
+                }
+
+            }
+        } else {
+            ap.setObject(existing);
         }
     }
 
@@ -349,7 +494,11 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
             }
         } else {
-            as.setSource(existing);
+            if (policies.isAllowUpdateSources()) {
+                updateSource(dao, policies, as, se, existing);
+            } else {
+                as.setSource(existing);
+            }
         }
     }
 
@@ -376,7 +525,11 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
             }
         } else {
-            ao.setObject(existing);
+            if (policies.isAllowUpdateObjects()) {
+                updateObject(dao, policies, ao, oe, existing);
+            } else {
+                ao.setObject(existing);
+            }
             Set<ObjectDetailEntity> details = ao.getDetails();
             for (ObjectDetailEntity detail : details) {
                 if (!existing.containsDetailType(detail.getType())
@@ -384,8 +537,10 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                     throw new AtnaPersistenceException("bad object detail key.",
                             AtnaPersistenceException.PersistenceError.UNKNOWN_DETAIL_TYPE);
                 }
+
             }
         }
     }
+
 
 }

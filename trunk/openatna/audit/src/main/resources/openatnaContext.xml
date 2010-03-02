@@ -44,7 +44,6 @@
         <property name="allowUnknownDetailTypes" value="true"/>
         <property name="allowNewCodes" value="true"/>
         <property name="persistErrors" value="true"/>
-
     </bean>
 
     <bean id="serviceConfig" class="org.openhealthtools.openatna.audit.service.ServiceConfiguration">
@@ -175,6 +174,9 @@
     </bean>
 
     <bean id="errorDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateErrorDao">
+        <constructor-arg ref="sessionFactory"/>
+    </bean>
+    <bean id="queryDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.QueryDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 </beans>

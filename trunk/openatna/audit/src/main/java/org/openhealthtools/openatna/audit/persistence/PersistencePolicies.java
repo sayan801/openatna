@@ -39,6 +39,9 @@ public class PersistencePolicies {
     private boolean allowModifyMessages;
     private boolean errorOnDuplicateInsert;
     private boolean persistErrors;
+    private boolean allowUpdateSources;
+    private boolean allowUpdateParticipants;
+    private boolean allowUpdateObjects;
 
 
     public boolean isAllowNewCodes() {
@@ -111,5 +114,29 @@ public class PersistencePolicies {
 
     public void setPersistErrors(boolean persistErrors) {
         this.persistErrors = persistErrors;
+    }
+
+    public boolean isAllowUpdateSources() {
+        return allowUpdateSources;
+    }
+
+    public void setAllowUpdateSources(boolean allowUpdateSources) {
+        this.allowUpdateSources = allowUpdateSources;
+    }
+
+    public boolean isAllowUpdateParticipants() {
+        return allowUpdateParticipants;
+    }
+
+    public void setAllowUpdateParticipants(boolean allowUpdateParticipants) {
+        this.allowUpdateParticipants = allowUpdateParticipants;
+    }
+
+    public boolean isAllowUpdateObjects() {
+        return allowUpdateObjects;
+    }
+
+    public void setAllowUpdateObjects(boolean allowUpdateObjects) {
+        this.allowUpdateObjects = allowUpdateObjects;
     }
 }

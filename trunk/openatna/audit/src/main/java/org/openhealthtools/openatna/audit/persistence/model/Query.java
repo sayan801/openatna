@@ -39,8 +39,6 @@ import java.util.Set;
  * NULLITY takes a Boolean value.
  * true = the value must be null and false = the value must not be null.
  * <p/>
- * ORDER takes a boolean value. True = ordering will be ascending, false = descending.
- * <p/>
  * and the target represents an element in an AtnaMessage.
  * <p/>
  * Two conditionals of the same type cannot be applied to the same target.
@@ -59,7 +57,7 @@ public class Query implements Serializable {
 
     private static final long serialVersionUID = 9210675605754512907L;
 
-    private Map<Target, Set<ConditionalValue>> map = new HashMap<Target, Set<ConditionalValue>>();
+    private Map<Target, Set<ConditionalStatement>> map = new HashMap<Target, Set<ConditionalStatement>>();
 
     public static TargetPath createPath(Target target) {
         List<String> path = new ArrayList<String>();
@@ -216,6 +214,9 @@ public class Query implements Serializable {
                 path.add("sourceTypeCodes");
                 s = "codeSystemName";
                 break;
+            case MESSAGE:
+                s = "MESSAGE";
+                break;
             default:
                 break;
         }
@@ -259,8 +260,11 @@ public class Query implements Serializable {
         NETWORK_ACCESS_POINT_TYPE,
 
         // result target
-        // currently this accepts MAX_NUM and START_OFFSET as conditionals
-        RESULT;
+        // currently this accepts MAX_NUM, START_OFFSET, ASC and DESC as conditionals
+        RESULT,
+
+        // default message target
+        MESSAGE
     }
 
     public static enum Conditional {
@@ -275,33 +279,48 @@ public class Query implements Serializable {
         LESS_THAN_OR_EQUAL,
         NOT_EQUAL,
         NULLITY,
+
+
+        // query result parameters
         ASC,
         DESC,
-
-        // query result parameters - both ints
         MAX_NUM,
-        START_OFFSET
+        START_OFFSET,
+
+        // conditionals that take 2 ConditionalStatements as arguments to create disjunctions or conjunctions
+        OR,
+        AND
     }
 
     public boolean hasConditionals() {
         if (map.keySet().size() == 0) {
             return false;
         }
-        if (map.keySet().size() == 1 && map.keySet().contains(Target.RESULT)) {
-            return false;
+        boolean has = false;
+        for (Target target : map.keySet()) {
+            if (target != Target.MESSAGE && target != Target.RESULT) {
+                has = true;
+                break;
+            }
         }
-        return true;
+        return has;
     }
 
     public Query addConditional(Conditional c, Object value, Target target) {
-        if (c == null || value == null || target == null) {
-            throw new IllegalArgumentException("parameters cannot be null");
+        if (c == null) {
+            throw new IllegalArgumentException("conditional cannot be null");
         }
-        Set<ConditionalValue> existing = map.get(target);
+        if (value == null) {
+            throw new IllegalArgumentException("value cannot be null");
+        }
+        if (target == null) {
+            throw new IllegalArgumentException("target cannot be null");
+        }
+        Set<ConditionalStatement> existing = map.get(target);
         if (existing == null) {
-            existing = new HashSet<ConditionalValue>();
+            existing = new HashSet<ConditionalStatement>();
         }
-        existing.add(new ConditionalValue(c, value));
+        existing.add(new ConditionalStatement(c, value, target));
         map.put(target, existing);
         return this;
     }
@@ -363,7 +382,7 @@ public class Query implements Serializable {
         return this;
     }
 
-    public Map<Target, Set<ConditionalValue>> getConditionals() {
+    public Map<Target, Set<ConditionalStatement>> getConditionals() {
         return Collections.unmodifiableMap(map);
     }
 
@@ -387,47 +406,14 @@ public class Query implements Serializable {
         return this;
     }
 
-    public static class ConditionalValue implements Serializable {
-        private static final long serialVersionUID = 3791598321976795625L;
+    public Query or(ConditionalStatement t1, ConditionalStatement t2) {
+        addConditional(Conditional.OR, new ConditionalStatement[]{t1, t2}, Target.MESSAGE);
+        return this;
+    }
 
-        private Conditional conditional;
-        private Object value;
-
-        public ConditionalValue(Conditional conditional, Object value) {
-            this.conditional = conditional;
-            this.value = value;
-        }
-
-        public Conditional getConditional() {
-            return conditional;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            ConditionalValue that = (ConditionalValue) o;
-
-            if (conditional != that.conditional) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            return conditional != null ? conditional.hashCode() : 0;
-        }
+    public Query and(ConditionalStatement t1, ConditionalStatement t2) {
+        addConditional(Conditional.AND, new ConditionalStatement[]{t1, t2}, Target.MESSAGE);
+        return this;
     }
 
     public String toString() {
@@ -435,8 +421,8 @@ public class Query implements Serializable {
         sb.append("[").append(getClass().getName());
         for (Target target : map.keySet()) {
             sb.append("[target=").append(target.toString());
-            Set<ConditionalValue> l = map.get(target);
-            for (ConditionalValue value : l) {
+            Set<ConditionalStatement> l = map.get(target);
+            for (ConditionalStatement value : l) {
                 sb.append(" conditional=")
                         .append(value.getConditional())
                         .append(" value=")
@@ -449,7 +435,8 @@ public class Query implements Serializable {
     }
 
 
-    public static class TargetPath implements Serializable  {
+    public static class TargetPath implements Serializable {
+
         private static final long serialVersionUID = -1595557753673966358L;
 
         private List<String> paths;
@@ -475,6 +462,95 @@ public class Query implements Serializable {
             }
             sb.append(target);
             return sb.toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            TargetPath that = (TargetPath) o;
+
+            if (paths != null ? !paths.equals(that.paths) : that.paths != null) {
+                return false;
+            }
+            if (target != null ? !target.equals(that.target) : that.target != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = paths != null ? paths.hashCode() : 0;
+            result = 31 * result + (target != null ? target.hashCode() : 0);
+            return result;
+        }
+
+
+    }
+
+    public static class ConditionalStatement implements Serializable {
+
+        private static final long serialVersionUID = -5195556653769366538L;
+
+        private Conditional conditional;
+        private Object value;
+        private Target target;
+
+        public ConditionalStatement(Conditional conditional, Object value, Target target) {
+            this.conditional = conditional;
+            this.value = value;
+            this.target = target;
+        }
+
+        public Conditional getConditional() {
+            return conditional;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Target getTarget() {
+            return target;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ConditionalStatement that = (ConditionalStatement) o;
+
+            if (conditional != that.conditional) {
+                return false;
+            }
+            if (target != that.target) {
+                return false;
+            }
+            if (value != null ? !value.equals(that.value) : that.value != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = conditional != null ? conditional.hashCode() : 0;
+            result = 31 * result + (value != null ? value.hashCode() : 0);
+            result = 31 * result + (target != null ? target.hashCode() : 0);
+            return result;
         }
     }
 }

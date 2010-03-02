@@ -181,6 +181,7 @@ public class MessageController extends MultiActionController {
         if (bean.getSourceAddress() != null && bean.getSourceAddress().length() > 0) {
             query.addConditional(Query.Conditional.EQUALS, bean.getSourceAddress(), Query.Target.SOURCE_ADDRESS);
         }
+
         query.setMaxResults(bean.getMaxResults());
         query.setStartOffset(bean.getStartOffset());
         query.orderAscending(Query.Target.ID);

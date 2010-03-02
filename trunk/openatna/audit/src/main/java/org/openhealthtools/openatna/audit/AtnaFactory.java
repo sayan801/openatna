@@ -28,6 +28,7 @@ import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
 import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
 import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
 import org.openhealthtools.openatna.audit.persistence.dao.ProvisionalDao;
+import org.openhealthtools.openatna.audit.persistence.dao.QueryDao;
 import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
 import org.openhealthtools.openatna.audit.service.AuditService;
 import org.springframework.context.ApplicationContext;
@@ -117,6 +118,10 @@ public class AtnaFactory {
 
     public static ProvisionalDao provisionalDao() {
         return (ProvisionalDao) getBean("provisionalDao");
+    }
+
+    public static QueryDao queryDao() {
+        return (QueryDao) getBean("queryDao");
     }
 
 }

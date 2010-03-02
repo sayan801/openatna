@@ -41,5 +41,6 @@
         <mapping class="org.openhealthtools.openatna.audit.persistence.model.ObjectDescriptionEntity"/>
         <mapping class="org.openhealthtools.openatna.audit.persistence.model.SopClassEntity"/>
         <mapping class="org.openhealthtools.openatna.audit.persistence.model.ErrorEntity"/>
+        <mapping class="org.openhealthtools.openatna.audit.persistence.model.QueryEntity"/>
     </session-factory>
 </hibernate-configuration>
