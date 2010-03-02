@@ -72,8 +72,9 @@ public class UdpClientTest0 extends ClientTest {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                //<110>1 2010-03-02T15:03:04.251-05:00 carefx1/10.243.0.118 XDS 777 AUDIT -
                 message.setEventDateTime(new Date());
-                ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new JaxbLogMessage(message), "Spartacus", "PDQIN", "777");
+                ProtocolMessage sl = new ProtocolMessage(10, 5, "carefx1/10.243.0.118", new JaxbLogMessage(message), "XDS", "AUDIT", "777");
                 InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
                 DatagramSocket s = new DatagramSocket();
                 byte[] bytes = sl.toByteArray();
@@ -109,10 +110,9 @@ public class UdpClientTest0 extends ClientTest {
     }
 
     @Test
-    public void testBadProvMessage() {
+    public void testBadMessage() {
         try {
-            ProvisionalMessage message = new ProvisionalMessage(badProv.getBytes("UTF-8"));
-            ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new ProvLogMessage(message), "Spartacus", "PDQIN", "777");
+            ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new BadLogMessage(badMsg), "Spartacus", "PDQIN", "777");
             InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
             DatagramSocket s = new DatagramSocket();
             byte[] bytes = sl.toByteArray();
@@ -131,6 +131,9 @@ public class UdpClientTest0 extends ClientTest {
 
 
     String badProv = "This is a bad message";
+
+    String badMsg =
+            "<AuditMessage><EventIdentification EventActionCode=\"C\" EventDateTime=\"2010-03-02T15:03:11.115Z\" EventOutcomeIndicator=\"0\"><EventID code=\"110107\" codeSystemName=\"DCM\" displayName=\"Import\" /><EventTypeCode code=\"ITI-14\" codeSystemName=\"IHE Transactions\" displayName=\"Register Document Set\" /></EventIdentification><ActiveParticipant UserID=\"CAREFX APPLICATION\" AlternativeUserID=\"CAREFX USER\" UserIsRequestor=\"true\"><RoleIDCode code=\"110153\" codeSystemName=\"DCM\" displayName=\"Source\" /></ActiveParticipant><ActiveParticipant UserID=\"http://localhost:8080/services/xdsregistryb\" UserName=\"CAREFX\" UserIsRequestor=\"false\"><RoleIDCode code=\"110152\" codeSystemName=\"DCM\" displayName=\"Desination\" /></ActiveParticipant><AuditSourceIdentification AuditEnterpriseSiteID=\"Hospital\" AuditSourceID=\"ReadingRoom\"><AuditSourceTypeCode code=\"1\" /></AuditSourceIdentification><ParticipantObjectIdentification ParticipantObjectID=\"SELF-5^^^&amp;amp;1.3.6.1.4.1.21367.2005.3.7&amp;amp;ISO\" ParticipantObjectTypeCode=\"1\" ParticipantObjectTypeCodeRole=\"1\" ParticipantObjectDataLifeCycle=\"1\" ParticipantObjectName=\"CAREFX\"><ParticipantObjectIDTypeCode code=\"2\" codeSystemName=\"RFC-3381\" displayName=\"Patient Number\" /></ParticipantObjectIdentification><ParticipantObjectIdentification ParticipantObjectID=\"2.16.840.1.114107.1.1.17.1.135001013018002033.126756017\" ParticipantObjectTypeCode=\"2\" ParticipantObjectTypeCodeRole=\"20\"><ParticipantObjectIDTypeCode code=\"urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd\" codeSystemName=\"IHE XDS Metadata\" displayName=\"submission set classificationNode\" /></ParticipantObjectIdentification></AuditMessage>";
 
 
     protected static class ProvLogMessage implements LogMessage<ProvisionalMessage> {
@@ -158,6 +161,35 @@ public class UdpClientTest0 extends ClientTest {
         }
 
         public ProvisionalMessage getMessageObject() {
+            return msg;
+        }
+    }
+
+    protected static class BadLogMessage implements LogMessage<String> {
+
+        private String msg;
+
+        BadLogMessage(String msg) {
+            this.msg = msg;
+        }
+
+        public String getExpectedEncoding() {
+            return "UTF-8";
+        }
+
+        public void read(InputStream in, String encoding) throws SyslogException {
+        }
+
+        public void write(OutputStream out) throws SyslogException {
+            try {
+                out.write(msg.getBytes("UTF-8"));
+                out.flush();
+            } catch (IOException e) {
+                throw new SyslogException(e);
+            }
+        }
+
+        public String getMessageObject() {
             return msg;
         }
     }

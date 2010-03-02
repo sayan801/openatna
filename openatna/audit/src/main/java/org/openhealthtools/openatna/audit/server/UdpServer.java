@@ -65,7 +65,7 @@ public class UdpServer {
         thread = new UdpServerThread(socket);
         running = true;
         thread.start();
-        log.debug("UDP Server running on port:" + udpConnection.getPort());
+        log.info("UDP Server running on port:" + udpConnection.getPort());
 
     }
 
@@ -73,7 +73,7 @@ public class UdpServer {
         running = false;
         thread.interrupt();
         udpConn.closeServerConnection();
-        log.debug("UDP Server shutting down...");
+        log.info("UDP Server shutting down...");
     }
 
     private class UdpServerThread extends Thread {

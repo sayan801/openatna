@@ -55,6 +55,7 @@ public class ParticipantEntity extends PersistentEntity {
     private String userId;
     private String alternativeUserId;
     private String userName;
+
     private Set<ParticipantCodeEntity> participantTypeCodes = new HashSet<ParticipantCodeEntity>();
 
     public ParticipantEntity() {

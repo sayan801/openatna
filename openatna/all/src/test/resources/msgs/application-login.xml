@@ -4,6 +4,7 @@
         <EventID codeSystemName="DCM" displayName="User Authentication" code="110114"/>
         <EventTypeCode codeSystemName="DCM" displayName="Login" code="110122"/>
     </EventIdentification>
-    <ActiveParticipant NetworkAccessPointTypeCode="2" NetworkAccessPointID="192.168.1.5" UserIsRequestor="true" UserID="misys" UserName="misysuser"/>
+    <ActiveParticipant NetworkAccessPointTypeCode="2" NetworkAccessPointID="192.168.1.5" UserIsRequestor="true" UserID="misys"
+                       UserName="misysuser-again"/>
     <AuditSourceIdentification AuditSourceID="SYS_NAME" AuditEnterpriseSiteID="ENTERPRISE_SYS_NAME"/>
 </AuditMessage>

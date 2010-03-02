@@ -67,14 +67,14 @@ public class TcpServer {
         running = true;
         thread = new TcpServerThread(ss);
         thread.start();
-        log.debug("TLS Server running on port:" + tlsConnection.getPort());
+        log.info("TLS Server running on port:" + tlsConnection.getPort());
     }
 
     public void stop() {
         running = false;
         thread.interrupt();
         tlsConn.closeServerConnection();
-        log.debug("TLS Server shutting down...");
+        log.info("TLS Server shutting down...");
     }
 
 

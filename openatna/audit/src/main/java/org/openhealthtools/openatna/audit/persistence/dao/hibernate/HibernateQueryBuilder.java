@@ -25,8 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -34,6 +37,11 @@ import org.openhealthtools.openatna.audit.persistence.model.Query;
 
 /**
  * Builds a hibernate Criteria from a query
+ * <p/>
+ * NOTE: a current restriction is that the two restriction of OR and AND will only work on the same object.
+ * This means for example, that
+ * you cannot do an OR on, say a participant id and a source id, because these are properties of different objects,
+ * but you can on participant id and participant name.
  *
  * @author Andrew Harrison
  * @version $Revision:$
@@ -43,6 +51,9 @@ import org.openhealthtools.openatna.audit.persistence.model.Query;
 
 public class HibernateQueryBuilder {
 
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateQueryBuilder");
+
+
     private Criteria messageCriteria;
     private Criteria idCriteria;
 
@@ -51,10 +62,11 @@ public class HibernateQueryBuilder {
         this.idCriteria = messageDao.criteria();
     }
 
-    private void createConditional(CriteriaNode node, Query.ConditionalValue value, String name) {
+    private Criterion createConditional(CriteriaNode root, CriteriaNode node, Query.ConditionalStatement value, String name) {
         Criteria c = node.getCriteria();
         Query.Conditional con = value.getConditional();
         Object val = value.getValue();
+        Criterion cron = null;
 
         switch (con) {
             case MAX_NUM:
@@ -64,42 +76,44 @@ public class HibernateQueryBuilder {
                 idCriteria.setFirstResult((Integer) val);
                 break;
             case AFTER:
-                c.add(Restrictions.ge(name, val));
+                cron = Restrictions.ge(name, val);
                 break;
             case BEFORE:
-                c.add(Restrictions.le(name, val));
+                cron = Restrictions.le(name, val);
                 break;
             case CASE_INSENSITIVE_LIKE:
-                c.add(Restrictions.ilike(name, val));
+                cron = Restrictions.ilike(name, val);
                 break;
             case EQUALS:
-                c.add(Restrictions.eq(name, val));
+                cron = Restrictions.eq(name, val);
                 break;
             case GREATER_THAN:
-                c.add(Restrictions.gt(name, val));
+                cron = Restrictions.gt(name, val);
                 break;
             case GREATER_THAN_OR_EQUAL:
-                c.add(Restrictions.ge(name, val));
+                cron = Restrictions.ge(name, val);
                 break;
             case LESS_THAN:
-                c.add(Restrictions.lt(name, val));
+                cron = Restrictions.lt(name, val);
                 break;
             case LESS_THAN_OR_EQUAL:
-                c.add(Restrictions.le(name, val));
+                cron = Restrictions.le(name, val);
                 break;
             case LIKE:
-                c.add(Restrictions.like(name, val));
+                cron = Restrictions.like(name, val);
                 break;
             case NOT_EQUAL:
-                c.add(Restrictions.ne(name, val));
+                cron = Restrictions.ne(name, val);
+                break;
+            case OR:
+                processJoint(root, value, false);
+                break;
+            case AND:
+                processJoint(root, value, true);
                 break;
             case NULLITY:
                 Boolean b = (Boolean) val;
-                if (b) {
-                    c.add(Restrictions.isNull(name));
-                } else {
-                    c.add(Restrictions.isNotNull(name));
-                }
+                cron = b ? Restrictions.isNull(name) : Restrictions.isNotNull(name);
                 break;
             case ASC:
                 messageCriteria.addOrder(Order.asc((String) val));
@@ -110,7 +124,39 @@ public class HibernateQueryBuilder {
             default:
                 break;
         }
+        if (cron != null && c != null) {
+            c.add(cron);
+        }
+        return cron;
+    }
 
+    private void processJoint(CriteriaNode root, Query.ConditionalStatement value, boolean and) {
+        try {
+            Query.ConditionalStatement[] values = (Query.ConditionalStatement[]) value.getValue();
+            if (values == null || values.length != 2) {
+                log.info("Joint takes two conditional values");
+                return;
+            }
+            Query.TargetPath tp = Query.createPath(values[0].getTarget());
+            Query.TargetPath tp1 = Query.createPath(values[1].getTarget());
+            if (!tp.getPaths().equals(tp1.getPaths())) {
+                throw new IllegalArgumentException("cannot perform OR on two values with a different depth, i.e. relating to a different object");
+            }
+            CriteriaNode cn = getNode(root, tp);
+            Criterion c0 = createConditional(root, cn, values[0], tp.getTarget());
+
+            CriteriaNode cn1 = getNode(root, tp1);
+            Criterion c1 = createConditional(root, cn1, values[1], tp1.getTarget());
+            if (c0 != null && c1 != null) {
+                if (and) {
+                    cn1.getCriteria().add(Restrictions.and(c0, c1));
+                } else {
+                    cn1.getCriteria().add(Restrictions.or(c0, c1));
+                }
+            }
+        } catch (Exception e) {
+            log.info(e);
+        }
     }
 
     /**
@@ -122,7 +168,7 @@ public class HibernateQueryBuilder {
      */
     public Criteria build(Query query) {
 
-        Map<Query.Target, Set<Query.ConditionalValue>> map = query.getConditionals();
+        Map<Query.Target, Set<Query.ConditionalStatement>> map = query.getConditionals();
 
         CriteriaNode root = new CriteriaNode(idCriteria, "MESSAGE");
         idCriteria.setProjection(Projections.id());
@@ -130,9 +176,9 @@ public class HibernateQueryBuilder {
         for (Query.Target target : targets) {
             Query.TargetPath tp = Query.createPath(target);
             CriteriaNode node = getNode(root, tp);
-            Set<Query.ConditionalValue> values = map.get(target);
-            for (Query.ConditionalValue value : values) {
-                createConditional(node, value, tp.getTarget());
+            Set<Query.ConditionalStatement> values = map.get(target);
+            for (Query.ConditionalStatement value : values) {
+                createConditional(root, node, value, tp.getTarget());
             }
         }
         idCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
