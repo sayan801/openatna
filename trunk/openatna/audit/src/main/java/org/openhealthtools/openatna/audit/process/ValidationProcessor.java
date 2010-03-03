@@ -32,6 +32,7 @@ import org.openhealthtools.openatna.anom.AtnaObjectDetail;
 import org.openhealthtools.openatna.anom.AtnaSource;
 import org.openhealthtools.openatna.anom.ObjectType;
 import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 
 
 /**
@@ -100,7 +101,7 @@ public class ValidationProcessor implements AtnaProcessor {
 
 
     public void process(ProcessContext context) throws Exception {
-        validate(context.getMessage());
+        validate(context);
         context.setState(ProcessContext.State.VALIDATED);
     }
 
@@ -108,7 +109,8 @@ public class ValidationProcessor implements AtnaProcessor {
     }
 
 
-    protected void validate(AtnaMessage message) throws AtnaException {
+    protected void validate(ProcessContext context) throws AtnaException {
+        AtnaMessage message = context.getMessage();
         if (message == null) {
             throw new AtnaException("null message", AtnaException.AtnaError.NO_MESSAGE);
         }
@@ -133,23 +135,23 @@ public class ValidationProcessor implements AtnaProcessor {
             throw new AtnaException("no audit source defined", AtnaException.AtnaError.NO_AUDIT_SOURCE);
         }
         for (AtnaSource source : sources) {
-            validateSource(source);
+            validateSource(source, context.getPolicies());
         }
         List<AtnaMessageParticipant> participants = message.getParticipants();
         if (participants.size() == 0) {
             throw new AtnaException("no participants defined", AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
         }
         for (AtnaMessageParticipant participant : participants) {
-            validateParticipant(participant);
+            validateParticipant(participant, context.getPolicies());
         }
         List<AtnaMessageObject> objects = message.getObjects();
         for (AtnaMessageObject object : objects) {
-            validateObject(object);
+            validateObject(object, context.getPolicies());
         }
 
     }
 
-    private void validateParticipant(AtnaMessageParticipant participant) throws AtnaException {
+    private void validateParticipant(AtnaMessageParticipant participant, PersistencePolicies policies) throws AtnaException {
         if (participant.getParticipant() == null) {
             throw new AtnaException("no active participant defined",
                     AtnaException.AtnaError.NO_ACTIVE_PARTICIPANT);
@@ -176,7 +178,7 @@ public class ValidationProcessor implements AtnaProcessor {
         }*/
     }
 
-    private void validateSource(AtnaSource source) throws AtnaException {
+    private void validateSource(AtnaSource source, PersistencePolicies policies) throws AtnaException {
         if (source.getSourceId() == null) {
             throw new AtnaException("no audit source id defined",
                     AtnaException.AtnaError.NO_AUDIT_SOURCE_ID);
@@ -189,7 +191,7 @@ public class ValidationProcessor implements AtnaProcessor {
         }
     }
 
-    private void validateObject(AtnaMessageObject object) throws AtnaException {
+    private void validateObject(AtnaMessageObject object, PersistencePolicies policies) throws AtnaException {
         if (object.getObject() == null) {
             throw new AtnaException("no participant object defined",
                     AtnaException.AtnaError.NO_PARTICIPANT_OBJECT);

@@ -63,4 +63,5 @@ public class ParticipantCodeEntity extends CodeEntity {
         super(CodeType.ACTIVE_PARTICIPANT, code, codeSystem, codeSystemName, displayName, originalText);
     }
 
+
 }

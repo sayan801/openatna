@@ -37,9 +37,11 @@ public interface SourceDao {
 
     public SourceEntity getById(Long id) throws AtnaPersistenceException;
 
-    public SourceEntity getBySourceId(String id) throws AtnaPersistenceException;
+    public List<? extends SourceEntity> getBySourceId(String id) throws AtnaPersistenceException;
 
     public SourceEntity getByEnterpriseSiteId(String id) throws AtnaPersistenceException;
+
+    public SourceEntity get(SourceEntity other) throws AtnaPersistenceException;
 
     public List<? extends SourceEntity> getByCode(SourceCodeEntity code) throws AtnaPersistenceException;
 

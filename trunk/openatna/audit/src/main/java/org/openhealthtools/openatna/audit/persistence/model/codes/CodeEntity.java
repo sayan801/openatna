@@ -70,7 +70,7 @@ public abstract class CodeEntity extends PersistentEntity {
     private String displayName;
     private String originalText;
 
-    private CodeEntity() {
+    protected CodeEntity() {
     }
 
     protected CodeEntity(CodeType type) {
@@ -251,22 +251,22 @@ public abstract class CodeEntity extends PersistentEntity {
         }
         CodeEntity that = (CodeEntity) o;
 
-        if (code != null ? !code.equals(that.code) : that.code != null) {
+        if (getCode() != null ? !getCode().equals(that.getCode()) : that.getCode() != null) {
             return false;
         }
-        if (codeSystem != null ? !codeSystem.equals(that.codeSystem) : that.codeSystem != null) {
+        if (getCodeSystem() != null ? !getCodeSystem().equals(that.getCodeSystem()) : that.getCodeSystem() != null) {
             return false;
         }
-        if (codeSystemName != null ? !codeSystemName.equals(that.codeSystemName) : that.codeSystemName != null) {
+        if (getCodeSystemName() != null ? !getCodeSystemName().equals(that.getCodeSystemName()) : that.getCodeSystemName() != null) {
             return false;
         }
-        if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) {
+        /*if (getDisplayName() != null ? !getDisplayName().equals(that.getDisplayName()) : that.getDisplayName() != null) {
             return false;
         }
-        if (originalText != null ? !originalText.equals(that.originalText) : that.originalText != null) {
+        if (getOriginalText() != null ? !getOriginalText().equals(that.getOriginalText()) : that.getOriginalText() != null) {
             return false;
-        }
-        if (type != that.type) {
+        }*/
+        if (getType() != that.getType()) {
             return false;
         }
         return true;
@@ -274,12 +274,13 @@ public abstract class CodeEntity extends PersistentEntity {
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (codeSystem != null ? codeSystem.hashCode() : 0);
-        result = 31 * result + (codeSystemName != null ? codeSystemName.hashCode() : 0);
-        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
-        result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
+        int result = getType() != null ? getType().hashCode() : 0;
+        result = 31 * result + (getCode() != null ? getCode().hashCode() : 0);
+        result = 31 * result + (getCodeSystem() != null ? getCodeSystem().hashCode() : 0);
+        result = 31 * result + (getCodeSystemName() != null ? getCodeSystemName().hashCode() : 0);
+        /*result = 31 * result + (getDisplayName() != null ? getDisplayName().hashCode() : 0);
+        result = 31 * result + (getOriginalText() != null ? getOriginalText().hashCode() : 0);*/
+        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
         return result;
     }
 

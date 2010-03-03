@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 
 /**
  * A chain for processors.
@@ -76,11 +77,10 @@ public class ProcessorChain {
     private PhaseProcessor postPersist = new PhaseProcessor();
     private boolean validate;
     private Map<String, Object> contextProperties = new HashMap<String, Object>();
+    private PersistencePolicies policies = new PersistencePolicies();
 
     public ProcessorChain(boolean validate) {
         this.validate = validate;
-
-
     }
 
     public ProcessorChain() {
@@ -141,6 +141,7 @@ public class ProcessorChain {
     public void process(ProcessContext context) throws Exception {
         long before = System.currentTimeMillis();
         context.addProperties(Collections.unmodifiableMap(contextProperties));
+        context.setPolicies(getPolicies());
         List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
         Exception ex = null;
         try {
@@ -196,6 +197,14 @@ public class ProcessorChain {
             AtnaProcessor ap = completed.get(i);
             ap.error(context);
         }
+    }
+
+    public PersistencePolicies getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(PersistencePolicies policies) {
+        this.policies = policies;
     }
 
     public void putProperty(String key, Object value) {

@@ -7,7 +7,7 @@
         <RoleIDCode code="110153" codeSystemName="DCM" displayName="Source"/>
     </ActiveParticipant>
     <ActiveParticipant UserID="http://localhost:8080/services/xdsregistryb" UserName="CAREFX" UserIsRequestor="false">
-        <RoleIDCode code="110152" codeSystemName="DCM" displayName="Desination"/>
+        <RoleIDCode code="110152" codeSystemName="Desination" displayName="DCM"/>
     </ActiveParticipant>
     <AuditSourceIdentification AuditEnterpriseSiteID="Hospital" AuditSourceID="ReadingRoom">
         <AuditSourceTypeCode code="1"/>

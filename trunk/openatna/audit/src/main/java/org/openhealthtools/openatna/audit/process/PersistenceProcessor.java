@@ -29,7 +29,6 @@ import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
 import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.audit.persistence.util.EntityConverter;
-import org.openhealthtools.openatna.audit.service.AuditService;
 
 /**
  * @author Andrew Harrison
@@ -51,8 +50,7 @@ public class PersistenceProcessor implements AtnaProcessor {
         MessageEntity entity = EntityConverter.createMessage(msg);
         if (entity != null) {
 
-            PersistencePolicies pp = context.getProperty(AuditService.PROPERTY_PERSISTENCE_POLICIES,
-                    PersistencePolicies.class);
+            PersistencePolicies pp = context.getPolicies();
             if (pp == null) {
                 pp = new PersistencePolicies();
             }

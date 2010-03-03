@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 
 /**
  * @author Andrew Harrison
@@ -46,6 +47,7 @@ public class ProcessContext {
     private State state;
     private Map<String, Object> properties = new HashMap<String, Object>();
     private Throwable throwable;
+    private PersistencePolicies policies;
 
     public ProcessContext(AtnaMessage message) {
         this.message = message;
@@ -62,6 +64,14 @@ public class ProcessContext {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public PersistencePolicies getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(PersistencePolicies policies) {
+        this.policies = policies;
     }
 
     public Throwable getThrowable() {

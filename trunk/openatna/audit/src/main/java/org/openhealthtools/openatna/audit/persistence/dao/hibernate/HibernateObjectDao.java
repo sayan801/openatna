@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.AtnaFactory;
@@ -34,6 +35,7 @@ import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
 import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.util.CodesUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -60,6 +62,43 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
     public ObjectEntity getByObjectId(String id) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("objectId", id)));
     }
+
+    public ObjectEntity get(ObjectEntity other) throws AtnaPersistenceException {
+        Criteria c = criteria();
+        c.add(Restrictions.eq("objectId", other.getObjectId()));
+        if (other.getObjectName() != null) {
+            c.add(Restrictions.eq("objectName", other.getObjectName()));
+        } else {
+            c.add(Restrictions.isNull("objectName"));
+        }
+        if (other.getObjectTypeCode() != null) {
+            c.add(Restrictions.eq("objectTypeCode", other.getObjectTypeCode()));
+        } else {
+            c.add(Restrictions.isNull("objectTypeCode"));
+        }
+        if (other.getObjectTypeCodeRole() != null) {
+            c.add(Restrictions.eq("objectTypeCodeRole", other.getObjectTypeCodeRole()));
+        } else {
+            c.add(Restrictions.isNull("objectTypeCodeRole"));
+        }
+        if (other.getObjectSensitivity() != null) {
+            c.add(Restrictions.eq("objectSensitivity", other.getObjectSensitivity()));
+        } else {
+            c.add(Restrictions.isNull("objectSensitivity"));
+        }
+
+        List<? extends ObjectEntity> ret = list(c);
+        if (ret == null || ret.size() == 0) {
+            return null;
+        }
+        for (ObjectEntity objectEntity : ret) {
+            if (CodesUtils.equivalent(objectEntity.getObjectIdTypeCode(), other.getObjectIdTypeCode())) {
+                return objectEntity;
+            }
+        }
+        return null;
+    }
+
 
     public List<? extends ObjectEntity> getByName(String name) throws AtnaPersistenceException {
         return list(criteria().add(Restrictions.eq("objectName", name)));

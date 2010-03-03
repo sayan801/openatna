@@ -39,6 +39,8 @@ public interface ObjectDao {
 
     public ObjectEntity getByObjectId(String id) throws AtnaPersistenceException;
 
+    public ObjectEntity get(ObjectEntity other) throws AtnaPersistenceException;
+
     public List<? extends ObjectEntity> getByName(String name) throws AtnaPersistenceException;
 
     public List<? extends ObjectEntity> getByTypeCode(Short type) throws AtnaPersistenceException;
