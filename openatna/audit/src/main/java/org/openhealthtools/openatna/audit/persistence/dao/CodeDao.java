@@ -41,9 +41,9 @@ public interface CodeDao extends Dao {
     public List<? extends CodeEntity> getByType(CodeEntity.CodeType type)
             throws AtnaPersistenceException;
 
-    public CodeEntity getByCode(String code) throws AtnaPersistenceException;
+    public List<? extends CodeEntity> getByCode(String code) throws AtnaPersistenceException;
 
-    public CodeEntity getByCodeAndType(CodeEntity.CodeType type, String code) throws AtnaPersistenceException;
+    public List<? extends CodeEntity> getByCodeAndType(CodeEntity.CodeType type, String code) throws AtnaPersistenceException;
 
     public List<? extends CodeEntity> getByCodeSystem(String codeSystem) throws AtnaPersistenceException;
 

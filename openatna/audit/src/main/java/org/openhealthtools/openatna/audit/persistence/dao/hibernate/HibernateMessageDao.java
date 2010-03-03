@@ -70,11 +70,6 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
 
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateMessageDao");
 
-    /**
-     * prefix applied to identifying id of entites that have been updated.
-     */
-    public static final String DEPRECATION_SUFFIX = "-OpenATNA version ";
-
 
     public HibernateMessageDao(SessionFactory sessionFactory) {
         super(MessageEntity.class, sessionFactory);
@@ -302,13 +297,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
         ParticipantEntity pe = ap.getParticipant();
         ParticipantDao dao = AtnaFactory.participantDao();
-        ParticipantEntity existing = null;
-        if (pe.getAlternativeUserId() != null) {
-            existing = dao.getByAltUserId(pe.getAlternativeUserId());
-        }
-        if (existing == null) {
-            existing = dao.getByUserId(pe.getUserId());
-        }
+        ParticipantEntity existing = dao.get(pe);
         if (existing == null) {
             if (policies.isAllowNewParticipants()) {
                 dao.save(pe, policies);
@@ -317,11 +306,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_PARTICIPANT);
             }
         } else {
-            if (policies.isAllowUpdateParticipants()) {
-                updateParticipant(dao, policies, ap, pe, existing);
-            } else {
-                ap.setParticipant(existing);
-            }
+            ap.setParticipant(existing);
         }
         NetworkAccessPointEntity net = ap.getNetworkAccessPoint();
         if (net != null) {
@@ -340,14 +325,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
     }
 
-    private boolean isParticipantEqual(ParticipantEntity update,
-                                       ParticipantEntity existing) {
-        if (!update.getUserId().equals(existing.getUserId())) {
-            return false;
-        }
-        if (update.getAlternativeUserId() != null && !update.getAlternativeUserId().equals(existing.getAlternativeUserId())) {
-            return false;
-        }
+    private boolean isParticipantNonUniquelyEqual(ParticipantEntity update,
+                                                  ParticipantEntity existing) {
         if (update.getUserName() != null && !update.getUserName().equals(existing.getUserName())) {
             return false;
         }
@@ -357,14 +336,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         return true;
     }
 
-    private boolean isSourceEqual(SourceEntity update,
-                                  SourceEntity existing) {
-        if (!update.getSourceId().equals(existing.getSourceId())) {
-            return false;
-        }
-        if (update.getEnterpriseSiteId() != null && !update.getEnterpriseSiteId().equals(existing.getEnterpriseSiteId())) {
-            return false;
-        }
+    private boolean isSourceNonUniquelyEqual(SourceEntity update,
+                                             SourceEntity existing) {
 
         if (!update.getSourceTypeCodes().equals(existing.getSourceTypeCodes())) {
             return false;
@@ -372,11 +345,9 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         return true;
     }
 
-    private boolean isObjectEqual(ObjectEntity update,
-                                  ObjectEntity existing) {
-        if (!update.getObjectId().equals(existing.getObjectId())) {
-            return false;
-        }
+    private boolean isObjectNonUniquelyEqual(ObjectEntity update,
+                                             ObjectEntity existing) {
+
         if (update.getObjectName() != null && !update.getObjectName().equals(existing.getObjectName())) {
             return false;
         }
@@ -409,13 +380,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                                    ParticipantEntity update,
                                    ParticipantEntity existing)
             throws AtnaPersistenceException {
-        if (!isParticipantEqual(update, existing)) {
+        if (!isParticipantNonUniquelyEqual(update, existing)) {
             update.setVersion(existing.getVersion() + 1);
-            existing.setUserId(existing.getUserId() + DEPRECATION_SUFFIX + existing.getVersion());
-            if (existing.getAlternativeUserId() != null) {
-                existing.setAlternativeUserId(existing.getAlternativeUserId() +
-                        DEPRECATION_SUFFIX + existing.getVersion());
-            }
             dao.save(existing, policies);
             dao.save(update, policies);
             ap.setParticipant(update);
@@ -430,13 +396,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                               SourceEntity update,
                               SourceEntity existing)
             throws AtnaPersistenceException {
-        if (!isSourceEqual(update, existing)) {
+        if (!isSourceNonUniquelyEqual(update, existing)) {
             update.setVersion(existing.getVersion() + 1);
-            existing.setSourceId(existing.getSourceId() + DEPRECATION_SUFFIX + existing.getVersion());
-            if (existing.getEnterpriseSiteId() != null) {
-                existing.setEnterpriseSiteId(existing.getEnterpriseSiteId() + DEPRECATION_SUFFIX
-                        + existing.getVersion());
-            }
             dao.save(existing, policies);
             dao.save(update, policies);
             ap.setSource(update);
@@ -451,9 +412,8 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                               ObjectEntity update,
                               ObjectEntity existing)
             throws AtnaPersistenceException {
-        if (!isObjectEqual(update, existing)) {
+        if (!isObjectNonUniquelyEqual(update, existing)) {
             update.setVersion(existing.getVersion() + 1);
-            existing.setObjectId(existing.getObjectId() + DEPRECATION_SUFFIX + existing.getVersion());
             dao.save(existing, policies);
             dao.save(update, policies);
             ap.setObject(update);
@@ -485,8 +445,9 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
         }
         SourceEntity se = as.getSource();
         SourceDao dao = AtnaFactory.sourceDao();
-        SourceEntity existing = dao.getBySourceId(se.getSourceId());
+        SourceEntity existing = dao.get(se);
         if (existing == null) {
+            System.out.println("HibernateMessageDao.normalize NO MATCHING SOURCE ENTITY IN DB");
             if (policies.isAllowNewSources()) {
                 dao.save(se, policies);
             } else {
@@ -494,11 +455,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_SOURCE);
             }
         } else {
-            if (policies.isAllowUpdateSources()) {
-                updateSource(dao, policies, as, se, existing);
-            } else {
-                as.setSource(existing);
-            }
+            as.setSource(existing);
         }
     }
 
@@ -525,11 +482,7 @@ public class HibernateMessageDao extends AbstractHibernateDao<MessageEntity> imp
                         AtnaPersistenceException.PersistenceError.NON_EXISTENT_OBJECT);
             }
         } else {
-            if (policies.isAllowUpdateObjects()) {
-                updateObject(dao, policies, ao, oe, existing);
-            } else {
-                ao.setObject(existing);
-            }
+            ao.setObject(existing);
             Set<ObjectDetailEntity> details = ao.getDetails();
             for (ObjectDetailEntity detail : details) {
                 if (!existing.containsDetailType(detail.getType())

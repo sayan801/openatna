@@ -39,9 +39,11 @@ public interface ParticipantDao extends Dao {
 
     public ParticipantEntity getById(Long id) throws AtnaPersistenceException;
 
-    public ParticipantEntity getByUserId(String userId) throws AtnaPersistenceException;
+    public List<? extends ParticipantEntity> getByUserId(String userId) throws AtnaPersistenceException;
 
     public ParticipantEntity getByAltUserId(String altUserId) throws AtnaPersistenceException;
+
+    public ParticipantEntity get(ParticipantEntity other) throws AtnaPersistenceException;
 
     public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity)
             throws AtnaPersistenceException;

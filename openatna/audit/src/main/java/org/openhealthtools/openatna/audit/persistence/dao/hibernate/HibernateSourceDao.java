@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.AtnaFactory;
@@ -35,6 +36,7 @@ import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
 import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.util.CodesUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -55,13 +57,33 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
         return get(id);
     }
 
-    public SourceEntity getBySourceId(String id) throws AtnaPersistenceException {
-        return uniqueResult(criteria().add(Restrictions.eq("sourceId", id)));
-
+    public List<? extends SourceEntity> getBySourceId(String id) throws AtnaPersistenceException {
+        return list(criteria().add(Restrictions.eq("sourceId", id)));
     }
 
     public SourceEntity getByEnterpriseSiteId(String id) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("enterpriseSiteId", id)));
+    }
+
+    public SourceEntity get(SourceEntity other) throws AtnaPersistenceException {
+        Criteria c = criteria();
+        c.add(Restrictions.eq("sourceId", other.getSourceId()));
+        if (other.getEnterpriseSiteId() != null) {
+            c.add(Restrictions.eq("enterpriseSiteId", other.getEnterpriseSiteId()));
+        } else {
+            c.add(Restrictions.isNull("enterpriseSiteId"));
+        }
+        List<? extends SourceEntity> ret = list(c);
+        if (ret == null || ret.size() == 0) {
+            return null;
+        }
+
+        for (SourceEntity sourceEntity : ret) {
+            if (CodesUtils.equivalent(sourceEntity.getSourceTypeCodes(), other.getSourceTypeCodes())) {
+                return sourceEntity;
+            }
+        }
+        return null;
     }
 
     public List<? extends SourceEntity> getByCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException {
@@ -107,13 +129,12 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
         }
         if (entity.getVersion() == null) {
             // new one.
-            SourceEntity existing = getBySourceId(entity.getSourceId());
+            SourceEntity existing = get(entity);
             if (existing != null) {
+                System.out.println("HibernateSourceDao.save FOUND A SOURCE ENTITY IN THE DB????:" + existing);
                 if (policies.isErrorOnDuplicateInsert()) {
                     throw new AtnaPersistenceException(entity.toString(),
                             AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
-                } else {
-                    return;
                 }
             }
         }

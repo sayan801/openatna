@@ -68,13 +68,13 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         return list(criteria(fromCodeType(type)));
     }
 
-    public CodeEntity getByCode(String code) throws AtnaPersistenceException {
-        return uniqueResult(criteria().add(Restrictions.eq("code", code)));
+    public List<? extends CodeEntity> getByCode(String code) throws AtnaPersistenceException {
+        return list(criteria().add(Restrictions.eq("code", code)));
     }
 
-    public CodeEntity getByCodeAndType(CodeEntity.CodeType type, String code) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getByCodeAndType(CodeEntity.CodeType type, String code) throws AtnaPersistenceException {
         // first see if someone was lazy and didn't use the name of the RFC
-        CodeEntity ce = uniqueResult(criteria()
+        List<? extends CodeEntity> ce = list(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("codeSystemName", "RFC-3881")));
@@ -82,7 +82,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
             return ce;
         }
         // look for codes with an empty system name
-        ce = uniqueResult(criteria()
+        ce = list(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("codeSystemName", "")));
@@ -90,7 +90,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
             return ce;
         }
         // look for codes with a null system name
-        return uniqueResult(criteria()
+        return list(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.isNull("codeSystemName")));
@@ -185,7 +185,10 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
                     AtnaPersistenceException.PersistenceError.NON_EXISTENT_CODE);
         }
         if ((sys == null || sys.length() == 0) && (name == null || name.length() == 0)) {
-            return getByCodeAndType(code.getType(), c);
+            List<? extends CodeEntity> l = getByCodeAndType(code.getType(), c);
+            if (l.size() == 1) {
+                return l.get(0);
+            }
         }
         CodeEntity ret = null;
         if ((sys != null && sys.length() > 0 && (name != null && name.length() > 0))) {

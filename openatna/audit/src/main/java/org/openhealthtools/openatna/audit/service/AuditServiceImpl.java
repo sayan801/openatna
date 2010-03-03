@@ -77,7 +77,7 @@ public class AuditServiceImpl implements AuditService {
 
         loadCodes();
 
-        chain.putProperty(AuditService.PROPERTY_PERSISTENCE_POLICIES, serviceConfig.getPersistencePolicies());
+        chain.setPolicies(serviceConfig.getPersistencePolicies());
         Map<ProcessorChain.PHASE, List<String>> processors = serviceConfig.getProcessors();
         for (ProcessorChain.PHASE phase : processors.keySet()) {
             List<String> ap = processors.get(phase);

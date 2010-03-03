@@ -34,7 +34,6 @@ import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 public interface AuditService {
 
     String PROPERTY_DAO_FACTORY = AuditService.class.getName() + ".dao.factory";
-    String PROPERTY_PERSISTENCE_POLICIES = AuditService.class.getName() + ".persistence.policies";
 
     /**
      * start the service

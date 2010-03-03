@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.AtnaFactory;
@@ -35,6 +36,7 @@ import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
 import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
 import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.util.CodesUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -55,12 +57,37 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         return get(id);
     }
 
-    public ParticipantEntity getByUserId(String userId) throws AtnaPersistenceException {
-        return uniqueResult(criteria().add(Restrictions.eq("userId", userId)));
+    public List<? extends ParticipantEntity> getByUserId(String userId) throws AtnaPersistenceException {
+        return list(criteria().add(Restrictions.eq("userId", userId)));
     }
 
     public ParticipantEntity getByAltUserId(String altUserId) throws AtnaPersistenceException {
         return uniqueResult(criteria().add(Restrictions.eq("alternativeUserId", altUserId)));
+    }
+
+    public ParticipantEntity get(ParticipantEntity other) throws AtnaPersistenceException {
+        Criteria c = criteria();
+        c.add(Restrictions.eq("userId", other.getUserId()));
+        if (other.getAlternativeUserId() != null) {
+            c.add(Restrictions.eq("alternativeUserId", other.getAlternativeUserId()));
+        } else {
+            c.add(Restrictions.isNull("alternativeUserId"));
+        }
+        if (other.getUserName() != null) {
+            c.add(Restrictions.eq("userName", other.getUserName()));
+        } else {
+            c.add(Restrictions.isNull("userName"));
+        }
+        List<? extends ParticipantEntity> ret = list(c);
+        if (ret == null || ret.size() == 0) {
+            return null;
+        }
+        for (ParticipantEntity participantEntity : ret) {
+            if (CodesUtils.equivalent(participantEntity.getParticipantTypeCodes(), other.getParticipantTypeCodes())) {
+                return participantEntity;
+            }
+        }
+        return null;
     }
 
     public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity)
@@ -97,7 +124,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
      * will not be persisted in this call. To modify, one would have to call
      * the save on the code itself.
      * <p/>
-     * If the participant's version is null, then a matching participant based on the user id
+     * If the participant's version is null, then a matching participant based on the (alt)user id
      * is queried for. If one is found, this throws a DUPLICATE_PARTICIPANT
      * AtnaParticipantException. Otherwise, the save is allowed to proceed.
      *
@@ -133,7 +160,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
 
         if (pe.getVersion() == null) {
             // new one.
-            ParticipantEntity existing = getByUserId(pe.getUserId());
+            ParticipantEntity existing = get(pe);
             if (existing != null) {
                 if (policies.isErrorOnDuplicateInsert()) {
                     throw new AtnaPersistenceException(pe.toString(),
