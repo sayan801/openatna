@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>1.0RC</version>
     </parent>
     <packaging>pom</packaging>
     <artifactId>syslog</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.0RC</version>
     <name>Syslog</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
@@ -20,25 +19,28 @@
 
     <licenses>
         <license>
-            <name/>
-            <url/>
+            <name />
+            <url />
         </license>
     </licenses>
 
     <scm>
-    </scm>
+      <connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/REL-1.0RC/syslog</connection>
+    <developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/REL-1.0RC/syslog</developerConnection>
+    <url>https://openatna.projects.openhealthtools.org/source/browse/openatna/syslog/tags/REL-1.0RC/syslog</url>
+  </scm>
 
     <issueManagement>
-        <system/>
-        <url/>
+        <system />
+        <url />
     </issueManagement>
 
     <developers>
         <developer>
-            <id/>
-            <name/>
-            <email/>
-            <timezone/>
+            <id />
+            <name />
+            <email />
+            <timezone />
         </developer>
     </developers>
 
