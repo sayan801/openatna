@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>1.0RC</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>openatna-audit</artifactId>
 
     <packaging>jar</packaging>
-    <version>1.0RC</version>
+    <version>1.0-SNAPSHOT</version>
     <name>OpenATNA Audit</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
