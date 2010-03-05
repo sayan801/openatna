@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd" [
+        ]>
+
+<jasperReport
+        name="MessageObjectReport"
+        pageWidth="595"
+        pageHeight="842"
+        columnWidth="515"
+        columnSpacing="0"
+        leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0"
+        whenNoDataType="NoPages"
+        isTitleNewPage="false"
+        isSummaryNewPage="false">
+    <import value="org.openhealthtools.openatna.report.EntityDataSource"/>
+
+    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique"
+           pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+
+
+    <parameter name="inputDirectory" class="java.lang.String"/>
+
+    <field name="objectDataLifeCycle" class="java.lang.Short">
+        <fieldDescription>objectDataLifeCycle</fieldDescription>
+    </field>
+    <field name="objectQuery" class="java.lang.String">
+        <fieldDescription>objectQuery</fieldDescription>
+    </field>
+    <field name="details" class="java.util.Set">
+        <fieldDescription>details</fieldDescription>
+    </field>
+    <field name="object" class="org.openhealthtools.openatna.audit.persistence.model.ObjectEntity">
+        <fieldDescription>object</fieldDescription>
+    </field>
+
+
+    <detail>
+        <band height="46">
+            <frame>
+                <reportElement mode="Opaque" backcolor="#fcd291" x="0" y="4" width="520" height="42"/>
+                <subreport>
+                    <reportElement x="0" y="0" width="520" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{object})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/ObjectReport.jasper"</subreportExpression>
+                </subreport>
+                <staticText>
+                    <reportElement positionType="Float" x="10" y="0" width="95" height="12" style="Arial_Small_Italic"
+                                   forecolor="#2c5519">
+                        <printWhenExpression>$F{details} != null</printWhenExpression>
+                    </reportElement>
+                    <text><![CDATA[Details]]></text>
+                </staticText>
+                <subreport>
+                    <reportElement positionType="Float" x="5" y="12" width="500" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{details})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/DetailReport.jasper"</subreportExpression>
+                </subreport>
+                <staticText>
+                    <reportElement positionType="Float" x="20" y="12" width="95" height="15" style="Arial_Small_Italic">
+                        <printWhenExpression>$F{objectDataLifeCycle} != null</printWhenExpression>
+                    </reportElement>
+                    <text><![CDATA[Data Life Cycle]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="120" y="12" width="95" height="15" style="Arial_Small_Italic">
+                        <printWhenExpression>$F{objectQuery} != null</printWhenExpression>
+                    </reportElement>
+                    <text><![CDATA[Query]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement positionType="Float" x="20" y="27" width="100" height="15" style="Arial_Normal_Small">
+                        <printWhenExpression>$F{objectDataLifeCycle} != null</printWhenExpression>
+                    </reportElement>
+                    <textFieldExpression class="java.lang.Short">
+                        $F{objectDataLifeCycle}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement positionType="Float" x="120" y="27" width="400" height="15" style="Arial_Normal_Small">
+                        <printWhenExpression>$F{objectQuery} != null</printWhenExpression>
+                    </reportElement>
+                    <textFieldExpression class="java.lang.String">
+                        $F{objectQuery}
+                    </textFieldExpression>
+                </textField>
+            </frame>
+        </band>
+    </detail>
+
+</jasperReport>
