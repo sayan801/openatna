@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<reportConfig>
+    <!--
+       @PID.3.4.1^IHENA
+       @PID.7.1^19380224
+       101^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO
+    -->
+    <property key="outputFileName" type="string">report</property>
+    <!--<property key="groupingField" type="string">type</property>-->
+    <property key="query" type="string">MESSAGES</property>
+    <!--<property key="outputType" type="string">HTML</property>-->
+    <property key="outputDirectory" type="string">/Users/scmabh/ATNAreports</property>
+    <!-- target is useful for HQL queries. This should one of the targets array in ReportConfig
+    if not supplied, the reporter will try to guess the return value (in the absence of a hibernate query object) -->
+    <!-- <property key="target" type="string">CODES</property>-->
+</reportConfig>
