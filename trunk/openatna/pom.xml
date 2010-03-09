@@ -4,7 +4,7 @@
     <groupId>org.openhealthtools.openatna</groupId>
     <artifactId>openatna</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>OpenATNA</name>
     <url>https://openatna.projects.openhealthtools.org</url>
     <prerequisites>
@@ -18,9 +18,9 @@
     </licenses>
     
    <scm>
-    	<connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.0-20100309</connection>
-    	<developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.0-20100309</developerConnection>
-    	<url>https://openatna.projects.openhealthtools.org/source/browse/openatna/tags/openatna-1.0-20100309</url>
+    	<connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna</connection>
+    	<developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna</developerConnection>
+    	<url>https://openatna.projects.openhealthtools.org/source/browse/openatna/</url>
     </scm>
     <issueManagement>
         <system />
