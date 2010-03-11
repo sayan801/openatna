@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                              
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                            
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -77,7 +77,7 @@
 		<li>The conf directory - this contains the actors, their connection parameters, and another directory called certs/ which contains dummy certificates for testing secure nodes.</li>
 		<li>conf/IheActors.xml - contains the Audit Record Repository (ARR) actor definition. This contains references to the two connections it uses (TLS and UDP).</li>
 		<li>conf/ArrConnections.xml - contains the Audit Record Repository (ARR) connection definitions. These specify the port numbers and in the case of the secured TCP connection, the certificates to use during exchanges. These values reference the keystores stored in the conf/certs/ directory. When you want to use real certificates in real keystores, put those keystores in the conf/certs/ directory, and reference them in the secure connection definition.</li>
-		<li>conf/atnacodes.xml - Contains codes used by ATNA. You can add codes here according to the type of the code. When the default build runs, i.e. when you type "mvn install" from the openatna directory, then the codes in this file will be loaded into the database. If you want to add codes to the database that are not in this file, first add the codes to the file using the syntax of the file, then change directory to the all/ directory under the openatna directory, and type: <code>ant populateCodes This will read in the file and store any codes not already in the database. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. </code>
+		<li>conf/atnacodes.xml - Contains codes used by ATNA. You can add codes here according to the type of the code. When the default build runs, i.e. when you type "mvn install" from the openatna directory, then the codes in this file will be loaded into the database. If you want to add codes to the database that are not in this file, first add the codes to the file using the syntax of the file, then change directory to the all/ directory under the openatna directory, and type: <code>ant populateCodes</code> This will read in the file and store any codes not already in the database. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. 
 		</li>
 		<li>conf/entities.xml - Contains codes and entities to load into the database. This file contains Codes, as well as ATNA entities that you may want to load into the data base, for example network access points, participant objects, active participants and audit sources. You can also define "pre-cooked" audit messages to load into the data base. Please read the comments on the entities.xml files for details of the syntax of the file. To load the contents in the data base, change directory to the all/ directory under the openatna directory, and type: ant populateEntities This will read in the file and store the entities in the data base. This requires that you have Ant installed independently of Maven, and on your $PATH environment variable. </li>
 	</ul>
@@ -87,12 +87,13 @@
 	<p>You can test against the server by running the clients in the "test" directory of the all module. These are JUnit tests and are probably easiest to run inside your IDE. The classes that are designed to run against the server are:</p>
 	<ul>
 		<li>
-			<code>org.openhealthtools.openatna.dist.test.TlsClientTest0</code>sends six messages to the ARR using TLS and Syslog RFC 5424 style messages. The first set of messages use mutually authentication with message encryption. The second set of messages use mutual authentication without message encryption. </li>
+			<code>org.openhealthtools.openatna.dist.test.TlsClientTest0</code>sends messages to the ARR using TLS and Syslog RFC 5424 style messages. The first set of messages use mutually authentication with message encryption. The second set of messages use mutual authentication without message encryption. </li>
 		<li>
 			<code>org.openhealthtools.openatna.dist.test.UdpClientTest0</code>sends messages to the ARR using UDP and Syslog RFC 5424 style messages. </li>
 		<li>
 			<code>org.openhealthtools.openatna.dist.test.BsdClientTest0</code>sends messages to the ARR using UDP and Syslog BSD style messages. </li>
 	</ul>
+<p>Some of these tests send erroneous messages to the ARR (on purpose :-)), so you may see error stack traces.</p>
 </div>
 
 <div class="h2">
@@ -142,6 +143,7 @@ http://localhost:8081/atna
 
 
 </div>
+              
               
               
               
