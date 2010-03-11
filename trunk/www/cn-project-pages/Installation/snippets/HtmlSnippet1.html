@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                            
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                                                          
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -58,8 +58,8 @@
 	<p><code>mvn install </code></p>
 	<p>To create an executable version of OpenATNA use the following command:</p>
 	<p><code>mvn -P exec install </code></p>
-	<p>This uses a maven profile (-P <profile> command). This will create an executable jar file in the "all" directory. Change directory into the all/build folder. You should see a jar file called openatna-<version>.jar, where "<version>" is the version you have downloaded. This is the executable jar file. The dependencies are in the all/build/lib/ directory. To run OpenATNA, type: </p>
-	<p><code>java -jar openatna-<version>.jar </code></p>
+	<p>This uses a maven profile (-P <profile> command). This will create an executable jar file in the "all" directory. Change directory into the all/build folder. You should see a jar file called <code>openatna-&lt;version>.jar</code>, where <code>&lt;version></code> is the version you have downloaded. This is the executable jar file. The dependencies are in the all/build/lib/ directory. To run OpenATNA, type: </p>
+	<p><code>java -jar openatna-&lt;version>.jar </code></p>
 	<p>from the all/build directory. You should see something similar to: </p>
 	<p><code>12:56:59,233 DEBUG [TcpServer] TLS Server running on port:2862<br/>12:56:59,262 DEBUG [UdpServer] UDP Server running on port:2863 </code></p>
 	<p>This has started two servers. The first is a secured TCP server socket. The second is an unsecured UDP connection. The port numbers are not completely random - "ATNA" on your mobile phone is 2862.</p>
@@ -143,6 +143,7 @@ http://localhost:8081/atna
 
 
 </div>
+              
               
               
               
