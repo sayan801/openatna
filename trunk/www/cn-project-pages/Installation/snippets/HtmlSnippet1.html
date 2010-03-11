@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                        
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                      
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -21,9 +21,9 @@
 		<li>a Subversion (svn) client</li>
 		<li>Java 1.5 minimum</li>
 		<li>Apache's Maven</li>
-		<li>Postgres RDBMS (see below for using other databases)</li>
+		<li>Postgres RDBMS (see the section below for using other databases)</li>
 	</ul>
-	<p>First, set up your database. OpenATNA is tested against Postres 8.4. Currently support for other databases is experimental. See the section below <a href="#other-dbs">Using Other Databases</a>. Once you have Postgres installed, create a user called "atna" with the password "atna". Postgres usually comes with PGAdmin which allows you to do this in a gui. From the command line, it would look like this: </p>
+	<p>First, set up your database. OpenATNA is tested against Postres 8.4. Currently support for other databases is experimental. See the section below called "Using Other Databases". Once you have Postgres installed, create a user called "atna" with the password "atna". Postgres usually comes with PGAdmin which allows you to do this in a gui. From the command line, it would look like this: </p>
 	<p><code>psql -d template1 -U postgres<br />
 	Password for user postgres:<br />
 	psql (8.4.0)  Type "help" for help.<br />
@@ -109,13 +109,35 @@ http://localhost:8081/atna
 </div>
 <div class="h2" >
 
-<a  name="other-dbs"></a><h2>Using Other Databases</h2>
+<h2>Using Other Databases</h2>
 
-<p></p>
-</div>
+<p>OpenATNA supports building with a different database other than Postgres using a maven profile. PLEASE NOTE: This feature is still being tested. The current profiles supported are:</p>
+
+<ul>
+<li>oracle - this installs the Oracle JDBC driver version 10.2.0.2.0</li>
+<li>mysql - this installs the mySQL JDBC driver version 5.1.9</li>
+<li>hsqldb - this installs the HSQLDB JDBC driver version 1.8.0.1</li>
+<li>derby - this installs the Derby JDBC driver version 10.1.3.1</li>
+</ul>
 
 
+<p>So, for example, if you want to use Derby, you could type:</p>
+<code>mvn -P derby install</code>
+
+<p>The other option is to manually drop the JDBC driver you want to use into the OpenATNA classpath. If you are building with the exec maven profile, then you can drop the driver into the all/ext/ directory.</p>
+
+<p>Once the driver for your database is available, you can reconfigure how OpenATNA talks to the database. This is done by editing the openatna.properties file. This file contains commented out example settings for the databases listed above, or you can add your own. Specifically, you should edit the following properties:</p>
               
+<ul>
+<li>db.driver.class - this points the full class name of your chosen JDBC driver</li>
+<li>db.url - this is the URL of your database</li>
+<li>hib.dialect - this is the DB dialect that Hibernate should use to talk to the database</li>
+</ul>      
+<p>In editing the db.url property, you can also, of course, point to a database with a different name from "openatna"</p>
+<p>You can also set the login name in this file, using the db.username property, as well as the password used to log in, with the db.password property.</p>        
+
+
+</div>
               
               
               
