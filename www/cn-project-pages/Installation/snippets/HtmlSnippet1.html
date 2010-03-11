@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                    
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                  
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -65,8 +65,8 @@
 <div class="h2">
 	<h2>Configuration</h2>
 	<p>The configuration files for OpenATNA are in the all/build directory. Their purpose is described below. They allow you change the configuration of OpenATNA without re-compiling, although they do require that you shut the servers down, and restart them so the chages can take effect. To kill the servers, hit Control + C.</p>
-	<h3>Note</h3>
-	<p>Remember! The all/build directory is generated during the build. Any changes you make to configuration files will be lost if you run "mvn install" again. To make permanent changes that will survive the build, edit the corresponding files in the openatna/audit/src/main/resources/ directory.</p>
+	
+	<p><strong> Remember!</strong> The all/build directory is generated during the build. Any changes you make to configuration files will be lost if you run "mvn install" again. To make permanent changes that will survive the build, edit the corresponding files in the openatna/audit/src/main/resources/ directory.</p>
 	<ul>
 		<li>commons-logging.properties - This sets the logging system to use. The default is Log4J.</li>
 		<li>log4j.xml - This is the configuration for the Log4J logging system. </li>
@@ -111,7 +111,7 @@ http://localhost:8081/atna
 
 <h2>Using Other Databases</h2>
 
-<p>OpenATNA supports building with a different database other than Postgres using a maven profile. PLEASE NOTE: This feature is still being tested. The current profiles supported are:</p>
+<p>OpenATNA supports building with a different database other than Postgres using a maven profile. <strong>PLEASE NOTE: This feature is still being tested.</strong> The current profiles supported are:</p>
 
 <ul>
 <li>oracle - this installs the Oracle JDBC driver version 10.2.0.2.0</li>
@@ -124,7 +124,7 @@ http://localhost:8081/atna
 <p>So, for example, if you want to use Derby, you could type:</p>
 <code>mvn -P derby install</code>
 
-<p>NOTE: you can specify more than one maven profile using a comma separated list of profiles.</p>
+<p><strong>NOTE:</strong> you can specify more than one maven profile using a comma separated list of profiles.</p>
 
 <p>The other option is to manually drop the JDBC driver you want to use into the OpenATNA classpath. If you are building with the exec maven profile, then you can drop the driver into the all/ext/ directory.</p>
 
@@ -140,6 +140,7 @@ http://localhost:8081/atna
 
 
 </div>
+              
               
               
               
