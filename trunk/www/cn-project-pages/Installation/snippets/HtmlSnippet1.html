@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                      
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                    
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -124,6 +124,8 @@ http://localhost:8081/atna
 <p>So, for example, if you want to use Derby, you could type:</p>
 <code>mvn -P derby install</code>
 
+<p>NOTE: you can specify more than one maven profile using a comma separated list of profiles.</p>
+
 <p>The other option is to manually drop the JDBC driver you want to use into the OpenATNA classpath. If you are building with the exec maven profile, then you can drop the driver into the all/ext/ directory.</p>
 
 <p>Once the driver for your database is available, you can reconfigure how OpenATNA talks to the database. This is done by editing the openatna.properties file. This file contains commented out example settings for the databases listed above, or you can add your own. Specifically, you should edit the following properties:</p>
@@ -138,6 +140,7 @@ http://localhost:8081/atna
 
 
 </div>
+              
               
               
               
