@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -72,7 +72,7 @@
 	<ul>
 		<li>commons-logging.properties - This sets the logging system to use. The default is Log4J.</li>
 		<li>log4j.xml - This is the configuration for the Log4J logging system. </li>
-		<li>openatna.properties - These are the core properties of OpenATNA. They point to the conf directory (more in a second) and also define the database connection values, for example the username and password of the role that connects to the database. Edit this file if you want to use a different username, or have made the atna password a little more secure :-). Once you have built OpenATNA once, you can change the value of the hib.hbm2ddl.auto property value to "none". </li>
+		<li>openatna.properties - These are the core properties of OpenATNA. They point to the conf directory (more in a second) and also define the database connection values, for example the username and password of the role that connects to the database. Edit this file if you want to use a different username, or have made the atna password a little more secure :-).</li>
 		<li>openatnaContext.xml - This is the Spring configuration file for OpenATNA. This is read at start up to wire up the various components. Editing this file gives you fine-grained control over the components. If you have run the servers, you will also see an openatna.log file. This receives the log messages from Log4J and will not grow beyond 1/2 MB in size. </li>
 		<li>The conf directory - this contains the actors, their connection parameters, and another directory called certs/ which contains dummy certificates for testing secure nodes.</li>
 		<li>conf/IheActors.xml - contains the Audit Record Repository (ARR) actor definition. This contains references to the two connections it uses (TLS and UDP).</li>
@@ -143,6 +143,7 @@ http://localhost:8081/atna
 
 
 </div>
+              
               
               
               
