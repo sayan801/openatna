@@ -311,7 +311,9 @@
                 </tr>
                 <tr>
                     <td class="innerTable">
-                            ${error.stackTrace}
+                        <code>
+                                ${error.stackTrace}
+                        </code>
                     </td>
                 </tr>
                 <tr>
@@ -319,7 +321,9 @@
                 </tr>
                 <tr>
                     <td class="innerTable">
-                            ${error.content}
+                        <code>
+                                ${error.content}
+                        </code>
                     </td>
                 </tr>
             </table>

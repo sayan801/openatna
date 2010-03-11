@@ -19,6 +19,7 @@
 
 package org.openhealthtools.openatna.web;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.openhealthtools.openatna.audit.persistence.model.ErrorEntity;
@@ -45,7 +46,12 @@ public class StringifiedError {
             this.stackTrace = new String(errorEntity.getStackTrace());
         }
         if (errorEntity.getPayload() != null) {
-            this.content = new String(errorEntity.getPayload());
+            try {
+                this.content = new String(errorEntity.getPayload(), "UTF-8");
+                this.content = this.content.replaceAll("<", "&lt;");
+            } catch (UnsupportedEncodingException e) {
+
+            }
         }
         if (errorEntity.getSourceIp() != null) {
             this.ip = errorEntity.getSourceIp();

@@ -134,11 +134,8 @@ public class TcpServer {
         public void run() {
             try {
                 InputStream in = socket.getInputStream();
-                int maxErr = 3;
                 while (true) {
-                    if (maxErr == 0) {
-                        return;
-                    }
+
                     byte[] b = new byte[128];
                     int count = 0;
                     while (count < b.length) {
@@ -157,11 +154,10 @@ public class TcpServer {
                             length = Integer.parseInt(new String(b, 0, count));
                             log.debug("length of incoming message:" + length);
                         } catch (NumberFormatException e) {
-                            maxErr--;
                             SyslogException ex = new SyslogException(e, b);
                             ex.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
                             atnaServer.notifyException(ex);
-                            continue;
+                            break;
                         }
                         byte[] bytes = new byte[length];
                         int len = in.read(bytes);
@@ -177,7 +173,6 @@ public class TcpServer {
                         try {
                             msg = createMessage(bytes);
                         } catch (SyslogException e) {
-                            maxErr--;
                             e.setBytes(bytes);
                             e.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
                             atnaServer.notifyException(e);
@@ -199,10 +194,12 @@ public class TcpServer {
         }
 
         private SyslogMessage createMessage(byte[] bytes) throws SyslogException {
-            try {
-                log.debug("creating message from bytes: " + new String(bytes, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
+            if (log.isDebugEnabled()) {
+                try {
+                    log.debug("creating message from bytes: " + new String(bytes, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
 
+                }
             }
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
         }
