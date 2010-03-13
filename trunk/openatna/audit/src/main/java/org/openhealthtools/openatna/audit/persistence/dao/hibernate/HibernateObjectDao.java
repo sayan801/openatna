@@ -159,7 +159,7 @@ public class HibernateObjectDao extends AbstractHibernateDao<ObjectEntity> imple
 
         if (entity.getVersion() == null) {
             // new one.
-            ObjectEntity existing = getByObjectId(entity.getObjectId());
+            ObjectEntity existing = get(entity);
             if (existing != null) {
                 if (policies.isErrorOnDuplicateInsert()) {
                     throw new AtnaPersistenceException(entity.toString(),
