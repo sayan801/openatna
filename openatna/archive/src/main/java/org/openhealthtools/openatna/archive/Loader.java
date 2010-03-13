@@ -51,9 +51,9 @@ import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
  * @date Mar 12, 2010: 11:00:59 PM
  */
 
-public class Extractor {
+public class Loader {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.archive.Extractor");
+    static Log log = LogFactory.getLog("org.openhealthtools.openatna.archive.Loader");
 
     private String archive;
     private boolean loadMessages = true;
@@ -62,13 +62,13 @@ public class Extractor {
     private int pageSize = 100;
     private PersistencePolicies pp = new PersistencePolicies();
 
-    public Extractor(String archive) {
+    public Loader(String archive) {
         this.archive = archive;
         initPolicies();
 
     }
 
-    public Extractor(String archive, String propertiesLocation) {
+    public Loader(String archive, String propertiesLocation) {
         this(archive);
         AtnaFactory.setPropertiesLocation(propertiesLocation);
     }
@@ -307,7 +307,7 @@ public class Extractor {
     }
 
     public static void main(String[] args) throws Exception {
-        Extractor e = new Extractor(System.getProperty("user.dir") + File.separator + "test.oar", "archive.properties");
+        Loader e = new Loader(System.getProperty("user.dir") + File.separator + "test.oar", "archive.properties");
         e.extract();
 
     }
