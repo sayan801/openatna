@@ -69,6 +69,7 @@ public class SopClass {
         return new ArrayList<String>(instanceUids);
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

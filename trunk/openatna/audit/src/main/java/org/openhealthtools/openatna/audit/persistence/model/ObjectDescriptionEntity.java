@@ -138,6 +138,10 @@ public class ObjectDescriptionEntity extends PersistentEntity {
         this.sopClasses = sopClasses;
     }
 
+    public void addSopClass(SopClassEntity sce) {
+        getSopClasses().add(sce);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -165,7 +169,7 @@ public class ObjectDescriptionEntity extends PersistentEntity {
                 .append(getId())
                 .append(", version=")
                 .append(getVersion())
-                .append(", mppsUids:")
+                .append(", mppsUids=")
                 .append(getMppsUids())
                 .append(", accessionNumbers=")
                 .append(getAccessionNumbers())

@@ -159,7 +159,7 @@
     <!-- Limit categories -->
     <!-- ================ -->
     <category name="org.openhealthtools.openatna">
-        <priority value="INFO"/>
+        <priority value="DEBUG"/>
     </category>
 
     <category name="com.misyshealthcare.connect">

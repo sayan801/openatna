@@ -45,6 +45,7 @@ public class AtnaFactory {
 
     private ApplicationContext context;
     private static AtnaFactory instance;
+    private static String openatnaProperties = null;
 
 
     private AtnaFactory(final ApplicationContext context) {
@@ -78,6 +79,14 @@ public class AtnaFactory {
             initialize(null);
         }
         return instance.getComponent(id);
+    }
+
+    public static void setPropertiesLocation(String location) {
+        openatnaProperties = location;
+    }
+
+    public static String getPropertiesLocation() {
+        return openatnaProperties;
     }
 
     public static CodeDao codeDao() {

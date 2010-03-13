@@ -30,9 +30,9 @@
         <Port>2862</Port>
 
         <!-- Trust and Keystore -->
-        <KeyStore>certs/OpenATNA_2010_Keystore.jks</KeyStore>
+        <KeyStore>certs/serverKeyStore</KeyStore>
         <KeyPass>password</KeyPass>
-        <TrustStore>certs/OpenATNA_2010_Truststore.jks</TrustStore>
+        <TrustStore>certs/clientKeyStore</TrustStore>
         <TrustPass>password</TrustPass>
     </SecureConnection>
 
