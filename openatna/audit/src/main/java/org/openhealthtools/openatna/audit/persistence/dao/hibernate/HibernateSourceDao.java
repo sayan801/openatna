@@ -127,18 +127,22 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
             }
             entity.setSourceTypeCodes(new HashSet<SourceCodeEntity>(Arrays.asList(arr)));
         }
+
         if (entity.getVersion() == null) {
             // new one.
             SourceEntity existing = get(entity);
             if (existing != null) {
-                System.out.println("HibernateSourceDao.save FOUND A SOURCE ENTITY IN THE DB????:" + existing);
                 if (policies.isErrorOnDuplicateInsert()) {
                     throw new AtnaPersistenceException(entity.toString(),
                             AtnaPersistenceException.PersistenceError.DUPLICATE_SOURCE);
+                } else {
+                    return;
                 }
             }
         }
+
         currentSession().saveOrUpdate(entity);
+
     }
 
     public void delete(SourceEntity entity) throws AtnaPersistenceException {

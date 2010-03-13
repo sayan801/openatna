@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openhealthtools.openatna</groupId>
     <artifactId>openatna</artifactId>
@@ -16,15 +17,15 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
-    
-   <scm>
-    	<connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna</connection>
-    	<developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna</developerConnection>
-    	<url>https://openatna.projects.openhealthtools.org/source/browse/openatna/</url>
+
+    <scm>
+        <connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna</connection>
+        <developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna</developerConnection>
+        <url>https://openatna.projects.openhealthtools.org/source/browse/openatna/</url>
     </scm>
     <issueManagement>
-        <system />
-        <url />
+        <system/>
+        <url/>
     </issueManagement>
     <developers>
         <developer>
@@ -124,6 +125,7 @@
         <module>net</module>
         <module>report</module>
         <module>web</module>
+        <module>archive</module>
     </modules>
     <!-- Properties defined by OpenATNA -->
     <properties>

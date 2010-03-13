@@ -230,6 +230,8 @@ public class ObjectEntity extends PersistentEntity {
                 .append(getObjectSensitivity())
                 .append(", object detail keys=")
                 .append(getObjectDetailTypes())
+                .append(", object descriptions=")
+                .append(getObjectDescriptions())
                 .append("]")
                 .toString();
     }

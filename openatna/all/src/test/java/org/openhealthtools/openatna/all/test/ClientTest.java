@@ -20,8 +20,9 @@
 
 package org.openhealthtools.openatna.all.test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,20 +53,16 @@ public abstract class ClientTest {
     public List<AtnaMessage> getMessages() throws IOException, AtnaException {
         JaxbIOFactory fac = new JaxbIOFactory();
         List<AtnaMessage> messages = new ArrayList<AtnaMessage>();
-        InputStream in = ClientTest.class.getResourceAsStream("/msgs/application-login.xml");
-        messages.add(fac.read(in));
-        in = ClientTest.class.getResourceAsStream("/msgs/application-start.xml");
-        messages.add(fac.read(in));
-        in = ClientTest.class.getResourceAsStream("/msgs/create-patient-record.xml");
-        messages.add(fac.read(in));
-        in = ClientTest.class.getResourceAsStream("/msgs/dicom.xml");
-        messages.add(fac.read(in));
-        in = ClientTest.class.getResourceAsStream("/msgs/dup.xml");
-        messages.add(fac.read(in));
-        in = ClientTest.class.getResourceAsStream("/msgs/no-source.xml");
-        messages.add(fac.read(in));
-        /*in = ClientTest.class.getResourceAsStream("/msgs/partid.xml");
-        messages.add(fac.read(in));*/
+        URL url = ClientTest.class.getResource("/msgs");
+        File f = new File(url.getFile());
+        File[] files = f.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.getName().endsWith(".xml")) {
+                messages.add(fac.read(new FileInputStream(file)));
+            }
+        }
+
         return messages;
     }
 }
