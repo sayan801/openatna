@@ -38,26 +38,29 @@
 
     Included in this release are the following:
 
-    README.txt 	               This file
-    LICENSE.txt	               Software license
-    NOTICE.txt	   		       Copyright and contribution Notice
-    commons-logging.properties common-logging file
-    log4j.xml                  log4j configuration
-    openatnaContext.xml        Spring context configuration file
-    openatna-1.0.jar           Main openatna executable file
-    openatna.properties        openatna configuration
-    conf/actors/               All the actor configuration files
-    conf/actors/cert/          keystore and truststore 
-    lib/                       All the libs needed for running tje OpenXDS server
-    licenses/	               All the third party license files 
+    README.txt 	                    This file
+    LICENSE.txt	                    Software license
+    NOTICE.txt	   		            Copyright and contribution Notice
+    header.txt                      copyright template
+    pom.xml                         project maven build file
+    syslog/                         Syslog implementation module
+    anom/                           ATNA Normalized Object Model module
+    audit/                          main OpenATNA module
+    jaxb/                           JAXB2 implementation of message parser
+    net/                            connection configuration module
+    web/                            query servlet module
+    report/                         Jasper reporting module
+    archive/                        DB independent archiving module
+    all/                            executable OpenATNA module
+    src/main/rescourse/licenses/    All the third party license files
 
 
   Requirements
   ------------
 
-     JDK Version	
-	 OpenATNA supports JDK 1.5 or higher. Related projects (e.g. OpenXDS) require 
-	 Java 1.6, so for integration with these projects 1.6 is required.
+  JDK Version
+  OpenATNA supports JDK 1.5 or higher. Related projects (e.g. OpenXDS) require
+  Java 1.6, so for integration with these projects 1.6 is required.
                 
 
   Installation and Configuration
@@ -104,7 +107,7 @@
   
 
  
-  Thanks for using OpenExcange - OpenATNA.
+  Thanks for using OpenExchange - OpenATNA.
 
 				    
 				    Open Health Tools (OHT)  <http://www.openhealthtools.org>
