@@ -26,6 +26,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -86,6 +87,7 @@ public class ErrorEntity extends PersistentEntity {
         this.errorMessage = errorMessage;
     }
 
+    @Lob
     public byte[] getPayload() {
         return payload;
     }
@@ -102,6 +104,7 @@ public class ErrorEntity extends PersistentEntity {
         this.sourceIp = sourceIp;
     }
 
+    @Lob
     public byte[] getStackTrace() {
         return stackTrace;
     }

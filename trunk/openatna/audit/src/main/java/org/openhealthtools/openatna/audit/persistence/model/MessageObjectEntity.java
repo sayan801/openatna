@@ -30,6 +30,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -74,7 +75,7 @@ public class MessageObjectEntity extends PersistentEntity {
         this.object = object;
     }
 
-
+    @Lob
     public byte[] getObjectQuery() {
         return objectQuery;
     }

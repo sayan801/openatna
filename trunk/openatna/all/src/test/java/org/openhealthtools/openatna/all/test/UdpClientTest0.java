@@ -66,6 +66,7 @@ public class UdpClientTest0 extends ClientTest {
     public void testMessages() {
         try {
             List<AtnaMessage> messages = getMessages();
+            System.out.println("UdpClientTest0.testMessages testing " + messages.size() + " messages");
             for (AtnaMessage message : messages) {
                 try {
                     Thread.sleep(10);
