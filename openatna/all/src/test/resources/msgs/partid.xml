@@ -5,7 +5,7 @@
         <EventID code="110106" codeSystemName="DCM" displayName="Export"/>
         <EventTypeCode code="ITI-41" codeSystemName="IHE Transactions" displayName="Provide and Register Document Set-b"/>
     </EventIdentification>
-    <ActiveParticipant UserIsRequestor="true" NetworkAccessPointTypeCode="2" NetworkAccessPointID="207.65.232.226">
+    <ActiveParticipant UserID="me" UserIsRequestor="true" NetworkAccessPointTypeCode="2" NetworkAccessPointID="207.65.232.226">
         <RoleIDCode code="110153" codeSystemName="DCM" displayName="Source"/>
     </ActiveParticipant>
     <ActiveParticipant UserID="asaip" UserIsRequestor="true">
