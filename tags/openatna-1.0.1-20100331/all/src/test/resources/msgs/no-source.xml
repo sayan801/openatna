@@ -1,0 +1,24 @@
+<AuditMessage>
+    <EventIdentification EventActionCode="C" EventDateTime="2010-03-02T15:03:11.115Z" EventOutcomeIndicator="0">
+        <EventID code="110107" codeSystemName="DCM" displayName="Import"/>
+        <EventTypeCode code="ITI-14" codeSystemName="IHE Transactions" displayName="Register Document Set"/>
+    </EventIdentification>
+    <ActiveParticipant UserID="CAREFX APPLICATION" AlternativeUserID="CAREFX USER" UserIsRequestor="true">
+        <RoleIDCode code="110153" codeSystemName="DCM" displayName="Source"/>
+    </ActiveParticipant>
+    <ActiveParticipant UserID="http://localhost:8080/services/xdsregistryb" UserName="CAREFX" UserIsRequestor="false">
+        <RoleIDCode code="110152" codeSystemName="Desination" displayName="DCM"/>
+    </ActiveParticipant>
+    <AuditSourceIdentification AuditEnterpriseSiteID="Hospital" AuditSourceID="ReadingRoom">
+        <AuditSourceTypeCode code="1"/>
+    </AuditSourceIdentification>
+    <ParticipantObjectIdentification ParticipantObjectID="SELF-5^^^&amp;amp;1.3.6.1.4.1.21367.2005.3.7&amp;amp;ISO" ParticipantObjectTypeCode="1"
+                                     ParticipantObjectTypeCodeRole="1" ParticipantObjectDataLifeCycle="1" ParticipantObjectName="CAREFX">
+        <ParticipantObjectIDTypeCode code="2" codeSystemName="RFC-3381" displayName="Patient Number"/>
+    </ParticipantObjectIdentification>
+    <ParticipantObjectIdentification ParticipantObjectID="2.16.840.1.114107.1.1.17.1.135001013018002033.126756017" ParticipantObjectTypeCode="2"
+                                     ParticipantObjectTypeCodeRole="20">
+        <ParticipantObjectIDTypeCode code="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd" codeSystemName="IHE XDS Metadata"
+                                     displayName="submission set classificationNode"/>
+    </ParticipantObjectIdentification>
+</AuditMessage>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AuditMessage>
+    <EventIdentification EventOutcomeIndicator="8" EventDateTime="2009-10-22T12:28:57.055+01:00" EventActionCode="E">
+        <EventID codeSystemName="DCM" displayName="User Authentication" code="110114"/>
+        <EventTypeCode codeSystemName="DCM" displayName="Login" code="110122"/>
+    </EventIdentification>
+    <ActiveParticipant NetworkAccessPointTypeCode="2" NetworkAccessPointID="192.168.1.5" UserIsRequestor="true" UserID="misys"
+                       UserName="misysuser-again"/>
+    <AuditSourceIdentification AuditSourceID="SYS_NAME" AuditEnterpriseSiteID="ENTERPRISE_SYS_NAME"/>
+</AuditMessage>
