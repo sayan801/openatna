@@ -1,4 +1,4 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 <div class="h2">
 	<h2>OpenATNA Quick Start</h2>
 	<p>This document provides a quick start guide to OpenATNA. OpenATNA is currently developed at Cardiff University and Misys Open Source Solutions (MOSS). It is released under the <a class="link" href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2 Licence</a>
@@ -27,13 +27,11 @@
 	<p><code>psql -d template1 -U postgres<br />
 	Password for user postgres:<br />
 	psql (8.4.0)  Type "help" for help.<br />
-	template1=# CREATE USER atna WITH PASSWORD 'atna';
+	template1=# CREATE USER openatna WITH PASSWORD 'openatna';
 	</code></p>
 	<p>Next, create the data base. On the command line: </p>
-	<p><code>template1=# CREATE DATABASE atna WITH OWNER = atna<br />
+	<p><code>template1=# CREATE DATABASE openatna WITH OWNER = openatna<br />
 		ENCODING = 'UTF8'<br />
-		LC_COLLATE = 'C'<br />
-		LC_CTYPE = 'C'<br />
 		CONNECTION LIMIT = -1; </code></p>
 	<p>To install OpenATNA, open a terminal window and download the code using svn: </p>
 	<p><code>svn co https://openatna.projects.openhealthtools.org/svn/openatna/trunk openatna </code></p>
@@ -143,6 +141,7 @@ http://localhost:8081/atna
 
 
 </div>
+              
               
               
               
