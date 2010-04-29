@@ -65,6 +65,7 @@
         <Code code="ITI-42" codingScheme="IHE Transactions" display="Register Document Set-b"/>
         <Code code="ITI-43" codingScheme="IHE Transactions" display="Retrieve Document Set"/>
         <Code code="ITI-48" codingScheme="IHE Transactions" display="Retrieve Value Set"/>
+        <Code code="ITI-51" codingScheme="IHE Transactions" display="Multi-Patient Query"/>
 
         <Code code="110120" codingScheme="DCM" display="Application Start"/>
         <Code code="110121" codingScheme="DCM" display="Application Stop"/>
