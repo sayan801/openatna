@@ -145,11 +145,13 @@
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="participantDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateParticipantDao">
+    <bean id="participantDao"
+          class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateParticipantDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="networkAccessPointDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateNetworkAccessPointDao">
+    <bean id="networkAccessPointDao"
+          class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateNetworkAccessPointDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
@@ -169,14 +171,15 @@
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
-    <bean id="provisionalDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateProvisionalDao">
+    <bean id="provisionalDao"
+          class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateProvisionalDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 
     <bean id="errorDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateErrorDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
-    <bean id="queryDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.QueryDao">
+    <bean id="queryDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.hibernateQueryDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 </beans>
