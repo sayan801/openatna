@@ -162,6 +162,10 @@
         <priority value="DEBUG"/>
     </category>
 
+    <category name="org.openhealthtools.openexchange">
+        <priority value="INFO"/>
+    </category>
+    
     <category name="com.misyshealthcare.connect">
         <priority value="WARN"/>
     </category>
