@@ -55,6 +55,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.openhealthtools.openexchange</groupId>
+            <artifactId>openexchange-config</artifactId>
+			<version>${openexchange.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <version>1.0</version>
@@ -101,6 +106,7 @@
     </dependencies>
     <properties>
         <spring.version>2.5.4</spring.version>
+        <openexchange.version>1.0-SNAPSHOT</openexchange.version>
     </properties>
     <profiles>
         <profile>
