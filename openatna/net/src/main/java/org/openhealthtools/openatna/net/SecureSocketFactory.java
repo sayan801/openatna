@@ -38,23 +38,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Used by the connection factory to create customized secure sockets.
- * <p>
- * SecureSocketFactory can be used to validate the identity of the HTTPS
- * server against a list of trusted certificates and to authenticate to the HTTPS
- * server using a private key.
- * </p>
- * <p/>
- * <p>
- * SecureSocketFactory will enable server authentication when supplied with
- * a {@link KeyStore truststore} file containg one or several trusted certificates.
- * The client secure socket will reject the connection during the SSL session handshake
- * if the target HTTPS server attempts to authenticate itself with a non-trusted
- * certificate.
- * </p>
- * <p/>
- * <p>
- * Use JDK keytool utility to import a trusted certificate and generate a truststore file:
+ * Used by the connection factory to create customized secure sockets. <p> SecureSocketFactory can be used to validate
+ * the identity of the HTTPS server against a list of trusted certificates and to authenticate to the HTTPS server using
+ * a private key. </p> <p/> <p> SecureSocketFactory will enable server authentication when supplied with a {@link
+ * KeyStore truststore} file containg one or several trusted certificates. The client secure socket will reject the
+ * connection during the SSL session handshake if the target HTTPS server attempts to authenticate itself with a
+ * non-trusted certificate. </p> <p/> <p> Use JDK keytool utility to import a trusted certificate and generate a
+ * truststore file:
  * <pre>
  *     keytool -import -alias "my server cert" -file server.crt -keystore misys.jks
  *    </pre>
@@ -62,44 +52,26 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  *     openssl pkcs12 -in provided.cert -export -out misys.p12 -name provided
  * 	  </pre>
- * </p>
- * <p/>
- * <p>
- * SecureSocketFactory will enable client authentication when supplied with
- * a {@link KeyStore keystore} file containg a private key/public certificate pair.
- * The client secure socket will use the private key to authenticate itself to the target
- * HTTPS server during the SSL session handshake if requested to do so by the server.
- * The target HTTPS server will in its turn verify the certificate presented by the client
- * in order to establish client's authenticity
- * </p>
- * <p/>
- * <p>
- * Use the following sequence of actions to generate a keystore file
- * </p>
- * <p>
- * Use JDK keytool utility to generate a new key, make sure the store has the same
- * password as the key.  Then check to make sure that the key generation took.  You
- * can use a keystore and a truststore, or one that does both.
- * </p>
+ * </p> <p/> <p> SecureSocketFactory will enable client authentication when supplied with a {@link KeyStore keystore}
+ * file containg a private key/public certificate pair. The client secure socket will use the private key to
+ * authenticate itself to the target HTTPS server during the SSL session handshake if requested to do so by the server.
+ * The target HTTPS server will in its turn verify the certificate presented by the client in order to establish
+ * client's authenticity </p> <p/> <p> Use the following sequence of actions to generate a keystore file </p> <p> Use
+ * JDK keytool utility to generate a new key, make sure the store has the same password as the key.  Then check to make
+ * sure that the key generation took.  You can use a keystore and a truststore, or one that does both. </p>
  * <pre>
  *  keytool -genkey -v -alias "misys" -validity 365 -keystore misys.jks
  *  keytool -list -v -keystore my.keystore
  * </pre>
- * <p>
- * The lame keytool tool can't import private keys, so if you need to use another
- * privte key (e.g. one given to you for IHE connectathon) then you need to use
- * a different system.  Change it to pkcs12 format and make sure that you have the
- * filname end in .p12 then the factory wil deal with it correctly.  How to use OpenSSL
- * to generate the appropriate files:
- * </p>
+ * <p> The lame keytool tool can't import private keys, so if you need to use another privte key (e.g. one given to you
+ * for IHE connectathon) then you need to use a different system.  Change it to pkcs12 format and make sure that you
+ * have the filname end in .p12 then the factory wil deal with it correctly.  How to use OpenSSL to generate the
+ * appropriate files: </p>
  * <pre>
  *  openssl pkcs12 -in provided.cert -inkey provided.key -export -out misys.p12 -name provided
  * </pre>
- * <p>
- * That makes a single keystore for both the private key and the public certs.
- * </p>
- * <p>
- * Example of using custom protocol socket factory for a specific host:
+ * <p> That makes a single keystore for both the private key and the public certs. </p> <p> Example of using custom
+ * protocol socket factory for a specific host:
  * <pre>
  *     Protocol authhttps = new Protocol("https",
  *          new SecureSocketFactory(
@@ -112,9 +84,7 @@ import org.apache.commons.logging.LogFactory;
  *     GetMethod httpget = new GetMethod("/");
  *     client.executeMethod(httpget);
  *     </pre>
- * </p>
- * <p>
- * Example of using custom protocol socket factory per default instead of the standard one:
+ * </p> <p> Example of using custom protocol socket factory per default instead of the standard one:
  * <pre>
  *     Protocol authhttps = new Protocol("https",
  *          new SecureSocketFactory(
@@ -147,8 +117,8 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
     private SecureConnectionDescription scd;
 
     /**
-     * Constructor for HttpStreamHandler. Either a keystore or truststore file
-     * must be given. Otherwise SSL context initialization error will result.
+     * Constructor for HttpStreamHandler. Either a keystore or truststore file must be given. Otherwise SSL context
+     * initialization error will result.
      *
      * @param scd The secure connection description
      */
@@ -167,15 +137,20 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
             log.debug("Attempting to create ssl context.");
             KeyManager[] keymanagers = null;
             TrustManager[] trustmanagers = null;
+            if (this.keystoreUrl == null) {
+                throw new IOException("Cannot create SSL context without keystore");
+            }
             if (this.keystoreUrl != null) {
-                KeyStore keystore = ConnectionCertificateHandler.createKeyStore(this.keystoreUrl, this.keystorePassword);
+                KeyStore keystore = ConnectionCertificateHandler
+                        .createKeyStore(this.keystoreUrl, this.keystorePassword);
                 if (log.isDebugEnabled()) {
                     ConnectionCertificateHandler.printKeyCertificates(keystore);
                 }
                 keymanagers = ConnectionCertificateHandler.createKeyManagers(keystore, this.keystorePassword);
             }
             if (this.truststoreUrl != null) {
-                KeyStore keystore = ConnectionCertificateHandler.createKeyStore(this.truststoreUrl, this.truststorePassword);
+                KeyStore keystore = ConnectionCertificateHandler
+                        .createKeyStore(this.truststoreUrl, this.truststorePassword);
                 if (log.isDebugEnabled()) {
                     ConnectionCertificateHandler.printTrustCerts(keystore);
                 }
