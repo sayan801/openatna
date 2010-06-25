@@ -41,8 +41,6 @@ import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 /**
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Oct 21, 2009: 1:41:18 PM
- * @date $Date:$ modified by $Author:$
  */
 
 public class TcpServer {
@@ -87,7 +85,11 @@ public class TcpServer {
         }
 
         public void run() {
-
+            if (server == null) {
+                log.info("Server socket is null. Cannot start server.");
+                running = false;
+                return;
+            }
             while (running && !interrupted()) {
                 Socket s = null;
                 try {
@@ -155,7 +157,8 @@ public class TcpServer {
                             log.debug("length of incoming message:" + length);
                         } catch (NumberFormatException e) {
                             SyslogException ex = new SyslogException(e, b);
-                            ex.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
+                            ex.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress())
+                                    .getAddress().getHostAddress());
                             atnaServer.notifyException(ex);
                             break;
                         }
@@ -174,7 +177,8 @@ public class TcpServer {
                             msg = createMessage(bytes);
                         } catch (SyslogException e) {
                             e.setBytes(bytes);
-                            e.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
+                            e.setSourceIp(((InetSocketAddress) socket.getRemoteSocketAddress())
+                                    .getAddress().getHostAddress());
                             atnaServer.notifyException(e);
                         }
                         if (msg != null) {
