@@ -98,6 +98,14 @@ public class AtnaServer implements SyslogServer {
         listeners.remove(listener);
     }
 
+    public IConnectionDescription getUdpConnection() {
+    	return this.udpConnection;
+    }
+    
+    public IConnectionDescription getTlsConnection() {
+    	return this.tlsConnection;
+    }
+    
     protected void notifyListeners(final SyslogMessage msg) {
         for (SyslogListener listener : listeners) {
             log.debug("notifying listener...");

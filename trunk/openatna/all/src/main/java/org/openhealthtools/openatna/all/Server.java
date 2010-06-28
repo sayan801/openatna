@@ -24,6 +24,9 @@ import java.io.IOException;
 
 import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.service.AuditService;
+import org.openhealthtools.openexchange.config.ConfigProcessorFactory;
+import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openexchange.config.SpringFacade;
 
 /**
  * @author Andrew Harrison
@@ -35,11 +38,18 @@ import org.openhealthtools.openatna.audit.service.AuditService;
 public class Server {
 
     public static void main(String[] args) {
+    	
+		//pre config process
+        ConfigProcessorFactory.getConfigProcessor().preProcess();
+
         AuditService service = AtnaFactory.auditService();
         try {
             service.start();
         } catch (IOException e) {
             throw new RuntimeException("IO Error starting service:", e);
         }
+        
+        //post config process
+        ConfigProcessorFactory.getConfigProcessor().postProcess();
     }
 }
