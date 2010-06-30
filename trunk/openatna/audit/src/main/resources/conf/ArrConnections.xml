@@ -35,9 +35,9 @@
         <TrustStore>certs/clientKeyStore</TrustStore>
         <TrustPass>password</TrustPass>
     </SecureConnection>
-
+	<!-- use IP address instead of localhost for UDP -->
     <StandardConnection name="arr-udp">
-        <HostName>localhost</HostName>
+        <HostName>127.0.0.1</HostName>
         <Port>2863</Port>
     </StandardConnection>
 
