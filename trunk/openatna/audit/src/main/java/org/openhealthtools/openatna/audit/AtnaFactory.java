@@ -68,7 +68,7 @@ public class AtnaFactory {
     public static synchronized void initialize(ApplicationContext context) {
         if (context == null) {
     		try {
-    			SpringFacade.loadSpringConfig( new String[]{"openatnaContext.xml"} );
+    			SpringFacade.loadSpringConfig( new String[]{"classpath*:/*Context.xml"} );
     			context = SpringFacade.getApplicationContext();
     		}catch(ConfigurationException e){
     			e.printStackTrace();

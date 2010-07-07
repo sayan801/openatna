@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openexchange</groupId>
-            <artifactId>openexchange-config</artifactId>
+            <artifactId>openexchange-actorconfig</artifactId>
 			<version>${openexchange.version}</version>
         </dependency>
         <dependency>
