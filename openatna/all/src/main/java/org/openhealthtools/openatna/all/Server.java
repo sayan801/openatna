@@ -50,6 +50,6 @@ public class Server {
         }
         
         //post config process
-        ConfigProcessorFactory.getConfigProcessor().postProcess();
+        ConfigProcessorFactory.getConfigProcessor().postProcess(null);
     }
 }
