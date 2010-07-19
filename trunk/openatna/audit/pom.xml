@@ -105,7 +105,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <spring.version>2.5.4</spring.version>
+        <spring.version>2.5.6</spring.version>
         <openexchange.version>1.0-SNAPSHOT</openexchange.version>
     </properties>
     <profiles>
