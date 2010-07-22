@@ -58,6 +58,12 @@
             <groupId>org.openhealthtools.openexchange</groupId>
             <artifactId>openexchange-actorconfig</artifactId>
 			<version>${openexchange.version}</version>
+	        <exclusions>
+	        	<exclusion>
+		    		<groupId>org.openhealthtools.openexchange</groupId>
+				    <artifactId>openexchange-log</artifactId>
+	        	</exclusion>
+	        </exclusions>        
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -106,7 +112,7 @@
     </dependencies>
     <properties>
         <spring.version>2.5.6</spring.version>
-        <openexchange.version>1.0-SNAPSHOT</openexchange.version>
+        <openexchange.version>1.0</openexchange.version>
     </properties>
     <profiles>
         <profile>
