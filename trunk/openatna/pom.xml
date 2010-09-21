@@ -25,9 +25,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.0.2-20100921</connection>
-        <developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.0.2-20100921</developerConnection>
-        <url>https://openatna.projects.openhealthtools.org/source/browse/openatna/tags/openatna-1.0.2-20100921</url>
+        <connection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna</connection>
+        <developerConnection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna</developerConnection>
+        <url>https://www.projects.openhealthtools.org/svn/openatna/</url>
     </scm>
     <issueManagement>
         <system />
