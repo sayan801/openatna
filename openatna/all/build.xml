@@ -8,7 +8,8 @@
     <property name="dist" value="../dist"/>
     <property name="build" value="build"/>
     <property name="audit-resources" value="../audit/src/main/resources/"/>
-    <property name="licences" value="../src/main/resources/licenses"/>
+    <property name="licenses" value="../src/main/resources/licenses"/>
+    <property name="web.target" value="../web/target"/>
 
     <target name="exec" depends="bundle">
         <antcall target="populateCodes"/>
@@ -43,6 +44,11 @@
             <filterset begintoken="@" endtoken="@">
                 <filter token="log.message.class" value="org.openhealthtools.openatna.all.JaxbLogMessage"/>
             </filterset>
+        	<fileset dir="..">
+        		<include name="LICENSE.txt" />        		
+        		<include name="NOTICE.txt" />        		
+				<include name="README.txt" />        		
+        	</fileset>        	
         </copy>
         <!-- copy certs (with no filters!)-->
         <copy todir="${build}/conf/certs" overwrite="yes">
@@ -56,10 +62,15 @@
         <copy todir="stage" overwrite="yes">
             <fileset dir="target/classes" includes="**/*.class"/>
         </copy>
-        <!-- copy licences -->
-        <mkdir dir="${build}/licences"/>
-        <copy todir="${build}/licences" overwrite="yes">
-            <fileset dir="${licences}"/>
+        <!-- copy licenses -->
+        <mkdir dir="${build}/licenses"/>
+        <copy todir="${build}/licenses" overwrite="yes">
+            <fileset dir="${licenses}"/>
+        </copy>
+        <!-- copy atna log viewer -->
+        <mkdir dir="${build}/logviewer"/>
+        <copy todir="${build}/logviewer" overwrite="yes">
+            <fileset dir="${web.target}" includes="**/atna.war"/>
         </copy>
         <!-- jar it all up -->
         <jar destfile="${build}/openatna-${project.version}.jar">
