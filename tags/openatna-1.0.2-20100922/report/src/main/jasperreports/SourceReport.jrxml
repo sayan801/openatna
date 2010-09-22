@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd" [
+        ]>
+
+<jasperReport
+        name="SourceReport"
+        pageWidth="595"
+        pageHeight="842"
+        columnWidth="515"
+        columnSpacing="0"
+        leftMargin="0" rightMargin="0" topMargin="2" bottomMargin="2"
+        whenNoDataType="NoPages"
+        isTitleNewPage="false"
+        isSummaryNewPage="false">
+    <import value="org.openhealthtools.openatna.report.EntityDataSource"/>
+
+    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Bold_Small" isBold="true" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+
+    <parameter name="inputDirectory" class="java.lang.String"/>
+
+    <field name="sourceId" class="java.lang.String">
+        <fieldDescription>sourceId</fieldDescription>
+    </field>
+    <field name="enterpriseSiteId" class="java.lang.String">
+        <fieldDescription>enterpriseSiteId</fieldDescription>
+    </field>
+    <field name="sourceTypeCodes" class="java.util.Set">
+        <fieldDescription>sourceTypeCodes</fieldDescription>
+    </field>
+
+
+    <detail>
+        <band height="45">
+            <frame>
+                <reportElement x="0" y="0" width="520" height="45"/>
+                <staticText>
+                    <reportElement x="5" y="0" width="400" height="15" style="Arial_Bold_Small" forecolor="#2c5519"/>
+                    <text><![CDATA[Audit Source]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="15" width="195" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Source Id]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="220" y="15" width="195" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Enterprise Site Id]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="20" y="30" width="195" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.String">
+                        $F{sourceId}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="220" y="30" width="195" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.String">
+                        $F{enterpriseSiteId}
+                    </textFieldExpression>
+                </textField>
+
+                <subreport>
+                    <reportElement positionType="Float" x="5" y="45" width="510" height="0" isRemoveLineWhenBlank="true"/>
+                    <dataSourceExpression>new EntityDataSource($F{sourceTypeCodes})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/CodeReport.jasper"</subreportExpression>
+                </subreport>
+            </frame>
+        </band>
+    </detail>
+
+</jasperReport>
