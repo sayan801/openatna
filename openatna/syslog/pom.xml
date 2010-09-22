@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
     <artifactId>syslog</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>Syslog</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
