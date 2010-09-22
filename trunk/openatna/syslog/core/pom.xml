@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>syslog</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>syslog-core</artifactId>
 
     <packaging>jar</packaging>
-    <version>1.0.2</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>Syslog Core</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 

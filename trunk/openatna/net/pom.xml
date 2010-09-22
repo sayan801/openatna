@@ -3,14 +3,14 @@
     <parent>
         <artifactId>openatna</artifactId>
         <groupId>org.openhealthtools.openatna</groupId>
-        <version>1.0.2</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openhealthtools.openatna</groupId>
     <artifactId>openatna-net</artifactId>
     <packaging>jar</packaging>
     <name>OpenATNA Net</name>
-    <version>1.0.2</version>
+    <version>1.0.2-SNAPSHOT</version>
     <url>https://openatna.projects.openhealthtools.org</url>
 
     <dependencies>
