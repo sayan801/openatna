@@ -48,6 +48,7 @@ public class SyslogMessageDecoder implements MessageDecoder {
 
     private ByteBuffer msg = ByteBuffer.wrap(new byte[0]);
     private int headerLength = 0;
+    private String error = null;
 
     public MessageDecoderResult decodable(IoSession ioSession, ByteBuffer byteBuffer) {
         log.fine("Enter");
@@ -56,6 +57,14 @@ public class SyslogMessageDecoder implements MessageDecoder {
 
     public MessageDecoderResult decode(IoSession ioSession, ByteBuffer byteBuffer, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
         log.fine("Enter");
+        if (error != null) {
+            SyslogException e = new SyslogException("Error reading message length.");
+            e.setSourceIp(((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
+            e.setBytes(error.getBytes("UTF-8"));
+            protocolDecoderOutput.write(e);
+            ioSession.close();
+            return MessageDecoderResult.OK;
+        }
         if (headerLength > 0) {
             byteBuffer.position(byteBuffer.position() + headerLength);
             headerLength = 0;
@@ -74,10 +83,10 @@ public class SyslogMessageDecoder implements MessageDecoder {
                 protocolDecoderOutput.write(sm);
                 return MessageDecoderResult.OK;
             } catch (SyslogException e) {
-                log.info("SyslogMessageDecoder.decode IP:" + ((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
                 e.setSourceIp(((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
                 e.setBytes(msg.array());
                 protocolDecoderOutput.write(e);
+                ioSession.close();
                 return MessageDecoderResult.OK;
             }
         }
@@ -94,6 +103,10 @@ public class SyslogMessageDecoder implements MessageDecoder {
         StringBuilder total = new StringBuilder();
         int count = 0;
         while ((byteBuffer.position() + count) < byteBuffer.limit()) {
+            if (count > 10) {
+                error = total.toString();
+                return MessageDecoderResult.OK;
+            }
             byte b = byteBuffer.get(byteBuffer.position() + count);
             count++;
             char c = (char) (b & 0xff);
@@ -107,14 +120,15 @@ public class SyslogMessageDecoder implements MessageDecoder {
                     headerLength = count;
                     break;
                 } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    return MessageDecoderResult.NOT_OK;
+                    error = total.toString();
+                    return MessageDecoderResult.OK;
                 }
             } else {
                 if (Character.isDigit(c)) {
                     total.append(c);
                 } else {
-                    return MessageDecoderResult.NOT_OK;
+                    error = total.toString();
+                    return MessageDecoderResult.OK;
                 }
             }
         }

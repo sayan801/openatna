@@ -46,7 +46,8 @@ import java.util.List;
 
 public class TlsClientTest0 extends ClientTest {
 
-    @Test
+    //@Test
+
     public void testMessages() {
         try {
             URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
@@ -79,7 +80,8 @@ public class TlsClientTest0 extends ClientTest {
 
     }
 
-    @Test
+    //@Test
+
     public void testNoEncryption() {
         try {
             URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
