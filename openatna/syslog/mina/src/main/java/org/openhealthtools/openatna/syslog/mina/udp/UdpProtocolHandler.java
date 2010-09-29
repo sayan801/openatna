@@ -46,7 +46,6 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.udp.UdpProtocolHandler");
 
-
     private Notifier server;
     private int mtu;
 
@@ -78,6 +77,11 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
         ByteBuffer buff = (ByteBuffer) message;
         if (buff.limit() > mtu) {
             log.info("message is too long: " + buff.limit() + ". It exceeds config MTU of " + mtu);
+            SyslogException e = new SyslogException("Packet exceeds MTU of " + mtu);
+            e.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
+            e.setBytes(buff.array());
+            session.close();
+            server.notifyException(e);
             return;
         }
         try {
