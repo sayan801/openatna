@@ -88,6 +88,7 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
         } catch (SyslogException e) {
             e.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
             e.setBytes(buff.array());
+            session.close();
             server.notifyException(e);
         }
     }
