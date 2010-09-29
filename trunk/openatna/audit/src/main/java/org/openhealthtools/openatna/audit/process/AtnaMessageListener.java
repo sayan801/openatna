@@ -117,6 +117,8 @@ public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(bout);
         e.printStackTrace(writer);
+        writer.flush();
+        writer.close();
         return bout.toByteArray();
     }
 }

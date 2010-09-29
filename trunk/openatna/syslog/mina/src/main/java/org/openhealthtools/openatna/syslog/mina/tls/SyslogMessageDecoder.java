@@ -30,6 +30,7 @@ import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
 import java.io.ByteArrayInputStream;
+import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 /**
@@ -70,15 +71,15 @@ public class SyslogMessageDecoder implements MessageDecoder {
             try {
                 SyslogMessage sm = createMessage(msg);
                 msg.clear();
-                if (sm != null) {
-                    protocolDecoderOutput.write(sm);
-                    return MessageDecoderResult.OK;
-                }
+                protocolDecoderOutput.write(sm);
+                return MessageDecoderResult.OK;
             } catch (SyslogException e) {
+                log.info("SyslogMessageDecoder.decode IP:" + ((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
+                e.setSourceIp(((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
+                e.setBytes(msg.array());
                 protocolDecoderOutput.write(e);
                 return MessageDecoderResult.OK;
             }
-            return MessageDecoderResult.NOT_OK;
         }
     }
 

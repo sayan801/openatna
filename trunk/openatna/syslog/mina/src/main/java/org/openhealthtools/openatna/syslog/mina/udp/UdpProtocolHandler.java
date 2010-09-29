@@ -30,6 +30,7 @@ import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 import org.openhealthtools.openatna.syslog.mina.Notifier;
 
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 /**
@@ -85,6 +86,8 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
             SyslogMessage msg = factory.read(in);
             server.notifyMessage(msg);
         } catch (SyslogException e) {
+            e.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
+            e.setBytes(buff.array());
             server.notifyException(e);
         }
     }
