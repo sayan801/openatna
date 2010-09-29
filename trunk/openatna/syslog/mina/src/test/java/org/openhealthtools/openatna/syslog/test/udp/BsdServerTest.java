@@ -20,8 +20,6 @@
 
 package org.openhealthtools.openatna.syslog.test.udp;
 
-import java.io.IOException;
-
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
@@ -52,11 +50,7 @@ public class BsdServerTest {
         conf.setPort(1513);
         conf.setHost("localhost");
         server.configure(conf);
-        try {
-            server.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server.start();
     }
 
 

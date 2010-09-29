@@ -20,15 +20,6 @@
 
 package org.openhealthtools.openatna.audit.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.net.ConnectionFactory;
@@ -38,12 +29,21 @@ import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+
 /**
  * @author Andrew Harrison
  * @version $Revision:$
  */
 
-public class TcpServer {
+public class TcpServer implements Server {
 
     private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.TcpServer");
 

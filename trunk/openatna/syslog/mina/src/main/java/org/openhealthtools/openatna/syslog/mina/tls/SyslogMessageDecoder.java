@@ -20,9 +20,6 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
-import java.io.ByteArrayInputStream;
-import java.util.logging.Logger;
-
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
@@ -31,6 +28,9 @@ import org.apache.mina.filter.codec.demux.MessageDecoderResult;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+
+import java.io.ByteArrayInputStream;
+import java.util.logging.Logger;
 
 /**
  * Class Description Here...
@@ -46,7 +46,6 @@ public class SyslogMessageDecoder implements MessageDecoder {
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.SyslogMessageDecoder");
 
     private ByteBuffer msg = ByteBuffer.wrap(new byte[0]);
-    ;
     private int headerLength = 0;
 
     public MessageDecoderResult decodable(IoSession ioSession, ByteBuffer byteBuffer) {

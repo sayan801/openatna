@@ -20,59 +20,71 @@
 
 package org.openhealthtools.openatna.audit.server;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.audit.server.nio.TcpNioServer;
+import org.openhealthtools.openatna.audit.server.nio.UdpNioServer;
 import org.openhealthtools.openatna.net.IConnectionDescription;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * @author Andrew Harrison
  * @date $Date:$ modified by $Author:$
  */
 
-public class AtnaServer implements SyslogServer {
+public class AtnaServer {
 
     private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.AtnaServer");
 
     private IConnectionDescription tlsConnection;
     private IConnectionDescription udpConnection;
-    private TcpServer tcpServer = null;
-    private UdpServer udpServer = null;
+    private Server tcpServer = null;
+    private Server udpServer = null;
+    private boolean nio = false;
+    private MessageQueue queue = null;
 
     private volatile boolean destroyed = false;
 
     private Executor exec;
-    private Set<SyslogListener> listeners = new HashSet<SyslogListener>();
 
 
-    public AtnaServer(IConnectionDescription tlsConnection, IConnectionDescription udpConnection, int threads) {
+    public AtnaServer(IConnectionDescription tlsConnection, IConnectionDescription udpConnection, int threads, boolean nio) {
         this.tlsConnection = tlsConnection;
         this.udpConnection = udpConnection;
+        this.nio = nio;
         exec = Executors.newFixedThreadPool(threads);
         new ShutdownHook().createHook();
+
     }
 
     public AtnaServer(IConnectionDescription tlsConnection, IConnectionDescription udpConnection) {
-        this(tlsConnection, udpConnection, 5);
+        this(tlsConnection, udpConnection, 5, false);
     }
 
-    public void start() throws IOException {
+    public void start(SyslogListener listener) throws IOException {
+        queue = new MessageQueue(listener);
+        queue.start();
         if (tlsConnection != null) {
-            tcpServer = new TcpServer(this, tlsConnection);
+            if (nio) {
+                tcpServer = new TcpNioServer(this, tlsConnection);
+            } else {
+                tcpServer = new TcpServer(this, tlsConnection);
+            }
             tcpServer.start();
         }
         if (udpConnection != null) {
-            udpServer = new UdpServer(this, udpConnection);
+            if (nio) {
+                udpServer = new UdpNioServer(this, udpConnection);
+            } else {
+                udpServer = new UdpServer(this, udpConnection);
+            }
             udpServer.start();
         }
     }
@@ -84,39 +96,32 @@ public class AtnaServer implements SyslogServer {
         if (udpServer != null) {
             udpServer.stop();
         }
+        if (queue != null) {
+            queue.stop();
+        }
     }
 
     public void execute(Runnable r) {
         exec.execute(r);
     }
 
-    public void addSyslogListener(SyslogListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeSyslogListener(SyslogListener listener) {
-        listeners.remove(listener);
-    }
-
     public IConnectionDescription getUdpConnection() {
-    	return this.udpConnection;
+        return this.udpConnection;
     }
-    
+
     public IConnectionDescription getTlsConnection() {
-    	return this.tlsConnection;
+        return this.tlsConnection;
     }
-    
-    protected void notifyListeners(final SyslogMessage msg) {
-        for (SyslogListener listener : listeners) {
-            log.debug("notifying listener...");
-            listener.messageArrived(msg);
+
+    public void notifyListeners(final SyslogMessage msg) {
+        if (queue != null) {
+            queue.put(msg);
         }
     }
 
-    protected void notifyException(final SyslogException ex) {
-        for (SyslogListener listener : listeners) {
-            log.debug("notifying listener...");
-            listener.exceptionThrown(ex);
+    public void notifyException(final SyslogException ex) {
+        if (queue != null) {
+            queue.put(ex);
         }
     }
 

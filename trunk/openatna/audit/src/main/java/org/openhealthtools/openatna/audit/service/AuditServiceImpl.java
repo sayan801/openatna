@@ -20,11 +20,6 @@
 
 package org.openhealthtools.openatna.audit.service;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.anom.AtnaCode;
@@ -44,7 +39,11 @@ import org.openhealthtools.openatna.audit.process.ProcessorChain;
 import org.openhealthtools.openatna.audit.server.AtnaServer;
 import org.openhealthtools.openatna.audit.server.ServerConfiguration;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This pulls together various configurations to create an ATNA Audit service
@@ -62,7 +61,7 @@ public class AuditServiceImpl implements AuditService {
     private ServerConfiguration serverConfig;
     private ServiceConfiguration serviceConfig = new ServiceConfiguration();
     private ProcessorChain chain = new ProcessorChain();
-    private SyslogServer syslogServer;
+    private AtnaServer syslogServer;
 
 
     /**
@@ -101,8 +100,7 @@ public class AuditServiceImpl implements AuditService {
                 this.syslogServer = servers.get(0);
                 if (syslogServer != null) {
                     SyslogMessageFactory.setDefaultLogMessage(serviceConfig.getLogMessageClass());
-                    syslogServer.addSyslogListener(new AtnaMessageListener(this));
-                    syslogServer.start();
+                    syslogServer.start(new AtnaMessageListener(this));
                 }
             }
         }

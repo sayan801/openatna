@@ -20,22 +20,21 @@
 
 package org.openhealthtools.openatna.audit.server;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.net.ConnectionFactory;
+import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.audit.service.ServiceConfiguration;
-import org.openhealthtools.openatna.net.ConnectionFactory;
-import org.openhealthtools.openatna.net.IConnectionDescription;
 
 /**
  * Loads XML actor and connection files.
@@ -175,10 +174,10 @@ public class ServerConfiguration {
     private boolean processArr(Element parent) {
         IConnectionDescription tcp = null;
         IConnectionDescription udp = null;
-        ServiceConfiguration sc = new ServiceConfiguration();
 
         NodeList children = parent.getChildNodes();
         int threads = 5;
+        boolean nio = false;
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
@@ -215,11 +214,18 @@ public class ServerConfiguration {
                             threads = 5;
                         }
                     }
+                } else if (el.getTagName().equalsIgnoreCase("NIO")) {
+                    String t = el.getTextContent().trim();
+                    if (t.length() > 0) {
+                        if (t.equalsIgnoreCase("true") || t.equalsIgnoreCase("1") || t.equalsIgnoreCase("yes")) {
+                            nio = true;
+                        }
+                    }
                 }
             }
         }
         if (tcp != null && udp != null) {
-            AtnaServer server = new AtnaServer(tcp, udp, threads);
+            AtnaServer server = new AtnaServer(tcp, udp, threads, nio);
             servers.add(server);
             return true;
         } else {

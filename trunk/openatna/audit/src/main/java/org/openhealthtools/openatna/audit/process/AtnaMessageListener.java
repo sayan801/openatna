@@ -20,8 +20,6 @@
 
 package org.openhealthtools.openatna.audit.process;
 
-import java.util.Date;
-
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.log.PersistenceErrorLogger;
@@ -36,6 +34,10 @@ import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.util.Date;
 
 /**
  * @author Andrew Harrison
@@ -112,22 +114,9 @@ public class AtnaMessageListener implements SyslogListener<AtnaMessage> {
     }
 
     private byte[] createStackTrace(Throwable e) {
-        StringBuilder sb = new StringBuilder();
-
-        StackTraceElement[] els = e.getStackTrace();
-        for (StackTraceElement el : els) {
-            sb.append(el.toString()).append("\n\t");
-        }
-        e = e.getCause();
-        while (e != null) {
-            sb.append("\n\tCaused by:\n");
-            els = e.getStackTrace();
-            for (StackTraceElement el : els) {
-                sb.append(el.toString()).append("\n\t");
-            }
-            e = e.getCause();
-        }
-
-        return sb.toString().getBytes();
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(bout);
+        e.printStackTrace(writer);
+        return bout.toByteArray();
     }
 }
