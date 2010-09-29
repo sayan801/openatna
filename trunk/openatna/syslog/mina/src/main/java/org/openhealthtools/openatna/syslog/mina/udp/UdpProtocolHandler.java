@@ -79,7 +79,10 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
             log.info("message is too long: " + buff.limit() + ". It exceeds config MTU of " + mtu);
             SyslogException e = new SyslogException("Packet exceeds MTU of " + mtu);
             e.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
-            e.setBytes(buff.array());
+            buff.rewind();
+            byte[] bytes = new byte[buff.limit()];
+            buff.get(bytes);
+            e.setBytes(bytes);
             session.close();
             server.notifyException(e);
             return;
@@ -91,9 +94,14 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
             server.notifyMessage(msg);
         } catch (SyslogException e) {
             e.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
-            e.setBytes(buff.array());
+            buff.rewind();
+            byte[] bytes = new byte[buff.limit()];
+            buff.get(bytes);
+            e.setBytes(bytes);
             session.close();
             server.notifyException(e);
         }
     }
+
+
 }
