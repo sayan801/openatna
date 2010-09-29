@@ -20,6 +20,17 @@
 
 package org.openhealthtools.openatna.syslog.mina.tls;
 
+import org.apache.mina.common.*;
+import org.apache.mina.filter.SSLFilter;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.transport.socket.nio.SocketAcceptor;
+import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.mina.Notifier;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -30,21 +41,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import javax.net.ssl.SSLContext;
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.common.DefaultIoFilterChainBuilder;
-import org.apache.mina.common.IoAcceptor;
-import org.apache.mina.common.IoAcceptorConfig;
-import org.apache.mina.common.ThreadModel;
-import org.apache.mina.filter.SSLFilter;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
-import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
-
 /**
  * Class Description Here...
  *
@@ -54,7 +50,7 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
  * @date $Date:$ modified by $Author:$
  */
 
-public class TlsServer implements SyslogServer {
+public class TlsServer implements Notifier {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.TlsServer");
 
@@ -78,6 +74,7 @@ public class TlsServer implements SyslogServer {
         ByteBuffer.setUseDirectBuffers(false);
         acceptor = new SocketAcceptor(Runtime.getRuntime().availableProcessors() + 1, Executors.newCachedThreadPool());
         acceptor.getDefaultConfig().setThreadModel(ThreadModel.MANUAL);
+
         IoAcceptorConfig config = new SocketAcceptorConfig();
 
         DefaultIoFilterChainBuilder chain = config.getFilterChain();
@@ -93,7 +90,7 @@ public class TlsServer implements SyslogServer {
         acceptor.bind(new InetSocketAddress(host, tlsconfig.getPort()), new SyslogProtocolHandler(this));
         Set<SocketAddress> addr = acceptor.getManagedServiceAddresses();
         for (SocketAddress sa : addr) {
-            System.out.println("TlsServer.start " + sa.toString());
+            log.info("TlsServer.start " + sa.toString());
         }
         log.info("server started on port " + tlsconfig.getPort());
 
@@ -113,7 +110,7 @@ public class TlsServer implements SyslogServer {
         listeners.remove(listener);
     }
 
-    protected void notifyListeners(final SyslogMessage msg) {
+    public void notifyMessage(final SyslogMessage msg) {
         exec.execute(new Runnable() {
             public void run() {
                 for (SyslogListener listener : listeners) {
@@ -125,7 +122,7 @@ public class TlsServer implements SyslogServer {
 
     }
 
-    protected void notifyException(final SyslogException ex) {
+    public void notifyException(final SyslogException ex) {
         exec.execute(new Runnable() {
             public void run() {
                 for (SyslogListener listener : listeners) {

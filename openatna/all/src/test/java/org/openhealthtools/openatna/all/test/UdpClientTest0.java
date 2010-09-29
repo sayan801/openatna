@@ -20,6 +20,14 @@
 
 package org.openhealthtools.openatna.all.test;
 
+import org.junit.Test;
+import org.openhealthtools.openatna.anom.AtnaException;
+import org.openhealthtools.openatna.anom.AtnaMessage;
+import org.openhealthtools.openatna.anom.ProvisionalMessage;
+import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,14 +36,6 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.util.Date;
 import java.util.List;
-
-import org.openhealthtools.openatna.anom.AtnaException;
-import org.openhealthtools.openatna.anom.AtnaMessage;
-import org.openhealthtools.openatna.anom.ProvisionalMessage;
-import org.openhealthtools.openatna.syslog.LogMessage;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
-import org.junit.Test;
 
 /**
  * @author Andrew Harrison
@@ -75,7 +75,7 @@ public class UdpClientTest0 extends ClientTest {
                 }
                 message.setEventDateTime(new Date());
                 ProtocolMessage sl = new ProtocolMessage(10, 5, "carefx1/10.243.0.118", new JaxbLogMessage(message), "XDS", "AUDIT", "777");
-                InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
+                InetSocketAddress addr = new InetSocketAddress("localhost", 2861);
                 DatagramSocket s = new DatagramSocket();
                 byte[] bytes = sl.toByteArray();
                 DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, addr);

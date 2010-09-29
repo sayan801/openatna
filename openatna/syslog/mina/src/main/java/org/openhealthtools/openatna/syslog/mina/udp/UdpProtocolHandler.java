@@ -20,9 +20,6 @@
 
 package org.openhealthtools.openatna.syslog.mina.udp;
 
-import java.io.InputStream;
-import java.util.logging.Logger;
-
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandlerAdapter;
@@ -30,6 +27,10 @@ import org.apache.mina.common.IoSession;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+import org.openhealthtools.openatna.syslog.mina.Notifier;
+
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Class Description Here...
@@ -45,12 +46,12 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.udp.UdpProtocolHandler");
 
 
-    private UdpServer server;
-    private UdpConfig config;
+    private Notifier server;
+    private int mtu;
 
-    public UdpProtocolHandler(UdpServer server, UdpConfig config) {
+    public UdpProtocolHandler(Notifier server, int mtu) {
         this.server = server;
-        this.config = config;
+        this.mtu = mtu;
     }
 
     public void sessionCreated(IoSession session) {
@@ -74,17 +75,17 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
             return;
         }
         ByteBuffer buff = (ByteBuffer) message;
-        if (buff.limit() > config.getMtu()) {
-            log.info("message is too long: " + buff.limit() + ". It exceeds config MTU of " + config.getMtu());
+        if (buff.limit() > mtu) {
+            log.info("message is too long: " + buff.limit() + ". It exceeds config MTU of " + mtu);
             return;
         }
         try {
             InputStream in = buff.asInputStream();
             SyslogMessageFactory factory = SyslogMessageFactory.getFactory();
             SyslogMessage msg = factory.read(in);
-            server.notifyListeners(msg);
+            server.notifyMessage(msg);
         } catch (SyslogException e) {
-            e.printStackTrace();
+            server.notifyException(e);
         }
     }
 }

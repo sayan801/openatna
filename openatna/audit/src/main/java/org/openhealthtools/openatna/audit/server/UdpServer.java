@@ -20,14 +20,6 @@
 
 package org.openhealthtools.openatna.audit.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.net.ConnectionFactory;
@@ -37,6 +29,10 @@ import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.*;
+
 /**
  * @author Andrew Harrison
  * @version $Revision:$
@@ -44,7 +40,7 @@ import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
  * @date $Date:$ modified by $Author:$
  */
 
-public class UdpServer {
+public class UdpServer implements Server {
 
     private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.UdpServer");
 
@@ -59,13 +55,18 @@ public class UdpServer {
         this.udpConnection = udpConnection;
     }
 
-    public void start() throws IOException {
-        udpConn = ConnectionFactory.getUdpServerConnection(udpConnection);
-        DatagramSocket socket = udpConn.getServerSocket();
-        thread = new UdpServerThread(socket);
-        running = true;
-        thread.start();
-        log.info("UDP Server running on port:" + udpConnection.getPort());
+    public void start() {
+        System.out.println("UdpServer.start ENTER");
+        try {
+            udpConn = ConnectionFactory.getUdpServerConnection(udpConnection);
+            DatagramSocket socket = udpConn.getServerSocket();
+            thread = new UdpServerThread(socket);
+            running = true;
+            thread.start();
+            log.info("UDP Server running on port:" + udpConnection.getPort());
+        } catch (Exception e) {
+            log.error("Failed to start UDP server", e);
+        }
 
     }
 

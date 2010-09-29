@@ -20,6 +20,13 @@
 
 package org.openhealthtools.openatna.net;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -29,13 +36,6 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Used by the connection factory to create customized secure sockets. <p> SecureSocketFactory can be used to validate
@@ -174,19 +174,28 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
         }
     }
 
-    private SSLContext getSSLContext() throws IOException {
+    public SSLContext getSSLContext() throws IOException {
         if (this.sslcontext == null) {
             this.sslcontext = createSSLContext();
         }
         return this.sslcontext;
     }
 
-    private void setAtnaProtocols(SSLSocket secureSocket) {
-        secureSocket.setEnabledProtocols(new String[]{"TLSv1"});
-        String[] strings = {"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA",
+    public String[] getAtnaProtocols() {
+        return new String[]{"TLSv1"};
+    }
+
+    public String[] getAtnaCipherSuites() {
+        return new String[]{"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA",
                 "SSL_RSA_WITH_3DES_EDE_CBC_SHA", "SSL_RSA_WITH_DES_CBC_SHA"};
+    }
+
+
+    private void setAtnaProtocols(SSLSocket secureSocket) {
+        secureSocket.setEnabledProtocols(getAtnaProtocols());
+
         //String[] strings = {"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA"};
-        secureSocket.setEnabledCipherSuites(strings);
+        secureSocket.setEnabledCipherSuites(getAtnaCipherSuites());
         // Useful debugging information:
         //secureSocket.setSoTimeout(1000);
         //String[] strings = secureSocket.getSupportedCipherSuites();

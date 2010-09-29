@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
-	<parent>
-	  <groupId>org.sonatype.oss</groupId>
-	  <artifactId>oss-parent</artifactId>
-	  <version>3</version>
-	</parent>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>3</version>
+    </parent>
 
     <groupId>org.openhealthtools.openatna</groupId>
     <artifactId>openatna</artifactId>
@@ -26,12 +27,13 @@
 
     <scm>
         <connection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna</connection>
-        <developerConnection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna</developerConnection>
+        <developerConnection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna
+        </developerConnection>
         <url>https://www.projects.openhealthtools.org/svn/openatna/</url>
     </scm>
     <issueManagement>
-        <system />
-        <url />
+        <system/>
+        <url/>
     </issueManagement>
     <developers>
         <developer>
@@ -54,15 +56,15 @@
                 <artifactId>hibernate3-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                  <components>
-                    <component>
-                      <name>hbm2ddl</name>
-                    </component>
-                  </components>
-                  <componentProperties>
-                    <configurationfile>/src/main/resources/openatna-hibernate.cfg.xml</configurationfile>
-                    <export>false</export>
-                  </componentProperties>
+                    <components>
+                        <component>
+                            <name>hbm2ddl</name>
+                        </component>
+                    </components>
+                    <componentProperties>
+                        <configurationfile>/src/main/resources/openatna-hibernate.cfg.xml</configurationfile>
+                        <export>false</export>
+                    </componentProperties>
                 </configuration>
             </plugin>
             <plugin>
@@ -89,14 +91,14 @@
             <id>central</id>
             <url>http://repo1.maven.org/maven2</url>
         </repository>
-        <repository>
-            <id>appfuse</id>
-            <url>http://static.appfuse.org/repository</url>
-        </repository>
-        <repository>
-            <id>sun</id>
-            <url>http://download.java.net/maven/2</url>
-        </repository>
+        <!-- <repository>
+                    <id>appfuse</id>
+                    <url>http://static.appfuse.org/repository</url>
+                </repository>
+                <repository>
+                    <id>sun</id>
+                    <url>http://download.java.net/maven/2</url>
+                </repository> -->
         <repository>
             <id>ibilio</id>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -106,23 +108,25 @@
             <url>https://oss.sonatype.org/content/groups/staging</url>
         </repository>
     </repositories>
+    <!--
     <pluginRepositories>
-        <pluginRepository>
-            <id>appfuse</id>
-            <url>http://static.appfuse.org/repository</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>mc-release</id>
-            <name>Local Maven repository of releases</name>
-            <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
+            <pluginRepository>
+                <id>appfuse</id>
+                <url>http://static.appfuse.org/repository</url>
+            </pluginRepository>
+            <pluginRepository>
+                <id>mc-release</id>
+                <name>Local Maven repository of releases</name>
+                <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+            </pluginRepository>
+        </pluginRepositories>-->
+
     <dependencies>
         <dependency>
             <groupId>commons-logging</groupId>
@@ -211,7 +215,8 @@
                                 <configuration>
                                     <properties>
                                         <company>University of Cardiff and others</company>
-                                        <contributor1>University of Cardiff - initial API and implementation</contributor1>
+                                        <contributor1>University of Cardiff - initial API and implementation
+                                        </contributor1>
                                         <contributor2>-</contributor2>
                                     </properties>
                                     <excludes>
@@ -241,7 +246,8 @@
                                 <configuration>
                                     <properties>
                                         <company>Misys Open Source Solutions (MOSS) and others</company>
-                                        <contributor1>Misys Open Source Solutions - initial API and implementation</contributor1>
+                                        <contributor1>Misys Open Source Solutions - initial API and implementation
+                                        </contributor1>
                                         <contributor2>-</contributor2>
                                     </properties>
                                     <excludes>

@@ -20,15 +20,6 @@
 
 package org.openhealthtools.openatna.syslog.mina.udp;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.DefaultIoFilterChainBuilder;
 import org.apache.mina.common.IoAcceptorConfig;
@@ -37,8 +28,17 @@ import org.apache.mina.transport.socket.nio.DatagramAcceptor;
 import org.apache.mina.transport.socket.nio.DatagramAcceptorConfig;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.mina.Notifier;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
-import org.openhealthtools.openatna.syslog.transport.SyslogServer;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Class Description Here...
@@ -49,7 +49,7 @@ import org.openhealthtools.openatna.syslog.transport.SyslogServer;
  * @date $Date:$ modified by $Author:$
  */
 
-public class UdpServer implements SyslogServer {
+public class UdpServer implements Notifier {
 
     static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.udp.UdpServer");
 
@@ -62,20 +62,24 @@ public class UdpServer implements SyslogServer {
         this.udpconfig = config;
     }
 
-    public void start() throws IOException {
-        String host = udpconfig.getHost();
-        if (host == null) {
-            host = InetAddress.getLocalHost().getHostAddress();
-        }
-        ByteBuffer.setUseDirectBuffers(false);
-        acceptor = new DatagramAcceptor();
-        acceptor.getDefaultConfig().setThreadModel(ThreadModel.MANUAL);
-        IoAcceptorConfig config = new DatagramAcceptorConfig();
-        DefaultIoFilterChainBuilder chain = config.getFilterChain();
+    public void start() {
+        try {
+            String host = udpconfig.getHost();
+            if (host == null) {
+                host = InetAddress.getLocalHost().getHostAddress();
+            }
+            ByteBuffer.setUseDirectBuffers(false);
+            acceptor = new DatagramAcceptor();
+            acceptor.getDefaultConfig().setThreadModel(ThreadModel.MANUAL);
+            IoAcceptorConfig config = new DatagramAcceptorConfig();
+            DefaultIoFilterChainBuilder chain = config.getFilterChain();
 
-        acceptor.setFilterChainBuilder(chain);
-        acceptor.bind(new InetSocketAddress(host, udpconfig.getPort()), new UdpProtocolHandler(this, udpconfig));
-        log.info("server started on port " + udpconfig.getPort());
+            acceptor.setFilterChainBuilder(chain);
+            acceptor.bind(new InetSocketAddress(host, udpconfig.getPort()), new UdpProtocolHandler(this, udpconfig.getMtu()));
+            log.info("server started on port " + udpconfig.getPort());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stop() throws IOException {
@@ -93,7 +97,7 @@ public class UdpServer implements SyslogServer {
         listeners.remove(listener);
     }
 
-    protected void notifyListeners(final SyslogMessage msg) {
+    public void notifyMessage(final SyslogMessage msg) {
         exec.execute(new Runnable() {
             public void run() {
                 for (SyslogListener listener : listeners) {
@@ -103,7 +107,7 @@ public class UdpServer implements SyslogServer {
         });
     }
 
-    protected void notifyException(final SyslogException ex) {
+    public void notifyException(final SyslogException ex) {
         exec.execute(new Runnable() {
             public void run() {
                 for (SyslogListener listener : listeners) {

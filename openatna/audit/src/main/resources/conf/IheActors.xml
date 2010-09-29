@@ -41,7 +41,7 @@
         <!--
         <ExecutionThreads>5</ExecutionThreads>
         -->
-        
+        <nio>true</nio>
     </Actor>
 
 </Configuration>
