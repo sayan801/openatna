@@ -20,13 +20,7 @@
 
 package org.openhealthtools.openatna.all.test;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.net.URL;
-import java.util.List;
-
-import javax.net.ssl.SSLSocket;
+import org.junit.Test;
 import org.openhealthtools.openatna.all.test.ssl.AuthSSLSocketFactory;
 import org.openhealthtools.openatna.all.test.ssl.KeystoreDetails;
 import org.openhealthtools.openatna.anom.AtnaException;
@@ -35,7 +29,13 @@ import org.openhealthtools.openatna.anom.ProvisionalMessage;
 import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.protocol.ProtocolMessage;
-import org.junit.Test;
+
+import javax.net.ssl.SSLSocket;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.URL;
+import java.util.List;
 
 /**
  * @author Andrew Harrison
@@ -46,7 +46,7 @@ import org.junit.Test;
 
 public class TlsClientTest0 extends ClientTest {
 
-    //@Test
+    @Test
     public void testMessages() {
         try {
             URL u = Thread.currentThread().getContextClassLoader().getResource("testcerts/serverKeyStore");
@@ -55,17 +55,19 @@ public class TlsClientTest0 extends ClientTest {
             KeystoreDetails key = new KeystoreDetails(uu.toString(), "password", "myClientCert", "password");
             AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
             List<AtnaMessage> messages = getMessages();
-            Socket s = f.createSecureSocket("localhost", 2862);
-            OutputStream out = s.getOutputStream();
-            for (AtnaMessage message : messages) {
-                ProtocolMessage sl = new ProtocolMessage(10, 5, "localhost", new JaxbLogMessage(message), "IHE_CLIENT", "ATNALOG", "1234");
-                byte[] bytes = sl.toByteArray();
-                out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
-                out.write(bytes);
-                out.flush();
+            for (int i = 0; i < 1000; i++) {
+                Socket s = f.createSecureSocket("localhost", 2862);
+                OutputStream out = s.getOutputStream();
+                for (AtnaMessage message : messages) {
+                    ProtocolMessage sl = new ProtocolMessage(10, 5, "localhost", new JaxbLogMessage(message), "IHE_CLIENT", "ATNALOG", "1234");
+                    byte[] bytes = sl.toByteArray();
+                    out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
+                    out.write(bytes);
+                    out.flush();
+                }
+                out.close();
+                s.close();
             }
-            out.close();
-            s.close();
 
         } catch (IOException e) {
             e.printStackTrace();

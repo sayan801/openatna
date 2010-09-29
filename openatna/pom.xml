@@ -151,11 +151,11 @@
         <module>audit</module>
         <module>anom</module>
         <module>jaxb</module>
-        <module>all</module>
         <module>net</module>
         <module>report</module>
         <module>web</module>
         <module>archive</module>
+        <module>all</module>
     </modules>
     <!-- Properties defined by OpenATNA -->
     <properties>

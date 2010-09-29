@@ -112,8 +112,8 @@ public class UdpClientTest0 extends ClientTest {
     @Test
     public void testBadMessage() {
         try {
-            ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new BadLogMessage(badMsg), "Spartacus", "PDQIN", "777");
-            InetSocketAddress addr = new InetSocketAddress("localhost", 2863);
+            ProtocolMessage sl = new ProtocolMessage(10, 5, "hildegard", new BadLogMessage(badProv), "Spartacus", "PDQIN", "777");
+            InetSocketAddress addr = new InetSocketAddress("localhost", 2861);
             DatagramSocket s = new DatagramSocket();
             byte[] bytes = sl.toByteArray();
             DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, addr);
