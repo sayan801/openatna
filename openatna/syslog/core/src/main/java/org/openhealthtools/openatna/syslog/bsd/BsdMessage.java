@@ -20,20 +20,11 @@
 
 package org.openhealthtools.openatna.syslog.bsd;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-
-import org.openhealthtools.openatna.syslog.Constants;
-import org.openhealthtools.openatna.syslog.LogMessage;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+import org.openhealthtools.openatna.syslog.*;
 import org.openhealthtools.openatna.syslog.message.StringLogMessage;
+
+import java.io.*;
+import java.util.Date;
 
 /**
  * Class Description Here...
@@ -57,7 +48,7 @@ public class BsdMessage<M> extends SyslogMessage {
     }
 
     public BsdMessage(int facility, int severity, String hostName, LogMessage<M> message, String tag) {
-        this(facility, severity, BsdMessageFactory.createDate(new Date()), hostName, message);
+        this(facility, severity, BsdMessageFactory.createDate(new Date()), hostName, message, tag);
 
     }
 
