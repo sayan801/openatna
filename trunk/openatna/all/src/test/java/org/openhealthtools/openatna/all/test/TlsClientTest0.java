@@ -55,19 +55,19 @@ public class TlsClientTest0 extends ClientTest {
             KeystoreDetails key = new KeystoreDetails(uu.toString(), "password", "myClientCert", "password");
             AuthSSLSocketFactory f = new AuthSSLSocketFactory(key, trust);
             List<AtnaMessage> messages = getMessages();
-            //for (int i = 0; i < 1000; i++) {
-            Socket s = f.createSecureSocket("localhost", 2862);
-            OutputStream out = s.getOutputStream();
-            for (AtnaMessage message : messages) {
-                ProtocolMessage sl = new ProtocolMessage(10, 5, "localhost", new JaxbLogMessage(message), "IHE_CLIENT", "ATNALOG", "1234");
-                byte[] bytes = sl.toByteArray();
-                out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
-                out.write(bytes);
-                out.flush();
+            for (int i = 0; i < 1000; i++) {
+                Socket s = f.createSecureSocket("localhost", 2862);
+                OutputStream out = s.getOutputStream();
+                for (AtnaMessage message : messages) {
+                    ProtocolMessage sl = new ProtocolMessage(10, 5, "localhost", new JaxbLogMessage(message), "IHE_CLIENT", "ATNALOG", "1234");
+                    byte[] bytes = sl.toByteArray();
+                    out.write((String.valueOf(bytes.length) + " ").getBytes(Constants.ENC_UTF8));
+                    out.write(bytes);
+                    out.flush();
+                }
+                out.close();
+                s.close();
             }
-            out.close();
-            s.close();
-            //}
 
         } catch (IOException e) {
             e.printStackTrace();

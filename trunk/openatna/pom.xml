@@ -88,17 +88,28 @@
     </build>
     <repositories>
         <repository>
-            <id>central</id>
-            <url>http://repo1.maven.org/maven2</url>
+            <id>appfuse</id>
+            <url>http://static.appfuse.org/repository</url>
         </repository>
-        <!-- <repository>
-                    <id>appfuse</id>
-                    <url>http://static.appfuse.org/repository</url>
-                </repository>
-                <repository>
-                    <id>sun</id>
-                    <url>http://download.java.net/maven/2</url>
-                </repository> -->
+        <repository>
+            <id>sun</id>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+        <repository>
+            <id>trianacode-maven-repos</id>
+            <url>http://trianacode.org/maven</url>
+        </repository>
+        <!--<repository>-->
+        <!--<id>java.net</id>-->
+        <!--<url>http://download.java.net/maven/1</url>-->
+        <!--<layout>legacy</layout>-->
+        <!--<snapshots>-->
+        <!--<enabled>false</enabled>-->
+        <!--</snapshots>-->
+        <!--<releases>-->
+        <!--<enabled>true</enabled>-->
+        <!--</releases>-->
+        <!--</repository>-->
         <repository>
             <id>ibilio</id>
             <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
