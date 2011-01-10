@@ -30,9 +30,9 @@
         <Port>2862</Port>
 
         <!-- Trust and Keystore -->
-        <KeyStore>certs/serverKeyStore</KeyStore>
+        <KeyStore>certs/OpenATNA_2011_Keystore.jks</KeyStore>
         <KeyPass>password</KeyPass>
-        <TrustStore>certs/clientKeyStore</TrustStore>
+        <TrustStore>certs/OpenATNA_2011_Truststore.jks</TrustStore>
         <TrustPass>password</TrustPass>
     </SecureConnection>
     <!-- use IP address instead of localhost for UDP -->
