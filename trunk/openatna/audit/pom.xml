@@ -117,7 +117,7 @@
     </dependencies>
     <properties>
         <spring.version>2.5.6</spring.version>
-        <openexchange.version>1.0</openexchange.version>
+        <openexchange.version>1.2</openexchange.version>
     </properties>
     <profiles>
         <profile>
