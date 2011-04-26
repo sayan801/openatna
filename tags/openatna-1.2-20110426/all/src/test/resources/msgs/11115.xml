@@ -1,0 +1,15 @@
+<AuditMessage>
+    <EventIdentification EventActionCode="E" EventDateTime="2009-11-29T15:15:19" EventOutcomeIndicator="0">
+        <EventID code="110100" codeSystemName="DCM" displayName="Application Activity"/>
+        <EventTypeCode code="110120" codeSystemName="DCM" displayName="Application Start"/>
+    </EventIdentification>
+    <ActiveParticipant UserID="MESA Application" AlternativeUserID="MESA AE Title" UserIsRequestor="false">
+        <RoleIDCode code="110150" codeSystemName="DCM" displayName="Application"/>
+    </ActiveParticipant>
+    <ActiveParticipant UserID="smm" UserName="Steve Moore" UserIsRequestor="true">
+        <RoleIDCode code="110151" codeSystemName="DCM" displayName="Application Launcher"/>
+    </ActiveParticipant>
+    <AuditSourceIdentification AuditEnterpriseSiteID="Hospital" AuditSourceID="ReadingRoom">
+        <AuditSourceTypeCode code="1"/>
+    </AuditSourceIdentification>
+</AuditMessage>

@@ -1,0 +1,14 @@
+<!--
+	ATNA all build file. Creates an executable jar file and has some targets for adding codes and entities.
+-->
+
+
+<project name="openatna-web-dist" default="dist" basedir=".">
+
+    <target name="dist">
+        <copy todir="../dist">
+            <fileset dir="target" includes="*.war"/>
+        </copy>
+    </target>
+
+</project>
