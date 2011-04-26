@@ -11,7 +11,7 @@
     <groupId>org.openhealthtools.openatna</groupId>
     <artifactId>openatna</artifactId>
     <packaging>pom</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2RC</version>
     <name>OpenATNA</name>
     <url>https://openatna.projects.openhealthtools.org</url>
     <prerequisites>
@@ -25,10 +25,10 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna</connection>
-        <developerConnection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/trunk/openatna
+        <connection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/tags/openatna-1.2RC</connection>
+        <developerConnection>scm:svn:https://www.projects.openhealthtools.org/svn/openatna/tags/openatna-1.2RC
         </developerConnection>
-        <url>https://www.projects.openhealthtools.org/svn/openatna/</url>
+        <url>https://www.projects.openhealthtools.org/svn/openatna/tags/openatna-1.2RC</url>
     </scm>
     <issueManagement>
         <system />
