@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>1.2RC</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
     <artifactId>syslog</artifactId>
-    <version>1.2RC</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Syslog</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
@@ -25,9 +25,9 @@
     </licenses>
 
     <scm>
-      <connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.2RC/syslog</connection>
-    <developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.2RC/syslog</developerConnection>
-    <url>https://openatna.projects.openhealthtools.org/source/browse/openatna/syslog/tags/openatna-1.2RC/syslog</url>
+      <connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.0.2-20100921/syslog</connection>
+    <developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/tags/openatna-1.0.2-20100921/syslog</developerConnection>
+    <url>https://openatna.projects.openhealthtools.org/source/browse/openatna/syslog/tags/openatna-1.0.2-20100921/syslog</url>
   </scm>
 
     <issueManagement>
