@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd" [
+        ]>
+
+
+<jasperReport
+        name="MessageReport"
+        pageWidth="595"
+        pageHeight="842"
+        columnWidth="515"
+        columnSpacing="0"
+        leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0"
+        whenNoDataType="NoPages"
+        isTitleNewPage="false"
+        isSummaryNewPage="false">
+    <import value="org.openhealthtools.openatna.report.EntityDataSource"/>
+
+    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique"
+           pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Bold_Small" isBold="true" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+
+
+    <parameter name="inputDirectory" class="java.lang.String"/>
+
+    <field name="id" class="java.lang.Long">
+        <fieldDescription>id</fieldDescription>
+    </field>
+    <field name="eventId" class="org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity">
+        <fieldDescription>eventId</fieldDescription>
+    </field>
+    <field name="eventOutcome" class="java.lang.Integer">
+        <fieldDescription>eventOutcome</fieldDescription>
+    </field>
+    <field name="eventDateTime" class="java.util.Date">
+        <fieldDescription>eventDateTime</fieldDescription>
+    </field>
+    <field name="eventActionCode" class="java.lang.String">
+        <fieldDescription>eventActionCode</fieldDescription>
+    </field>
+    <field name="messageSources" class="java.util.Set">
+        <fieldDescription>messageSources</fieldDescription>
+    </field>
+    <field name="messageParticipants" class="java.util.Set">
+        <fieldDescription>messageParticipants</fieldDescription>
+    </field>
+    <field name="messageObjects" class="java.util.Set">
+        <fieldDescription>messageObjects</fieldDescription>
+    </field>
+
+    <detail>
+        <band height="49">
+            <frame>
+                <reportElement x="0" y="4" width="520" height="45"/>
+                <staticText>
+                    <reportElement x="5" y="0" width="95" height="15" style="Arial_Bold_Small" forecolor="#2c5519"/>
+                    <text><![CDATA[Message]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Time]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="120" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Outcome]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="220" y="15" width="95" height="15" style="Arial_Small_Italic"/>
+                    <text><![CDATA[Action]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="20" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.util.Date">
+                        $F{eventDateTime}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="120" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.Integer">
+                        $F{eventOutcome}
+                    </textFieldExpression>
+                </textField>
+                <textField isStretchWithOverflow="true">
+                    <reportElement x="220" y="30" width="95" height="15" style="Arial_Normal_Small"/>
+                    <textFieldExpression class="java.lang.String">
+                        <![CDATA[$F{eventActionCode}]]>
+                    </textFieldExpression>
+                </textField>
+                <subreport>
+                    <reportElement positionType="Float" x="0" y="45" width="520" height="0" isRemoveLineWhenBlank="true"/>
+                    <dataSourceExpression>new EntityDataSource($F{eventId})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/CodeReport.jasper"</subreportExpression>
+                </subreport>
+                <subreport>
+                    <reportElement positionType="Float" x="0" y="45" width="520" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{messageSources})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/MessageSourceReport.jasper"</subreportExpression>
+                </subreport>
+                <subreport>
+                    <reportElement positionType="Float" x="0" y="45" width="520" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{messageParticipants})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/MessageParticipantReport.jasper"</subreportExpression>
+                </subreport>
+                <subreport>
+                    <reportElement positionType="Float" x="0" y="45" width="500" height="0" isRemoveLineWhenBlank="true"/>
+                    <subreportParameter name="inputDirectory">
+                        <subreportParameterExpression><![CDATA[$P{inputDirectory}]]></subreportParameterExpression>
+                    </subreportParameter>
+                    <dataSourceExpression>new EntityDataSource($F{messageObjects})</dataSourceExpression>
+                    <subreportExpression>$P{inputDirectory} + "/MessageObjectReport.jasper"</subreportExpression>
+                </subreport>
+            </frame>
+        </band>
+    </detail>
+
+</jasperReport>
