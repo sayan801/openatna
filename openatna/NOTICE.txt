@@ -1,5 +1,5 @@
 OpenExchange - OpenATNA
-Copyright (c) 2009-2010 Univerisy of Cardiff, 
+Copyright (c) 2009-2011 Univerisy of Cardiff, 
     Misys Open Source Solutions(MOSS) and others
              
 OpenExchange has been led by 
