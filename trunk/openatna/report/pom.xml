@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>openatna</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
     </parent>
     <artifactId>openatna-report</artifactId>
 
     <packaging>jar</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <name>OpenATNA Report</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
