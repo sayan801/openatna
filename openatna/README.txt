@@ -44,10 +44,10 @@
     openatnaContext.xml        Spring context configuration file
     commons-logging.properties common-logging file
     log4j.xml                  log4j configuration
-    openatna-1.0.2.jar         Main openatna executable file
+    openatna-1.2.jar           Main openatna executable file
     openatna.properties        openatna configuration
     conf/                      The actor configuration files
-    conf/cert/                 Keystore and truststore files 
+    conf/certs/                 Keystore and truststore files 
     lib/                       All the libs needed to OpenATNA
     licenses/                  All the third party license files 
 
@@ -83,6 +83,14 @@
   <https://www.projects.openhealthtools.org/sf/frs/do/viewSummary/projects.openatna/frs>.
 
 
+  Release Notes
+  -------------
+  
+  Details of the release notes can be found on the OpenANTA Project web site 
+  on Open Health Tools (OHT)
+  <https://www.projects.openhealthtools.org/sf/wiki/do/viewPage/projects.openatna/wiki/ReleaseNotes>.
+
+  
   Problems
   ---------
 
