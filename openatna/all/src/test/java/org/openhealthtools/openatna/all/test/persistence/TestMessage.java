@@ -88,7 +88,12 @@ public class TestMessage {
         objEnt.addObjectDetail(new ObjectDetailEntity("version", Base64.encodeString("1.2").getBytes()));
         msgEnt.addMessageObject(objEnt);
 
-        dao.save(msgEnt, new PersistencePolicies());
+        PersistencePolicies pp = new PersistencePolicies();
+        pp.setAllowNewParticipants(true);
+        pp.setAllowNewNetworkAccessPoints(true);
+        pp.setAllowNewSources(true);
+        pp.setAllowNewObjects(true);
+        dao.save(msgEnt, pp);
     }
 
     @Test
@@ -115,7 +120,12 @@ public class TestMessage {
         objEnt.setObject(obj);
         msgEnt.getMessageObjects().add(objEnt);
 
-        dao.save(msgEnt, new PersistencePolicies());
+        PersistencePolicies pp = new PersistencePolicies();
+        pp.setAllowNewParticipants(true);
+        pp.setAllowNewNetworkAccessPoints(true);
+        pp.setAllowNewSources(true);
+        pp.setAllowNewObjects(true);
+        dao.save(msgEnt, pp);
     }
 
     @Test

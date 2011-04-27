@@ -150,7 +150,7 @@ public class TestConvert {
         assertEquals(details.size(), 1);
         AtnaObjectDetail detail = details.get(0);
         assertEquals(detail.getType(), "version");
-        assertEquals(new String(detail.getValue()), "1.2");
+        assertEquals(new String(detail.getValue()), Base64.encodeString("1.2"));
         AtnaObject oe = amo.getObject();
         assertEquals(oe.getObjectId(), "obj1");
         assertEquals(oe.getObjectName(), "machine");
@@ -159,7 +159,7 @@ public class TestConvert {
         assertEquals(oe.getObjectTypeCodeRole(), ObjectTypeCodeRole.PATIENT);
         assertEquals(oe.getObjectIdTypeCode().getCode(), "110180");
         assertEquals(oe.getObjectIdTypeCode().getCodeSystemName(), "DCM");
-        assertEquals(new String(amo.getObjectQuery()), "a query string");
+        assertEquals(new String(amo.getObjectQuery()), Base64.encodeString("a query string"));
 
 
         MessageEntity msgEntity = EntityConverter.createMessage(msg);
