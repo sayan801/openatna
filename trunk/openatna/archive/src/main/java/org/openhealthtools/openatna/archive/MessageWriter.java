@@ -19,29 +19,21 @@
 
 package org.openhealthtools.openatna.archive;
 
+import org.openhealthtools.openatna.audit.persistence.model.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.util.Base64;
+import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
-import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.audit.persistence.util.Base64;
-import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
-
 /**
  * @author Andrew Harrison
  * @version 1.0.0
- * @date Jan 26, 2010: 1:54:27 PM
  */
 
 public class MessageWriter {
