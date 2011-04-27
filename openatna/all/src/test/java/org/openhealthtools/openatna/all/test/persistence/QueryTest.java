@@ -20,14 +20,14 @@
 
 package org.openhealthtools.openatna.all.test.persistence;
 
-import java.util.List;
-
+import org.junit.Test;
+import org.openhealthtools.openatna.audit.AtnaFactory;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.audit.persistence.dao.hibernate.SpringDaoFactory;
 import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
-import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author Andrew Harrison
@@ -48,8 +48,7 @@ public class QueryTest {
                 .equals(0, Query.Target.EVENT_OUTCOME)
                 .equals("scmabh", Query.Target.PARTICIPANT_ID)
                 .orderDescending(Query.Target.EVENT_TIME);
-        SpringDaoFactory fac = new SpringDaoFactory();
-        MessageDao dao = fac.messageDao();
+        MessageDao dao = AtnaFactory.messageDao();
         try {
             List<? extends MessageEntity> ents = dao.getByQuery(query);
             for (MessageEntity ent : ents) {

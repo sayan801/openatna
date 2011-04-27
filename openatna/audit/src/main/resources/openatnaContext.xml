@@ -179,7 +179,7 @@
     <bean id="errorDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateErrorDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
-    <bean id="queryDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.hibernateQueryDao">
+    <bean id="queryDao" class="org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateQueryDao">
         <constructor-arg ref="sessionFactory"/>
     </bean>
 </beans>
