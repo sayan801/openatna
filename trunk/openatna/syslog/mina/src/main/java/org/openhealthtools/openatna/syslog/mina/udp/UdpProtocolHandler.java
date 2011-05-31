@@ -91,6 +91,7 @@ public class UdpProtocolHandler extends IoHandlerAdapter {
             InputStream in = buff.asInputStream();
             SyslogMessageFactory factory = SyslogMessageFactory.getFactory();
             SyslogMessage msg = factory.read(in);
+            msg.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
             server.notifyMessage(msg);
         } catch (SyslogException e) {
             e.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());

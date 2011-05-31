@@ -30,6 +30,8 @@ import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.mina.Notifier;
 
+import java.net.InetSocketAddress;
+
 
 /**
  * Class Description Here...
@@ -72,9 +74,11 @@ public class SyslogProtocolHandler extends IoHandlerAdapter {
             throws Exception {
         if (message instanceof SyslogMessage) {
             SyslogMessage sl = (SyslogMessage) message;
+            sl.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
             server.notifyMessage(sl);
         } else if (message instanceof SyslogException) {
             SyslogException ex = (SyslogException) message;
+            ex.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
             server.notifyException(ex);
         }
 
