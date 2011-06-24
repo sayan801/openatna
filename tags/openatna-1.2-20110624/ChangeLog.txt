@@ -1,0 +1,10 @@
+2010-09-29  Andrew Harrison  <a.b.harrison@.cs.cardiff.ac.uk>
+
+Version 1.2
+
+* Changed default UDP port to 2861 because it was clashing with an open port on Mac OS X Snow Leopard
+
+* Added java.nio servers for TCP and UDP. This can be enabled by adding <nio>true</nio> to the actor
+configuration.
+
+* Added message queue for incoming messages.

@@ -1,0 +1,122 @@
+<!--
+	ATNA all build file. Creates an executable jar file and has some targets for adding codes and entities.
+-->
+
+
+<project name="openatna-dist" default="dist" basedir=".">
+
+    <property name="dist" value="../dist"/>
+    <property name="build" value="build"/>
+    <property name="audit-resources" value="../audit/src/main/resources/"/>
+    <property name="licenses" value="../src/main/resources/licenses"/>
+    <property name="web.target" value="../web/target"/>
+
+    <target name="exec" depends="bundle">
+        <antcall target="populateCodes"/>
+    </target>
+
+    <target name="dist" depends="bundle">
+        <mkdir dir="../dist"/>
+        <zip destfile="${dist}/openatna-${project.version}.zip" basedir="build" update="true"/>
+        <delete file="${dist}/openatna-${project.version}.tar.gz"/>
+        <tar destfile="${dist}/openatna-${project.version}.tar.gz" basedir="build" compression="gzip"/>
+    </target>
+
+    <target name="bundle">
+        <copy todir="${build}/lib" overwrite="yes">
+            <fileset dir="ext" includes="**/**" excludes=".svn"/>
+        </copy>
+
+        <path id="jar.class.path">
+            <fileset dir="${build}/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+
+        <manifestclasspath property="manifest.classpath.prop" jarfile="${build}/openatna-${project.version}.jar">
+            <classpath refid="jar.class.path"/>
+        </manifestclasspath>
+        <!-- clean the conf -->
+        <delete dir="${build}/conf"/>
+        <!-- copy conf with filters -->
+        <copy todir="${build}" overwrite="yes">
+            <fileset dir="${audit-resources}" excludes="*.cfg.xml,sql/**,conf/certs/**"/>
+            <filterset begintoken="@" endtoken="@">
+                <filter token="log.message.class" value="org.openhealthtools.openatna.all.JaxbLogMessage"/>
+            </filterset>
+        	<fileset dir="..">
+        		<include name="LICENSE.txt" />        		
+        		<include name="NOTICE.txt" />        		
+				<include name="README.txt" />        		
+        	</fileset>        	
+        </copy>
+        <!-- copy certs (with no filters!)-->
+        <copy todir="${build}/conf/certs" overwrite="yes">
+            <fileset dir="${audit-resources}/conf/certs"/>
+        </copy>
+        <!-- delete existing jar -->
+        <delete file="${build}/openatna-${project.version}.jar"/>
+        <!-- create staging dir -->
+        <mkdir dir="stage"/>
+        <!-- copy classes to staging -->
+        <copy todir="stage" overwrite="yes">
+            <fileset dir="target/classes" includes="**/*.class"/>
+        </copy>
+        <!-- copy licenses -->
+        <mkdir dir="${build}/licenses"/>
+        <copy todir="${build}/licenses" overwrite="yes">
+            <fileset dir="${licenses}"/>
+        </copy>
+        <!-- copy atna log viewer -->
+        <mkdir dir="${build}/logviewer"/>
+        <copy todir="${build}/logviewer" overwrite="yes">
+            <fileset dir="${web.target}" includes="**/atna.war"/>
+        </copy>
+        <!-- jar it all up -->
+        <jar destfile="${build}/openatna-${project.version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.openhealthtools.openatna.all.Server"/>
+                <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
+            </manifest>
+            <fileset dir="stage" includes="**/**"/>
+        </jar>
+        <!-- delete staging dir -->
+        <delete dir="stage"/>
+    </target>
+
+
+    <target name="populateCodes">
+        <java classname="org.openhealthtools.openatna.audit.util.CodeLoader">
+            <classpath>
+                <fileset dir="${build}/lib/">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <pathelement location="."/>
+                <pathelement location="${build}"/>
+                <pathelement location="target/classes"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="populateEntities">
+        <java classname="org.openhealthtools.openatna.audit.util.EntityLoader">
+            <classpath>
+                <pathelement location="${build}"/>
+                <pathelement location="target/classes"/>
+                <fileset dir="${build}/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="cleanDist" depends="clean">
+        <delete dir="${dist}"/>
+    </target>
+
+
+</project>

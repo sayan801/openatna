@@ -1,0 +1,14 @@
+OpenExchange - OpenATNA
+Copyright (c) 2009-2011 Univerisy of Cardiff, 
+    Misys Open Source Solutions(MOSS) and others
+             
+OpenExchange has been led by 
+Misys Open Source Solutions (MOSS) (http://www.misysoss.com/)
+University of Cardiff   (http://www.cs.cardiff.ac.uk/)
+
+Other contributors include 
+Sysnet International (http://www.sysnetint.com) 
+Topicus Zorg (http://www.topicus.nl)
+and a number of individuals.  
+
+For commercial support, please contact Kondayya.Mullapudi@misys.com. 
