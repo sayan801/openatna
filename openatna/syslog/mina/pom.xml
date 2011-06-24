@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.openhealthtools.openatna</groupId>
         <artifactId>syslog</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
     </parent>
     <artifactId>syslog-mina</artifactId>
 
     <packaging>jar</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <name>Syslog Mina</name>
     <url>https://openatna.projects.openhealthtools.org</url>
 
