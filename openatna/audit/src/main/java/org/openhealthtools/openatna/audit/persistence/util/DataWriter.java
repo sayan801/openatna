@@ -1,24 +1,22 @@
-/**
- * Copyright (c) 2009-2011 University of Cardiff and others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Contributors:
- * Cardiff University - intial API and implementation
- */
-
 package org.openhealthtools.openatna.audit.persistence.util;
 
+import org.openhealthtools.openatna.audit.persistence.model.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,30 +24,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.openhealthtools.openatna.audit.persistence.model.DetailTypeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectDescriptionEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.SopClassEntity;
-import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
 
 /**
  * @author Andrew Harrison
@@ -59,54 +33,74 @@ import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEnti
 
 public class DataWriter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataReader.class);
+
     private Document doc;
     private Element root;
 
     public DataWriter() {
+
         try {
             this.doc = newDocument();
-            root = doc.createElement(DataConstants.ENTITIES);
-            doc.appendChild(root);
+            if (this.doc != null) {
+                root = doc.createElement(DataConstants.ENTITIES);
+                doc.appendChild(root);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("IOException: '{}'", e.getMessage(), e);
         }
     }
 
+    private static StreamResult transform(Document doc, OutputStream out, boolean indent) throws IOException {
+
+        StreamResult sr = new StreamResult(out);
+
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            Transformer t = transformerFactory.newTransformer();
+            t.setOutputProperty(OutputKeys.INDENT, indent ? "yes" : "no");
+            t.setOutputProperty(OutputKeys.METHOD, "xml");
+            t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+            DOMSource doms = new DOMSource(doc);
+
+            t.transform(doms, sr);
+        } catch (TransformerConfigurationException tce) {
+            LOGGER.error("TransformerConfigurationException: '{}'", tce.getMessage(), tce);
+            assert (false);
+        } catch (TransformerException te) {
+            LOGGER.error("TransformerException: '{}'", te.getMessage(), te);
+            throw new IOException(te.getMessage());
+        }
+        return sr;
+    }
+
+    private static Document newDocument() throws IOException {
+
+        Document doc = null;
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            doc = db.newDocument();
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("ParserConfigurationException: '{}'", e.getMessage(), e);
+        }
+        return doc;
+    }
+
     public void write(File f) throws IOException {
+
         FileOutputStream fout = new FileOutputStream(f);
         transform(doc, fout, false);
         fout.flush();
         fout.close();
     }
 
-
-    private static StreamResult transform(Document doc, OutputStream out, boolean indent) throws IOException {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer t = null;
-        try {
-            t = tf.newTransformer();
-            if (indent) {
-                t.setOutputProperty(OutputKeys.INDENT, "yes");
-            } else {
-                t.setOutputProperty(OutputKeys.INDENT, "no");
-            }
-            t.setOutputProperty(OutputKeys.METHOD, "xml");
-            t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        } catch (TransformerConfigurationException tce) {
-            assert (false);
-        }
-        DOMSource doms = new DOMSource(doc);
-        StreamResult sr = new StreamResult(out);
-        try {
-            t.transform(doms, sr);
-        } catch (TransformerException te) {
-            throw new IOException(te.getMessage());
-        }
-        return sr;
-    }
-
     public void writeSources(List<SourceEntity> sources) {
-        if (sources.size() > 0) {
+
+        if (!sources.isEmpty()) {
             Element els = doc.createElement(DataConstants.SOURCES);
             for (SourceEntity source : sources) {
                 Element el = doc.createElement(DataConstants.SOURCE);
@@ -136,7 +130,8 @@ public class DataWriter {
     }
 
     public void writeParticipants(List<ParticipantEntity> entities) {
-        if (entities.size() > 0) {
+
+        if (!entities.isEmpty()) {
             Element els = doc.createElement(DataConstants.PARTICIPANTS);
             for (ParticipantEntity entity : entities) {
                 Element el = doc.createElement(DataConstants.PARTICIPANT);
@@ -169,7 +164,8 @@ public class DataWriter {
     }
 
     public void writeObjects(List<ObjectEntity> entities) {
-        if (entities.size() > 0) {
+
+        if (!entities.isEmpty()) {
             Element els = doc.createElement(DataConstants.OBJECTS);
             for (ObjectEntity entity : entities) {
                 Element el = doc.createElement(DataConstants.OBJECT);
@@ -239,7 +235,8 @@ public class DataWriter {
     }
 
     public void writeNaps(List<NetworkAccessPointEntity> naps) {
-        if (naps.size() > 0) {
+
+        if (!naps.isEmpty()) {
             Element els = doc.createElement(DataConstants.NETWORK_ACCESS_POINTS);
             for (NetworkAccessPointEntity nap : naps) {
                 Element el = doc.createElement(DataConstants.NETWORK_ACCESS_POINT);
@@ -252,13 +249,14 @@ public class DataWriter {
     }
 
     public void writeCodes(List<CodeEntity> ents) {
-        if (ents.size() > 0) {
+
+        if (!ents.isEmpty()) {
             Element els = doc.createElement(DataConstants.CODES);
             List<List<CodeEntity>> lists = sort(ents);
 
             for (List<CodeEntity> list : lists) {
                 Element typeEl = doc.createElement(DataConstants.CODE_TYPE);
-                if (list.size() > 0) {
+                if (!list.isEmpty()) {
                     CodeEntity ce = list.get(0);
                     CodeEntity.CodeType type = ce.getType();
                     switch (type) {
@@ -304,11 +302,13 @@ public class DataWriter {
     }
 
     private List<List<CodeEntity>> sort(List<CodeEntity> ents) {
-        List<CodeEntity> eventIds = new ArrayList<CodeEntity>();
-        List<CodeEntity> eventTypes = new ArrayList<CodeEntity>();
-        List<CodeEntity> objTypeCodes = new ArrayList<CodeEntity>();
-        List<CodeEntity> participantTypes = new ArrayList<CodeEntity>();
-        List<CodeEntity> sourceTypes = new ArrayList<CodeEntity>();
+
+        List<CodeEntity> eventIds = new ArrayList<>();
+        List<CodeEntity> eventTypes = new ArrayList<>();
+        List<CodeEntity> objTypeCodes = new ArrayList<>();
+        List<CodeEntity> participantTypes = new ArrayList<>();
+        List<CodeEntity> sourceTypes = new ArrayList<>();
+
         for (CodeEntity ent : ents) {
             CodeEntity.CodeType type = ent.getType();
             switch (type) {
@@ -331,7 +331,7 @@ public class DataWriter {
                     break;
             }
         }
-        List<List<CodeEntity>> ret = new ArrayList<List<CodeEntity>>();
+        List<List<CodeEntity>> ret = new ArrayList<>();
         ret.add(eventIds);
         ret.add(eventTypes);
         ret.add(objTypeCodes);
@@ -339,18 +339,4 @@ public class DataWriter {
         ret.add(sourceTypes);
         return ret;
     }
-
-    private static Document newDocument() throws IOException {
-        Document doc = null;
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setNamespaceAware(true);
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.newDocument();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        return doc;
-    }
-
 }

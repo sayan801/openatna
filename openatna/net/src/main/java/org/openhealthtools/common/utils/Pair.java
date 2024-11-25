@@ -1,23 +1,3 @@
-/**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.common.utils;
 
 import java.io.Serializable;
@@ -29,8 +9,10 @@ import java.io.Serializable;
  */
 
 public final class Pair implements Serializable {
-    public Object _first = null;
-    public Object _second = null;
+
+    private Object _first = null;
+
+    private Object _second = null;
 
     public Pair() {
     }
@@ -40,7 +22,7 @@ public final class Pair implements Serializable {
     }
 
     public Pair(int first, int second) {
-        _set(new Integer(first), new Integer(second));
+        _set(first, second);
     }
 
     public Pair(String first, Object second) {
@@ -51,12 +33,29 @@ public final class Pair implements Serializable {
         _first = first;
         _second = second;
     }
+    
+    public Object get_first() {
+        return _first;
+    }
 
-    /* (non-Javadoc)
-      * @see java.lang.Object#hashCode()
-      */
+    public void set_first(Object _first) {
+        this._first = _first;
+    }
+
+    public Object get_second() {
+        return _second;
+    }
+
+    public void set_second(Object _second) {
+        this._second = _second;
+    }
+
+    /**
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
+
         final int prime = 31;
         int result = 1;
         result = prime * result + ((_first == null) ? 0 : _first.hashCode());
@@ -64,11 +63,12 @@ public final class Pair implements Serializable {
         return result;
     }
 
-    /* (non-Javadoc)
-      * @see java.lang.Object#equals(java.lang.Object)
-      */
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
+
         if (this == obj) {
             return true;
         }
@@ -87,13 +87,7 @@ public final class Pair implements Serializable {
             return false;
         }
         if (_second == null) {
-            if (other._second != null) {
-                return false;
-            }
-        } else if (!_second.equals(other._second)) {
-            return false;
-        }
-        return true;
+            return other._second == null;
+        } else return _second.equals(other._second);
     }
-
 }

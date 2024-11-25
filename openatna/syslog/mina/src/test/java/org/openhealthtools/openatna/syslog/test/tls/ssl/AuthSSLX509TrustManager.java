@@ -1,39 +1,38 @@
 /**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
+ * Copyright (c) 2009-2011 University of Cardiff and others
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * <p>
+ * Contributors:
+ * University of Cardiff - initial API and implementation
+ * -
  */
-
 package org.openhealthtools.openatna.syslog.test.tls.ssl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
-import javax.net.ssl.X509TrustManager;
 
 /**
  * <p>
  * <p/>
  * </p>
  */
-
 public class AuthSSLX509TrustManager implements X509TrustManager {
 
     private X509TrustManager trustManager = null;
@@ -42,7 +41,7 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
     /**
      * Log object for this class.
      */
-    static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.test.tls.ssl.AuthSSLX509TrustManager");
+    private static Logger log = LoggerFactory.getLogger(AuthSSLX509TrustManager.class);
 
     /**
      * Constructor for AuthSSLX509TrustManager.
@@ -61,7 +60,7 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
     }
 
     /**
-     * @see javax.net.ssl.X509TrustManager#checkClientTrusted(X509Certificate[],String authType)
+     * @see javax.net.ssl.X509TrustManager#checkClientTrusted(X509Certificate[], String authType)
      */
     public void checkClientTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
         if (certificates != null) {
@@ -78,12 +77,12 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
                         }
                     }
                 }
-                log.fine(" Client certificate " + (c + 1) + ":");
-                log.fine("  Subject DN: " + cert.getSubjectDN());
-                log.fine("  Signature Algorithm: " + cert.getSigAlgName());
-                log.fine("  Valid from: " + cert.getNotBefore());
-                log.fine("  Valid until: " + cert.getNotAfter());
-                log.fine("  Issuer: " + cert.getIssuerDN());
+                log.info(" Client certificate " + (c + 1) + ":");
+                log.info("  Subject DN: " + cert.getSubjectDN());
+                log.info("  Signature Algorithm: " + cert.getSigAlgName());
+                log.info("  Valid from: " + cert.getNotBefore());
+                log.info("  Valid until: " + cert.getNotAfter());
+                log.info("  Issuer: " + cert.getIssuerDN());
             }
             if (!isAuthDN) {
                 throw new CertificateException("Subject DN is not authorized to perform the requested action.");
@@ -94,18 +93,18 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
     }
 
     /**
-     * @see javax.net.ssl.X509TrustManager#checkServerTrusted(X509Certificate[],String authType)
+     * @see javax.net.ssl.X509TrustManager#checkServerTrusted(X509Certificate[], String authType)
      */
     public void checkServerTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
         if (certificates != null) {
             for (int c = 0; c < certificates.length; c++) {
                 X509Certificate cert = certificates[c];
-                log.fine(" Server certificate " + (c + 1) + ":");
-                log.fine("  Subject DN: " + cert.getSubjectDN());
-                log.fine("  Signature Algorithm: " + cert.getSigAlgName());
-                log.fine("  Valid from: " + cert.getNotBefore());
-                log.fine("  Valid until: " + cert.getNotAfter());
-                log.fine("  Issuer: " + cert.getIssuerDN());
+                log.info(" Server certificate " + (c + 1) + ":");
+                log.info("  Subject DN: " + cert.getSubjectDN());
+                log.info("  Signature Algorithm: " + cert.getSigAlgName());
+                log.info("  Valid from: " + cert.getNotBefore());
+                log.info("  Valid until: " + cert.getNotAfter());
+                log.info("  Issuer: " + cert.getIssuerDN());
             }
         }
 
@@ -134,7 +133,6 @@ public class AuthSSLX509TrustManager implements X509TrustManager {
         if (certs == null) {
             certs = new X509Certificate[0];
         }
-
         return certs;
     }
 }

@@ -35,7 +35,11 @@ import org.openhealthtools.openatna.anom.codes.CodeRegistry;
 
 public class AtnaCodes {
 
-    private static AtnaCode sourceTypeCode(String code) {
+    private AtnaCodes() {
+		super();
+	}
+
+	private static AtnaCode sourceTypeCode(String code) {
         return CodeRegistry.getCode(AtnaCode.SOURCE_TYPE, code, null, "RFC-3881");
     }
 
@@ -59,7 +63,6 @@ public class AtnaCodes {
      * 8    ISO level 4-6 operating software
      * 9    External source, other or unknown type
      */
-
 
     public static AtnaCode sourceTypeEndUserInterface() {
         return sourceTypeCode("1");
@@ -166,5 +169,4 @@ public class AtnaCodes {
     public static AtnaCode objectIdUri() {
         return objectIdTypeCode("12");
     }
-
 }

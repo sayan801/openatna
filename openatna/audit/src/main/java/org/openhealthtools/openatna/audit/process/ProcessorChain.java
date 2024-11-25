@@ -1,35 +1,11 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.process;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * A chain for processors.
@@ -53,21 +29,10 @@ import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
  * processor that has been called gets its error(context) method called in reverse order.
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 13, 2009: 9:07:16 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class ProcessorChain {
 
-    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.process.ProcessorChain");
-
-    public static enum PHASE {
-        PRE_VERIFY,
-        POST_VERIFY,
-        POST_PERSIST,
-    }
-
+    private final Logger logger = LoggerFactory.getLogger(ProcessorChain.class);
     private ProvisionalProcessor prov = new ProvisionalProcessor();
     private ExceptionProcessor except = new ExceptionProcessor();
     private ValidationProcessor validator = new ValidationProcessor();
@@ -76,7 +41,7 @@ public class ProcessorChain {
     private PhaseProcessor postVerify = new PhaseProcessor();
     private PhaseProcessor postPersist = new PhaseProcessor();
     private boolean validate;
-    private Map<String, Object> contextProperties = new HashMap<String, Object>();
+    private Map<String, Object> contextProperties = new HashMap<>();
     private PersistencePolicies policies = new PersistencePolicies();
 
     public ProcessorChain(boolean validate) {
@@ -139,27 +104,28 @@ public class ProcessorChain {
     }
 
     public void process(ProcessContext context) throws Exception {
+
         long before = System.currentTimeMillis();
         context.addProperties(Collections.unmodifiableMap(contextProperties));
         context.setPolicies(getPolicies());
-        List<AtnaProcessor> done = new ArrayList<AtnaProcessor>();
+        List<AtnaProcessor> done = new ArrayList<>();
         Exception ex = null;
         try {
             prov.process(context);
             if (context.getState() == ProcessContext.State.ABORTED) {
-                log.debug("chain aborted after provisional processor");
+                logger.debug("chain aborted after provisional processor");
                 return;
             }
             except.process(context);
             done.add(except);
             if (context.getState() == ProcessContext.State.ABORTED) {
-                log.debug("chain aborted after exception processor");
+                logger.debug("chain aborted after exception processor");
                 return;
             }
             preVerify.process(context);
             done.add(preVerify);
             if (context.getState() == ProcessContext.State.ABORTED) {
-                log.debug("chain aborted after preverify processors");
+                logger.debug("chain aborted after pre-verify processors");
                 return;
             }
             if (validate) {
@@ -169,24 +135,26 @@ public class ProcessorChain {
             postVerify.process(context);
             done.add(postVerify);
             if (context.getState() == ProcessContext.State.ABORTED) {
-                log.debug("chain aborted after postverify processor");
+                logger.debug("chain aborted after post-verify processor");
                 return;
             }
             if (context.getState() != ProcessContext.State.PERSISTED) {
-                log.debug("about to persist message");
+                logger.debug("about to persist message");
                 persist.process(context);
                 done.add(persist);
             }
             postPersist.process(context);
             done.add(postPersist);
+
         } catch (Exception e) {
+            logger.error("Exception: '{}'", e.getMessage(), e);
             ex = e;
             context.setState(ProcessContext.State.ERROR);
             context.setThrowable(e);
             rewind(done, context);
         }
         long now = System.currentTimeMillis();
-        log.debug("message processing time:" + (now - before));
+        logger.debug("Message processing time: '{}'ms", (now - before));
         if (ex != null) {
             throw ex;
         }
@@ -228,4 +196,9 @@ public class ProcessorChain {
         return null;
     }
 
+    public enum PHASE {
+        PRE_VERIFY,
+        POST_VERIFY,
+        POST_PERSIST,
+    }
 }

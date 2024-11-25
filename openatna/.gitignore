@@ -1,0 +1,21 @@
+# Ignore all target directories
+target/
+
+# Ignore all project files from IntelliJ
+*.iml
+.idea/
+
+# Ignore mac index files
+._*
+
+# Ignore Eclipse configuration files
+.classpath
+.project
+.settings
+
+# Ignore out directory (IntelliJ)
+out/
+
+# Ignore openATNA build stuff
+build/
+openatna.log

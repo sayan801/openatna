@@ -1,47 +1,17 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
 /**
  * @author Andrew Harrison
  * @version 1.0.0
- * @date Jan 7, 2010: 11:48:17 PM
  */
-
 @Entity
 @Table(name = "object_descriptions")
 public class ObjectDescriptionEntity extends PersistentEntity {
@@ -50,11 +20,13 @@ public class ObjectDescriptionEntity extends PersistentEntity {
     private Integer version;
     private String mppsUids = "";
     private String accessionNumbers = "";
-    private Set<SopClassEntity> sopClasses = new HashSet<SopClassEntity>();
+    private Set<SopClassEntity> sopClasses = new HashSet<>();
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    //@GenericGenerator(name = "native", strategy = "native")
     public Long getId() {
         return id;
     }
@@ -83,7 +55,7 @@ public class ObjectDescriptionEntity extends PersistentEntity {
     public List<String> mppsUidsAsList() {
         String uids = getMppsUids();
         String[] vals = uids.split(" ");
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         for (String val : vals) {
             if (val.length() > 0) {
                 ret.add(val);
@@ -103,7 +75,7 @@ public class ObjectDescriptionEntity extends PersistentEntity {
     public List<String> accessionNumbersAsList() {
         String numbers = getAccessionNumbers();
         String[] vals = numbers.split(" ");
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         for (String val : vals) {
             if (val.length() > 0) {
                 ret.add(val);
@@ -156,27 +128,12 @@ public class ObjectDescriptionEntity extends PersistentEntity {
         if (accessionNumbers != null ? !accessionNumbers.equals(that.accessionNumbers) : that.accessionNumbers != null) {
             return false;
         }
-        if (mppsUids != null ? !mppsUids.equals(that.mppsUids) : that.mppsUids != null) {
-            return false;
-        }
-
-        return true;
+        return mppsUids != null ? mppsUids.equals(that.mppsUids) : that.mppsUids == null;
     }
 
     public String toString() {
-        return new StringBuilder("[").append(getClass().getName())
-                .append(" id=")
-                .append(getId())
-                .append(", version=")
-                .append(getVersion())
-                .append(", mppsUids=")
-                .append(getMppsUids())
-                .append(", accessionNumbers=")
-                .append(getAccessionNumbers())
-                .append(", SOP Classes=")
-                .append(getSopClasses())
-                .append("]")
-                .toString();
+        return "[" + getClass().getName() + " id=" + getId() + ", version=" + getVersion() + ", mppsUids=" + getMppsUids() +
+                ", accessionNumbers=" + getAccessionNumbers() + ", SOP Classes=" + getSopClasses() + "]";
     }
 
     @Override

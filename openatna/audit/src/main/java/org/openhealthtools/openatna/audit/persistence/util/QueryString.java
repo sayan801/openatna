@@ -1,38 +1,11 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.util;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.openhealthtools.openatna.anom.EventAction;
-import org.openhealthtools.openatna.anom.EventOutcome;
-import org.openhealthtools.openatna.anom.NetworkAccessPoint;
-import org.openhealthtools.openatna.anom.ObjectType;
-import org.openhealthtools.openatna.anom.ObjectTypeCodeRole;
-import org.openhealthtools.openatna.anom.Timestamp;
+import org.openhealthtools.openatna.anom.*;
 import org.openhealthtools.openatna.audit.persistence.model.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * reads in a query in the form of a string and converts it to a Query.
@@ -60,13 +33,11 @@ import org.openhealthtools.openatna.audit.persistence.model.Query;
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Oct 2, 2009: 5:06:16 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class QueryString {
 
-    public static final char[] ESCAPED = {'"', '\\'};
+    protected static final char[] ESCAPED = {'"', '\\'};
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryString.class);
 
     private QueryString() {
     }
@@ -114,9 +85,9 @@ public class QueryString {
     }
 
     private static Object getObjectForType(Query.Target target, String value) {
-        if (value.equalsIgnoreCase("true")
-                || value.equalsIgnoreCase("false")) {
-            return new Boolean(value.toLowerCase());
+
+        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+            return Boolean.valueOf(value.toLowerCase());
         }
         switch (target) {
             case RESULT:
@@ -143,10 +114,11 @@ public class QueryString {
     }
 
     private static String getStringFromObject(Object value) {
+
         if (value instanceof Date) {
             return Timestamp.format((Date) value);
         } else if (value instanceof EventAction) {
-            return ((EventAction) value).value().toString();
+            return ((EventAction) value).value();
         } else if (value instanceof EventOutcome) {
             return Integer.toString(((EventOutcome) value).value());
         } else if (value instanceof ObjectType) {
@@ -157,10 +129,10 @@ public class QueryString {
             return Integer.toString(((NetworkAccessPoint) value).value());
         }
         return value.toString();
-
     }
 
     public static String create(Query query) {
+
         StringBuilder sb = new StringBuilder();
 
         Map<Query.Target, Set<Query.ConditionalStatement>> map = query.getConditionals();
@@ -185,26 +157,26 @@ public class QueryString {
     }
 
     private static String serializeJoint(Query.ConditionalStatement[] values, Query.Conditional conditional) {
-        StringBuilder sb = new StringBuilder(" ");
+
         Query.ConditionalStatement ct1 = values[0];
         Query.ConditionalStatement ct2 = values[1];
-        sb.append(ct1.getTarget().toString())
-                .append(" ")
-                .append(ct1.getConditional().toString())
-                .append(" ")
-                .append("\"")
-                .append(escape(getStringFromObject(ct1.getValue())))
-                .append("\" ")
-                .append(conditional.toString())
-                .append(" ")
-                .append(ct2.getTarget().toString())
-                .append(" ")
-                .append(ct2.getConditional().toString())
-                .append(" ")
-                .append("\"")
-                .append(escape(getStringFromObject(ct2.getValue())))
-                .append("\" ");
-        return sb.toString();
+
+        return " " + ct1.getTarget().toString() +
+                " " +
+                ct1.getConditional().toString() +
+                " " +
+                "\"" +
+                escape(getStringFromObject(ct1.getValue())) +
+                "\" " +
+                conditional.toString() +
+                " " +
+                ct2.getTarget().toString() +
+                " " +
+                ct2.getConditional().toString() +
+                " " +
+                "\"" +
+                escape(getStringFromObject(ct2.getValue())) +
+                "\" ";
     }
 
     /**
@@ -223,15 +195,14 @@ public class QueryString {
     public static Query parse(String queryString) {
         int state = 0;
         char[] chars = queryString.toCharArray();
-        List<String> targets = new ArrayList<String>();
-        List<String> conditions = new ArrayList<String>();
-        List<String> values = new ArrayList<String>();
-        List<Joint> joints = new ArrayList<Joint>();
+        List<String> targets = new ArrayList<>();
+        List<String> conditions = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+        List<Joint> joints = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean afterBackslash = false;
         Joint currJoint = null;
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
+        for (char c : chars) {
             switch (state) {
                 case 0:
                     if (!Character.isSpaceChar(c)) {
@@ -380,6 +351,32 @@ public class QueryString {
         return query;
     }
 
+    public static void main(String[] args) {
+
+        Query query = new Query();
+        Query.ConditionalStatement t1 = new Query.ConditionalStatement(Query.Conditional.EQUALS, "1",
+                Query.Target.PARTICIPANT_TYPE_CODE_SYSTEM_NAME);
+        Query.ConditionalStatement t2 = new Query.ConditionalStatement(Query.Conditional.EQUALS, "1",
+                Query.Target.PARTICIPANT_TYPE_CODE_SYSTEM);
+        query.notNull(Query.Target.EVENT_OUTCOME)
+                .equals("ITI-8", Query.Target.EVENT_ID_CODE)
+                .equals("IHE Transactions", Query.Target.EVENT_ID_CODE_SYSTEM_NAME)
+                .equals(EventAction.CREATE, Query.Target.EVENT_ACTION)
+                .equals("scmabh", Query.Target.PARTICIPANT_ID)
+                .equals(new Date(), Query.Target.EVENT_TIME)
+                .equals("bla \",,,^^^^  ble", Query.Target.OBJECT_SENSITIVITY)
+                .or(t1, t2)
+                .orderDescending(Query.Target.EVENT_TIME);
+        String s = QueryString.create(query);
+        LOGGER.info(s);
+        LOGGER.info("==========");
+        //String s = "EVENT_ID_CODE EQUALS \"ITI-8\" PARTICIPANT_TYPE_CODE LIKE \"L%\" OR SOURCE_TYPE_CODE EQUALS \"1223\"";
+        LOGGER.info("QueryString.main query: '{}'", s);
+        query = QueryString.parse(s);
+        LOGGER.info("Parsed Query: '{}'", query);
+
+    }
+
     private static class Joint {
 
         private String target1;
@@ -446,31 +443,4 @@ public class QueryString {
             this.value2 = value2;
         }
     }
-
-    public static void main(String[] args) {
-        Query query = new Query();
-        Query.ConditionalStatement t1 = new Query.ConditionalStatement(Query.Conditional.EQUALS, "1",
-                Query.Target.PARTICIPANT_TYPE_CODE_SYSTEM_NAME);
-        Query.ConditionalStatement t2 = new Query.ConditionalStatement(Query.Conditional.EQUALS, "1",
-                Query.Target.PARTICIPANT_TYPE_CODE_SYSTEM);
-        query.notNull(Query.Target.EVENT_OUTCOME)
-                .equals("ITI-8", Query.Target.EVENT_ID_CODE)
-                .equals("IHE Transactions", Query.Target.EVENT_ID_CODE_SYSTEM_NAME)
-                .equals(EventAction.CREATE, Query.Target.EVENT_ACTION)
-                .equals("scmabh", Query.Target.PARTICIPANT_ID)
-                .equals(new Date(), Query.Target.EVENT_TIME)
-                .equals("bla \",,,^^^^  ble", Query.Target.OBJECT_SENSITIVITY)
-                .or(t1, t2)
-                .orderDescending(Query.Target.EVENT_TIME);
-        String s = QueryString.create(query);
-        System.out.println(s);
-        System.out.println("==========");
-        //String s = "EVENT_ID_CODE EQUALS \"ITI-8\" PARTICIPANT_TYPE_CODE LIKE \"L%\" OR SOURCE_TYPE_CODE EQUALS \"1223\"";
-        System.out.println("QueryString.main query:" + s);
-        query = QueryString.parse(s);
-        System.out.println(query);
-
-    }
-
-
 }

@@ -1,24 +1,17 @@
-/**
- *  Copyright (c) 2009-2010 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.web;
+
+import org.apache.commons.lang3.StringUtils;
+import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.dao.ErrorDao;
+import org.openhealthtools.openatna.audit.persistence.model.ErrorEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,73 +19,67 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.audit.persistence.dao.ErrorDao;
-import org.openhealthtools.openatna.audit.persistence.model.ErrorEntity;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+@Controller
+public class ErrorController {
 
-/**
- * @author Andrew Harrison
- * @version 1.0.0
- * @date Jan 19, 2010: 9:58:57 AM
- */
+    private final Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
-public class ErrorController extends MultiActionController {
+    private final ErrorDao errorDao;
 
-    private ErrorDao errorDao;
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-    public ErrorDao getErrorDao() {
-        return errorDao;
-    }
-
-    public void setErrorDao(ErrorDao errorDao) {
+    @Autowired
+    public ErrorController(ErrorDao errorDao) {
         this.errorDao = errorDao;
     }
 
-    public ModelAndView errors(HttpServletRequest request,
-                               HttpServletResponse response, QueryBean queryBean) throws Exception {
+    @GetMapping(value = "/errors")
+    public String errors(ModelMap model) {
 
-        ModelMap modelMap = new ModelMap();
-        List<? extends ErrorEntity> ents = query(queryBean);
-        if (ents != null) {
-            List<StringifiedError> list = new ArrayList<StringifiedError>();
-            for (ErrorEntity ent : ents) {
+        var queryBean = new QueryBean();
+        model.addAttribute("queryBean", queryBean);
+        return "errorForm";
+    }
+
+    @PostMapping(value = "/errors")
+    public ModelAndView errors(QueryBean queryBean) throws AtnaPersistenceException {
+
+        var modelMap = new ModelMap();
+        List<? extends ErrorEntity> errorEntities = query(queryBean);
+        if (errorEntities != null) {
+            List<StringifiedError> list = new ArrayList<>();
+            for (ErrorEntity ent : errorEntities) {
                 list.add(new StringifiedError(ent));
             }
             modelMap.addAttribute("errors", list);
         } else {
-            modelMap.addAttribute("errors", new ArrayList());
+            modelMap.addAttribute("errors", new ArrayList<StringifiedError>());
         }
         modelMap.addAttribute("queryBean", queryBean);
         return new ModelAndView("errorForm", modelMap);
     }
 
     private List<? extends ErrorEntity> query(QueryBean bean) throws AtnaPersistenceException {
-        List<? extends ErrorEntity> ents = null;
+
+        var simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        List<? extends ErrorEntity> errorEntities = null;
         Date startDate = null;
-        if (bean.getStartDate() != null && bean.getStartDate().length() > 0) {
+        if (StringUtils.isNotBlank(bean.getStartDate())) {
             String date = bean.getStartDate();
             try {
-                startDate = format.parse(date + " " + bean.getStartHour() + ":" + bean.getStartMin());
+                startDate = simpleDateFormat.parse(date + " " + bean.getStartHour() + ":" + bean.getStartMin());
             } catch (ParseException e) {
+                logger.error("ParseException: '{}'", e.getMessage(), e);
             }
         }
         Date endDate = null;
-        if (bean.getEndDate() != null && bean.getEndDate().length() > 0) {
+        if (StringUtils.isNotBlank(bean.getEndDate())) {
             String date = bean.getEndDate();
             try {
-                endDate = format.parse(date + " " + bean.getEndHour() + ":" + bean.getEndMin());
-                if (startDate != null) {
-                    if (endDate.before(startDate)) {
-                        endDate = null;
-                    }
+                endDate = simpleDateFormat.parse(date + " " + bean.getEndHour() + ":" + bean.getEndMin());
+                if (startDate != null && endDate.before(startDate)) {
+                    endDate = null;
                 }
             } catch (ParseException e) {
+                logger.error("ParseException: '{}'", e.getMessage(), e);
             }
         }
         String ip = null;
@@ -102,19 +89,18 @@ public class ErrorController extends MultiActionController {
         if (ip != null) {
             if (startDate != null) {
                 if (endDate != null) {
-                    ents = errorDao.getBetween(ip, startDate, endDate);
+                    errorEntities = errorDao.getBetween(ip, startDate, endDate);
                 } else {
-                    ents = errorDao.getAfter(ip, startDate);
+                    errorEntities = errorDao.getAfter(ip, startDate);
                 }
             } else {
                 if (endDate != null) {
-                    ents = errorDao.getBefore(ip, endDate);
+                    errorEntities = errorDao.getBefore(ip, endDate);
                 } else {
-                    ents = errorDao.getBySourceIp(ip);
+                    errorEntities = errorDao.getBySourceIp(ip);
                 }
             }
         }
-        return ents;
+        return errorEntities;
     }
-
 }

@@ -36,7 +36,7 @@ import org.openhealthtools.openatna.syslog.transport.TransportConfig;
 
 public class TlsConfig extends TransportConfig {
 
-    public static final String TLS = "TLSv1";
+    public static final String TLS = "TLSv1.2";
 
 
     public TlsConfig() {

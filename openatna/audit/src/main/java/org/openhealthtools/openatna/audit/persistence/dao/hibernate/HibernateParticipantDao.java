@@ -1,29 +1,4 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
@@ -39,13 +14,14 @@ import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCod
 import org.openhealthtools.openatna.audit.persistence.util.CodesUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 8, 2009: 2:57:42 PM
- * @date $Date:$ modified by $Author:$
  */
-
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEntity> implements ParticipantDao {
 
@@ -53,19 +29,20 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         super(ParticipantEntity.class, sessionFactory);
     }
 
-    public ParticipantEntity getById(Long id) throws AtnaPersistenceException {
+    public ParticipantEntity getById(Long id) {
         return get(id);
     }
 
-    public List<? extends ParticipantEntity> getByUserId(String userId) throws AtnaPersistenceException {
+    public List<? extends ParticipantEntity> getByUserId(String userId) {
         return list(criteria().add(Restrictions.eq("userId", userId)));
     }
 
-    public ParticipantEntity getByAltUserId(String altUserId) throws AtnaPersistenceException {
+    public ParticipantEntity getByAltUserId(String altUserId) {
         return uniqueResult(criteria().add(Restrictions.eq("alternativeUserId", altUserId)));
     }
 
-    public ParticipantEntity get(ParticipantEntity other) throws AtnaPersistenceException {
+    public ParticipantEntity get(ParticipantEntity other) {
+
         Criteria c = criteria();
         c.add(Restrictions.eq("userId", other.getUserId()));
         if (other.getAlternativeUserId() != null) {
@@ -79,7 +56,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
             c.add(Restrictions.isNull("userName"));
         }
         List<? extends ParticipantEntity> ret = list(c);
-        if (ret == null || ret.size() == 0) {
+        if (ret == null || ret.isEmpty()) {
             return null;
         }
         for (ParticipantEntity participantEntity : ret) {
@@ -90,15 +67,15 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         return null;
     }
 
-    public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity)
-            throws AtnaPersistenceException {
+    public List<? extends ParticipantEntity> getByCode(ParticipantCodeEntity codeEntity) {
+
         return list(criteria().createCriteria("participantTypeCodes")
                 .add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
                 .add(Restrictions.eq("codeSystemName", codeEntity.getCodeSystemName())));
     }
 
-    public List<? extends ParticipantEntity> getByUserName(String userName) throws AtnaPersistenceException {
+    public List<? extends ParticipantEntity> getByUserName(String userName) {
         return list(criteria().add(Restrictions.eq("userName", userName)));
     }
 
@@ -131,8 +108,9 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
      * @param pe
      */
     public void save(ParticipantEntity pe, PersistencePolicies policies) throws AtnaPersistenceException {
+
         Set<ParticipantCodeEntity> codes = pe.getParticipantTypeCodes();
-        if (codes.size() > 0) {
+        if (!codes.isEmpty()) {
             ParticipantCodeEntity[] arr = codes.toArray(new ParticipantCodeEntity[codes.size()]);
             CodeDao dao = AtnaFactory.codeDao();
             for (int i = 0; i < arr.length; i++) {
@@ -154,8 +132,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
                     }
                 }
             }
-
-            pe.setParticipantTypeCodes(new HashSet<ParticipantCodeEntity>(Arrays.asList(arr)));
+            pe.setParticipantTypeCodes(new HashSet<>(Arrays.asList(arr)));
         }
 
         if (pe.getVersion() == null) {
@@ -173,9 +150,7 @@ public class HibernateParticipantDao extends AbstractHibernateDao<ParticipantEnt
         currentSession().saveOrUpdate(pe);
     }
 
-    public void delete(ParticipantEntity ap) throws AtnaPersistenceException {
+    public void delete(ParticipantEntity ap) {
         currentSession().delete(ap);
     }
-
-
 }

@@ -1,40 +1,16 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.util;
 
 /**
  * Class Description Here...
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Dec 18, 2007: 7:42:00 PM
- * @date $Date:$ modified by $Author:$
- * @todo Put your notes here...
  */
-
 public class Base64 {
 
-
     // Mapping table from 6-bit nibbles to Base64 characters.
-    private static char[] map1 = new char[64];
+    private static final char[] map1 = new char[64];
+    // Mapping table from Base64 characters to 6-bit nibbles.
+    private static final byte[] map2 = new byte[128];
 
     static {
         int i = 0;
@@ -51,9 +27,6 @@ public class Base64 {
         map1[i++] = '/';
     }
 
-    // Mapping table from Base64 characters to 6-bit nibbles.
-    private static byte[] map2 = new byte[128];
-
     static {
         for (int i = 0; i < map2.length; i++) {
             map2[i] = -1;
@@ -61,6 +34,9 @@ public class Base64 {
         for (int i = 0; i < 64; i++) {
             map2[map1[i]] = (byte) i;
         }
+    }
+
+    private Base64() {
     }
 
     /**
@@ -71,7 +47,7 @@ public class Base64 {
      * @return A String with the Base64 encoded data.
      */
     public static String encodeString(String s) {
-        return new String(encode(s.getBytes()));
+        return encode(s.getBytes());
     }
 
     /**
@@ -82,8 +58,7 @@ public class Base64 {
      * @return A character array with the Base64 encoded data.
      */
     public static String encode(byte[] in) {
-        String s = new String(encode(in, in.length));
-        return s;
+        return new String(encode(in, in.length));
     }
 
     /**
@@ -187,9 +162,5 @@ public class Base64 {
             }
         }
         return out;
-    }
-
-    // Dummy constructor.
-    private Base64() {
     }
 }

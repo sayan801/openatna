@@ -1,27 +1,8 @@
-/**
- * Copyright (c) 2009-2011 University of Cardiff and others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Contributors:
- * Cardiff University - intial API and implementation
- */
-
 package org.openhealthtools.openatna.archive;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.openhealthtools.openatna.audit.persistence.model.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -29,25 +10,9 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectDescriptionEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.SopClassEntity;
-import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
-
-/**
- * @author Andrew Harrison
- * @version 1.0.0
- * @date Jan 27, 2010: 5:56:09 PM
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class EntityReader {
 
@@ -86,7 +51,6 @@ public class EntityReader {
                 reader.nextEvent();
             } else {
                 reader.nextEvent();
-
             }
         }
         return se;
@@ -175,26 +139,31 @@ public class EntityReader {
             XMLEvent code = reader.peek();
             if (code.isStartElement()) {
                 StartElement el = code.asStartElement();
-                if (el.getName().getLocalPart().equals(DataConstants.OBJECT_ID_TYPE)) {
-                    code = reader.nextTag();
-                    attrs = ReadUtils.getAttributes(code);
-                    se.setObjectIdTypeCode(readCode(attrs, ObjectIdTypeCodeEntity.class));
-                } else if (el.getName().getLocalPart().equals(DataConstants.DETAIL)) {
-                    code = reader.nextTag();
-                    attrs = ReadUtils.getAttributes(code);
-                    if (attrs.size() == 1 && attrs.get(0).getName().getLocalPart().equals(DataConstants.VALUE)) {
-                        se.addObjectDetailType(attrs.get(0).getValue());
-                    }
-                    se.setObjectIdTypeCode(readCode(attrs, ObjectIdTypeCodeEntity.class));
-                } else if (el.getName().getLocalPart().equals(DataConstants.OBJECT_DESCRIPTIONS)) {
+                switch (el.getName().getLocalPart()) {
+                    case DataConstants.OBJECT_ID_TYPE:
+                        code = reader.nextTag();
+                        attrs = ReadUtils.getAttributes(code);
+                        se.setObjectIdTypeCode(readCode(attrs, ObjectIdTypeCodeEntity.class));
+                        break;
+                    case DataConstants.DETAIL:
+                        code = reader.nextTag();
+                        attrs = ReadUtils.getAttributes(code);
+                        if (attrs.size() == 1 && attrs.get(0).getName().getLocalPart().equals(DataConstants.VALUE)) {
+                            se.addObjectDetailType(attrs.get(0).getValue());
+                        }
+                        se.setObjectIdTypeCode(readCode(attrs, ObjectIdTypeCodeEntity.class));
+                        break;
+                    case DataConstants.OBJECT_DESCRIPTIONS:
 
-                    code = ReadUtils.dig(reader, DataConstants.OBJECT_DESCRIPTION);
-                    while (evt != null) {
-                        se.addObjectDescription(readDescription(reader));
-                        evt = ReadUtils.dig(reader, DataConstants.OBJECT_DESCRIPTION);
-                    }
-                } else {
-                    reader.nextEvent();
+                        code = ReadUtils.dig(reader, DataConstants.OBJECT_DESCRIPTION);
+                        while (evt != null) {
+                            se.addObjectDescription(readDescription(reader));
+                            evt = ReadUtils.dig(reader, DataConstants.OBJECT_DESCRIPTION);
+                        }
+                        break;
+                    default:
+                        reader.nextEvent();
+                        break;
                 }
             } else if (code.isEndElement()) {
                 EndElement el = code.asEndElement();
@@ -254,14 +223,22 @@ public class EntityReader {
             for (Attribute attribute : attr) {
                 String name = attribute.getName().getLocalPart();
                 String val = attribute.getValue();
-                if (name.equals(DataConstants.CODE)) {
-                    ret.setCode(val);
-                } else if (name.equals(DataConstants.CODE_SYSTEM)) {
-                    ret.setCodeSystem(val);
-                } else if (name.equals(DataConstants.CODE_SYSTEM_NAME)) {
-                    ret.setCodeSystemName(val);
-                } else if (name.equals(DataConstants.DISPLAY_NAME)) {
-                    ret.setDisplayName(val);
+                switch (name) {
+                    case DataConstants.CODE:
+                        ret.setCode(val);
+                        break;
+                    case DataConstants.CODE_SYSTEM:
+                        ret.setCodeSystem(val);
+                        break;
+                    case DataConstants.CODE_SYSTEM_NAME:
+                        ret.setCodeSystemName(val);
+                        break;
+                    case DataConstants.DISPLAY_NAME:
+                        ret.setDisplayName(val);
+                        break;
+                    default:
+                        // No action expected
+                        break;
                 }
             }
             return ret;
@@ -309,7 +286,7 @@ public class EntityReader {
         if (max <= 0) {
             max = Integer.MAX_VALUE;
         }
-        List<NetworkAccessPointEntity> ret = new ArrayList<NetworkAccessPointEntity>();
+        List<NetworkAccessPointEntity> ret = new ArrayList<>();
         boolean is = ReadUtils.peek(reader, DataConstants.NETWORK_ACCESS_POINT);
         while (is && ret.size() < max) {
             ret.add(readNap(reader));
@@ -323,7 +300,7 @@ public class EntityReader {
         if (max <= 0) {
             max = Integer.MAX_VALUE;
         }
-        List<CodeEntity> ret = new ArrayList<CodeEntity>();
+        List<CodeEntity> ret = new ArrayList<>();
         boolean is = ReadUtils.peek(reader, DataConstants.EVT_ID,
                 DataConstants.EVT_TYPE, DataConstants.SOURCE_TYPE,
                 DataConstants.PARTICIPANT_TYPE, DataConstants.OBJECT_ID_TYPE);
@@ -342,7 +319,7 @@ public class EntityReader {
         if (max <= 0) {
             max = Integer.MAX_VALUE;
         }
-        List<SourceEntity> ret = new ArrayList<SourceEntity>();
+        List<SourceEntity> ret = new ArrayList<>();
         boolean is = ReadUtils.peek(reader, DataConstants.SOURCE);
         while (is && ret.size() < max) {
             ret.add(readSource(reader));
@@ -356,7 +333,7 @@ public class EntityReader {
         if (max <= 0) {
             max = Integer.MAX_VALUE;
         }
-        List<ObjectEntity> ret = new ArrayList<ObjectEntity>();
+        List<ObjectEntity> ret = new ArrayList<>();
         boolean is = ReadUtils.peek(reader, DataConstants.OBJECT);
         while (is && ret.size() < max) {
             ret.add(readObject(reader));
@@ -379,7 +356,7 @@ public class EntityReader {
         if (max <= 0) {
             max = Integer.MAX_VALUE;
         }
-        List<ParticipantEntity> ret = new ArrayList<ParticipantEntity>();
+        List<ParticipantEntity> ret = new ArrayList<>();
         boolean is = ReadUtils.peek(reader, DataConstants.PARTICIPANT);
         while (is && ret.size() < max) {
             ret.add(readParticipant(reader));
@@ -388,5 +365,4 @@ public class EntityReader {
         }
         return ret;
     }
-
 }

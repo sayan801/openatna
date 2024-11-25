@@ -1,26 +1,28 @@
 /**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
+ * Copyright (c) 2009-2011 University of Cardiff and others
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * <p>
+ * Contributors:
+ * University of Cardiff - initial API and implementation
+ * -
  */
-
 package org.openhealthtools.openatna.syslog.test.tls.ssl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,31 +30,18 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-import java.util.logging.Logger;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
 
 /**
  *
  */
 public class AuthSSLSocketFactory {
 
-    static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.test.tls.ssl.AuthSSLSocketFactory");
+    static Logger log = LoggerFactory.getLogger("org.openhealthtools.openatna.syslog.test.tls.ssl.AuthSSLSocketFactory");
 
     private KeystoreDetails details = null;
     private KeystoreDetails truststore = null;
@@ -70,7 +59,7 @@ public class AuthSSLSocketFactory {
             this.truststore = truststore;
         }
         if (defaultTrustManager == null) {
-            log.fine(" using sun default trust manager");
+            log.info(" using sun default trust manager");
             this.defaultTrustManager = KeystoreManager.getDefaultTrustManager();
         } else {
             this.defaultTrustManager = defaultTrustManager;
@@ -95,7 +84,7 @@ public class AuthSSLSocketFactory {
             throw new IllegalArgumentException("Keystore location may not be null");
         }
 
-        log.fine("Initializing key store");
+        log.info("Initializing key store");
         KeyStore keystore = KeyStore.getInstance(details.getKeystoreType());
         InputStream is = null;
         try {
@@ -128,7 +117,7 @@ public class AuthSSLSocketFactory {
         } catch (Exception e) {
 
         }
-        log.fine("could not open stream to:" + location);
+        log.info("could not open stream to:" + location);
         return null;
     }
 
@@ -137,7 +126,7 @@ public class AuthSSLSocketFactory {
         if (keystore == null) {
             throw new IllegalArgumentException("Keystore may not be null");
         }
-        log.fine("Initializing key manager");
+        log.info("Initializing key manager");
         KeyManagerFactory kmfactory = KeyManagerFactory.getInstance(details.getAlgType());
         String password = details.getKeyPassword();
         kmfactory.init(keystore, (password == null || password.length() == 0) ? details.getKeystorePassword().toCharArray() : password.toCharArray());
@@ -176,16 +165,16 @@ public class AuthSSLSocketFactory {
                     String alias = (String) aliases.nextElement();
                     Certificate[] certs = keystore.getCertificateChain(alias);
                     if (certs != null) {
-                        log.fine("Certificate chain '" + alias + "':");
+                        log.info("Certificate chain '" + alias + "':");
                         for (int c = 0; c < certs.length; c++) {
                             if (certs[c] instanceof X509Certificate) {
                                 X509Certificate cert = (X509Certificate) certs[c];
-                                log.fine(" Certificate " + (c + 1) + ":");
-                                log.fine("  Subject DN: " + cert.getSubjectDN());
-                                log.fine("  Signature Algorithm: " + cert.getSigAlgName());
-                                log.fine("  Valid from: " + cert.getNotBefore());
-                                log.fine("  Valid until: " + cert.getNotAfter());
-                                log.fine("  Issuer: " + cert.getIssuerDN());
+                                log.info(" Certificate " + (c + 1) + ":");
+                                log.info("  Subject DN: " + cert.getSubjectDN());
+                                log.info("  Signature Algorithm: " + cert.getSigAlgName());
+                                log.info("  Valid from: " + cert.getNotBefore());
+                                log.info("  Valid until: " + cert.getNotAfter());
+                                log.info("  Issuer: " + cert.getIssuerDN());
                             }
                         }
                     }
@@ -198,38 +187,38 @@ public class AuthSSLSocketFactory {
                 Enumeration aliases = keystore.aliases();
                 while (aliases.hasMoreElements()) {
                     String alias = (String) aliases.nextElement();
-                    log.fine("Trusted certificate '" + alias + "':");
+                    log.info("Trusted certificate '" + alias + "':");
                     Certificate trustedcert = keystore.getCertificate(alias);
                     if (trustedcert != null && trustedcert instanceof X509Certificate) {
                         X509Certificate cert = (X509Certificate) trustedcert;
-                        log.fine("  Subject DN: " + cert.getSubjectDN());
-                        log.fine("  Signature Algorithm: " + cert.getSigAlgName());
-                        log.fine("  Valid from: " + cert.getNotBefore());
-                        log.fine("  Valid until: " + cert.getNotAfter());
-                        log.fine("  Issuer: " + cert.getIssuerDN());
+                        log.info("  Subject DN: " + cert.getSubjectDN());
+                        log.info("  Signature Algorithm: " + cert.getSigAlgName());
+                        log.info("  Valid from: " + cert.getNotBefore());
+                        log.info("  Valid until: " + cert.getNotAfter());
+                        log.info("  Issuer: " + cert.getIssuerDN());
                     }
                 }
                 trustmanagers = createTrustManagers(truststore, keystore, defaultTrustManager);
             }
             if (trustmanagers == null) {
-                log.fine(" created trustmanagers from the default...");
+                log.info(" created trustmanagers from the default...");
                 trustmanagers = new TrustManager[]{defaultTrustManager};
             }
 
-            SSLContext sslcontext = SSLContext.getInstance("SSL");
+            SSLContext sslcontext = SSLContext.getInstance("TLSv1.2");
             sslcontext.init(keymanagers, trustmanagers, null);
             return sslcontext;
         } catch (NoSuchAlgorithmException e) {
-            log.warning(e.getMessage());
+            log.warn(e.getMessage());
             throw new IOException("Unsupported algorithm exception: " + e.getMessage());
         } catch (KeyStoreException e) {
-            log.warning(e.getMessage());
+            log.warn(e.getMessage());
             throw new IOException("Keystore exception: " + e.getMessage());
         } catch (GeneralSecurityException e) {
-            log.warning(e.getMessage());
+            log.warn(e.getMessage());
             throw new IOException("Key management exception: " + e.getMessage());
         } catch (IOException e) {
-            log.warning(e.getMessage());
+            log.warn(e.getMessage());
             throw new IOException("I/O error reading keystore/truststore file: " + e.getMessage());
         }
     }
@@ -252,6 +241,4 @@ public class AuthSSLSocketFactory {
     public boolean isSecured() {
         return true;
     }
-
-
 }

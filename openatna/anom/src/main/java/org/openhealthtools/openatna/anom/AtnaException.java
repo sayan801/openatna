@@ -40,7 +40,7 @@ public class AtnaException extends Exception {
 
     private static final long serialVersionUID = -8359738447751397693L;
 
-    public static enum AtnaError {
+    public enum AtnaError {
 
         UNDEFINED,
         NO_MESSAGE,

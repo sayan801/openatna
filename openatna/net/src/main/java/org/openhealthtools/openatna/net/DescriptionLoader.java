@@ -1,43 +1,18 @@
-/**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.net;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -50,7 +25,7 @@ public class DescriptionLoader {
 
     /* Logger for debugging messages */
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.DescriptionLoader");
+    private static final Logger LOGGER = LoggerFactory.getLogger(DescriptionLoader.class);
 
     /**
      * Load connection descriptions from the given filename.  The filename
@@ -78,7 +53,7 @@ public class DescriptionLoader {
      * @throws ParserConfigurationException When no XML parser can be found
      */
     public static List<IConnectionDescription> loadConnectionDescriptions(File file) throws SAXException, IOException, ParserConfigurationException {
-        ArrayList<IConnectionDescription> allDescriptions = new ArrayList<IConnectionDescription>();
+        ArrayList<IConnectionDescription> allDescriptions = new ArrayList<>();
         addConnectionDescriptions(allDescriptions, file);
         return allDescriptions;
     }
@@ -320,11 +295,17 @@ public class DescriptionLoader {
         if (itemName.equalsIgnoreCase("KEYSTORE")) {
             String filename = getNodeAsText(item);
             if (filename != null) {
-                File keyFile = new File(parent.getParentFile(), filename);
+                // Mustafa: Check whether the filename string is already a global path, act accordingly!
+                File keyFile;
+                if (filename.startsWith("/"))
+                    keyFile = new File(filename);
+                else
+                    keyFile = new File(parent.getParentFile(), filename);
+
                 if (secure != null) {
                     secure.setKeyStore(keyFile.getAbsolutePath());
                 } else {
-                    log.error("KEYSTORE element in non secure connection.");
+                    LOGGER.error("KEYSTORE element in non secure connection.");
                 }
             } else {
                 logMissingAttributeWarning(itemName, "name", description);
@@ -333,16 +314,22 @@ public class DescriptionLoader {
             if (secure != null) {
                 secure.setKeyStorePassword(getNodeAsText(item));
             } else {
-                log.error("KEYSTORE element in non secure connection.");
+                LOGGER.error("KEYSTORE element in non secure connection.");
             }
         } else if (itemName.equalsIgnoreCase("TRUSTSTORE")) {
             String filename = getNodeAsText(item);
             if (filename != null) {
-                File keyFile = new File(parent.getParentFile(), filename);
+                // Mustafa: Check whether the filename string is already a global path, act accordingly!
+                File keyFile;
+                if (filename.startsWith("/"))
+                    keyFile = new File(filename);
+                else
+                    keyFile = new File(parent.getParentFile(), filename);
+
                 if (secure != null) {
                     secure.setTrustStore(keyFile.getAbsolutePath());
                 } else {
-                    log.error("KEYSTORE element in non secure connection.");
+                    LOGGER.error("KEYSTORE element in non secure connection.");
                 }
             } else {
                 logMissingAttributeWarning(itemName, "name", description);
@@ -351,7 +338,7 @@ public class DescriptionLoader {
             if (secure != null) {
                 secure.setTrustStorePassword(getNodeAsText(item));
             } else {
-                log.error("KEYSTORE element in non secure connection.");
+                LOGGER.error("KEYSTORE element in non secure connection.");
             }
         } else {
             handled = false;
@@ -445,7 +432,7 @@ public class DescriptionLoader {
             logMissingAttributeWarning(enumMap.getNodeName(), "class", connection);
         } else {
             // Create an enum map for this entry
-            EnumMap theMap = null;
+            EnumMap theMap;
             try {
                 theMap = new EnumMap(enumName);
             } catch (ClassNotFoundException e) {
@@ -623,7 +610,9 @@ public class DescriptionLoader {
             // We did, add the authority
             // Create a property set for this entry
             Identifier theAuthority = new Identifier(namespaceId, universalId, universalIdType);
-            connection.addIdentifier(setName, type, theAuthority);
+            if (connection != null) {
+                connection.addIdentifier(setName, type, theAuthority);
+            }
         }
     }
 
@@ -814,10 +803,8 @@ public class DescriptionLoader {
                             logMissingAttributeWarning(field.getNodeName(), "format", connection);
                         } else {
                             // Save away the field
-                            ObjectEntry.Field fieldData = null;
-                            if (fieldValue != null) {
-                                fieldData = new ObjectEntry.Field(fieldName, fieldValue, fieldType, fieldFormat);
-                            }
+                            ObjectEntry.Field fieldData;
+                            fieldData = new ObjectEntry.Field(fieldName, fieldValue, fieldType, fieldFormat);
                             theObject.addField(fieldName, fieldData);
                         }
                     }
@@ -844,9 +831,9 @@ public class DescriptionLoader {
             name = name.trim();
         }
         if ((name == null) || (name.equals(""))) {
-            log.warn("Unexpected '" + tagName + "' element in connection description");
+            LOGGER.warn("Unexpected '" + tagName + "' element in connection description");
         } else {
-            log.warn("Unexpected '" + tagName + "' element in connection description \"" + name + "\"");
+            LOGGER.warn("Unexpected '" + tagName + "' element in connection description \"" + name + "\"");
         }
     }
 
@@ -866,9 +853,9 @@ public class DescriptionLoader {
             name = name.trim();
         }
         if ((name == null) || (name.equals(""))) {
-            log.warn("Missing attribute '" + attribute + "' in '" + tagName + "' element in connection description");
+            LOGGER.warn("Missing attribute '" + attribute + "' in '" + tagName + "' element in connection description");
         } else {
-            log.warn("Missing attribute '" + attribute + "' in '" + tagName + "' element in connection description \"" + name + "\"");
+            LOGGER.warn("Missing attribute '" + attribute + "' in '" + tagName + "' element in connection description \"" + name + "\"");
         }
     }
 
@@ -888,9 +875,9 @@ public class DescriptionLoader {
             name = name.trim();
         }
         if ((name == null) || (name.equals(""))) {
-            log.warn("Missing subelement '" + element + "' in '" + tagName + "' element in connection description");
+            LOGGER.warn("Missing subelement '" + element + "' in '" + tagName + "' element in connection description");
         } else {
-            log.warn("Missing subelement '" + element + "' in '" + tagName + "' element in connection description \"" + name + "\"");
+            LOGGER.warn("Missing subelement '" + element + "' in '" + tagName + "' element in connection description \"" + name + "\"");
         }
     }
 
@@ -903,15 +890,15 @@ public class DescriptionLoader {
      */
     private static void logIncludeFileError(String filename, IConnectionDescription description, Exception e) {
         if ((filename == null) || (filename.equals(""))) {
-            log.error("Error reading file included in connection description", e);
+            LOGGER.error("Error reading file included in connection description", e);
         } else if (description == null) {
-            log.error("Error reading connection description include file: \"" + filename + "\"", e);
+            LOGGER.error("Error reading connection description include file: \"" + filename + "\"", e);
         } else {
             String name = description.getName();
             if (name != null) {
                 name = name.trim();
             }
-            log.warn("Error reading connection description \"" + name + "\" include file: \"" + filename + "\"", e);
+            LOGGER.warn("Error reading connection description \"" + name + "\" include file: \"" + filename + "\"", e);
         }
     }
 
@@ -924,13 +911,13 @@ public class DescriptionLoader {
      */
     private static void logEnumMapError(String enumClassName, IConnectionDescription description, Exception e) {
         if ((enumClassName == null) || (enumClassName.equals(""))) {
-            log.error("Error reading file included in connection description", e);
+            LOGGER.error("Error reading file included in connection description", e);
         } else {
             String name = description.getName();
             if (name != null) {
                 name = name.trim();
             }
-            log.warn("Error reading connection description \"" + name + "\" enum map \"" + enumClassName + "\"", e);
+            LOGGER.warn("Error reading connection description \"" + name + "\" enum map \"" + enumClassName + "\"", e);
         }
     }
 
@@ -978,5 +965,4 @@ public class DescriptionLoader {
         String value = nodeTextContents.getData();
         return Integer.parseInt(value);
     }
-
 }

@@ -1,39 +1,15 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.*;
+import org.openhealthtools.openatna.audit.persistence.model.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.openhealthtools.openatna.audit.persistence.model.Query;
 
 /**
  * Builds a hibernate Criteria from a query
@@ -45,14 +21,10 @@ import org.openhealthtools.openatna.audit.persistence.model.Query;
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 13, 2009: 7:10:40 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class HibernateQueryBuilder {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateQueryBuilder");
-
+    private static Logger logger = LoggerFactory.getLogger(HibernateQueryBuilder.class);
 
     private Criteria messageCriteria;
     private Criteria idCriteria;
@@ -63,6 +35,7 @@ public class HibernateQueryBuilder {
     }
 
     private Criterion createConditional(CriteriaNode root, CriteriaNode node, Query.ConditionalStatement value, String name) {
+
         Criteria c = node.getCriteria();
         Query.Conditional con = value.getConditional();
         Object val = value.getValue();
@@ -134,7 +107,7 @@ public class HibernateQueryBuilder {
         try {
             Query.ConditionalStatement[] values = (Query.ConditionalStatement[]) value.getValue();
             if (values == null || values.length != 2) {
-                log.info("Joint takes two conditional values");
+                logger.info("Joint takes two conditional values");
                 return;
             }
             Query.TargetPath tp = Query.createPath(values[0].getTarget());
@@ -155,7 +128,7 @@ public class HibernateQueryBuilder {
                 }
             }
         } catch (Exception e) {
-            log.info(e);
+            logger.info("Exception: '{}'", e.getMessage(), e);
         }
     }
 
@@ -184,7 +157,7 @@ public class HibernateQueryBuilder {
         idCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         idCriteria.addOrder(Order.asc("id"));
         List<Long> ids = idCriteria.list();
-        if (ids == null || ids.size() == 0) {
+        if (ids == null || ids.isEmpty()) {
             return null;
         }
         if (ids.size() == 1) {
@@ -226,8 +199,7 @@ public class HibernateQueryBuilder {
 
         private Criteria criteria;
         private String criteriaName;
-        private List<CriteriaNode> children = new ArrayList<CriteriaNode>();
-
+        private List<CriteriaNode> children = new ArrayList<>();
 
         private CriteriaNode(Criteria criteria, String criteriaName) {
             this.criteria = criteria;
@@ -250,6 +222,4 @@ public class HibernateQueryBuilder {
             this.children.add(child);
         }
     }
-
-
 }

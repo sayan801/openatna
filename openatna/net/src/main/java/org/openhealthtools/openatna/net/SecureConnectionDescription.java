@@ -1,24 +1,7 @@
-/**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.net;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 
@@ -33,23 +16,24 @@ import java.net.URL;
  */
 public class SecureConnectionDescription extends StandardConnectionDescription {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecureConnectionDescription.class);
     private String trustStoreLocation = null;
     private String trustStorePassword = null;
     private String keyStoreLocation = null;
     private String keyStorePassword = null;
 
     /**
-     * Constuctor for bidirectional authentication connections.
+     * Constructor for bidirectional authentication connections.
      * <p/>
      * Should not be used except for by the ConnectionFactory.getConnectionDescription function.
      */
     public SecureConnectionDescription() {
-        log.debug("Generating bidirectional secure connection description.");
+        LOGGER.debug("Generating bidirectional secure connection description.");
     }
 
     /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnectionDescription#isSecure()
-      */
+     * @see org.openhealthtools.openatna.net.IConnectionDescription#isSecure()
+     */
     public boolean isSecure() {
         return true;
     }
@@ -65,66 +49,17 @@ public class SecureConnectionDescription extends StandardConnectionDescription {
         if (invokedLevel >= 1) {
             return false;
         }
-//     one directional or no authentication may work.
-//		if (( (keyStorePassword != null && keyStoreLocation != null) ||
-//			  (keyStorePassword == null && keyStoreLocation == null) ) &&
-//			( (trustStorePassword != null && trustStoreLocation != null) ||
-//			  (trustStorePassword == null && trustStoreLocation == null) ))
+        //  one directional or no authentication may work.
         if (((keyStorePassword != null && keyStoreLocation != null)) &&
                 ((trustStorePassword != null && trustStoreLocation != null))) {
             this.complete = complete;
         } else {
-            log.warn("Attempt to complete invalid secure connection description.");
+            LOGGER.warn("Attempt to complete invalid secure connection description.");
             this.complete = false;
         }
 
         return this.complete;
     }
-
-    /**
-     * Only used for init.  Not for use outside of factory.
-     */
-    public void setKeyStore(String keyStoreLocation) {
-        if (!complete) {
-            this.keyStoreLocation = keyStoreLocation;
-        } else {
-            log.warn("Connection Descriptor setter used outside of factory.");
-        }
-    }
-
-    /**
-     * Only used for init.  Not for use outside of factory.
-     */
-    public void setKeyStorePassword(String keyStorePassword) {
-        if (!complete) {
-            this.keyStorePassword = keyStorePassword;
-        } else {
-            log.warn("Connection Descriptor setter used outside of factory.");
-        }
-    }
-
-    /**
-     * Only used for init.  Not for use outside of factory.
-     */
-    public void setTrustStore(String trustStoreLocation) {
-        if (!complete) {
-            this.trustStoreLocation = trustStoreLocation;
-        } else {
-            log.warn("Connection Descriptor setter used outside of factory.");
-        }
-    }
-
-    /**
-     * Only used for init.  Not for use outside of factory.
-     */
-    public void setTrustStorePassword(String trustStorePassword) {
-        if (!complete) {
-            this.trustStorePassword = trustStorePassword;
-        } else {
-            log.warn("Connection Descriptor setter used outside of factory.");
-        }
-    }
-
 
     /**
      * Use to get the URL of the keystore described in this connection description. <p />
@@ -138,12 +73,22 @@ public class SecureConnectionDescription extends StandardConnectionDescription {
         if (keyStoreLocation != null) {
             try {
                 keyStore = new URL("file:" + keyStoreLocation);
-            }
-            catch (Exception e) {
-                log.error("Keystore has a malformed name: " + keyStoreLocation, e);
+            } catch (Exception e) {
+                LOGGER.error("Keystore has a malformed name: " + keyStoreLocation, e);
             }
         }
         return keyStore;
+    }
+
+    /**
+     * Only used for init.  Not for use outside of factory.
+     */
+    public void setKeyStore(String keyStoreLocation) {
+        if (!complete) {
+            this.keyStoreLocation = keyStoreLocation;
+        } else {
+            LOGGER.warn("Connection Descriptor setter used outside of factory.");
+        }
     }
 
     public String getKeyStoreString() {
@@ -162,12 +107,22 @@ public class SecureConnectionDescription extends StandardConnectionDescription {
         if (trustStoreLocation != null) {
             try {
                 trustStore = new URL("file:" + trustStoreLocation);
-            }
-            catch (Exception e) {
-                log.error("Truststore has a malformed name: " + trustStoreLocation, e);
+            } catch (Exception e) {
+                LOGGER.error("Truststore has a malformed name: " + trustStoreLocation, e);
             }
         }
         return trustStore;
+    }
+
+    /**
+     * Only used for init.  Not for use outside of factory.
+     */
+    public void setTrustStore(String trustStoreLocation) {
+        if (!complete) {
+            this.trustStoreLocation = trustStoreLocation;
+        } else {
+            LOGGER.warn("Connection Descriptor setter used outside of factory.");
+        }
     }
 
     public String getTrustStoreString() {
@@ -187,11 +142,33 @@ public class SecureConnectionDescription extends StandardConnectionDescription {
     }
 
     /**
+     * Only used for init.  Not for use outside of factory.
+     */
+    public void setKeyStorePassword(String keyStorePassword) {
+        if (!complete) {
+            this.keyStorePassword = keyStorePassword;
+        } else {
+            LOGGER.warn("Connection Descriptor setter used outside of factory.");
+        }
+    }
+
+    /**
      * Returns the password to use for this truststore. <p />
      *
      * @return The password for the truststore.
      */
     public String getTrustStorePassword() {
         return trustStorePassword;
+    }
+
+    /**
+     * Only used for init.  Not for use outside of factory.
+     */
+    public void setTrustStorePassword(String trustStorePassword) {
+        if (!complete) {
+            this.trustStorePassword = trustStorePassword;
+        } else {
+            LOGGER.warn("Connection Descriptor setter used outside of factory.");
+        }
     }
 }

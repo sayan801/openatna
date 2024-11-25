@@ -36,7 +36,11 @@ import org.openhealthtools.openatna.anom.codes.CodeRegistry;
 public class IheCodes {
 
 
-    private static AtnaCode newCode(String type, String code, String codeSystemName) {
+    private IheCodes() {
+		super();
+	}
+
+	private static AtnaCode newCode(String type, String code, String codeSystemName) {
         return CodeRegistry.getCode(type, code, null, codeSystemName);
     }
 

@@ -41,7 +41,7 @@ public class LoggedX509TrustManager implements X509TrustManager {
      */
     static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.LoggedX509TrustManager");
 
-    //private static final Logger log = Logger.getLogger(LoggedX509TrustManager.class);
+    //private static final Logger log = LoggerFactory.getLogger(LoggedX509TrustManager.class);
     SecureConnectionDescription scd;
 
     /**

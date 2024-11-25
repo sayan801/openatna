@@ -1,49 +1,15 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
-
 /**
- * the userId, userName, and alternativeUserId are used to determine equality
- *
- * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 4, 2009: 9:23:30 AM
- * @date $Date:$ modified by $Author:$
+ * The userId, userName, and alternativeUserId are used to determine equality.
  */
-
-
 @Entity
 @Table(name = "participants")
 public class ParticipantEntity extends PersistentEntity {
@@ -56,7 +22,7 @@ public class ParticipantEntity extends PersistentEntity {
     private String alternativeUserId;
     private String userName;
 
-    private Set<ParticipantCodeEntity> participantTypeCodes = new HashSet<ParticipantCodeEntity>();
+    private Set<ParticipantCodeEntity> participantTypeCodes = new HashSet<>();
 
     public ParticipantEntity() {
     }
@@ -71,7 +37,7 @@ public class ParticipantEntity extends PersistentEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -129,27 +95,7 @@ public class ParticipantEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ParticipantEntity)) {
-            return false;
-        }
-
-        ParticipantEntity that = (ParticipantEntity) o;
-
-        if (alternativeUserId != null ? !alternativeUserId.equals(that.alternativeUserId)
-                : that.alternativeUserId != null) {
-            return false;
-        }
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) {
-            return false;
-        }
-        if (userName != null ? !userName.equals(that.userName) : that.userName != null) {
-            return false;
-        }
-
-        return true;
+        return this == o;
     }
 
     @Override
@@ -160,21 +106,15 @@ public class ParticipantEntity extends PersistentEntity {
         return result;
     }
 
+    @Override
     public String toString() {
-        return new StringBuilder("[").append(getClass().getName())
-                .append(" id=")
-                .append(getId())
-                .append(", version=")
-                .append(getVersion())
-                .append(", userID=")
-                .append(getUserId())
-                .append(", user name=")
-                .append(getUserName())
-                .append(", alternative user id=")
-                .append(getAlternativeUserId())
-                .append(", codes=")
-                .append(getParticipantTypeCodes())
-                .append("]")
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("version", version)
+                .append("userId", userId)
+                .append("alternativeUserId", alternativeUserId)
+                .append("userName", userName)
+                .append("participantTypeCodes", participantTypeCodes)
                 .toString();
     }
 }

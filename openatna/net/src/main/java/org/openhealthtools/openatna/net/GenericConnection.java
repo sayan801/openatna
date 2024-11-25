@@ -1,44 +1,29 @@
-/**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.net;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * An abstract implementation of IConnection which does a number of items required by all connections. <p />
+ * An abstract implementation of IConnection which does a number of items required by all connections. <p/>
  * <p/>
- * To make a new type of connection which requires these features simply extend this class
- * and implement the additionally required features.  Remember that the connect call is
- * where the socket (or other connection type) should be made.
+ * To make a new type of connection which requires these features simply extend this class and implement the additionally
+ * required features.
+ * <p>
+ * Remember that the connect call is where the socket (or other connection type) should be made.
  *
  * @author Josh Flachsbart
  */
 public abstract class GenericConnection implements IConnection {
 
+    /**
+     * Package level logger for debugging only.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericConnection.class);
     /**
      * The actual connection.
      */
@@ -47,27 +32,24 @@ public abstract class GenericConnection implements IConnection {
      * The description of the connection. This includes everything needed to connect.
      */
     protected IConnectionDescription description = null;
-    /**
-     * Package level logger for debugging only.
-     */
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net");
 
 
     public GenericConnection(IConnectionDescription connectionDescription) {
         description = connectionDescription;
     }
 
-    /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnection#getConnectionDescription()
-      */
+    /**
+     * @see org.openhealthtools.openatna.net.IConnection#getConnectionDescription()
+     */
     public IConnectionDescription getConnectionDescription() {
         return description;
     }
 
-    /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnection#isConnectionValid()
-      */
+    /**
+     * @see org.openhealthtools.openatna.net.IConnection#isConnectionValid()
+     */
     public boolean isConnectionValid() {
+
         boolean isValid = false;
         if (socket != null) {
             isValid = socket.isConnected();
@@ -75,68 +57,68 @@ public abstract class GenericConnection implements IConnection {
         return isValid;
     }
 
-    /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnection#getOutputStream()
-      */
+    /**
+     * @see org.openhealthtools.openatna.net.IConnection#getOutputStream()
+     */
     public OutputStream getOutputStream() {
+
         OutputStream returnVal = null;
         try {
             if (isConnectionValid()) {
                 returnVal = socket.getOutputStream();
             }
         } catch (IOException e) {
-            returnVal = null; // TODO add logging message.
+            return null;
         }
         return returnVal;
     }
 
-    /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnection#getInputStream()
-      */
+    /**
+     * @see org.openhealthtools.openatna.net.IConnection#getInputStream()
+     */
     public InputStream getInputStream() {
+
         InputStream returnVal = null;
         try {
             if (isConnectionValid()) {
                 returnVal = socket.getInputStream();
             }
         } catch (IOException e) {
-            returnVal = null; // TODO add logging message.
+            return null;
         }
         return returnVal;
     }
 
-    /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnection#getSocket()
-      */
+    /**
+     * @see org.openhealthtools.openatna.net.IConnection#getSocket()
+     */
     public Socket getSocket() {
+
         Socket returnVal = null;
         if (isConnectionValid()) {
             returnVal = socket;
         }
-        // TODO add logging message.
         return returnVal;
     }
 
-    /* (non-Javadoc)
-      * @see org.openhealthtools.openatna.net.IConnection#closeConnection()
-      */
+    /**
+     * @see org.openhealthtools.openatna.net.IConnection#closeConnection()
+     */
     public void closeConnection() {
+
         if (isConnectionValid()) {
             try {
                 socket.close();
+            } catch (IOException e) {
+                LOGGER.error("IOException: '{}'", e.getMessage());
             }
-            catch (IOException e) {
-                ;
-            } // TODO add logging message.
-            // TODO add ATNA message?
         }
         socket = null;
     }
 
     /**
-     * This function must be instantiated by the subclasses
-     * because it generates all the actual sockets when the c
-     * connection is made.
+     * This function must be instantiated by the subclasses because it generates all the actual sockets when
+     * the connection is made.
      */
     public abstract void connect();
 }

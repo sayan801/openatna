@@ -1,57 +1,29 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.anom;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Audit message interface
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 5, 2009: 2:37:18 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class AtnaMessage implements Serializable {
 
     private static final long serialVersionUID = -5502378798460439820L;
 
+    private Long messageId;
     private AtnaCode eventCode;
-    private Set<AtnaCode> eventTypeCodes = new HashSet<AtnaCode>();
+    private Set<AtnaCode> eventTypeCodes = new HashSet<>();
     private EventAction eventActionCode;
     private EventOutcome eventOutcome;
     private Date eventDateTime;
     private String sourceAddress;
-
-    private Long messageId;
-
-    private Set<AtnaMessageParticipant> participants = new HashSet<AtnaMessageParticipant>();
-    private Set<AtnaSource> sources = new HashSet<AtnaSource>();
-    private Set<AtnaMessageObject> objects = new HashSet<AtnaMessageObject>();
+    private Set<AtnaMessageParticipant> participants = new HashSet<>();
+    private Set<AtnaSource> sources = new HashSet<>();
+    private Set<AtnaMessageObject> objects = new HashSet<>();
+    private byte[] messageContent;
 
     public AtnaMessage(AtnaCode eventCode, EventOutcome eventOutcome) {
         this.eventCode = eventCode;
@@ -59,9 +31,9 @@ public class AtnaMessage implements Serializable {
     }
 
     /**
-     * a unique id for the message. This is assigned once a message has been successfully persisted.
+     * Returns unique ID for the message. This is assigned once a message has been successfully persisted.
      *
-     * @return
+     * @return Atna message unique ID.
      */
     public Long getMessageId() {
         return messageId;
@@ -80,7 +52,7 @@ public class AtnaMessage implements Serializable {
     }
 
     public List<AtnaCode> getEventTypeCodes() {
-        return new ArrayList<AtnaCode>(eventTypeCodes);
+        return new ArrayList<>(eventTypeCodes);
     }
 
     public AtnaMessage addEventTypeCode(AtnaCode value) {
@@ -130,7 +102,7 @@ public class AtnaMessage implements Serializable {
     }
 
     public List<AtnaMessageParticipant> getParticipants() {
-        return new ArrayList<AtnaMessageParticipant>(participants);
+        return new ArrayList<>(participants);
     }
 
     public AtnaMessage addParticipant(AtnaMessageParticipant participant) {
@@ -153,7 +125,7 @@ public class AtnaMessage implements Serializable {
     }
 
     public List<AtnaSource> getSources() {
-        return new ArrayList<AtnaSource>(sources);
+        return new ArrayList<>(sources);
     }
 
     public AtnaMessage addSource(AtnaSource atnaSource) {
@@ -176,7 +148,7 @@ public class AtnaMessage implements Serializable {
     }
 
     public List<AtnaMessageObject> getObjects() {
-        return new ArrayList<AtnaMessageObject>(objects);
+        return new ArrayList<>(objects);
     }
 
     public AtnaMessage addObject(AtnaMessageObject object) {
@@ -198,8 +170,17 @@ public class AtnaMessage implements Serializable {
         return null;
     }
 
+    public byte[] getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(byte[] messageContent) {
+        this.messageContent = messageContent;
+    }
+
     @Override
     public boolean equals(Object o) {
+
         if (this == o) {
             return true;
         }
@@ -208,32 +189,28 @@ public class AtnaMessage implements Serializable {
         }
 
         AtnaMessage that = (AtnaMessage) o;
-        if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) {
+        if (!Objects.equals(eventActionCode, that.eventActionCode)) {
             return false;
         }
-        if (eventCode != null ? !eventCode.equals(that.eventCode) : that.eventCode != null) {
+        if (!Objects.equals(eventCode, that.eventCode)) {
             return false;
         }
-        if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) {
+        if (!Objects.equals(eventDateTime, that.eventDateTime)) {
             return false;
         }
         if (eventOutcome != that.eventOutcome) {
             return false;
         }
-        if (eventTypeCodes != null ? !eventTypeCodes.equals(that.eventTypeCodes) : that.eventTypeCodes != null) {
+        if (!Objects.equals(eventTypeCodes, that.eventTypeCodes)) {
             return false;
         }
-        if (objects != null ? !objects.equals(that.objects) : that.objects != null) {
+        if (!Objects.equals(objects, that.objects)) {
             return false;
         }
-        if (participants != null ? !participants.equals(that.participants) : that.participants != null) {
+        if (!Objects.equals(participants, that.participants)) {
             return false;
         }
-        if (sources != null ? !sources.equals(that.sources) : that.sources != null) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(sources, that.sources);
     }
 
     @Override
@@ -249,26 +226,26 @@ public class AtnaMessage implements Serializable {
         return result;
     }
 
+    @Override
     public String toString() {
-        return new StringBuilder().append("[")
-                .append(getClass().getName())
-                .append(" event code=")
-                .append(getEventCode())
-                .append(" event action=")
-                .append(getEventActionCode())
-                .append(" event outcome=")
-                .append(getEventOutcome())
-                .append(" timestamp=")
-                .append(getEventDateTime())
-                .append(" event type codes=")
-                .append(getEventTypeCodes())
-                .append(" sources=")
-                .append(getSources())
-                .append(" participants=")
-                .append(getParticipants())
-                .append(" objects=")
-                .append(getObjects())
-                .append("]")
-                .toString();
+        return "[" +
+                getClass().getName() +
+                " event code=" +
+                getEventCode() +
+                " event action=" +
+                getEventActionCode() +
+                " event outcome=" +
+                getEventOutcome() +
+                " timestamp=" +
+                getEventDateTime() +
+                " event type codes=" +
+                getEventTypeCodes() +
+                " sources=" +
+                getSources() +
+                " participants=" +
+                getParticipants() +
+                " objects=" +
+                getObjects() +
+                "]";
     }
 }

@@ -1,23 +1,3 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog.mina.tls;
 
 import org.apache.mina.common.ByteBuffer;
@@ -28,39 +8,37 @@ import org.apache.mina.filter.codec.demux.MessageDecoderResult;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+import org.openhealthtools.openatna.syslog.mina.SyslogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.net.InetSocketAddress;
-import java.util.logging.Logger;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Class Description Here...
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Aug 18, 2009: 1:59:21 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class SyslogMessageDecoder implements MessageDecoder {
 
-    static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.mina.tls.SyslogMessageDecoder");
-
+    private static final String ACTION_ENTER = "Enter";
+    private final Logger logger = LoggerFactory.getLogger("org.openhealthtools.openatna.syslog.mina.tls.SyslogMessageDecoder");
     private ByteBuffer msg = ByteBuffer.wrap(new byte[0]);
     private int headerLength = 0;
     private String error = null;
 
     public MessageDecoderResult decodable(IoSession ioSession, ByteBuffer byteBuffer) {
-        log.fine("Enter");
+        logger.debug(ACTION_ENTER);
         return readHeader(byteBuffer);
     }
 
-    public MessageDecoderResult decode(IoSession ioSession, ByteBuffer byteBuffer, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
-        log.fine("Enter");
+    public MessageDecoderResult decode(IoSession ioSession, ByteBuffer byteBuffer, ProtocolDecoderOutput protocolDecoderOutput) {
+        logger.debug(ACTION_ENTER);
         if (error != null) {
             SyslogException e = new SyslogException("Error reading message length.");
-            e.setSourceIp(((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
-            e.setBytes(error.getBytes("UTF-8"));
+            e.setSourceIp(SyslogUtil.getHostname(ioSession));
+            e.setBytes(error.getBytes(StandardCharsets.UTF_8));
             protocolDecoderOutput.write(e);
             ioSession.close();
             return MessageDecoderResult.OK;
@@ -83,7 +61,7 @@ public class SyslogMessageDecoder implements MessageDecoder {
                 protocolDecoderOutput.write(sm);
                 return MessageDecoderResult.OK;
             } catch (SyslogException e) {
-                e.setSourceIp(((InetSocketAddress) ioSession.getRemoteAddress()).getAddress().getHostAddress());
+                e.setSourceIp(SyslogUtil.getHostname(ioSession));
                 e.setBytes(msg.array());
                 protocolDecoderOutput.write(e);
                 ioSession.close();
@@ -93,9 +71,8 @@ public class SyslogMessageDecoder implements MessageDecoder {
     }
 
 
-    public void finishDecode(IoSession ioSession, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
-        log.info("Enter");
-
+    public void finishDecode(IoSession ioSession, ProtocolDecoderOutput protocolDecoderOutput) {
+        logger.debug(ACTION_ENTER);
     }
 
     private MessageDecoderResult readHeader(ByteBuffer byteBuffer) {
@@ -110,9 +87,9 @@ public class SyslogMessageDecoder implements MessageDecoder {
             byte b = byteBuffer.get(byteBuffer.position() + count);
             count++;
             char c = (char) (b & 0xff);
-            log.fine("got character=|" + c + "|");
+            logger.debug("got character=|{}|", c);
             if (c == ' ') {
-                log.fine("got a space character.");
+                logger.debug("got a space character.");
                 readSpace = true;
                 try {
                     int length = Integer.parseInt(total.toString());
@@ -139,6 +116,11 @@ public class SyslogMessageDecoder implements MessageDecoder {
 
     }
 
+    /**
+     * @param buff
+     * @return
+     * @throws SyslogException
+     */
     private SyslogMessage createMessage(ByteBuffer buff) throws SyslogException {
         return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(buff.array()));
     }

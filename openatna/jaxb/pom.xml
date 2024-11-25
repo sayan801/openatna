@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.openhealthtools.openatna</groupId>
-        <artifactId>openatna</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
-    </parent>
-    <artifactId>openatna-jaxb</artifactId>
 
+    <parent>
+        <groupId>eu.europa.ec.sante.ehdsi.openncp-openatna</groupId>
+        <artifactId>openncp-openatna</artifactId>
+        <version>5.2.5</version>
+    </parent>
+
+    <artifactId>openatna-jaxb</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.1-SNAPSHOT</version>
-    <name>OpenATNA JAXB</name>
-    <url>https://openatna.projects.openhealthtools.org</url>
+
+    <name>OpenNCP OpenATNA JAXB</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.openhealthtools.openatna</groupId>
-            <artifactId>openatna-anom</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.1</version>
+            <version>${jaxb-api.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -41,11 +31,42 @@
             <version>1.1</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>${xmlsec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.4</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.14.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <extension>true</extension>
+                    <schemaDirectory>src/main/resources</schemaDirectory>
+                    <generatePackage>org.openhealthtools.openatna.jaxb21</generatePackage>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

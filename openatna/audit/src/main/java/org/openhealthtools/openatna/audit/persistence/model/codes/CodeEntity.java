@@ -1,47 +1,19 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.model.codes;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
 
+import javax.persistence.*;
 
 /**
  * Entity for coded value types.
  * NOTE: equality between codes is a slightly fuzzy business.
  * Codes need to be unique, but both the code system and code system name are optional.
- * This makes determining equality slightly tricky. Added to this, two null values in the DB
- * do not equate, so two Codes with the same code, and null for the system and system name are not equal.
+ * This makes determining equality slightly tricky. Added to this, two null values in the DB do not equate,
+ * so two Codes with the same code, and null for the system and system name are not equal.
  */
-
-
 @Entity
 @Table(name = "codes")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -51,19 +23,9 @@ import org.openhealthtools.openatna.audit.persistence.model.PersistentEntity;
 )
 public abstract class CodeEntity extends PersistentEntity {
 
-    public static enum CodeType {
-        ACTIVE_PARTICIPANT,
-        AUDIT_SOURCE,
-        EVENT_ID,
-        EVENT_TYPE,
-        PARTICIPANT_OBJECT_ID_TYPE
-    }
-
     private Long id;
     private Integer version;
-
     private CodeType type;
-
     private String code;
     private String codeSystem;
     private String codeSystemName;
@@ -115,7 +77,7 @@ public abstract class CodeEntity extends PersistentEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -136,8 +98,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Gets the value of the code property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public String getCode() {
         return code;
@@ -146,8 +107,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Sets the value of the code property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setCode(String value) {
         this.code = value;
@@ -156,8 +116,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Gets the value of the displayName property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public String getDisplayName() {
         return displayName;
@@ -166,8 +125,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Sets the value of the displayName property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setDisplayName(String value) {
         this.displayName = value;
@@ -176,8 +134,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Gets the value of the originalText property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public String getOriginalText() {
         return originalText;
@@ -186,8 +143,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Sets the value of the originalText property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setOriginalText(String value) {
         this.originalText = value;
@@ -196,8 +152,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Gets the value of the codeSystem property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public String getCodeSystem() {
         return codeSystem;
@@ -206,8 +161,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Sets the value of the codeSystem property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setCodeSystem(String value) {
         this.codeSystem = value;
@@ -216,8 +170,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Gets the value of the codeSystemName property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public String getCodeSystemName() {
         return codeSystemName;
@@ -226,8 +179,7 @@ public abstract class CodeEntity extends PersistentEntity {
     /**
      * Sets the value of the codeSystemName property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setCodeSystemName(String value) {
         this.codeSystemName = value;
@@ -243,69 +195,57 @@ public abstract class CodeEntity extends PersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CodeEntity)) {
-            return false;
-        }
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
         CodeEntity that = (CodeEntity) o;
 
-        if (getCode() != null ? !getCode().equals(that.getCode()) : that.getCode() != null) {
-            return false;
-        }
-        if (getCodeSystem() != null ? !getCodeSystem().equals(that.getCodeSystem()) : that.getCodeSystem() != null) {
-            return false;
-        }
-        if (getCodeSystemName() != null ? !getCodeSystemName().equals(that.getCodeSystemName()) : that.getCodeSystemName() != null) {
-            return false;
-        }
-        /*if (getDisplayName() != null ? !getDisplayName().equals(that.getDisplayName()) : that.getDisplayName() != null) {
-            return false;
-        }
-        if (getOriginalText() != null ? !getOriginalText().equals(that.getOriginalText()) : that.getOriginalText() != null) {
-            return false;
-        }*/
-        if (getType() != that.getType()) {
-            return false;
-        }
-        return true;
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(version, that.version)
+                .append(type, that.type)
+                .append(code, that.code)
+                .append(codeSystem, that.codeSystem)
+                .append(codeSystemName, that.codeSystemName)
+                .append(displayName, that.displayName)
+                .append(originalText, that.originalText)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = getType() != null ? getType().hashCode() : 0;
-        result = 31 * result + (getCode() != null ? getCode().hashCode() : 0);
-        result = 31 * result + (getCodeSystem() != null ? getCodeSystem().hashCode() : 0);
-        result = 31 * result + (getCodeSystemName() != null ? getCodeSystemName().hashCode() : 0);
-        /*result = 31 * result + (getDisplayName() != null ? getDisplayName().hashCode() : 0);
-        result = 31 * result + (getOriginalText() != null ? getOriginalText().hashCode() : 0);*/
-        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(version)
+                .append(type)
+                .append(code)
+                .append(codeSystem)
+                .append(codeSystemName)
+                .append(displayName)
+                .append(originalText)
+                .toHashCode();
     }
 
-
+    @Override
     public String toString() {
-        return new StringBuilder("[").append(getClass().getName())
-                .append(" id=")
-                .append(getId())
-                .append(", version=")
-                .append(getVersion())
-                .append(", type=")
-                .append(getType())
-                .append(", code=")
-                .append(getCode())
-                .append(", code system=")
-                .append(getCodeSystem())
-                .append(", code system name=")
-                .append(getCodeSystemName())
-                .append(", original text=")
-                .append(getOriginalText())
-                .append(", display name=")
-                .append(getDisplayName())
-                .append("]")
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("version", version)
+                .append("type", type)
+                .append("code", code)
+                .append("codeSystem", codeSystem)
+                .append("codeSystemName", codeSystemName)
+                .append("displayName", displayName)
+                .append("originalText", originalText)
                 .toString();
     }
 
-
+    public enum CodeType {
+        ACTIVE_PARTICIPANT,
+        AUDIT_SOURCE,
+        EVENT_ID,
+        EVENT_TYPE,
+        PARTICIPANT_OBJECT_ID_TYPE
+    }
 }

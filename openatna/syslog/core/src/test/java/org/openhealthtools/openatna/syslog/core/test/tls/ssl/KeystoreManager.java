@@ -1,32 +1,12 @@
-/**
- *  Copyright (c) 2009-2010 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog.core.test.tls.ssl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.KeyStore;
@@ -38,40 +18,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
-
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * Class Description Here...
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Nov 20, 2008: 7:58:07 PM
- * @date $Date:$ modified by $Author:$
- * @todo Put your notes here...
  */
-
 public class KeystoreManager {
 
-    static Logger log = Logger.getLogger("org.wspeer.security.KeystoreManager");
+    private static Logger log = LoggerFactory.getLogger("org.wspeer.security.KeystoreManager");
 
     private static X509TrustManager sunTrustManager = null;
-    private KeystoreDetails defaultKeyDetails;
-    private HashMap<String, KeystoreDetails> allKeys = new HashMap<String, KeystoreDetails>();
-    private HashMap<String, KeystoreDetails> allStores = new HashMap<String, KeystoreDetails>();
-
-    private File keysDir;
-    private File certsDir;
-    private String home;
 
     static {
         loadDefaultTrustManager();
     }
 
+    private KeystoreDetails defaultKeyDetails;
+    private HashMap<String, KeystoreDetails> allKeys = new HashMap<>();
+    private HashMap<String, KeystoreDetails> allStores = new HashMap<>();
+    private File keysDir;
+    private File certsDir;
+    private String home;
+
+    public KeystoreManager(String home) {
+        if (home != null) {
+            this.home = home;
+            loadKeys(this.home);
+        }
+    }
+
     private static void loadDefaultTrustManager() {
+
         try {
             File certs;
             String definedcerts = System.getProperty("javax.net.ssl.trustStore");
@@ -102,35 +80,49 @@ public class KeystoreManager {
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509", "SunJSSE");
                 tmf.init(ks);
                 TrustManager tms[] = tmf.getTrustManagers();
-                for (int i = 0; i < tms.length; i++) {
-                    if (tms[i] instanceof X509TrustManager) {
+                for (TrustManager tm : tms) {
+                    if (tm instanceof X509TrustManager) {
                         log.info(" found default trust manager.");
-                        sunTrustManager = (X509TrustManager) tms[i];
+                        sunTrustManager = (X509TrustManager) tm;
                         break;
                     }
                 }
             }
-
-        } catch (KeyStoreException e) {
-            log.fine("Exception thrown trying to create default trust manager:" + e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            log.fine("Exception thrown trying to create default trust manager:" + e.getMessage());
-        } catch (CertificateException e) {
-            log.fine("Exception thrown trying to create default trust manager:" + e.getMessage());
-        } catch (NoSuchProviderException e) {
-            log.fine("Exception thrown trying to create default trust manager:" + e.getMessage());
-        } catch (FileNotFoundException e) {
-            log.fine("Exception thrown trying to create default trust manager:" + e.getMessage());
-        } catch (IOException e) {
-            log.fine("Exception thrown trying to create default trust manager:" + e.getMessage());
+        } catch (KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException | IOException e) {
+            log.error("Exception thrown trying to create default trust manager:" + e.getMessage());
         }
     }
 
-    public KeystoreManager(String home) {
-        if (home != null) {
-            this.home = home;
-            loadKeys(this.home);
+    public static X509TrustManager getDefaultTrustManager() {
+        return sunTrustManager;
+    }
+
+    private static String trimPort(String host) {
+        int colon = host.indexOf(":");
+        if (colon > 0 && colon < host.length() - 1) {
+            try {
+                int port = Integer.parseInt(host.substring(colon + 1, host.length()), host.length());
+                host = host.substring(0, colon);
+                log.info("KeystoreManager.trimPort up to colon:" + host);
+                log.info("KeystoreManager.trimPort port:" + port);
+
+                return host;
+            } catch (NumberFormatException e) {
+            }
         }
+        return null;
+    }
+
+    private static String getAnyPort(String auth) {
+        int star = auth.indexOf("*");
+        if (star == auth.length() - 1) {
+            int colon = auth.indexOf(":");
+            if (colon == star - 1) {
+                auth = auth.substring(0, colon);
+                return auth;
+            }
+        }
+        return null;
     }
 
     private void loadKeys(String home) {
@@ -176,10 +168,6 @@ public class KeystoreManager {
                 }
             }
         }
-    }
-
-    public static X509TrustManager getDefaultTrustManager() {
-        return sunTrustManager;
     }
 
     public void addKeyDetails(String fileName, KeystoreDetails details) throws IOException {
@@ -245,16 +233,16 @@ public class KeystoreManager {
     public KeystoreDetails getKeyFileForHost(String host) {
         KeystoreDetails def = null;
         for (KeystoreDetails keystoreDetails : allKeys.values()) {
-            log.fine("KeystoreManager.getKeyFileForHost getting next key authority:" + keystoreDetails.getAuthority());
+            log.info("KeystoreManager.getKeyFileForHost getting next key authority:" + keystoreDetails.getAuthority());
             String auth = keystoreDetails.getAuthority();
             if (auth != null) {
                 if (auth.endsWith("*")) {
                     String s = trimPort(host);
                     if (s != null) {
-                        log.fine("KeystoreManager.getKeyFileForHost trimmed port:" + s);
+                        log.info("KeystoreManager.getKeyFileForHost trimmed port:" + s);
                         String a = getAnyPort(auth);
                         if (a != null) {
-                            log.fine("KeystoreManager.getKeyFileForHost trimmed auth:" + a);
+                            log.info("KeystoreManager.getKeyFileForHost trimmed auth:" + a);
                             auth = a;
                             host = s;
                         }
@@ -268,34 +256,6 @@ public class KeystoreManager {
             }
         }
         return def;
-    }
-
-    private static String trimPort(String host) {
-        int colon = host.indexOf(":");
-        if (colon > 0 && colon < host.length() - 1) {
-            try {
-                int port = Integer.parseInt(host.substring(colon + 1, host.length()), host.length());
-                host = host.substring(0, colon);
-                log.fine("KeystoreManager.trimPort up to colon:" + host);
-                log.fine("KeystoreManager.trimPort port:" + port);
-
-                return host;
-            } catch (NumberFormatException e) {
-            }
-        }
-        return null;
-    }
-
-    private static String getAnyPort(String auth) {
-        int star = auth.indexOf("*");
-        if (star == auth.length() - 1) {
-            int colon = auth.indexOf(":");
-            if (colon == star - 1) {
-                auth = auth.substring(0, colon);
-                return auth;
-            }
-        }
-        return null;
     }
 
     public KeystoreDetails getTrustFileForHost(String host) {
@@ -425,6 +385,4 @@ public class KeystoreManager {
         props.store(out, "Details for " + details.getAlias() + " keystore access.");
         out.close();
     }
-
-
 }

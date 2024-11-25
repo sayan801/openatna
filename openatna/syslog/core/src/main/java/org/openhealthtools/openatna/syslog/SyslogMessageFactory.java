@@ -1,24 +1,6 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog;
+
+import org.openhealthtools.openatna.syslog.message.StringLogMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +8,6 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.openhealthtools.openatna.syslog.message.StringLogMessage;
 
 /**
  * The SyslogMessageFactory is the super class of message factories. It
@@ -60,16 +40,12 @@ import org.openhealthtools.openatna.syslog.message.StringLogMessage;
  * This class also contains static utility methods for writing out UTF BOM values.
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Aug 19, 2009: 12:00:40 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public abstract class SyslogMessageFactory {
 
-    public static Map<String, Class<? extends LogMessage>> messages = new HashMap<String, Class<? extends LogMessage>>();
+    protected static Map<String, Class<? extends LogMessage>> messages = new HashMap<>();
 
-    public static Class<? extends LogMessage> defaultMessage = StringLogMessage.class;
+    private static Class<? extends LogMessage> defaultMessage = StringLogMessage.class;
 
     private static SyslogMessageFactory currFactory = new GenericMessageFactory();
 
@@ -89,9 +65,6 @@ public abstract class SyslogMessageFactory {
         currFactory = factory;
     }
 
-    public abstract SyslogMessage read(InputStream in) throws SyslogException;
-
-
     public static LogMessage getLogMessage(String msgId) throws SyslogException {
 
         Class<? extends LogMessage> m;
@@ -104,7 +77,7 @@ public abstract class SyslogMessageFactory {
             }
         }
         try {
-            return m.newInstance();
+            return m.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new SyslogException(e);
         }
@@ -116,8 +89,9 @@ public abstract class SyslogMessageFactory {
      * @throws java.io.IOException
      */
     public static String readBom(PushbackInputStream in, String expectedEncoding) throws IOException {
+
         String encoding = expectedEncoding;
-        byte[] bom = new byte[4];
+        var bom = new byte[4];
         int unread;
         int n = in.read(bom);
 
@@ -152,27 +126,34 @@ public abstract class SyslogMessageFactory {
     }
 
     public static void writeUtf8Bom(OutputStream out) throws IOException {
+
         out.write(Constants.UTF8_BOM);
         out.flush();
     }
 
     public static void writeUtf16LEBom(OutputStream out) throws IOException {
+
         out.write(Constants.UTF16LE_BOM);
         out.flush();
     }
 
     public static void writeUtf16BEBom(OutputStream out) throws IOException {
+
         out.write(Constants.UTF16BE_BOM);
         out.flush();
     }
 
     public static void writeUtf32LEBom(OutputStream out) throws IOException {
+
         out.write(Constants.UTF32LE_BOM);
         out.flush();
     }
 
     public static void writeUtf32BEBom(OutputStream out) throws IOException {
+
         out.write(Constants.UTF32BE_BOM);
         out.flush();
     }
+
+    public abstract SyslogMessage read(InputStream in) throws SyslogException;
 }

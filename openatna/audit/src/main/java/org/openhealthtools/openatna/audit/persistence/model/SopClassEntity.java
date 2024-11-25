@@ -1,34 +1,30 @@
 /**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
+ * Copyright (c) 2009-2011 University of Cardiff and others
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * <p>
+ * Contributors:
+ * University of Cardiff - initial API and implementation
+ * -
  */
 
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
 
 /**
  * @author Andrew Harrison
@@ -48,7 +44,9 @@ public class SopClassEntity extends PersistentEntity {
     private String instanceUids = "";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.AUTO,generator = "native")
+    //@GenericGenerator(name = "native",strategy = "native")
     public Long getId() {
         return id;
     }
@@ -93,7 +91,7 @@ public class SopClassEntity extends PersistentEntity {
     public List<String> instanceUidsAsList() {
         String uids = getInstanceUids();
         String[] vals = uids.split(" ");
-        List<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<>();
         for (String val : vals) {
             if (val.length() > 0) {
                 ret.add(val);
@@ -127,27 +125,22 @@ public class SopClassEntity extends PersistentEntity {
         if (numberOfInstances != null ? !numberOfInstances.equals(that.numberOfInstances) : that.numberOfInstances != null) {
             return false;
         }
-        if (sopId != null ? !sopId.equals(that.sopId) : that.sopId != null) {
-            return false;
-        }
-
-        return true;
+        return sopId != null ? sopId.equals(that.sopId) : that.sopId == null;
     }
 
     public String toString() {
-        return new StringBuilder("[").append(getClass().getName())
-                .append(" id=")
-                .append(getId())
-                .append(", version=")
-                .append(getVersion())
-                .append(", instanceUids=")
-                .append(getInstanceUids())
-                .append(", numberOfInstances=")
-                .append(getNumberOfInstances())
-                .append(", sopId=")
-                .append(getSopId())
-                .append("]")
-                .toString();
+        return "[" + getClass().getName() +
+                " id=" +
+                getId() +
+                ", version=" +
+                getVersion() +
+                ", instanceUids=" +
+                getInstanceUids() +
+                ", numberOfInstances=" +
+                getNumberOfInstances() +
+                ", sopId=" +
+                getSopId() +
+                "]";
 
     }
 

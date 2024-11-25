@@ -1,29 +1,4 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
@@ -39,13 +14,15 @@ import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEnti
 import org.openhealthtools.openatna.audit.persistence.util.CodesUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Sep 9, 2009: 10:39:44 AM
- * @date $Date:$ modified by $Author:$
  */
-
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> implements SourceDao {
 
@@ -53,19 +30,20 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
         super(SourceEntity.class, sessionFactory);
     }
 
-    public SourceEntity getById(Long id) throws AtnaPersistenceException {
+    public SourceEntity getById(Long id) {
         return get(id);
     }
 
-    public List<? extends SourceEntity> getBySourceId(String id) throws AtnaPersistenceException {
+    public List<? extends SourceEntity> getBySourceId(String id) {
         return list(criteria().add(Restrictions.eq("sourceId", id)));
     }
 
-    public SourceEntity getByEnterpriseSiteId(String id) throws AtnaPersistenceException {
+    public SourceEntity getByEnterpriseSiteId(String id) {
         return uniqueResult(criteria().add(Restrictions.eq("enterpriseSiteId", id)));
     }
 
-    public SourceEntity get(SourceEntity other) throws AtnaPersistenceException {
+    public SourceEntity get(SourceEntity other) {
+
         Criteria c = criteria();
         c.add(Restrictions.eq("sourceId", other.getSourceId()));
         if (other.getEnterpriseSiteId() != null) {
@@ -74,7 +52,7 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
             c.add(Restrictions.isNull("enterpriseSiteId"));
         }
         List<? extends SourceEntity> ret = list(c);
-        if (ret == null || ret.size() == 0) {
+        if (ret == null || ret.isEmpty()) {
             return null;
         }
 
@@ -86,7 +64,8 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
         return null;
     }
 
-    public List<? extends SourceEntity> getByCode(SourceCodeEntity codeEntity) throws AtnaPersistenceException {
+    public List<? extends SourceEntity> getByCode(SourceCodeEntity codeEntity) {
+
         return list(criteria().createCriteria("sourceTypeCodes")
                 .add(Restrictions.eq("code", codeEntity.getCode()))
                 .add(Restrictions.eq("codeSystem", codeEntity.getCodeSystem()))
@@ -102,8 +81,9 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
     }
 
     public void save(SourceEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
+
         Set<SourceCodeEntity> codes = entity.getSourceTypeCodes();
-        if (codes.size() > 0) {
+        if (!codes.isEmpty()) {
             CodeDao dao = AtnaFactory.codeDao();
             SourceCodeEntity[] arr = codes.toArray(new SourceCodeEntity[codes.size()]);
             for (int i = 0; i < arr.length; i++) {
@@ -125,7 +105,7 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                     }
                 }
             }
-            entity.setSourceTypeCodes(new HashSet<SourceCodeEntity>(Arrays.asList(arr)));
+            entity.setSourceTypeCodes(new HashSet<>(Arrays.asList(arr)));
         }
 
         if (entity.getVersion() == null) {
@@ -140,14 +120,10 @@ public class HibernateSourceDao extends AbstractHibernateDao<SourceEntity> imple
                 }
             }
         }
-
         currentSession().saveOrUpdate(entity);
-
     }
 
-    public void delete(SourceEntity entity) throws AtnaPersistenceException {
+    public void delete(SourceEntity entity) {
         currentSession().delete(entity);
     }
-
-
 }

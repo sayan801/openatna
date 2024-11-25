@@ -1,66 +1,44 @@
-/**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.net;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 /**
- * A static helper class for creating connections. <p />
+ * A static helper class for creating connections. <p/>
  * <p/>
- * The connection factory is a static class that allows
- * for generic connections to be made based on the name
- * of the configuration for that connection. <p />
+ * The connection factory is a static class that allows for generic connections to be made based on the name of
+ * the configuration for that connection.<p/>
  * <p/>
- * There are two classes of connections that can be made,
- * HTTP connections and socket connections.  Use the
- * getConnection function to get socket connections and use
- * the getHttpConnection function to get a configured apache
- * org HttpClient.  Be sure to only use relative URLs in
- * your methods that you call on the HttpClient because it
- * will be preconfigured with the host and port.  <p />
+ * There are two classes of connections that can be made, HTTP connections and socket connections.
+ * Use the getConnection function to get socket connections and use the getHttpConnection function to get
+ * a configured apache org HttpClient.
+ * Be sure to only use relative URLs in your methods that you call on the HttpClient because it will be preconfigured
+ * with the host and port.  <p/>
  * <p/>
  * Note that this class con not be relied on to remain thread safe.
- * One possible solution is to force instantiation of the class, the
- * other is to synchronize the get function.  I am waiting to decide
- * until I start working on the server connection version.  (Not
- * required for connectathon, but will be useful for if we ever want
- * to be a PIX server, etc.) <p />
+ * One possible solution is to force instantiation of the class, the other is to synchronize the get function.
+ * I am waiting to decide until I start working on the server connection version.
+ * (Not required for Connectathon, but will be useful for if we ever want to be a PIX server, etc.) <p/>
  *
  * @author Josh Flachsbart
  */
 public class ConnectionFactory {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.ConnectionFactory");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionFactory.class);
 
     /* Cached set of known descriptions */
-    private static Hashtable<String, IConnectionDescription> allDescriptions = null;
+    private static HashMap<String, IConnectionDescription> allDescriptions = null;
+
+    private ConnectionFactory() {
+    }
 
     /**
      * Looks up the description of a connection by its name. <p />
@@ -73,16 +51,14 @@ public class ConnectionFactory {
      * @return The description of the named connection.
      * @throws IllegalArgumentException If the name is not found in the connection configurations.
      */
-    public static synchronized IConnectionDescription getConnectionDescription(String connectionName)
-            throws IllegalArgumentException {
-        IConnectionDescription foundDescription = null;
-        if (allDescriptions != null) {
-            if (connectionName != null) {
-                String name = connectionName.toLowerCase().trim();
-                foundDescription = allDescriptions.get(name);
-            }
-        }
+    public static synchronized IConnectionDescription getConnectionDescription(String connectionName) {
 
+        IConnectionDescription foundDescription = null;
+        if (allDescriptions != null && connectionName != null) {
+
+            String name = connectionName.toLowerCase().trim();
+            foundDescription = allDescriptions.get(name);
+        }
         return foundDescription;
     }
 
@@ -122,24 +98,21 @@ public class ConnectionFactory {
         List<IConnectionDescription> newDescriptions = null;
         try {
             newDescriptions = DescriptionLoader.loadConnectionDescriptions(file);
-        } catch (ParserConfigurationException e) {
-            log.error("Internal XML parser error reading connection description file.", e);
+        } catch (ParserConfigurationException | SAXException e) {
+            LOGGER.error("Internal XML parser error reading connection description file.", e);
             return false;
         } catch (IOException e) {
-            log.error("File problem reading connection description file.", e);
-            return false;
-        } catch (SAXException e) {
-            log.error("Internal XML parser error reading connection description file.", e);
+            LOGGER.error("File problem reading connection description file.", e);
             return false;
         }
         // Add each description to the cached set
         for (IConnectionDescription description : newDescriptions) {
             String name = description.getName();
             if (name == null) {
-                log.warn("Connection description with no name referenced in '" + file.getAbsolutePath() + "'");
+                LOGGER.warn("Connection description with no name referenced in '" + file.getAbsolutePath() + "'");
             } else {
                 if (allDescriptions == null) {
-                    allDescriptions = new Hashtable<String, IConnectionDescription>();
+                    allDescriptions = new HashMap<>();
                 }
                 // Convert to lowercase to make lookup case insensitive
                 allDescriptions.put(name.toLowerCase().trim(), description);
@@ -167,10 +140,10 @@ public class ConnectionFactory {
         if (newDescription != null) {
             String name = newDescription.getName();
             if (name == null) {
-                log.warn("Connection description with no name referenced in '" + file.getAbsolutePath() + "'");
+                LOGGER.warn("Connection description with no name referenced in '" + file.getAbsolutePath() + "'");
             } else {
                 if (allDescriptions == null) {
-                    allDescriptions = new Hashtable<String, IConnectionDescription>();
+                    allDescriptions = new HashMap<>();
                 }
                 // Convert to lowercase to make lookup case insensitive
                 allDescriptions.put(name.toLowerCase().trim(), newDescription);
@@ -207,7 +180,8 @@ public class ConnectionFactory {
      * @return The fully initalized connection.
      */
     public static IConnection getConnection(IConnectionDescription connectionDescription) {
-        IConnection connection = null;
+
+        IConnection connection;
 
         if (connectionDescription.isSecure()) {
             connection = new SecureConnection(connectionDescription);
@@ -246,13 +220,14 @@ public class ConnectionFactory {
      * @return The fully initalized connection.
      */
     public static MailConnection getMailConnection(IConnectionDescription connectionDescription) {
-        MailConnection connection = new MailConnection(connectionDescription);
+
         // TODO deal with different kinds of mail connections...
-        return connection;
+        return new MailConnection(connectionDescription);
     }
 
     public static IServerConnection getServerConnection(IConnectionDescription connectionDescription) {
-        IServerConnection serverConnection = null;
+
+        IServerConnection serverConnection;
 
         if (connectionDescription.isSecure()) {
             serverConnection = new SecureServerConnection(connectionDescription);
@@ -273,7 +248,8 @@ public class ConnectionFactory {
         return udpServerConnection;
     }
 
-    /** The standard way of making an HTTP connection.
+    /**
+     * The standard way of making an HTTP connection.
      * <p>
      * Calling this will generate an HttpClient http connection and
      * initialize it according to the connection description that

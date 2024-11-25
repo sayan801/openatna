@@ -1,29 +1,9 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.server;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openatna.net.ConnectionFactory;
 import org.openhealthtools.openatna.net.IConnectionDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,20 +18,15 @@ import java.util.Set;
 
 /**
  * Loads XML actor and connection files.
- * This throws RuntimeExceptions if something goes pear shaped - no point in carrying
- * on if errors occur here.
+ * This throws RuntimeExceptions if something goes pear shaped - no point in carrying on if errors occur here.
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Oct 21, 2009: 10:24:00 AM
- * @date $Date:$ modified by $Author:$
  */
-
 public class ServerConfiguration {
 
-    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.ServerConfiguration");
+    private final Logger logger = LoggerFactory.getLogger(ServerConfiguration.class);
 
-    private Set<AtnaServer> servers = new HashSet<AtnaServer>();
+    private final Set<AtnaServer> servers = new HashSet<>();
     private String actorDir;
     private String actorFile;
 
@@ -76,6 +51,7 @@ public class ServerConfiguration {
     }
 
     private File getActorsFile() {
+
         if (actorDir == null || actorFile == null) {
             throw new RuntimeException("ERROR. Please set both actorDir and actorFile.");
         }
@@ -83,12 +59,12 @@ public class ServerConfiguration {
         actorsFile = actorsFile.replace(File.separator + "." + File.separator, File.separator);
         File actors = new File(actorsFile);
         if (!actors.exists()) {
-            log.warn("Could not find actors dir:" + actors.getAbsolutePath());
+            logger.warn("Could not find actors dir:" + actors.getAbsolutePath());
             return null;
         }
         File configFile = new File(actors, actorFile);
         if (!configFile.exists()) {
-            log.warn("Could not find actors file:" + configFile.getAbsolutePath());
+            logger.warn("Could not find actors file:" + configFile.getAbsolutePath());
             return null;
         }
         return configFile;
@@ -99,8 +75,9 @@ public class ServerConfiguration {
     }
 
     public boolean loadActors(File configFile) {
+
         boolean okay = true;
-        Document configuration = null;
+        Document configuration;
         try {
             configuration = createDocument(configFile);
         } catch (Exception e) {
@@ -111,7 +88,9 @@ public class ServerConfiguration {
         NodeList configurationElements = configuration.getDocumentElement().getChildNodes();
         // Load all the connection definitions first
         for (int elementIndex = 0; elementIndex < configurationElements.getLength(); elementIndex++) {
+
             Node element = configurationElements.item(elementIndex);
+
             if (element instanceof Element) {
                 // See what type of element it is
                 String name = element.getNodeName();
@@ -134,6 +113,7 @@ public class ServerConfiguration {
         // If all the connection files loaded okay, define the various actors
         if (okay) {
             for (int elementIndex = 0; elementIndex < configurationElements.getLength(); elementIndex++) {
+
                 Node element = configurationElements.item(elementIndex);
                 if (element instanceof Element) {
                     // See what type of element it is
@@ -155,6 +135,7 @@ public class ServerConfiguration {
     }
 
     private boolean processActorDefinition(Element parent) {
+
         boolean okay;
         String type = parent.getAttribute("type");
         String name = parent.getAttribute("name");
@@ -164,14 +145,14 @@ public class ServerConfiguration {
         if ("SECURENODE".equalsIgnoreCase(type) && "ARR".equalsIgnoreCase(name)) {
             okay = processArr(parent);
         } else {
-            log.warn("Unknown actor type or name. Expecting name=arr and type=SecureNode but got name="
-                    + name + " type=" + type);
+            logger.warn("Unknown actor type or name. Expecting name=arr and type=SecureNode but got name='{}' and type='{}'", name, type);
             okay = false;
         }
         return okay;
     }
 
     private boolean processArr(Element parent) {
+
         IConnectionDescription tcp = null;
         IConnectionDescription udp = null;
 
@@ -208,7 +189,7 @@ public class ServerConfiguration {
                         try {
                             threads = Integer.parseInt(t);
                         } catch (NumberFormatException e) {
-                            log.warn("Could not parse number of execution threads. Using default");
+                            logger.warn("Could not parse number of execution threads. Using default");
                         }
                         if (threads < 1) {
                             threads = 5;
@@ -229,7 +210,7 @@ public class ServerConfiguration {
             servers.add(server);
             return true;
         } else {
-            log.warn("No connections defined for server. This ARR will be not able to receive Syslog Messages.\n"
+            logger.warn("No connections defined for server. This ARR will be not able to receive Syslog Messages.\n"
                     + "The service will shut down unless it is being run from inside a separate execution thread.");
             return false;
         }
@@ -237,7 +218,8 @@ public class ServerConfiguration {
     }
 
     private boolean processConnectionFile(Element element, File configFile) {
-        boolean okay = false;
+
+        boolean okay;
         // Get out the file name
         String filename = element.getAttribute("file");
         if (filename == null) {
@@ -264,7 +246,8 @@ public class ServerConfiguration {
     }
 
     private boolean processActorFile(Element element, File configFile) {
-        boolean okay = false;
+
+        boolean okay;
         // Get out the file name
         String filename = element.getAttribute("file");
         if (filename == null) {
@@ -291,10 +274,9 @@ public class ServerConfiguration {
     }
 
     private Document createDocument(File configFile) throws Exception {
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(false);
         return factory.newDocumentBuilder().parse(configFile);
     }
-
-
 }

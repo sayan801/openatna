@@ -1,27 +1,27 @@
 /**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
+ * Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * <p>
+ * Contributors:
+ * Misys Open Source Solutions - initial API and implementation
+ * -
  */
 
 package org.openhealthtools.openatna.net;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -107,7 +107,7 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
      * Log object for this class.
      */
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.SecureSocketFactory");
+    static Logger log = LoggerFactory.getLogger("org.openhealthtools.openatna.net.SecureSocketFactory");
 
     private URL keystoreUrl = null;
     private String keystorePassword = null;
@@ -133,14 +133,14 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
     }
 
     private SSLContext createSSLContext() throws IOException {
+
         try {
             log.debug("Attempting to create ssl context.");
             KeyManager[] keymanagers = null;
             TrustManager[] trustmanagers = null;
             if (this.keystoreUrl == null) {
                 throw new IOException("Cannot create SSL context without keystore");
-            }
-            if (this.keystoreUrl != null) {
+            } else {
                 KeyStore keystore = ConnectionCertificateHandler
                         .createKeyStore(this.keystoreUrl, this.keystorePassword);
                 if (log.isDebugEnabled()) {
@@ -156,20 +156,21 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
                 }
                 trustmanagers = ConnectionCertificateHandler.createTrustManagers(keystore, this.scd);
             }
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
+            SSLContext sslcontext = SSLContext.getInstance("TLSv1.2");
             sslcontext.init(keymanagers, trustmanagers, null);
+
             return sslcontext;
         } catch (NoSuchAlgorithmException e) {
-            log.error("NSA: " + e.getMessage(), e);
+            log.error("NSA: '{}'", e.getMessage(), e);
             throw new IOException("Unsupported algorithm exception: " + e.getMessage());
         } catch (KeyStoreException e) {
-            log.error("Key Store: " + e.getMessage(), e);
+            log.error("Key Store: '{}'", e.getMessage(), e);
             throw new IOException("Keystore exception: " + e.getMessage());
         } catch (GeneralSecurityException e) {
-            log.error("General: " + e.getMessage(), e);
+            log.error("General: '{}", e.getMessage(), e);
             throw new IOException("Key management exception: " + e.getMessage());
         } catch (IOException e) {
-            log.error("I/O exception: " + e.getMessage(), e);
+            log.error("I/O exception: '{}'", e.getMessage(), e);
             throw new IOException("I/O error reading keystore/truststore file: " + e.getMessage());
         }
     }
@@ -182,14 +183,8 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
     }
 
     public String[] getAtnaProtocols() {
-        return new String[]{"TLSv1"};
+        return new String[]{"TLSv1.2"};
     }
-
-    public String[] getAtnaCipherSuites() {
-        return new String[]{"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA",
-                "SSL_RSA_WITH_3DES_EDE_CBC_SHA", "SSL_RSA_WITH_DES_CBC_SHA"};
-    }
-
 
     private void setAtnaProtocols(SSLSocket secureSocket) {
         secureSocket.setEnabledProtocols(getAtnaProtocols());
@@ -199,13 +194,18 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
         // Useful debugging information:
         //secureSocket.setSoTimeout(1000);
         //String[] strings = secureSocket.getSupportedCipherSuites();
-        //for (String s: strings) System.out.println(s);
+        //for (String s: strings) log.info(s);
         //strings = secureSocket.getEnabledCipherSuites();
-        //for (String s: strings) System.out.println(s);
+        //for (String s: strings) log.info(s);
+    }
+
+    public String[] getAtnaCipherSuites() {
+        return new String[]{"SSL_RSA_WITH_NULL_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA",
+                "SSL_RSA_WITH_3DES_EDE_CBC_SHA", "SSL_RSA_WITH_DES_CBC_SHA"};
     }
 
     /**
-     * @see SecureProtocolSocketFactory#createSocket(java.lang.String,int,java.net.InetAddress,int)
+     * @see SecureProtocolSocketFactory#createSocket(java.lang.String, int, java.net.InetAddress, int)
      */
     public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort) {
         Socket socket = null;
@@ -223,7 +223,7 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
     }
 
     /**
-     * @see SecureProtocolSocketFactory#createSocket(java.lang.String,int)
+     * @see SecureProtocolSocketFactory#createSocket(java.lang.String, int)
      */
     public Socket createSocket(String host, int port) {
         Socket socket = null;
@@ -241,7 +241,7 @@ public class SecureSocketFactory {//implements SecureProtocolSocketFactory {
     }
 
     /**
-     * @see SecureProtocolSocketFactory#createSocket(java.net.Socket,java.lang.String,int,boolean)
+     * @see SecureProtocolSocketFactory#createSocket(java.net.Socket, java.lang.String, int, boolean)
      */
     public Socket createSocket(Socket socket, String host, int port, boolean autoClose) {
         Socket lsocket = null;

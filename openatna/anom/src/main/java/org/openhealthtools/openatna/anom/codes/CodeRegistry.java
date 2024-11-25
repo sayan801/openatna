@@ -38,12 +38,16 @@ import org.openhealthtools.openatna.anom.AtnaCode;
 
 public class CodeRegistry {
 
-    private static Map<String, Set<AtnaCode>> codes = new HashMap<String, Set<AtnaCode>>();
+    private static Map<String, Set<AtnaCode>> codes = new HashMap<>();
 
-    public static void addCode(AtnaCode code) {
+    private CodeRegistry() {
+		super();
+	}
+
+	public static void addCode(AtnaCode code) {
         Set<AtnaCode> l = codes.get(code.getCodeType());
         if (l == null) {
-            l = new HashSet<AtnaCode>();
+            l = new HashSet<>();
         }
         l.add(code);
         codes.put(code.getCodeType(), l);
@@ -52,21 +56,30 @@ public class CodeRegistry {
     public static List<AtnaCode> getCodes(String type) {
         Set<AtnaCode> l = codes.get(type);
         if (l != null) {
-            return new ArrayList<AtnaCode>(l);
+            return new ArrayList<>(l);
         }
-        return new ArrayList<AtnaCode>();
+        return new ArrayList<>();
     }
 
-    public static List<AtnaCode> allCodes() {
-        ArrayList<AtnaCode> ret = new ArrayList<AtnaCode>();
-        for (String s : codes.keySet()) {
-            Set<AtnaCode> l = codes.get(s);
-            if (l != null) {
-                ret.addAll(l);
-            }
-        }
-        return ret;
-    }
+	public static List<AtnaCode> allCodes() {
+		ArrayList<AtnaCode> ret = new ArrayList<>();
+		for (String s : codes.keySet()) {
+			Set<AtnaCode> l = codes.get(s);
+			if (l != null) {
+				ret.addAll(l);
+			}
+		}
+
+		for (Map.Entry<String, Set<AtnaCode>> entry : codes.entrySet()) {
+
+			Set<AtnaCode> l = entry.getValue();
+			if (l != null) {
+				ret.addAll(l);
+			}
+		}
+
+		return ret;
+	}
 
     public static AtnaCode getCode(String type, String code, String system, String systemName) {
         if (type == null || code == null) {
@@ -94,6 +107,4 @@ public class CodeRegistry {
         }
         return null;
     }
-
-
 }

@@ -1,25 +1,10 @@
-/**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    Misys Open Source Solutions - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.net;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
@@ -31,37 +16,31 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * A simple class for dealing with certificate management. <p />
+ * A simple class for dealing with certificate management.
  * <p/>
- * This is a single point of entry for the entire suite of ssl
- * key and certificate handling functions.  Basically you should
- * use it as a static class for obtaining KeyManager s and
- * TrustManager s.  KeyManagers hold keys and as such require
- * passwords.  TrustManagers on the other hand only hold certificates
- * and as such do not require passwords.  You should also use it
- * to obtain the KeyStore needed to generate the KeyManager s and
- * TrustManager s.  <p />
  * <p/>
- * Once everything is complete, this should only be used by the
- * ConnectionFactory and should never be called directly. <p />
+ * This is a single point of entry for the entire suite of ssl key and certificate handling functions.
+ * Basically you should use it as a static class for obtaining KeyManager s and TrustManager s.
+ * KeyManagers hold keys and as such require passwords.
+ * TrustManagers on the other hand only hold certificates and as such do not require passwords.
+ * You should also use it to obtain the KeyStore needed to generate the KeyManager s and TrustManager s.
  * <p/>
- * (Actually that means that these should all be protected and
- * not public, but I think that would break the unit tests.) <p />
- *
- * @author Josh Flachsbart
+ * <p/>
+ * Once everything is complete, this should only be used by the ConnectionFactory and should never be called directly.
+ * <p/>
+ * <p/>
+ * (Actually that means that these should all be protected and not public, but I think that would break the unit tests.)
+ * <p/>
  */
 public class ConnectionCertificateHandler {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.net.ConnectionCertificateHandler");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionCertificateHandler.class);
+    private static final Logger LOGGER_CLINICAL = LoggerFactory.getLogger("LOGGER_CLINICAL");
+    private static final String SERVER_EHEALTH_MODE = "server.ehealth.mode";
+
+    private ConnectionCertificateHandler() {
+    }
 
     /**
      * Creates a key/trust store and loads in the corresponding file.
@@ -71,8 +50,8 @@ public class ConnectionCertificateHandler {
         if (url == null) {
             throw new IllegalArgumentException("Keystore url may not be null");
         }
-        log.debug("Initializing key store");
-        KeyStore keystore = null;
+        LOGGER.debug("Initializing key store");
+        KeyStore keystore;
         if (url.getFile().endsWith(".p12")) {
             keystore = KeyStore.getInstance("pkcs12");
         } else {
@@ -90,7 +69,7 @@ public class ConnectionCertificateHandler {
         if (keystore == null) {
             throw new IllegalArgumentException("Keystore may not be null");
         }
-        log.debug("Initializing key manager");
+        LOGGER.debug("Initializing key manager");
         KeyManagerFactory kmfactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmfactory.init(keystore, password != null ? password.toCharArray() : null);
         return kmfactory.getKeyManagers();
@@ -104,7 +83,7 @@ public class ConnectionCertificateHandler {
         if (keystore == null) {
             throw new IllegalArgumentException("Keystore may not be null");
         }
-        log.debug("Initializing trust manager");
+        LOGGER.debug("Initializing trust manager");
         TrustManagerFactory tmfactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmfactory.init(keystore);
         TrustManager[] trustmanagers = tmfactory.getTrustManagers();
@@ -117,18 +96,53 @@ public class ConnectionCertificateHandler {
     }
 
     /**
-     * For debuging only.  Prints out keystore certificate chain.
+     * Returns out keystore certificate chain.
+     *
+     * @param keystore Keystore to print out.
+     * @throws KeyStoreException If the keystore is broken.
+     */
+    public static String getKeyCertDN(KeyStore keystore) throws KeyStoreException {
+
+        Enumeration<String> aliases = keystore.aliases();
+        while (aliases.hasMoreElements()) {
+            String alias = aliases.nextElement();
+            Certificate[] certs = keystore.getCertificateChain(alias);
+            if (certs != null) {
+                StringBuilder message = new StringBuilder("Certificate chain '" + alias + "':");
+                int i = 1;
+                for (Certificate cert : certs) {
+                    if (cert instanceof X509Certificate) {
+                        X509Certificate x509Certificate = (X509Certificate) cert;
+                        message.append("\n Certificate ").append(i++).append(":");
+                        message.append("\n  Subject DN: ").append(x509Certificate.getSubjectDN());
+                        message.append("\n  Signature Algorithm: ").append(x509Certificate.getSigAlgName());
+                        message.append("\n  Valid from: ").append(x509Certificate.getNotBefore());
+                        message.append("\n  Valid until: ").append(x509Certificate.getNotAfter());
+                        message.append("\n  Issuer: ").append(x509Certificate.getIssuerDN());
+                    }
+                }
+                if (!StringUtils.equals(System.getProperty(SERVER_EHEALTH_MODE), "PRODUCTION") && LOGGER_CLINICAL.isDebugEnabled()) {
+                    LOGGER_CLINICAL.debug(message.toString());
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * For debugging only.  Prints out keystore certificate chain.
      *
      * @param keystore Keystore to print out.
      * @throws KeyStoreException If the keystore is broken.
      */
     public static void printTrustCerts(KeyStore keystore) throws KeyStoreException {
+
         Enumeration<String> aliases = keystore.aliases();
         while (aliases.hasMoreElements()) {
             String alias = aliases.nextElement();
             String message = "Trusted certificate '" + alias + "':";
             Certificate trustedcert = keystore.getCertificate(alias);
-            if (trustedcert != null && trustedcert instanceof X509Certificate) {
+            if (trustedcert instanceof X509Certificate) {
                 X509Certificate cert = (X509Certificate) trustedcert;
                 message += "\n  Subject DN: " + cert.getSubjectDN();
                 message += "\n  Signature Algorithm: " + cert.getSigAlgName();
@@ -136,61 +150,43 @@ public class ConnectionCertificateHandler {
                 message += "\n  Valid until: " + cert.getNotAfter();
                 message += "\n  Issuer: " + cert.getIssuerDN();
             }
-            log.info(message);
+            if (!StringUtils.equals(System.getProperty(SERVER_EHEALTH_MODE), "PRODUCTION")
+                    && LOGGER_CLINICAL.isDebugEnabled()) {
+                LOGGER_CLINICAL.debug(message);
+            }
         }
     }
 
     /**
-     * For debuging only.  Prints out keystore certificate chain.
+     * For debugging only.  Prints out keystore certificate chain.
      *
      * @param keystore Keystore to print out.
      * @throws KeyStoreException If the keystore is broken.
      */
     public static void printKeyCertificates(KeyStore keystore) throws KeyStoreException {
+
         Enumeration<String> aliases = keystore.aliases();
         while (aliases.hasMoreElements()) {
             String alias = aliases.nextElement();
             Certificate[] certs = keystore.getCertificateChain(alias);
             if (certs != null) {
-                String message = "Certificate chain '" + alias + "':";
+                StringBuilder message = new StringBuilder("Certificate chain '" + alias + "':");
                 int i = 1;
                 for (Certificate cert : certs) {
                     if (cert instanceof X509Certificate) {
-                        X509Certificate Xcert = (X509Certificate) cert;
-                        message += "\n Certificate " + i++ + ":";
-                        message += "\n  Subject DN: " + Xcert.getSubjectDN();
-                        message += "\n  Signature Algorithm: " + Xcert.getSigAlgName();
-                        message += "\n  Valid from: " + Xcert.getNotBefore();
-                        message += "\n  Valid until: " + Xcert.getNotAfter();
-                        message += "\n  Issuer: " + Xcert.getIssuerDN();
+                        X509Certificate x509Certificate = (X509Certificate) cert;
+                        message.append("\n Certificate ").append(i++).append(":");
+                        message.append("\n  Subject DN: ").append(x509Certificate.getSubjectDN());
+                        message.append("\n  Signature Algorithm: ").append(x509Certificate.getSigAlgName());
+                        message.append("\n  Valid from: ").append(x509Certificate.getNotBefore());
+                        message.append("\n  Valid until: ").append(x509Certificate.getNotAfter());
+                        message.append("\n  Issuer: ").append(x509Certificate.getIssuerDN());
                     }
                 }
-                log.info(message);
+                if (!StringUtils.equals(System.getProperty(SERVER_EHEALTH_MODE), "PRODUCTION") && LOGGER_CLINICAL.isDebugEnabled()) {
+                    LOGGER_CLINICAL.debug(message.toString());
+                }
             }
         }
     }
-
-    public static void main(String[] args) {
-        try {
-            //ConnectionCertificateHandler cch = new ConnectionCertificateHandler();
-            KeyStore ks = ConnectionCertificateHandler.createKeyStore(new URL("file:certs/keystore"), "password");
-            ConnectionCertificateHandler.printKeyCertificates(ks);
-            KeyManager[] kms = ConnectionCertificateHandler.createKeyManagers(ks, "password");
-            System.out.println("Printing all key managers:");
-            for (KeyManager km : kms) {
-                System.out.println(km.toString());
-            }
-            KeyStore ts = ConnectionCertificateHandler.createKeyStore(new URL("file:certs/truststore"), "password");
-            ConnectionCertificateHandler.printTrustCerts(ts);
-            TrustManager[] tms = ConnectionCertificateHandler.createTrustManagers(ts, null);
-            System.out.println("Printing all trust managers:");
-            for (TrustManager tm : tms) {
-                System.out.println(tm.toString());
-            }
-
-        } catch (Exception e) {
-            System.out.println("Top Level Error: " + e);
-        }
-    }
-
 }

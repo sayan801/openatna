@@ -26,14 +26,14 @@
 <Configuration>
 
     <SecureConnection name="arr-tls">
-        <HostName>localhost</HostName>
+        <HostName>127.0.0.1</HostName>
         <Port>2862</Port>
 
         <!-- Trust and Keystore -->
-        <KeyStore>certs/serverKeyStore</KeyStore>
-        <KeyPass>password</KeyPass>
-        <TrustStore>certs/clientKeyStore</TrustStore>
-        <TrustPass>password</TrustPass>
+        <KeyStore>/opt/epsos/Certificates/keystore_spsc.jks</KeyStore>
+        <KeyPass>passwd</KeyPass>
+        <TrustStore>/opt/epsos/Certificates/truststore.jks</TrustStore>
+        <TrustPass>passwd</TrustPass>
     </SecureConnection>
     <!-- use IP address instead of localhost for UDP -->
     <StandardConnection name="arr-udp">

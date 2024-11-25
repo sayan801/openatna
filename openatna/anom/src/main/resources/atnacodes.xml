@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-        ATNA related Codes
-
-    -->
 <Codes>
     <CodeType name="EventId">
         <Code code="110100" codingScheme="DCM" display="Application Activity"/>
@@ -21,7 +16,6 @@
         <Code code="110112" codingScheme="DCM" display="Query"/>
         <Code code="110113" codingScheme="DCM" display="Security Alert"/>
         <Code code="110114" codingScheme="DCM" display="User Authentication"/>
-
         <Code code="IHE0001" codingScheme="IHE" display="Health Services Provision Event"/>
         <Code code="IHE0002" codingScheme="IHE" display="Medication Event"/>
         <Code code="IHE0003" codingScheme="IHE" display="Patient Care Resource Assignment"/>
@@ -65,7 +59,6 @@
         <Code code="ITI-42" codingScheme="IHE Transactions" display="Register Document Set-b"/>
         <Code code="ITI-43" codingScheme="IHE Transactions" display="Retrieve Document Set"/>
         <Code code="ITI-48" codingScheme="IHE Transactions" display="Retrieve Value Set"/>
-
         <Code code="110120" codingScheme="DCM" display="Application Start"/>
         <Code code="110121" codingScheme="DCM" display="Application Stop"/>
         <Code code="110122" codingScheme="DCM" display="Login"/>
@@ -101,10 +94,7 @@
         <Code code="10" codingScheme="RFC-3881" display="Search Criteria"/>
         <Code code="11" codingScheme="RFC-3881" display="User Identifier"/>
         <Code code="12" codingScheme="RFC-3881" display="URI"/>
-
         <Code code="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd"
               codingScheme="IHE XDS Metadata" display="SubmissionSet ClassificationNode"/>
-
     </CodeType>
-
 </Codes>

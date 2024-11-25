@@ -1,24 +1,12 @@
-/**
- *  Copyright (c) 2009-2010 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog.core.test.tls;
+
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+import org.openhealthtools.openatna.syslog.core.test.tls.ssl.AuthSSLSocketFactory;
+import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,35 +18,21 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
-import org.openhealthtools.openatna.syslog.core.test.tls.ssl.AuthSSLSocketFactory;
-import org.openhealthtools.openatna.syslog.transport.SyslogListener;
 
 /**
  * very simple BIO test
  *
  * @author Andrew Harrison
  * @version $Revision:$
- * @created Aug 31, 2009: 11:18:58 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class TlsServer {
 
-    static Logger log = Logger.getLogger("org.openhealthtools.openatna.syslog.core.test.tls.TlsServer");
-
-
+    private final Logger logger = LoggerFactory.getLogger(TlsServer.class);
+    private final Executor exec = Executors.newFixedThreadPool(10);
+    private final Set<SyslogListener> listeners = new HashSet<>();
     private TlsConfig tlsconfig;
-    private Executor exec = Executors.newFixedThreadPool(5);
     private boolean stopped = false;
-    private ServerSocket serverSocket;
     private ServerThread thread;
-
-    private Set<SyslogListener> listeners = new HashSet<SyslogListener>();
 
     public void configure(TlsConfig config) {
         this.tlsconfig = config;
@@ -71,20 +45,20 @@ public class TlsServer {
         }
 
         AuthSSLSocketFactory f = tlsconfig.getSocketFactory();
+        ServerSocket serverSocket;
         if (f != null) {
             boolean auth = tlsconfig.isRequireClientAuth();
-            log.info("USING TLS...");
+            logger.info("Using TLS communication protocol");
             serverSocket = f.createServerSocket(tlsconfig.getPort(), auth);
         } else {
             serverSocket = new ServerSocket(tlsconfig.getPort());
         }
         thread = new ServerThread(serverSocket);
         thread.start();
-        log.info("server started on port " + tlsconfig.getPort());
-
+        logger.info("Server started on port " + tlsconfig.getPort());
     }
 
-    public void stop() throws IOException {
+    public void stop() {
         stopped = true;
         thread.interrupt();
     }
@@ -97,26 +71,22 @@ public class TlsServer {
         listeners.remove(listener);
     }
 
-
     protected void notifyListeners(final SyslogMessage msg) {
-        exec.execute(new Runnable() {
-            public void run() {
-                for (SyslogListener listener : listeners) {
-                    log.info("notifying listener...");
-                    listener.messageArrived(msg);
-                }
+
+        exec.execute(() -> {
+            for (SyslogListener listener : listeners) {
+                logger.info("notifying listener...");
+                listener.messageArrived(msg);
             }
         });
-
     }
 
     protected void notifyException(final SyslogException ex) {
-        exec.execute(new Runnable() {
-            public void run() {
-                for (SyslogListener listener : listeners) {
-                    log.info("notifying exception...");
-                    listener.exceptionThrown(ex);
-                }
+
+        exec.execute(() -> {
+            for (SyslogListener listener : listeners) {
+                logger.info("Notifying exception...");
+                listener.exceptionThrown(ex);
             }
         });
 
@@ -124,27 +94,28 @@ public class TlsServer {
 
     private class ServerThread extends Thread {
 
-        private ServerSocket server;
+        private final ServerSocket server;
 
         public ServerThread(ServerSocket server) {
             this.server = server;
         }
 
         public void run() {
+
             while (!stopped) {
                 try {
                     Socket s = server.accept();
                     exec.execute(new WorkerThread(s));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("{}: '{}'", e.getClass(), e.getMessage(), e);
                 }
-
             }
         }
     }
 
     private class WorkerThread extends Thread {
-        private Socket socket;
+
+        private final Socket socket;
 
         private WorkerThread(Socket socket) {
             this.socket = socket;
@@ -185,15 +156,12 @@ public class TlsServer {
             } catch (IOException e) {
                 notifyException(new SyslogException(e));
             }
-
         }
 
-        private SyslogMessage createMessage(byte[] bytes) throws SyslogException, IOException {
-
+        private SyslogMessage createMessage(byte[] bytes) throws SyslogException {
 
             // doesn't even check to see if the full length has been read!
             return SyslogMessageFactory.getFactory().read(new ByteArrayInputStream(bytes));
-
         }
     }
 }

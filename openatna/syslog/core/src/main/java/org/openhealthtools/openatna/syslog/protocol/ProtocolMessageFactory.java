@@ -1,64 +1,138 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog.protocol;
+
+import org.openhealthtools.openatna.syslog.LogMessage;
+import org.openhealthtools.openatna.syslog.SyslogException;
+import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.syslog.Constants;
-import org.openhealthtools.openatna.syslog.LogMessage;
-import org.openhealthtools.openatna.syslog.SyslogException;
-import org.openhealthtools.openatna.syslog.SyslogMessage;
-import org.openhealthtools.openatna.syslog.SyslogMessageFactory;
 
 /**
  * generates RFC 5424 messages from a stream.
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Aug 18, 2009: 12:42:04 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class ProtocolMessageFactory extends SyslogMessageFactory {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.syslog.protocol.ProtocolMessageFactory");
-
-
     public static final char VERSION_CHAR = '1';
-
     public static final Pattern DATE = Pattern.compile(
             "(\\d{4})-(\\d{2})-(\\d{2})[T](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{1,6}))?([+-](\\d{2}):(\\d{2}))?([Z])?");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtocolMessageFactory.class);
 
+    /**
+     * Parse the serialized string form into a java.util.Date
+     * NOTE: This only supports millisecond precision. decimals greater than 3 are truncated
+     *
+     * @param date The serialized string form of the date
+     * @return The created java.util.Date
+     */
+    public static Date createDate(String date) throws SyslogException {
+
+        Matcher m = DATE.matcher(date);
+        if (m.find()) {
+
+            LOGGER.debug("date groups{" + m.group(1) + "}{" + m.group(2) + "}{" + m.group(3) + "}{" +
+                    m.group(4) + "}{" + m.group(5) + "}{" + m.group(6) + "}{" +
+                    m.group(7) + "}{" + m.group(8) + "}{" + m.group(9) + "}{" +
+                    m.group(10) + "}{" + m.group(11) + "}{" + m.group(12) + "}");
+            Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+            int hoff = 0;
+            int moff = 0;
+            int doff;
+            if (m.group(9) != null) {
+                doff = m.group(9).equals("-") ? 1 : -1;
+                hoff = doff * (m.group(10) != null ? Integer.parseInt(m.group(10)) : 0);
+                moff = doff * (m.group(11) != null ? Integer.parseInt(m.group(11)) : 0);
+            } else {
+                /*
+                TODO
+                if (m.group(12) == null) {
+                    throw new SyslogException("Invalid Date Format");
+                }*/
+            }
+            c.set(Calendar.YEAR, Integer.parseInt(m.group(1)));
+            c.set(Calendar.MONTH, m.group(2) != null ? Integer.parseInt(m.group(2)) - 1 : 0);
+            c.set(Calendar.DATE, m.group(3) != null ? Integer.parseInt(m.group(3)) : 1);
+            c.set(Calendar.HOUR_OF_DAY, m.group(4) != null ? Integer.parseInt(m.group(4)) + hoff : 0);
+            c.set(Calendar.MINUTE, m.group(5) != null ? Integer.parseInt(m.group(5)) + moff : 0);
+            c.set(Calendar.SECOND, m.group(6) != null ? Integer.parseInt(m.group(6)) : 0);
+            String millis = m.group(8);
+            if (millis == null) {
+                millis = "0";
+            }
+            if (millis.length() > 3) {
+                millis = millis.substring(0, 3);
+            }
+            c.set(Calendar.MILLISECOND, Integer.parseInt(millis));
+            return c.getTime();
+        } else {
+            throw new SyslogException("Invalid Date Format");
+        }
+    }
+
+    /**
+     * Create the serialized string form from a java.util.Date
+     *
+     * @param date A java.util.Date
+     * @return The serialized string form of the date
+     */
+    public static String formatDate(Date date) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        c.setTime(date);
+        stringBuilder.append(c.get(Calendar.YEAR));
+        stringBuilder.append('-');
+        int f = c.get(Calendar.MONTH);
+        if (f < 9) {
+            stringBuilder.append('0');
+        }
+        stringBuilder.append(f + 1);
+        stringBuilder.append('-');
+        f = c.get(Calendar.DATE);
+        if (f < 10) {
+            stringBuilder.append('0');
+        }
+        stringBuilder.append(f);
+        stringBuilder.append('T');
+        f = c.get(Calendar.HOUR_OF_DAY);
+        if (f < 10) {
+            stringBuilder.append('0');
+        }
+        stringBuilder.append(f);
+        stringBuilder.append(':');
+        f = c.get(Calendar.MINUTE);
+        if (f < 10) {
+            stringBuilder.append('0');
+        }
+        stringBuilder.append(f);
+        stringBuilder.append(':');
+        f = c.get(Calendar.SECOND);
+        if (f < 10) {
+            stringBuilder.append('0');
+        }
+        stringBuilder.append(f);
+        stringBuilder.append('.');
+        f = c.get(Calendar.MILLISECOND);
+        if (f < 100) {
+            stringBuilder.append('0');
+        }
+        if (f < 10) {
+            stringBuilder.append('0');
+        }
+        stringBuilder.append(f);
+        stringBuilder.append('Z');
+        return stringBuilder.toString();
+    }
 
     /**
      * reads the priority value and positions the stream at the space after the version number.
@@ -67,7 +141,6 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
      * @param in
      * @return
      * @throws org.openhealthtools.openatna.syslog.SyslogException
-     *
      */
     private int readPriority(InputStream in) throws SyslogException {
         try {
@@ -113,8 +186,7 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
 
     /**
      * This reads up to 256 characters to read headers (excluding SDs). This limit is arbitrary.
-     * It is imposed to reduce the risk
-     * of badly formed or malicious messages from using too many resources.
+     * It is imposed to reduce the risk of badly formed or malicious messages from using too many resources.
      *
      * @param in
      * @return
@@ -144,7 +216,8 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
                 curr++;
                 if (c == ' ') {
                     count++;
-                    String currHeader = new String(buff.array(), 0, buff.position(), Constants.ENC_UTF8);
+                    String currHeader = new String(buff.array(), 0, buff.position(), StandardCharsets.UTF_8);
+                    LOGGER.debug("CurrHeader: '{}'", currHeader);
                     buff.clear();
                     switch (count) {
                         case 1:
@@ -162,6 +235,8 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
                         case 5:
                             mid = currHeader;
                             break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + count);
                     }
                 } else {
                     buff.put(c);
@@ -172,7 +247,7 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
             }
 
             c = (byte) pin.read();
-            List<StructuredElement> els = new ArrayList<StructuredElement>();
+            List<StructuredElement> els = new ArrayList<>();
             if (c == '-') {
                 c = (byte) pin.read();
                 if (c != ' ') {
@@ -189,118 +264,15 @@ public class ProtocolMessageFactory extends SyslogMessageFactory {
             logMessage.read(pin, encoding);
             facility = priority / 8;
             severity = priority % 8;
+
             ProtocolMessage sm = new ProtocolMessage(facility, severity, timestamp, host, logMessage, app, mid, proc);
             for (StructuredElement el : els) {
                 sm.addStructuredElement(el);
             }
             return sm;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("{}: '{}'", e.getClass(), e.getMessage(), e);
             throw new SyslogException(e);
         }
     }
-
-
-    /**
-     * Parse the serialized string form into a java.util.Date
-     * NOTE: This only supports millisecond precision. decimals greater than 3 are truncated
-     *
-     * @param date The serialized string form of the date
-     * @return The created java.util.Date
-     */
-    public static Date createDate(String date) throws SyslogException {
-        Matcher m = DATE.matcher(date);
-        if (m.find()) {
-
-            log.debug("date groups{" + m.group(1) + "}{" + m.group(2) + "}{" + m.group(3) + "}{" +
-                    m.group(4) + "}{" + m.group(5) + "}{" + m.group(6) + "}{" +
-                    m.group(7) + "}{" + m.group(8) + "}{" + m.group(9) + "}{" +
-                    m.group(10) + "}{" + m.group(11) + "}{" + m.group(12) + "}");
-            Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-            int hoff = 0, moff = 0, doff = -1;
-            if (m.group(9) != null) {
-                doff = m.group(9).equals("-") ? 1 : -1;
-                hoff = doff * (m.group(10) != null ? Integer.parseInt(m.group(10)) : 0);
-                moff = doff * (m.group(11) != null ? Integer.parseInt(m.group(11)) : 0);
-            } else {
-                /*
-                TODO
-                if (m.group(12) == null) {
-                    throw new SyslogException("Invalid Date Format");
-                }*/
-            }
-            c.set(Calendar.YEAR, Integer.parseInt(m.group(1)));
-            c.set(Calendar.MONTH, m.group(2) != null ? Integer.parseInt(m.group(2)) - 1 : 0);
-            c.set(Calendar.DATE, m.group(3) != null ? Integer.parseInt(m.group(3)) : 1);
-            c.set(Calendar.HOUR_OF_DAY, m.group(4) != null ? Integer.parseInt(m.group(4)) + hoff : 0);
-            c.set(Calendar.MINUTE, m.group(5) != null ? Integer.parseInt(m.group(5)) + moff : 0);
-            c.set(Calendar.SECOND, m.group(6) != null ? Integer.parseInt(m.group(6)) : 0);
-            String millis = m.group(8);
-            if (millis == null) {
-                millis = "0";
-            }
-            if (millis.length() > 3) {
-                millis = millis.substring(0, 3);
-            }
-            c.set(Calendar.MILLISECOND, Integer.parseInt(millis));
-            return c.getTime();
-        } else {
-            throw new SyslogException("Invalid Date Format");
-        }
-    }
-
-    /**
-     * Create the serialized string form from a java.util.Date
-     *
-     * @param date A java.util.Date
-     * @return The serialized string form of the date
-     */
-    public static String formatDate(Date date) {
-        StringBuilder sb = new StringBuilder();
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.setTime(date);
-        sb.append(c.get(Calendar.YEAR));
-        sb.append('-');
-        int f = c.get(Calendar.MONTH);
-        if (f < 9) {
-            sb.append('0');
-        }
-        sb.append(f + 1);
-        sb.append('-');
-        f = c.get(Calendar.DATE);
-        if (f < 10) {
-            sb.append('0');
-        }
-        sb.append(f);
-        sb.append('T');
-        f = c.get(Calendar.HOUR_OF_DAY);
-        if (f < 10) {
-            sb.append('0');
-        }
-        sb.append(f);
-        sb.append(':');
-        f = c.get(Calendar.MINUTE);
-        if (f < 10) {
-            sb.append('0');
-        }
-        sb.append(f);
-        sb.append(':');
-        f = c.get(Calendar.SECOND);
-        if (f < 10) {
-            sb.append('0');
-        }
-        sb.append(f);
-        sb.append('.');
-        f = c.get(Calendar.MILLISECOND);
-        if (f < 100) {
-            sb.append('0');
-        }
-        if (f < 10) {
-            sb.append('0');
-        }
-        sb.append(f);
-        sb.append('Z');
-        return sb.toString();
-    }
-
 }

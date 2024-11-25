@@ -1,21 +1,21 @@
 /**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
+ * Copyright (c) 2009-2011 University of Cardiff and others
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * <p>
+ * Contributors:
+ * University of Cardiff - initial API and implementation
+ * -
  */
 
 package org.openhealthtools.openatna.anom;
@@ -40,7 +40,7 @@ public class AtnaMessageObject implements Serializable {
 
     private AtnaObject object;
     private byte[] objectQuery;
-    private List<AtnaObjectDetail> objectDetails = new ArrayList<AtnaObjectDetail>();
+    private List<AtnaObjectDetail> objectDetails = new ArrayList<>();
     private ObjectDataLifecycle objectDataLifeCycle;
 
     public AtnaMessageObject(AtnaObject object) {
@@ -65,7 +65,7 @@ public class AtnaMessageObject implements Serializable {
     }
 
     public List<AtnaObjectDetail> getObjectDetails() {
-        return new ArrayList<AtnaObjectDetail>(objectDetails);
+        return new ArrayList<>(objectDetails);
     }
 
     /**
@@ -75,7 +75,7 @@ public class AtnaMessageObject implements Serializable {
      * @return
      */
     public List<AtnaObjectDetail> getObjectDetails(String type) {
-        ArrayList<AtnaObjectDetail> ret = new ArrayList<AtnaObjectDetail>();
+        ArrayList<AtnaObjectDetail> ret = new ArrayList<>();
         for (AtnaObjectDetail objectDetail : objectDetails) {
             if (objectDetail.getType().equals(type)) {
                 ret.add(objectDetail);
@@ -140,22 +140,22 @@ public class AtnaMessageObject implements Serializable {
         return result;
     }
 
+    @Override
     public String toString() {
         byte[] bytes = getObjectQuery();
         if (bytes == null) {
             bytes = new byte[0];
         }
-        return new StringBuilder().append("[")
-                .append(getClass().getName())
-                .append(" object=")
-                .append(getObject())
-                .append(" data life cycle=")
-                .append(getObjectDataLifeCycle())
-                .append(" query=")
-                .append(new String(bytes))
-                .append(" details=")
-                .append(getObjectDetails())
-                .append("]")
-                .toString();
+        return "[" +
+                getClass().getName() +
+                " object=" +
+                getObject() +
+                " data life cycle=" +
+                getObjectDataLifeCycle() +
+                " query=" +
+                new String(bytes) +
+                " details=" +
+                getObjectDetails() +
+                "]";
     }
 }

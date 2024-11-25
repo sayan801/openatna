@@ -1,41 +1,36 @@
 /**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
+ * Copyright (c) 2009-2011 University of Cardiff and others
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * <p>
+ * Contributors:
+ * University of Cardiff - initial API and implementation
+ * -
  */
 
 package org.openhealthtools.openatna.audit.persistence.dao.hibernate;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
 import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
 import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * NOTE: the fields that determine a code's uniqueness are its code, code system AND system name.
@@ -53,26 +48,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = AtnaPersistenceException.class)
 public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implements CodeDao {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.persistence.dao.hibernate.HibernateCodeDao");
-
+    private static Logger logger = LoggerFactory.getLogger(HibernateCodeDao.class);
 
     public HibernateCodeDao(SessionFactory sessionFactory) {
         super(CodeEntity.class, sessionFactory);
     }
 
-    public CodeEntity getById(Long id) throws AtnaPersistenceException {
+    public CodeEntity getById(Long id) {
         return get(id);
     }
 
-    public List<? extends CodeEntity> getByType(CodeEntity.CodeType type) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getByType(CodeEntity.CodeType type) {
         return list(criteria(fromCodeType(type)));
     }
 
-    public List<? extends CodeEntity> getByCode(String code) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getByCode(String code) {
         return list(criteria().add(Restrictions.eq("code", code)));
     }
 
-    public List<? extends CodeEntity> getByCodeAndType(CodeEntity.CodeType type, String code) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getByCodeAndType(CodeEntity.CodeType type, String code) {
+
         // first see if someone was lazy and didn't use the name of the RFC
         List<? extends CodeEntity> ce = list(criteria()
                 .add(Restrictions.eq("type", type))
@@ -96,24 +91,24 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
                 .add(Restrictions.isNull("codeSystemName")));
     }
 
-    public List<? extends CodeEntity> getByCodeSystem(String codeSystem) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getByCodeSystem(String codeSystem) {
         return list(criteria().add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
-    public List<? extends CodeEntity> getByCodeSystemName(String codeSystemName) throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getByCodeSystemName(String codeSystemName) {
         return list(criteria().add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
-    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem)
-            throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystem(CodeEntity.CodeType type, String code, String codeSystem) {
+
         return uniqueResult(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
-    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName)
-            throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystemName(CodeEntity.CodeType type, String code, String codeSystemName) {
+
         return uniqueResult(criteria()
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("code", code))
@@ -121,24 +116,23 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
 
     }
 
-    public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type)
-            throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getBySystemAndType(String codeSystem, CodeEntity.CodeType type) {
+
         return list(criteria(fromCodeType(type)).add(Restrictions.eq("codeSystem", codeSystem)));
     }
 
-    public List<? extends CodeEntity> getBySystemNameAndType(String codeSystemName, CodeEntity.CodeType type)
-            throws AtnaPersistenceException {
+    public List<? extends CodeEntity> getBySystemNameAndType(String codeSystemName, CodeEntity.CodeType type) {
+
         return list(criteria(fromCodeType(type)).add(Restrictions.eq("codeSystemName", codeSystemName)));
     }
 
-    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem,
-                                                      String codeSystemName) throws AtnaPersistenceException {
+    public CodeEntity getByCodeAndSystemAndSystemName(CodeEntity.CodeType type, String code, String codeSystem, String codeSystemName) {
+
         return uniqueResult(criteria().add(Restrictions.eq("codeSystemName", codeSystemName))
                 .add(Restrictions.eq("code", code))
                 .add(Restrictions.eq("type", type))
                 .add(Restrictions.eq("codeSystem", codeSystem)));
     }
-
 
     public List<? extends CodeEntity> getAll() throws AtnaPersistenceException {
         return all();
@@ -164,19 +158,19 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
         return false;
     }
 
-    public void delete(CodeEntity ce) throws AtnaPersistenceException {
+    public void delete(CodeEntity ce) {
         currentSession().delete(ce);
     }
 
     /**
-     * This does an ever decreasingly strict search. It will match against a matching code
-     * and a system name as a last resort.
+     * This does an ever decreasingly strict search. It will match against a matching code and a system name as a last resort.
      *
      * @param code
      * @return
      * @throws AtnaPersistenceException
      */
     public CodeEntity get(CodeEntity code) throws AtnaPersistenceException {
+
         String c = code.getCode();
         String sys = code.getCodeSystem();
         String name = code.getCodeSystemName();
@@ -213,6 +207,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
     }
 
     private Class fromCodeType(CodeEntity.CodeType type) {
+
         switch (type) {
             case EVENT_ID:
                 return EventIdCodeEntity.class;
@@ -230,6 +225,7 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
     }
 
     private boolean isDuplicate(CodeEntity entity, PersistencePolicies policies) throws AtnaPersistenceException {
+
         CodeEntity ce = get(entity);
         if (ce != null) {
             if (policies.isErrorOnDuplicateInsert()) {
@@ -247,7 +243,6 @@ public class HibernateCodeDao extends AbstractHibernateDao<CodeEntity> implement
      * @param entity
      * @return
      * @throws org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException
-     *
      */
     public CodeEntity find(CodeEntity entity) throws AtnaPersistenceException {
         CodeEntity ce = get(entity);

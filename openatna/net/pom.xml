@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
-        <artifactId>openatna</artifactId>
-        <groupId>org.openhealthtools.openatna</groupId>
-        <version>1.2.1-SNAPSHOT</version>
-    </parent>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.openhealthtools.openatna</groupId>
+
+    <parent>
+        <groupId>eu.europa.ec.sante.ehdsi.openncp-openatna</groupId>
+        <artifactId>openncp-openatna</artifactId>
+        <version>5.2.5</version>
+    </parent>
+
     <artifactId>openatna-net</artifactId>
     <packaging>jar</packaging>
-    <name>OpenATNA Net</name>
-    <version>1.2.1-SNAPSHOT</version>
-    <url>https://openatna.projects.openhealthtools.org</url>
+
+    <name>OpenNCP OpenATNA Net</name>
 
     <dependencies>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.1</version>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${mail.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcmail-jdk15</artifactId>
-            <version>1.43</version>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <version>${bcprov.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>1.43</version>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bcprov.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,30 +1,11 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.server;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openatna.audit.log.SyslogErrorLogger;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.transport.SyslogListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -37,28 +18,28 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class MessageQueue {
 
-    private static Log log = LogFactory.getLog("org.openhealthtools.openatna.audit.server.MessageQueue");
+    private final Logger logger = LoggerFactory.getLogger(MessageQueue.class);
 
-
-    private ExecutorService exec = Executors.newSingleThreadExecutor();
+    private final ExecutorService exec = Executors.newSingleThreadExecutor();
     private boolean running = false;
-    private Runner runner;
+    private final Runner runner;
 
     public MessageQueue(SyslogListener listener) {
         this.runner = new Runner(listener);
     }
 
     public void start() {
+
         if (running) {
             return;
         }
         running = true;
         exec.execute(runner);
-
     }
 
     public void stop() {
-        log.debug("Message Queue shutting down...");
+
+        logger.debug("Message Queue shutting down...");
         running = false;
         exec.shutdown();
     }
@@ -71,11 +52,10 @@ public class MessageQueue {
         runner.put(msg);
     }
 
-
     private class Runner implements Runnable {
 
-        private SyslogListener listener;
-        private BlockingQueue messageQueue = new LinkedBlockingQueue();
+        private final SyslogListener listener;
+        private final BlockingQueue messageQueue = new LinkedBlockingQueue();
 
         private Runner(SyslogListener listener) {
             this.listener = listener;
@@ -90,20 +70,61 @@ public class MessageQueue {
             }
         }
 
-
         public void run() {
-            while (!Thread.interrupted()) {
-                try {
-                    Object o = messageQueue.take();
-                    if (o instanceof SyslogMessage) {
-                        listener.messageArrived((SyslogMessage) o);
-                    } else if (o instanceof SyslogException) {
-                        listener.exceptionThrown((SyslogException) o);
+
+            while (!Thread.interrupted() && running) {
+                Object o = messageQueue.poll();
+                if (o == null) {
+                    try {
+                        Thread.sleep(25);
+                    } catch (InterruptedException e) {
+                        logger.error("InterruptedException: '{}'", e.getMessage(), e);
+                        Thread.currentThread().interrupt();
                     }
-                } catch (InterruptedException e) {
-                    messageQueue.clear();
-                    Thread.currentThread().interrupt();
+                } else {
+                    handleMessage(o);
                 }
+            }
+            logAndClearMessageQueue();
+        }
+
+        private void logAndClearMessageQueue() {
+
+            while (!messageQueue.isEmpty()) {
+                handleMessage(messageQueue.poll());
+            }
+        }
+
+        private void handleMessage(Object o) {
+
+            if (o instanceof SyslogMessage) {
+                handleSysLogMessage((SyslogMessage) o);
+            } else if (o instanceof SyslogException) {
+                handleSysLogException((SyslogException) o);
+            }
+        }
+
+        private void handleSysLogMessage(SyslogMessage message) {
+
+            if (running) {
+                listener.messageArrived(message);
+            } else {
+                try {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("MessageQueue was unable to persist message: '{}'", new String(message.toByteArray()));
+                    }
+                } catch (SyslogException e) {
+                    handleSysLogException(e);
+                }
+            }
+        }
+
+        private void handleSysLogException(SyslogException exception) {
+
+            if (running) {
+                listener.exceptionThrown(exception);
+            } else {
+                SyslogErrorLogger.log(exception);
             }
         }
     }

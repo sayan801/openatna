@@ -22,7 +22,7 @@ package org.openhealthtools.openatna.all.test;
 
 import org.openhealthtools.openatna.anom.AtnaMessage;
 import org.openhealthtools.openatna.audit.process.AtnaLogMessage;
-import org.openhealthtools.openatna.jaxb21.JaxbIOFactory;
+import org.openhealthtools.openatna.anom.JaxbIOFactory;
 
 /**
  * @author Andrew Harrison

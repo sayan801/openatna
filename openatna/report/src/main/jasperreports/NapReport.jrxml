@@ -1,26 +1,31 @@
 <?xml version="1.0"?>
-<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd" [
-        ]>
-
-<jasperReport
-        name="AuditReport"
-        pageWidth="595"
-        pageHeight="842"
-        columnWidth="515"
-        columnSpacing="0"
-        leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0"
-        whenNoDataType="NoPages"
-        isTitleNewPage="false"
-        isSummaryNewPage="false">
-    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="AuditReport"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="515"
+              columnSpacing="0"
+              leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0"
+              whenNoDataType="NoPages"
+              isTitleNewPage="false"
+              isSummaryNewPage="false">
+    <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" pdfFontName="Helvetica"
+           pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Normal_Small" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
-    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+    <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold"
+           pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
-    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+    <style name="Arial_Italic" isDefault="false" fontName="Arial" fontSize="12" isItalic="true"
+           pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
            isPdfEmbedded="false"/>
-    <style name="Arial_Bold_Small" isBold="true" fontName="Arial" fontSize="9" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+    <style name="Arial_Small_Italic" isDefault="false" fontName="Arial" fontSize="9" isItalic="true"
+           pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252"
+           isPdfEmbedded="false"/>
+    <style name="Arial_Bold_Small" isBold="true" fontName="Arial" fontSize="9" pdfFontName="Helvetica"
+           pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 
 
     <field name="type" class="java.lang.Short">
@@ -59,7 +64,7 @@
                         $F{identifier}
                     </textFieldExpression>
                 </textField>
-                
+
             </frame>
         </band>
     </detail>

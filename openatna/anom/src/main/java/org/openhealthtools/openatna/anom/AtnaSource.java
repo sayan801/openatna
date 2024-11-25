@@ -38,7 +38,7 @@ public class AtnaSource implements Serializable {
 
     private static final long serialVersionUID = -5837184418641690005L;
 
-    private Set<AtnaCode> sourceTypeCodes = new HashSet<AtnaCode>();
+    private Set<AtnaCode> sourceTypeCodes = new HashSet<>();
     private String sourceId;
     private String enterpriseSiteId;
 
@@ -47,7 +47,7 @@ public class AtnaSource implements Serializable {
     }
 
     public List<AtnaCode> getSourceTypeCodes() {
-        return new ArrayList<AtnaCode>(sourceTypeCodes);
+        return new ArrayList<>(sourceTypeCodes);
     }
 
     public AtnaSource addSourceTypeCode(AtnaCode value) {
@@ -110,6 +110,7 @@ public class AtnaSource implements Serializable {
         return result;
     }
 
+    @Override
     public String toString() {
         return new StringBuilder().append("[")
                 .append(getClass().getName())

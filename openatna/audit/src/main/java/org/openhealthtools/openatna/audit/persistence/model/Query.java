@@ -1,35 +1,7 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import java.util.*;
 
 /**
  * Allows construction of queries based on a few operators.
@@ -48,19 +20,16 @@ import java.util.Set;
  * or something similar)
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 13, 2009: 1:17:54 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class Query implements Serializable {
 
     private static final long serialVersionUID = 9210675605754512907L;
 
-    private Map<Target, Set<ConditionalStatement>> map = new HashMap<Target, Set<ConditionalStatement>>();
+    private Map<Target, Set<ConditionalStatement>> map = new HashMap<>();
 
     public static TargetPath createPath(Target target) {
-        List<String> path = new ArrayList<String>();
+
+        List<String> path = new ArrayList<>();
         String s = null;
         switch (target) {
             case ID:
@@ -226,74 +195,8 @@ public class Query implements Serializable {
         return null;
     }
 
-    public static enum Target {
-        ID,
-        SOURCE_ADDRESS,
-        EVENT_TIME,
-        EVENT_ID_CODE,
-        EVENT_ID_CODE_SYSTEM,
-        EVENT_ID_CODE_SYSTEM_NAME,
-        EVENT_TYPE_CODE,
-        EVENT_TYPE_CODE_SYSTEM,
-        EVENT_TYPE_CODE_SYSTEM_NAME,
-        EVENT_ACTION,
-        EVENT_OUTCOME,
-        SOURCE_ID,
-        SOURCE_ENTERPRISE_ID,
-        SOURCE_TYPE_CODE,
-        SOURCE_TYPE_CODE_SYSTEM,
-        SOURCE_TYPE_CODE_SYSTEM_NAME,
-        PARTICIPANT_ID,
-        PARTICIPANT_NAME,
-        PARTICIPANT_TYPE_CODE,
-        PARTICIPANT_TYPE_CODE_SYSTEM,
-        PARTICIPANT_TYPE_CODE_SYSTEM_NAME,
-        OBJECT_ID,
-        OBJECT_NAME,
-        OBJECT_TYPE,
-        OBJECT_TYPE_CODE,
-        OBJECT_TYPE_CODE_SYSTEM,
-        OBJECT_TYPE_CODE_SYSTEM_NAME,
-        OBJECT_TYPE_ROLE,
-        OBJECT_SENSITIVITY,
-        NETWORK_ACCESS_POINT_ID,
-        NETWORK_ACCESS_POINT_TYPE,
-
-        // result target
-        // currently this accepts MAX_NUM, START_OFFSET, ASC and DESC as conditionals
-        RESULT,
-
-        // default message target
-        MESSAGE
-    }
-
-    public static enum Conditional {
-        BEFORE,
-        AFTER,
-        LIKE,
-        CASE_INSENSITIVE_LIKE,
-        EQUALS,
-        GREATER_THAN,
-        LESS_THAN,
-        GREATER_THAN_OR_EQUAL,
-        LESS_THAN_OR_EQUAL,
-        NOT_EQUAL,
-        NULLITY,
-
-
-        // query result parameters
-        ASC,
-        DESC,
-        MAX_NUM,
-        START_OFFSET,
-
-        // conditionals that take 2 ConditionalStatements as arguments to create disjunctions or conjunctions
-        OR,
-        AND
-    }
-
     public boolean hasConditionals() {
-        if (map.keySet().size() == 0) {
+        if (map.keySet().isEmpty()) {
             return false;
         }
         boolean has = false;
@@ -318,7 +221,7 @@ public class Query implements Serializable {
         }
         Set<ConditionalStatement> existing = map.get(target);
         if (existing == null) {
-            existing = new HashSet<ConditionalStatement>();
+            existing = new HashSet<>();
         }
         existing.add(new ConditionalStatement(c, value, target));
         map.put(target, existing);
@@ -387,12 +290,14 @@ public class Query implements Serializable {
     }
 
     public Query orderAscending(Target value) {
-        addConditional(Conditional.ASC, createPath(value).toString(), Target.RESULT);
+        TargetPath path = createPath(value);
+        addConditional(Conditional.ASC, (path == null) ? null : path.toString(), Target.RESULT);
         return this;
     }
 
     public Query orderDescending(Target value) {
-        addConditional(Conditional.DESC, createPath(value).toString(), Target.RESULT);
+        TargetPath path = createPath(value);
+        addConditional(Conditional.DESC, (path == null) ? null : path.toString(), Target.RESULT);
         return this;
     }
 
@@ -434,6 +339,70 @@ public class Query implements Serializable {
         return sb.toString();
     }
 
+    public enum Target {
+        ID,
+        SOURCE_ADDRESS,
+        EVENT_TIME,
+        EVENT_ID_CODE,
+        EVENT_ID_CODE_SYSTEM,
+        EVENT_ID_CODE_SYSTEM_NAME,
+        EVENT_TYPE_CODE,
+        EVENT_TYPE_CODE_SYSTEM,
+        EVENT_TYPE_CODE_SYSTEM_NAME,
+        EVENT_ACTION,
+        EVENT_OUTCOME,
+        SOURCE_ID,
+        SOURCE_ENTERPRISE_ID,
+        SOURCE_TYPE_CODE,
+        SOURCE_TYPE_CODE_SYSTEM,
+        SOURCE_TYPE_CODE_SYSTEM_NAME,
+        PARTICIPANT_ID,
+        PARTICIPANT_NAME,
+        PARTICIPANT_TYPE_CODE,
+        PARTICIPANT_TYPE_CODE_SYSTEM,
+        PARTICIPANT_TYPE_CODE_SYSTEM_NAME,
+        OBJECT_ID,
+        OBJECT_NAME,
+        OBJECT_TYPE,
+        OBJECT_TYPE_CODE,
+        OBJECT_TYPE_CODE_SYSTEM,
+        OBJECT_TYPE_CODE_SYSTEM_NAME,
+        OBJECT_TYPE_ROLE,
+        OBJECT_SENSITIVITY,
+        NETWORK_ACCESS_POINT_ID,
+        NETWORK_ACCESS_POINT_TYPE,
+
+        // result target
+        // currently this accepts MAX_NUM, START_OFFSET, ASC and DESC as conditionals
+        RESULT,
+
+        // default message target
+        MESSAGE
+    }
+
+    public enum Conditional {
+        BEFORE,
+        AFTER,
+        LIKE,
+        CASE_INSENSITIVE_LIKE,
+        EQUALS,
+        GREATER_THAN,
+        LESS_THAN,
+        GREATER_THAN_OR_EQUAL,
+        LESS_THAN_OR_EQUAL,
+        NOT_EQUAL,
+        NULLITY,
+
+        // query result parameters
+        ASC,
+        DESC,
+        MAX_NUM,
+        START_OFFSET,
+
+        // conditionals that take 2 ConditionalStatements as arguments to create disjunctions or conjunctions
+        OR,
+        AND
+    }
 
     public static class TargetPath implements Serializable {
 
@@ -478,11 +447,7 @@ public class Query implements Serializable {
             if (paths != null ? !paths.equals(that.paths) : that.paths != null) {
                 return false;
             }
-            if (target != null ? !target.equals(that.target) : that.target != null) {
-                return false;
-            }
-
-            return true;
+            return target != null ? target.equals(that.target) : that.target == null;
         }
 
         @Override
@@ -491,8 +456,6 @@ public class Query implements Serializable {
             result = 31 * result + (target != null ? target.hashCode() : 0);
             return result;
         }
-
-
     }
 
     public static class ConditionalStatement implements Serializable {
@@ -538,11 +501,7 @@ public class Query implements Serializable {
             if (target != that.target) {
                 return false;
             }
-            if (value != null ? !value.equals(that.value) : that.value != null) {
-                return false;
-            }
-
-            return true;
+            return value != null ? value.equals(that.value) : that.value == null;
         }
 
         @Override

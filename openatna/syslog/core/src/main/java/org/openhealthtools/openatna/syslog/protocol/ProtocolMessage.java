@@ -1,59 +1,36 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog.protocol;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.openhealthtools.openatna.syslog.Constants;
 import org.openhealthtools.openatna.syslog.LogMessage;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
+import org.openhealthtools.openatna.syslog.util.XMLUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * RFC 5424 Syslog message format implementation.
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Aug 13, 2009: 11:01:20 AM
- * @date $Date:$ modified by $Author:$
  */
-
 public class ProtocolMessage<M> extends SyslogMessage {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolMessage.class);
+    private static final long serialVersionUID = 4839446464986500200L;
 
     private String appName = "-";
     private String messageId = "-";
     private String procId = "-";
-    private List<StructuredElement> structuredElement = new ArrayList<StructuredElement>();
+    private List<StructuredElement> structuredElement = new ArrayList<>();
 
-
-    public ProtocolMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message, String appName, String messageId,
-                           String procId) throws SyslogException {
+    public ProtocolMessage(int facility, int severity, String timestamp, String hostName, LogMessage<M> message,
+                           String appName, String messageId, String procId) throws SyslogException {
         super(facility, severity, timestamp, hostName, message);
         if (timestamp == null) {
             timestamp = "-";
@@ -96,22 +73,22 @@ public class ProtocolMessage<M> extends SyslogMessage {
     }
 
     private String getHeader() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<").append(getFacility() * 8 + getSeverity()).append(">")
-                .append(ProtocolMessageFactory.VERSION_CHAR).append(" ")
-                .append(getTimestamp()).append(" ")
-                .append(getHostName()).append(" ")
-                .append(appName).append(" ")
-                .append(procId).append(" ")
-                .append(messageId).append(" ");
-        return sb.toString();
+
+        return "<" + (getFacility() * 8 + getSeverity()) + ">" +
+                ProtocolMessageFactory.VERSION_CHAR + " " +
+                getTimestamp() + " " +
+                getHostName() + " " +
+                appName + " " +
+                procId + " " +
+                messageId + " ";
     }
 
     public void write(OutputStream out) throws SyslogException {
+
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(out, Constants.ENC_UTF8);
+            OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
             writer.write(getHeader());
-            if (structuredElement.size() > 0) {
+            if (!structuredElement.isEmpty()) {
                 for (StructuredElement element : structuredElement) {
                     writer.write(element.toString());
                 }
@@ -128,39 +105,31 @@ public class ProtocolMessage<M> extends SyslogMessage {
     }
 
     public byte[] toByteArray() throws SyslogException {
+
         try {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(getHeader());
-            if (structuredElement.size() > 0) {
-                for (StructuredElement element : structuredElement) {
-                    sb.append(element.toString());
-                }
-            } else {
-                sb.append("-");
-            }
-            sb.append(" ");
-            bout.write(sb.toString().getBytes(Constants.ENC_UTF8));
             getMessage().write(bout);
-            return bout.toByteArray();
-        } catch (IOException e) {
+            Document dom = XMLUtil.parseContent(bout.toString());
+            String result = XMLUtil.prettyPrint(dom.getDocumentElement());
+            return result.getBytes();
+        } catch (Exception e) {
+            logger.error("{}: '{}'", e.getClass(), e.getMessage(), e);
             throw new SyslogException(e);
         }
     }
 
-
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getHeader());
-        if (structuredElement.size() > 0) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getHeader());
+        if (!structuredElement.isEmpty()) {
             for (StructuredElement element : structuredElement) {
-                sb.append(element.toString());
+                stringBuilder.append(element.toString());
             }
         } else {
-            sb.append("-");
+            stringBuilder.append("-");
         }
-        sb.append(" ");
+        stringBuilder.append(" ");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
             getMessage().write(bout);
@@ -168,12 +137,10 @@ public class ProtocolMessage<M> extends SyslogMessage {
             assert false;
         }
         try {
-            sb.append(new String(bout.toByteArray(), getMessage().getExpectedEncoding()));
+            stringBuilder.append(new String(bout.toByteArray(), getMessage().getExpectedEncoding()));
         } catch (UnsupportedEncodingException e) {
             assert false;
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
-
-
 }

@@ -1,23 +1,3 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.syslog.mina.tls;
 
 import org.apache.mina.common.IdleStatus;
@@ -29,32 +9,30 @@ import org.apache.mina.transport.socket.nio.SocketSessionConfig;
 import org.openhealthtools.openatna.syslog.SyslogException;
 import org.openhealthtools.openatna.syslog.SyslogMessage;
 import org.openhealthtools.openatna.syslog.mina.Notifier;
-
-import java.net.InetSocketAddress;
-
+import org.openhealthtools.openatna.syslog.mina.SyslogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class Description Here...
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Aug 18, 2009: 1:35:29 PM
- * @date $Date:$ modified by $Author:$
  */
-
 public class SyslogProtocolHandler extends IoHandlerAdapter {
 
+    private final Logger logger = LoggerFactory.getLogger(SyslogProtocolHandler.class);
 
-    private Notifier server;
+    private final Notifier server;
 
     public SyslogProtocolHandler(Notifier server) {
         this.server = server;
     }
 
+    @Override
     public void sessionCreated(IoSession session) {
+
         if (session.getTransportType() == TransportType.SOCKET) {
-            ((SocketSessionConfig) session.getConfig())
-                    .setReceiveBufferSize(2048);
+            ((SocketSessionConfig) session.getConfig()).setReceiveBufferSize(2048);
         }
 
         session.setIdleTime(IdleStatus.BOTH_IDLE, 10);
@@ -62,25 +40,32 @@ public class SyslogProtocolHandler extends IoHandlerAdapter {
         session.setAttribute(SSLFilter.USE_NOTIFICATION);
     }
 
+    @Override
     public void sessionIdle(IoSession session, IdleStatus status) {
+        // Not implemented by eHDSI OpenNCP
     }
 
+    @Override
     public void exceptionCaught(IoSession session, Throwable cause) {
-        cause.printStackTrace();
+
+        logger.warn("Error: '{}'", cause.getMessage(), cause);
         session.close();
     }
 
-    public void messageReceived(IoSession session, Object message)
-            throws Exception {
-        if (message instanceof SyslogMessage) {
-            SyslogMessage sl = (SyslogMessage) message;
-            sl.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
-            server.notifyMessage(sl);
-        } else if (message instanceof SyslogException) {
-            SyslogException ex = (SyslogException) message;
-            ex.setSourceIp(((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress());
-            server.notifyException(ex);
-        }
+    @Override
+    public void messageReceived(IoSession session, Object message) {
 
+        String sourceIp = SyslogUtil.getHostname(session);
+        logger.info("[Syslog Protocol] Message '{}' received from '{}'", message.getClass(), sourceIp);
+        if (message instanceof SyslogMessage) {
+            SyslogMessage syslogMessage = (SyslogMessage) message;
+            syslogMessage.setSourceIp(sourceIp);
+            server.notifyMessage(syslogMessage);
+
+        } else if (message instanceof SyslogException) {
+            SyslogException syslogException = (SyslogException) message;
+            syslogException.setSourceIp(sourceIp);
+            server.notifyException(syslogException);
+        }
     }
 }

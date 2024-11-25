@@ -1,71 +1,32 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
-
 package org.openhealthtools.openatna.audit.persistence.model;
 
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
+import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
+
+import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
-
 
 @Entity
 @Table(name = "messages")
 public class MessageEntity extends PersistentEntity {
 
-    private static final long serialVersionUID = -1L;
-
-    private static DateFormat format = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:SS");
-
+    private static final long serialVersionUID = -4989747917448824812L;
     private Long id;
-
-    private Set<MessageParticipantEntity> messageParticipants = new HashSet<MessageParticipantEntity>();
-
-    private Set<MessageSourceEntity> messageSources = new HashSet<MessageSourceEntity>();
-
-    private Set<MessageObjectEntity> messageObjects = new HashSet<MessageObjectEntity>();
-
     private EventIdCodeEntity eventId;
-    private Set<EventTypeCodeEntity> eventTypeCodes = new HashSet<EventTypeCodeEntity>();
     private String eventActionCode;
     private Date eventDateTime;
     private Integer eventOutcome;
     private String sourceAddress;
+    private byte[] messageContent = new byte[0];
+    private Set<EventTypeCodeEntity> eventTypeCodes = new HashSet<>();
+    private Set<MessageParticipantEntity> messageParticipants = new HashSet<>();
+    private Set<MessageObjectEntity> messageObjects = new HashSet<>();
+    private Set<MessageSourceEntity> messageSources = new HashSet<>();
 
     public MessageEntity() {
     }
@@ -75,9 +36,8 @@ public class MessageEntity extends PersistentEntity {
         this.eventOutcome = eventOutcome;
     }
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -92,12 +52,12 @@ public class MessageEntity extends PersistentEntity {
         return eventTypeCodes;
     }
 
-    public void addEventTypeCode(EventTypeCodeEntity code) {
-        getEventTypeCodes().add(code);
-    }
-
     public void setEventTypeCodes(Set<EventTypeCodeEntity> eventTypeCodeEntities) {
         this.eventTypeCodes = eventTypeCodeEntities;
+    }
+
+    public void addEventTypeCode(EventTypeCodeEntity code) {
+        getEventTypeCodes().add(code);
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -184,6 +144,20 @@ public class MessageEntity extends PersistentEntity {
         getMessageObjects().add(entity);
     }
 
+    @Lob
+    public byte[] getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(byte[] messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    private String formatDate() {
+        DateFormat format = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm:SS");
+        return format.format(getEventDateTime());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -194,19 +168,19 @@ public class MessageEntity extends PersistentEntity {
         }
 
         MessageEntity that = (MessageEntity) o;
-        if (id != null ? !id.equals(that.id) : that.id != null) {
+        if (!Objects.equals(id, that.id)) {
             return false;
         }
-        if (eventActionCode != null ? !eventActionCode.equals(that.eventActionCode) : that.eventActionCode != null) {
+        if (!Objects.equals(eventActionCode, that.eventActionCode)) {
             return false;
         }
-        if (eventDateTime != null ? !eventDateTime.equals(that.eventDateTime) : that.eventDateTime != null) {
+        if (!Objects.equals(eventDateTime, that.eventDateTime)) {
             return false;
         }
-        if (eventId != null ? !eventId.equals(that.eventId) : that.eventId != null) {
+        if (!Objects.equals(eventId, that.eventId)) {
             return false;
         }
-        if (eventOutcome != null ? !eventOutcome.equals(that.eventOutcome) : that.eventOutcome != null) {
+        if (!Objects.equals(eventOutcome, that.eventOutcome)) {
             return false;
         }
         if (getEventTypeCodes() != null ? !getEventTypeCodes().equals(that.getEventTypeCodes())
@@ -221,12 +195,7 @@ public class MessageEntity extends PersistentEntity {
                 : that.getMessageParticipants() != null) {
             return false;
         }
-        if (getMessageSources() != null ? !getMessageSources().equals(that.getMessageSources())
-                : that.getMessageSources() != null) {
-            return false;
-        }
-
-        return true;
+        return getMessageSources() != null ? getMessageSources().equals(that.getMessageSources()) : that.getMessageSources() == null;
     }
 
     @Override
@@ -244,28 +213,25 @@ public class MessageEntity extends PersistentEntity {
     }
 
     public String toString() {
-        return new StringBuilder("[").append(getClass().getName())
-                .append(" id=")
-                .append(getId())
-                .append(", event id:")
-                .append(getEventId())
-                .append(", action=")
-                .append(getEventActionCode())
-                .append(", outcome=")
-                .append(getEventOutcome())
-                .append(", time stamp=")
-                .append(format.format(getEventDateTime()))
-                .append(", event types=")
-                .append(getEventTypeCodes())
-                .append(", audit sources=")
-                .append(getMessageSources())
-                .append(", active participants=")
-                .append(getMessageParticipants())
-                .append(", participant objects=")
-                .append(getMessageObjects())
-                .append("]")
-                .toString();
+        return "[" + getClass().getName() +
+                " id=" +
+                getId() +
+                ", event id:" +
+                getEventId() +
+                ", action=" +
+                getEventActionCode() +
+                ", outcome=" +
+                getEventOutcome() +
+                ", time stamp=" +
+                formatDate() +
+                ", event types=" +
+                getEventTypeCodes() +
+                ", audit sources=" +
+                getMessageSources() +
+                ", active participants=" +
+                getMessageParticipants() +
+                ", participant objects=" +
+                getMessageObjects() +
+                "]";
     }
-
-
 }

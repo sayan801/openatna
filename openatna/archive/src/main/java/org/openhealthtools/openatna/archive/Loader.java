@@ -1,66 +1,30 @@
-/**
- * Copyright (c) 2009-2011 University of Cardiff and others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Contributors:
- * Cardiff University - intial API and implementation
- */
-
 package org.openhealthtools.openatna.archive;
 
+import org.openhealthtools.openatna.audit.AtnaFactory;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
+import org.openhealthtools.openatna.audit.persistence.dao.*;
+import org.openhealthtools.openatna.audit.persistence.model.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
+import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openatna.audit.AtnaFactory;
-import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
-import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.audit.persistence.dao.ErrorDao;
-import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
-import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
-import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
-import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
-import org.openhealthtools.openatna.audit.persistence.model.ErrorEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.audit.persistence.util.DataConstants;
-
-/**
- * @author Andrew Harrison
- * @version 1.0.0
- * @date Mar 12, 2010: 11:00:59 PM
- */
-
 public class Loader {
 
-    static Log log = LogFactory.getLog("org.openhealthtools.openatna.archive.Loader");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
 
-    private String archive;
+    private final String archive;
+    private final PersistencePolicies policies = new PersistencePolicies();
     private boolean loadMessages = true;
     private boolean loadEntities = true;
     private boolean loadErrors = true;
     private int pageSize = 100;
-    private PersistencePolicies pp = new PersistencePolicies();
 
     public Loader(String archive) {
         this.archive = archive;
@@ -73,77 +37,88 @@ public class Loader {
         AtnaFactory.setPropertiesLocation(propertiesLocation);
     }
 
+    public static void main(String[] args) throws Exception {
+        Loader e = new Loader(System.getProperty("user.dir") + File.separator + "test.oar", "archive.properties");
+        e.extract();
+
+    }
+
     private void initPolicies() {
-        pp.setAllowNewCodes(true);
-        pp.setAllowNewNetworkAccessPoints(true);
-        pp.setAllowNewSources(true);
-        pp.setAllowNewParticipants(true);
-        pp.setAllowNewObjects(true);
-        pp.setAllowUnknownDetailTypes(true);
+
+        policies.setAllowNewCodes(true);
+        policies.setAllowNewNetworkAccessPoints(true);
+        policies.setAllowNewSources(true);
+        policies.setAllowNewParticipants(true);
+        policies.setAllowNewObjects(true);
+        policies.setAllowUnknownDetailTypes(true);
     }
 
     public void extract() throws Exception {
+
         File f = new File(archive);
         if (!f.exists() || f.length() == 0) {
             throw new Exception("archive does not exist");
         }
         if (loadEntities) {
-            InputStream min = ArchiveHandler.readEntities(f);
-            if (min != null) {
-                XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(min);
-                loadEntities(reader);
-                reader.close();
-            } else {
-                log.info(" Input stream to " + f.getAbsolutePath() + " message file is null");
+            try (InputStream min = ArchiveHandler.readEntities(f)) {
+                if (min != null) {
+                    XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(min);
+                    loadEntities(reader);
+                    reader.close();
+                } else {
+                    LOGGER.info(" Input stream to '{}' message file is null", f.getAbsolutePath());
+                }
             }
         }
         if (loadMessages) {
-            InputStream min = ArchiveHandler.readMessages(f);
-            if (min != null) {
-                XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(min);
-                loadMessages(reader);
-                reader.close();
-            } else {
-                log.info(" Input stream to " + f.getAbsolutePath() + " message file is null");
+            try (InputStream min = ArchiveHandler.readMessages(f)) {
+                if (min != null) {
+                    XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(min);
+                    loadMessages(reader);
+                    reader.close();
+                } else {
+                    LOGGER.info(" Input stream to '{}' message file is null", f.getAbsolutePath());
+                }
             }
         }
 
         if (loadErrors) {
-            InputStream min = ArchiveHandler.readErrors(f);
-            if (min != null) {
-                XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(min);
-                loadErrors(reader);
-                reader.close();
-            } else {
-                log.info(" Input stream to " + f.getAbsolutePath() + " message file is null");
+
+            try (InputStream min = ArchiveHandler.readErrors(f)) {
+                if (min != null) {
+                    XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(min);
+                    loadErrors(reader);
+                    reader.close();
+                } else {
+                    LOGGER.info(" Input stream to '{}' message file is null", f.getAbsolutePath());
+                }
             }
         }
-
-
     }
 
     public void loadMessages(XMLEventReader reader) throws Exception {
+
         MessageDao dao = AtnaFactory.messageDao();
         MessageReader mr = new MessageReader();
         mr.begin(reader);
         int total = 0;
         List<? extends MessageEntity> msgs = mr.readMessages(pageSize, reader);
         for (MessageEntity msg : msgs) {
-            dao.save(msg, pp);
+            dao.save(msg, policies);
         }
         total += msgs.size();
         while (msgs.size() >= pageSize) {
             msgs = mr.readMessages(pageSize, reader);
             for (MessageEntity msg : msgs) {
-                dao.save(msg, pp);
+                dao.save(msg, policies);
             }
             total += msgs.size();
         }
-        log.info("read " + total + " messages");
+        LOGGER.info("Read '{}' messages", total);
     }
 
-
     public void loadErrors(XMLEventReader reader) throws Exception {
+
         ErrorDao dao = AtnaFactory.errorDao();
         ErrorReader mr = new ErrorReader();
         mr.begin(reader);
@@ -160,10 +135,11 @@ public class Loader {
             }
             total += msgs.size();
         }
-        log.info("read " + total + " errors");
+        LOGGER.info("Read '{}' errors", total);
     }
 
     public void loadEntities(XMLEventReader reader) throws Exception {
+
         EntityReader er = new EntityReader();
         er.begin(reader);
         loadCodes(reader, er);
@@ -180,37 +156,38 @@ public class Loader {
         int total = 0;
         List<? extends CodeEntity> msgs = er.readCodes(pageSize, reader);
         for (CodeEntity msg : msgs) {
-            dao.save(msg, pp);
+            dao.save(msg, policies);
         }
         total += msgs.size();
         while (msgs.size() >= pageSize) {
             msgs = er.readCodes(pageSize, reader);
             for (CodeEntity msg : msgs) {
-                dao.save(msg, pp);
+                dao.save(msg, policies);
             }
             total += msgs.size();
         }
-        log.info("read " + total + " codes");
+        LOGGER.info("Read '{}' codes", total);
         er.endType(reader);
     }
 
     public void loadNaps(XMLEventReader reader, EntityReader er) throws Exception {
+
         NetworkAccessPointDao dao = AtnaFactory.networkAccessPointDao();
         er.beginType(reader, DataConstants.NETWORK_ACCESS_POINTS);
         int total = 0;
         List<? extends NetworkAccessPointEntity> msgs = er.readNaps(pageSize, reader);
         for (NetworkAccessPointEntity msg : msgs) {
-            dao.save(msg, pp);
+            dao.save(msg, policies);
         }
         total += msgs.size();
         while (msgs.size() >= pageSize) {
             msgs = er.readNaps(pageSize, reader);
             for (NetworkAccessPointEntity msg : msgs) {
-                dao.save(msg, pp);
+                dao.save(msg, policies);
             }
             total += msgs.size();
         }
-        log.info("read " + total + " network access points");
+        LOGGER.info("Read '{}' network access points", total);
         er.endType(reader);
     }
 
@@ -220,57 +197,59 @@ public class Loader {
         int total = 0;
         List<? extends SourceEntity> msgs = er.readSources(pageSize, reader);
         for (SourceEntity msg : msgs) {
-            dao.save(msg, pp);
+            dao.save(msg, policies);
         }
         total += msgs.size();
         while (msgs.size() >= pageSize) {
             msgs = er.readSources(pageSize, reader);
             for (SourceEntity msg : msgs) {
-                dao.save(msg, pp);
+                dao.save(msg, policies);
             }
             total += msgs.size();
         }
-        log.info("read " + total + " sources");
+        LOGGER.info("Read '{}' sources", total);
         er.endType(reader);
     }
 
     public void loadParticipants(XMLEventReader reader, EntityReader er) throws Exception {
+
         ParticipantDao dao = AtnaFactory.participantDao();
         er.beginType(reader, DataConstants.PARTICIPANTS);
         int total = 0;
         List<? extends ParticipantEntity> msgs = er.readParticipants(pageSize, reader);
         for (ParticipantEntity msg : msgs) {
-            dao.save(msg, pp);
+            dao.save(msg, policies);
         }
         total += msgs.size();
         while (msgs.size() >= pageSize) {
             msgs = er.readParticipants(pageSize, reader);
             for (ParticipantEntity msg : msgs) {
-                dao.save(msg, pp);
+                dao.save(msg, policies);
             }
             total += msgs.size();
         }
-        log.info("read " + total + " participants");
+        LOGGER.info("Read '{}' participants", total);
         er.endType(reader);
     }
 
     public void loadObjects(XMLEventReader reader, EntityReader er) throws Exception {
+
         ObjectDao dao = AtnaFactory.objectDao();
         er.beginType(reader, DataConstants.OBJECTS);
         int total = 0;
         List<? extends ObjectEntity> msgs = er.readObjects(pageSize, reader);
         for (ObjectEntity msg : msgs) {
-            dao.save(msg, pp);
+            dao.save(msg, policies);
         }
         total += msgs.size();
         while (msgs.size() >= pageSize) {
             msgs = er.readObjects(pageSize, reader);
             for (ObjectEntity msg : msgs) {
-                dao.save(msg, pp);
+                dao.save(msg, policies);
             }
             total += msgs.size();
         }
-        log.info("read " + total + " objects");
+        LOGGER.info("Read '{}' objects", total);
         er.endType(reader);
     }
 
@@ -304,11 +283,5 @@ public class Loader {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public static void main(String[] args) throws Exception {
-        Loader e = new Loader(System.getProperty("user.dir") + File.separator + "test.oar", "archive.properties");
-        e.extract();
-
     }
 }

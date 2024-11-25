@@ -1,189 +1,162 @@
-/**
- *  Copyright (c) 2009-2011 University of Cardiff and others
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- *  implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- *
- *  Contributors:
- *    University of Cardiff - initial API and implementation
- *    -
- */
-
 package org.openhealthtools.openatna.audit.persistence.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang.StringUtils;
+import org.openhealthtools.openatna.anom.Timestamp;
+import org.openhealthtools.openatna.audit.AtnaFactory;
+import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
+import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
+import org.openhealthtools.openatna.audit.persistence.model.*;
+import org.openhealthtools.openatna.audit.persistence.model.codes.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.openhealthtools.openatna.anom.Timestamp;
-import org.openhealthtools.openatna.audit.AtnaFactory;
-import org.openhealthtools.openatna.audit.persistence.AtnaPersistenceException;
-import org.openhealthtools.openatna.audit.persistence.PersistencePolicies;
-import org.openhealthtools.openatna.audit.persistence.dao.CodeDao;
-import org.openhealthtools.openatna.audit.persistence.dao.MessageDao;
-import org.openhealthtools.openatna.audit.persistence.dao.NetworkAccessPointDao;
-import org.openhealthtools.openatna.audit.persistence.dao.ObjectDao;
-import org.openhealthtools.openatna.audit.persistence.dao.ParticipantDao;
-import org.openhealthtools.openatna.audit.persistence.dao.SourceDao;
-import org.openhealthtools.openatna.audit.persistence.model.MessageEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.MessageSourceEntity;
-import org.openhealthtools.openatna.audit.persistence.model.NetworkAccessPointEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectDetailEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ObjectEntity;
-import org.openhealthtools.openatna.audit.persistence.model.ParticipantEntity;
-import org.openhealthtools.openatna.audit.persistence.model.SourceEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.CodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventIdCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.EventTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ObjectIdTypeCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.ParticipantCodeEntity;
-import org.openhealthtools.openatna.audit.persistence.model.codes.SourceCodeEntity;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Reads an XML file and loads entities into the DB.
  *
  * @author Andrew Harrison
- * @version $Revision:$
- * @created Sep 10, 2009: 8:37:36 AM
- * @date $Date:$ modified by $Author:$
  */
-
 public class DataReader {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataReader.class);
 
-    private Document doc;
+    private final Document document;
 
-    private Map<String, CodeEntity> evtIds = new HashMap<String, CodeEntity>();
-    private Map<String, CodeEntity> evtTypes = new HashMap<String, CodeEntity>();
-    private Map<String, CodeEntity> sourceTypes = new HashMap<String, CodeEntity>();
-    private Map<String, CodeEntity> objTypes = new HashMap<String, CodeEntity>();
-    private Map<String, CodeEntity> partTypes = new HashMap<String, CodeEntity>();
+    private final Map<String, CodeEntity> evtIds = new HashMap<>();
+    private final Map<String, CodeEntity> evtTypes = new HashMap<>();
+    private final Map<String, CodeEntity> sourceTypes = new HashMap<>();
+    private final Map<String, CodeEntity> objTypes = new HashMap<>();
+    private final Map<String, CodeEntity> partTypes = new HashMap<>();
 
 
-    private Map<String, NetworkAccessPointEntity> naps = new HashMap<String, NetworkAccessPointEntity>();
-    private Map<String, SourceEntity> sources = new HashMap<String, SourceEntity>();
-    private Map<String, ParticipantEntity> parts = new HashMap<String, ParticipantEntity>();
-    private Map<String, ObjectEntity> objects = new HashMap<String, ObjectEntity>();
-    private Set<MessageEntity> messages = new HashSet<MessageEntity>();
+    private final Map<String, NetworkAccessPointEntity> naps = new HashMap<>();
+    private final Map<String, SourceEntity> sources = new HashMap<>();
+    private final Map<String, ParticipantEntity> parts = new HashMap<>();
+    private final Map<String, ObjectEntity> objects = new HashMap<>();
+    private final Set<MessageEntity> messages = new HashSet<>();
 
     public DataReader(InputStream in) {
+
         try {
-            doc = newDocument(in);
+            document = newDocument(in);
             in.close();
         } catch (IOException e) {
+            LOGGER.error("IOException: '{}'", e.getMessage(), e);
             throw new RuntimeException("Could not load data file");
         }
     }
 
+    private static Document newDocument(InputStream stream) throws IOException {
+
+        Document document = null;
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            document = documentBuilder.parse(stream);
+        } catch (ParserConfigurationException e) {
+            LOGGER.error("ParserConfigurationException: '{}'", e.getMessage(), e);
+        } catch (SAXException e) {
+            LOGGER.error("SAXException: '{}'", e.getMessage(), e);
+        }
+        return document;
+    }
 
     public void parse() throws AtnaPersistenceException {
+
         readDoc();
         load();
     }
 
     private void load() throws AtnaPersistenceException {
-        PersistencePolicies pp = new PersistencePolicies();
-        pp.setErrorOnDuplicateInsert(false);
-        pp.setAllowNewCodes(true);
-        pp.setAllowNewNetworkAccessPoints(true);
-        pp.setAllowNewObjects(true);
-        pp.setAllowNewParticipants(true);
-        pp.setAllowNewSources(true);
+
+        var persistencePolicies = new PersistencePolicies();
+        persistencePolicies.setErrorOnDuplicateInsert(false);
+        persistencePolicies.setAllowNewCodes(true);
+        persistencePolicies.setAllowNewNetworkAccessPoints(true);
+        persistencePolicies.setAllowNewObjects(true);
+        persistencePolicies.setAllowNewParticipants(true);
+        persistencePolicies.setAllowNewSources(true);
         if (evtTypes.size() > 0) {
-            CodeDao dao = AtnaFactory.codeDao();
+            var codeDao = AtnaFactory.codeDao();
             for (CodeEntity code : evtTypes.values()) {
-                dao.save(code, pp);
+                codeDao.save(code, persistencePolicies);
             }
         }
         if (evtIds.size() > 0) {
-            CodeDao dao = AtnaFactory.codeDao();
+            var codeDao = AtnaFactory.codeDao();
             for (CodeEntity code : evtIds.values()) {
-                dao.save(code, pp);
+                codeDao.save(code, persistencePolicies);
             }
         }
         if (sourceTypes.size() > 0) {
-            CodeDao dao = AtnaFactory.codeDao();
+            var codeDao = AtnaFactory.codeDao();
             for (CodeEntity code : sourceTypes.values()) {
-                dao.save(code, pp);
+                codeDao.save(code, persistencePolicies);
             }
         }
         if (objTypes.size() > 0) {
-            CodeDao dao = AtnaFactory.codeDao();
+            var codeDao = AtnaFactory.codeDao();
             for (CodeEntity code : objTypes.values()) {
-                dao.save(code, pp);
+                codeDao.save(code, persistencePolicies);
             }
         }
         if (partTypes.size() > 0) {
-            CodeDao dao = AtnaFactory.codeDao();
+            var codeDao = AtnaFactory.codeDao();
             for (CodeEntity code : partTypes.values()) {
-                dao.save(code, pp);
+                codeDao.save(code, persistencePolicies);
             }
         }
         if (naps.size() > 0) {
-            NetworkAccessPointDao dao = AtnaFactory.networkAccessPointDao();
+            var networkAccessPointDao = AtnaFactory.networkAccessPointDao();
             for (NetworkAccessPointEntity nap : naps.values()) {
-                dao.save(nap, pp);
+                networkAccessPointDao.save(nap, persistencePolicies);
             }
         }
-
         if (sources.size() > 0) {
-            SourceDao dao = AtnaFactory.sourceDao();
+            var sourceDao = AtnaFactory.sourceDao();
             for (SourceEntity source : sources.values()) {
-                dao.save(source, pp);
+                sourceDao.save(source, persistencePolicies);
             }
         }
         if (parts.size() > 0) {
-            ParticipantDao dao = AtnaFactory.participantDao();
+            var participantDao = AtnaFactory.participantDao();
             for (ParticipantEntity pe : parts.values()) {
-                dao.save(pe, pp);
+                participantDao.save(pe, persistencePolicies);
             }
         }
         if (objects.size() > 0) {
-            ObjectDao dao = AtnaFactory.objectDao();
+            var objectDao = AtnaFactory.objectDao();
             for (ObjectEntity e : objects.values()) {
-                dao.save(e, pp);
+                objectDao.save(e, persistencePolicies);
             }
         }
-        if (messages.size() > 0) {
-            MessageDao dao = AtnaFactory.messageDao();
+        if (!messages.isEmpty()) {
+            var messageDao = AtnaFactory.messageDao();
             for (MessageEntity e : messages) {
-                dao.save(e, pp);
+                messageDao.save(e, persistencePolicies);
             }
         }
-
-
     }
 
     private void readDoc() {
-        Element el = doc.getDocumentElement();
+
+        Element el = document.getDocumentElement();
         if (el.getLocalName().equals(DataConstants.ENTITIES)) {
             NodeList children = el.getChildNodes();
-            for (int i = 0; i < children.getLength(); i++) {
+            for (var i = 0; i < children.getLength(); i++) {
                 Node n = children.item(i);
                 if (n instanceof Element) {
                     Element e = (Element) n;
@@ -195,7 +168,7 @@ public class DataReader {
                     }
                 }
             }
-            for (int i = 0; i < children.getLength(); i++) {
+            for (var i = 0; i < children.getLength(); i++) {
                 Node n = children.item(i);
                 if (n instanceof Element) {
                     Element e = (Element) n;
@@ -209,7 +182,7 @@ public class DataReader {
                     }
                 }
             }
-            for (int i = 0; i < children.getLength(); i++) {
+            for (var i = 0; i < children.getLength(); i++) {
                 Node n = children.item(i);
                 if (n instanceof Element) {
                     Element e = (Element) n;
@@ -225,8 +198,9 @@ public class DataReader {
     }
 
     private void readCodes(Element codes) {
+
         NodeList children = codes.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
                 Element e = (Element) n;
@@ -241,16 +215,14 @@ public class DataReader {
     }
 
     private void readCodeTypes(Element code, String type) {
+
         NodeList children = code.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
-            if (n instanceof Element) {
-                if (((Element) n).getTagName().equalsIgnoreCase(DataConstants.CODE)) {
-                    readCode((Element) n, type);
-                }
+            if (n instanceof Element && ((Element) n).getTagName().equalsIgnoreCase(DataConstants.CODE)) {
+                readCode((Element) n, type);
             }
         }
-
     }
 
     private void readCode(Element el, String type) {
@@ -272,7 +244,7 @@ public class DataReader {
         }
         String code = el.getAttribute(DataConstants.CODE);
         if (nill(code)) {
-            System.out.println("no code defined in coded value. Not loading...");
+            LOGGER.info("no code defined in coded value. Not loading...");
             return;
         }
         entity.setCode(code);
@@ -284,23 +256,32 @@ public class DataReader {
         entity.setCodeSystemName(nill(name) ? null : name);
         entity.setDisplayName(nill(dis) ? null : dis);
         entity.setOriginalText(nill(orig) ? null : orig);
-        if (type.equals(DataConstants.CODE_EVENT_ID)) {
-            evtIds.put(code, entity);
-        } else if (type.equals(DataConstants.CODE_EVENT_TYPE)) {
-            evtTypes.put(code, entity);
-        } else if (type.equals(DataConstants.CODE_OBJ_ID_TYPE)) {
-            objTypes.put(code, entity);
-        } else if (type.equals(DataConstants.CODE_PARTICIPANT_TYPE)) {
-            partTypes.put(code, entity);
-        } else if (type.equals(DataConstants.CODE_SOURCE)) {
-            sourceTypes.put(code, entity);
+
+        switch (type) {
+            case DataConstants.CODE_EVENT_ID:
+                evtIds.put(code, entity);
+                break;
+            case DataConstants.CODE_EVENT_TYPE:
+                evtTypes.put(code, entity);
+                break;
+            case DataConstants.CODE_OBJ_ID_TYPE:
+                objTypes.put(code, entity);
+                break;
+            case DataConstants.CODE_PARTICIPANT_TYPE:
+                partTypes.put(code, entity);
+                break;
+            case DataConstants.CODE_SOURCE:
+                sourceTypes.put(code, entity);
+                break;
+            default:
+                LOGGER.warn("Code not supported!");
         }
     }
 
-
     private void readNaps(Element codes) {
+
         NodeList children = codes.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(DataConstants.NETWORK_ACCESS_POINT)) {
                 readNap((Element) n);
@@ -309,21 +290,23 @@ public class DataReader {
     }
 
     private void readNap(Element el) {
+
         String netId = el.getAttribute(DataConstants.NETWORK_ACCESS_POINT_ID);
         String type = el.getAttribute(DataConstants.TYPE);
         if (nill(netId) || nill(type)) {
-            System.out.println("no identifier or type defined in network access point. Not loading...");
+            LOGGER.info("no identifier or type defined in network access point. Not loading...");
             return;
         }
-        NetworkAccessPointEntity e = new NetworkAccessPointEntity();
-        e.setIdentifier(netId);
-        e.setType(new Short(type));
-        naps.put(netId, e);
+        var networkAccessPointEntity = new NetworkAccessPointEntity();
+        networkAccessPointEntity.setIdentifier(netId);
+        networkAccessPointEntity.setType(Short.valueOf(type));
+        naps.put(netId, networkAccessPointEntity);
     }
 
     private void readSources(Element codes) {
+
         NodeList children = codes.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(DataConstants.SOURCE)) {
                 readSource((Element) n);
@@ -332,17 +315,18 @@ public class DataReader {
     }
 
     private void readSource(Element el) {
+
         String sourceId = el.getAttribute(DataConstants.SOURCE_ID);
         if (nill(sourceId)) {
-            System.out.println("No Source id set. Not loading...");
+            LOGGER.info("No Source id set. Not loading...");
             return;
         }
         String ent = el.getAttribute(DataConstants.ENT_SITE_ID);
-        SourceEntity e = new SourceEntity();
-        e.setSourceId(sourceId);
-        e.setEnterpriseSiteId(nill(ent) ? null : ent);
+        var sourceEntity = new SourceEntity();
+        sourceEntity.setSourceId(sourceId);
+        sourceEntity.setEnterpriseSiteId(nill(ent) ? null : ent);
         NodeList children = el.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(DataConstants.SOURCE_TYPE)) {
                 Element ch = (Element) n;
@@ -351,17 +335,18 @@ public class DataReader {
                     continue;
                 }
                 CodeEntity code = sourceTypes.get(ref);
-                if (code != null && code instanceof SourceCodeEntity) {
-                    e.getSourceTypeCodes().add((SourceCodeEntity) code);
+                if (code instanceof SourceCodeEntity) {
+                    sourceEntity.getSourceTypeCodes().add((SourceCodeEntity) code);
                 }
             }
         }
-        sources.put(sourceId, e);
+        sources.put(sourceId, sourceEntity);
     }
 
     private void readParts(Element codes) {
+
         NodeList children = codes.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(DataConstants.PARTICIPANT)) {
                 readPart((Element) n);
@@ -370,18 +355,19 @@ public class DataReader {
     }
 
     private void readPart(Element el) {
+
         String partId = el.getAttribute(DataConstants.USER_ID);
         if (nill(partId)) {
-            System.out.println("no active participant id defined. Not loading...");
+            LOGGER.info("no active participant id defined. Not loading...");
         }
         String name = el.getAttribute(DataConstants.USER_NAME);
         String alt = el.getAttribute(DataConstants.ALT_USER_ID);
-        ParticipantEntity e = new ParticipantEntity();
-        e.setUserId(partId);
-        e.setUserName(nill(name) ? null : name);
-        e.setAlternativeUserId(nill(alt) ? null : alt);
+        var participantEntity = new ParticipantEntity();
+        participantEntity.setUserId(partId);
+        participantEntity.setUserName(nill(name) ? null : name);
+        participantEntity.setAlternativeUserId(nill(alt) ? null : alt);
         NodeList children = el.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(DataConstants.PARTICIPANT_TYPE)) {
                 Element ch = (Element) n;
@@ -390,17 +376,18 @@ public class DataReader {
                     continue;
                 }
                 CodeEntity code = partTypes.get(ref);
-                if (code != null && code instanceof ParticipantCodeEntity) {
-                    e.getParticipantTypeCodes().add((ParticipantCodeEntity) code);
+                if (code instanceof ParticipantCodeEntity) {
+                    participantEntity.getParticipantTypeCodes().add((ParticipantCodeEntity) code);
                 }
             }
         }
-        parts.put(partId, e);
+        parts.put(partId, participantEntity);
     }
 
     private void readObjects(Element codes) {
+
         NodeList children = codes.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element && n.getLocalName().equals(DataConstants.OBJECT)) {
                 readObject((Element) n);
@@ -409,22 +396,23 @@ public class DataReader {
     }
 
     private void readObject(Element el) {
+
         String obId = el.getAttribute(DataConstants.OBJECT_ID);
         if (nill(obId)) {
-            System.out.println("no participating object id defined. Not loading...");
+            LOGGER.info("no participating object id defined. Not loading...");
         }
         String name = el.getAttribute(DataConstants.OBJECT_NAME);
         String type = el.getAttribute(DataConstants.OBJECT_TYPE_CODE);
         String role = el.getAttribute(DataConstants.OBJECT_TYPE_CODE_ROLE);
         String sens = el.getAttribute(DataConstants.OBJECT_SENSITIVITY);
-        ObjectEntity e = new ObjectEntity();
-        e.setObjectId(obId);
-        e.setObjectName(nill(name) ? null : name);
-        e.setObjectSensitivity(nill(sens) ? null : sens);
-        e.setObjectTypeCode(nill(type) ? null : Short.valueOf(type));
-        e.setObjectTypeCodeRole(nill(role) ? null : Short.valueOf(role));
+        var objectEntity = new ObjectEntity();
+        objectEntity.setObjectId(obId);
+        objectEntity.setObjectName(nill(name) ? null : name);
+        objectEntity.setObjectSensitivity(nill(sens) ? null : sens);
+        objectEntity.setObjectTypeCode(nill(type) ? null : Short.valueOf(type));
+        objectEntity.setObjectTypeCodeRole(nill(role) ? null : Short.valueOf(role));
         NodeList children = el.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
                 Element ele = (Element) n;
@@ -432,32 +420,33 @@ public class DataReader {
                 if (ele.getLocalName().equals(DataConstants.OBJECT_ID_TYPE)) {
                     String ref = ele.getAttribute(DataConstants.CODE);
                     if (nill(ref)) {
-                        System.out.println("no object id type defined. Not loading...");
+                        LOGGER.info("no object id type defined. Not loading...");
                         return;
                     }
                     CodeEntity code = objTypes.get(ref);
-                    if (code != null && code instanceof ObjectIdTypeCodeEntity) {
-                        e.setObjectIdTypeCode((ObjectIdTypeCodeEntity) code);
+                    if (code instanceof ObjectIdTypeCodeEntity) {
+                        objectEntity.setObjectIdTypeCode((ObjectIdTypeCodeEntity) code);
                     } else {
-                        System.out.println("no object id type defined. Not loading...");
+                        LOGGER.info("no object id type defined. Not loading...");
                         return;
                     }
                 } else if (ele.getLocalName().equals(DataConstants.OBJECT_DETAIL_KEY)) {
                     String key = ele.getAttribute(DataConstants.KEY);
                     if (key != null) {
-                        e.addObjectDetailType(key);
+                        objectEntity.addObjectDetailType(key);
                     }
                 }
             }
         }
-        if (e.getObjectIdTypeCode() == null) {
-            System.out.println("no object id type defined. Not loading...");
+        if (objectEntity.getObjectIdTypeCode() == null) {
+            LOGGER.info("no object id type defined. Not loading...");
             return;
         }
-        objects.put(obId, e);
+        objects.put(obId, objectEntity);
     }
 
     public void readMessage(Element el) {
+
         String action = el.getAttribute(DataConstants.EVT_ACTION);
         String outcome = el.getAttribute(DataConstants.EVT_OUTCOME);
         String time = el.getAttribute(DataConstants.EVT_TIME);
@@ -469,36 +458,36 @@ public class DataReader {
             ts = new Date();
         }
         if (nill(action) || nill(outcome)) {
-            System.out.println("action or outcome of message is null. Not loading...");
+            LOGGER.info("action or outcome of message is null. Not loading...");
         }
-        MessageEntity ent = new MessageEntity();
-        ent.setEventActionCode(action);
-        ent.setEventDateTime(ts);
-        ent.setEventOutcome(Integer.parseInt(outcome));
+        var messageEntity = new MessageEntity();
+        messageEntity.setEventActionCode(action);
+        messageEntity.setEventDateTime(ts);
+        messageEntity.setEventOutcome(Integer.parseInt(outcome));
         NodeList children = el.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
+        for (var i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n instanceof Element) {
                 Element ele = (Element) n;
                 if (ele.getLocalName().equals(DataConstants.EVT_ID)) {
                     String ref = ele.getAttribute(DataConstants.CODE);
                     if (nill(ref)) {
-                        System.out.println("no event id type defined. Not loading...");
+                        LOGGER.info("no event id type defined. Not loading...");
                         return;
                     }
                     CodeEntity code = evtIds.get(ref);
-                    if (code != null && code instanceof EventIdCodeEntity) {
-                        ent.setEventId((EventIdCodeEntity) code);
+                    if (code instanceof EventIdCodeEntity) {
+                        messageEntity.setEventId((EventIdCodeEntity) code);
                     } else {
-                        System.out.println("no event id type defined. Not loading...");
+                        LOGGER.info("no event id type defined. Not loading...");
                         return;
                     }
                 } else if (ele.getLocalName().equals(DataConstants.EVT_TYPE)) {
                     String ref = ele.getAttribute(DataConstants.CODE);
                     if (!nill(ref)) {
                         CodeEntity code = evtTypes.get(ref);
-                        if (code != null && code instanceof EventTypeCodeEntity) {
-                            ent.addEventTypeCode((EventTypeCodeEntity) code);
+                        if (code instanceof EventTypeCodeEntity) {
+                            messageEntity.addEventTypeCode((EventTypeCodeEntity) code);
                         }
                     }
                 } else if (ele.getLocalName().equals(DataConstants.PARTICIPANT)) {
@@ -506,19 +495,19 @@ public class DataReader {
                     if (!nill(ref)) {
                         ParticipantEntity pe = parts.get(ref);
                         if (pe != null) {
-                            MessageParticipantEntity p = new MessageParticipantEntity(pe);
+                            var messageParticipantEntity = new MessageParticipantEntity(pe);
                             String requestor = ele.getAttribute("requestor");
                             if (requestor != null) {
-                                p.setUserIsRequestor(Boolean.valueOf(requestor));
+                                messageParticipantEntity.setUserIsRequestor(Boolean.valueOf(requestor));
                             }
                             String nap = ele.getAttribute("nap");
                             if (nap != null) {
                                 NetworkAccessPointEntity net = naps.get(nap);
                                 if (net != null) {
-                                    p.setNetworkAccessPoint(net);
+                                    messageParticipantEntity.setNetworkAccessPoint(net);
                                 }
                             }
-                            ent.addMessageParticipant(p);
+                            messageEntity.addMessageParticipant(messageParticipantEntity);
                         }
                     }
                 } else if (ele.getLocalName().equals(DataConstants.SOURCE)) {
@@ -526,8 +515,8 @@ public class DataReader {
                     if (!nill(ref)) {
                         SourceEntity se = sources.get(ref);
                         if (se != null) {
-                            MessageSourceEntity p = new MessageSourceEntity(se);
-                            ent.addMessageSource(p);
+                            var messageSourceEntity = new MessageSourceEntity(se);
+                            messageEntity.addMessageSource(messageSourceEntity);
                         }
                     }
                 } else if (ele.getLocalName().equals(DataConstants.OBJECT)) {
@@ -535,14 +524,14 @@ public class DataReader {
                     if (!nill(ref)) {
                         ObjectEntity oe = objects.get(ref);
                         if (oe != null) {
-                            MessageObjectEntity p = new MessageObjectEntity(oe);
+                            var messageObjectEntity = new MessageObjectEntity(oe);
                             NodeList ch = ele.getChildNodes();
-                            for (int j = 0; j < ch.getLength(); j++) {
+                            for (var j = 0; j < ch.getLength(); j++) {
                                 Node node = ch.item(j);
                                 if (node instanceof Element) {
                                     Element child = (Element) node;
                                     boolean enc = child.getAttribute("encoded") != null
-                                            && child.getAttribute("encoded").equalsIgnoreCase("true");
+                                            && StringUtils.equalsIgnoreCase(child.getAttribute("encoded"), "true");
                                     if (child.getLocalName().equals(DataConstants.QUERY)) {
                                         String q = child.getTextContent();
                                         if (q != null) {
@@ -550,12 +539,7 @@ public class DataReader {
                                             if (!enc) {
                                                 q = Base64.encodeString(q);
                                             }
-                                            try {
-                                                p.setObjectQuery(q.getBytes("UTF-8"));
-                                            } catch (UnsupportedEncodingException e) {
-                                                e.printStackTrace();
-                                                // shouldn't happen
-                                            }
+                                            messageObjectEntity.setObjectQuery(q.getBytes(StandardCharsets.UTF_8));
                                         }
                                     } else if (child.getLocalName().equals(DataConstants.DETAIL)) {
                                         String type = child.getAttribute(DataConstants.TYPE);
@@ -566,50 +550,28 @@ public class DataReader {
                                                 if (!enc) {
                                                     val = Base64.encodeString(val);
                                                 }
-                                                try {
-                                                    ObjectDetailEntity ode
-                                                            = new ObjectDetailEntity(type, val.getBytes("UTF-8"));
-                                                    p.addObjectDetail(ode);
-                                                } catch (UnsupportedEncodingException e) {
-                                                    e.printStackTrace();
-                                                    // shouldn't happen
-                                                }
+                                                var objectDetailEntity = new ObjectDetailEntity(type, val.getBytes(StandardCharsets.UTF_8));
+                                                messageObjectEntity.addObjectDetail(objectDetailEntity);
                                             }
                                         }
                                     }
                                 }
                             }
-                            ent.addMessageObject(p);
+                            messageEntity.addMessageObject(messageObjectEntity);
                         }
                     }
                 }
             }
         }
-        if (ent.getMessageParticipants().size() == 0) {
-            System.out.println("message has no participants. Not loading...");
+        if (messageEntity.getMessageParticipants().isEmpty()) {
+            LOGGER.info("message has no participants. Not loading...");
             return;
         }
-        if (ent.getMessageSources().size() == 0) {
-            System.out.println("message has no sources. Not loading...");
+        if (messageEntity.getMessageSources().isEmpty()) {
+            LOGGER.info("message has no sources. Not loading...");
             return;
         }
-        messages.add(ent);
-    }
-
-
-    private static Document newDocument(InputStream stream) throws IOException {
-        Document doc = null;
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setNamespaceAware(true);
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.parse(stream);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-        return doc;
+        messages.add(messageEntity);
     }
 
     private String id(Element el) {
@@ -621,11 +583,6 @@ public class DataReader {
     }
 
     private boolean nill(String val) {
-        if (val == null || val.trim().length() == 0) {
-            return true;
-        }
-        return false;
+        return val == null || val.trim().length() == 0;
     }
-
-
 }

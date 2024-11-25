@@ -1,46 +1,19 @@
-/**
- * Copyright (c) 2009-2011 University of Cardiff and others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Contributors:
- * Cardiff University - intial API and implementation
- */
-
 package org.openhealthtools.openatna.archive;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-
-/**
- * @author Andrew Harrison
- * @version 1.0.0
- * @date Mar 12, 2010: 12:39:58 PM
- */
+import java.util.*;
 
 public class ReadUtils {
 
+    private ReadUtils() {
+    }
 
     public static XMLEvent dig(XMLEventReader reader, String... tags) throws XMLStreamException {
+
         XMLEvent evt = null;
         for (String tag : tags) {
             evt = reader.nextTag();
@@ -52,12 +25,17 @@ public class ReadUtils {
                 }
             }
         }
-        return evt.isStartElement() ? evt : null;
+        if (evt != null) {
+            return evt.isStartElement() ? evt : null;
+        } else {
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
     public static List<Attribute> getAttributes(XMLEvent evt) {
-        List<Attribute> ret = new ArrayList<Attribute>();
+
+        List<Attribute> ret = new ArrayList<>();
         if (evt.isStartElement()) {
             StartElement start = evt.asStartElement();
             Iterator<Attribute> iterator = start.getAttributes();
@@ -70,7 +48,8 @@ public class ReadUtils {
 
     @SuppressWarnings("unchecked")
     public static Map<String, String> getAttributeMap(XMLEvent evt) {
-        Map<String, String> ret = new HashMap<String, String>();
+
+        Map<String, String> ret = new HashMap<>();
         if (evt.isStartElement()) {
             StartElement start = evt.asStartElement();
             Iterator<Attribute> iterator = start.getAttributes();
@@ -84,7 +63,7 @@ public class ReadUtils {
 
     public static boolean peek(XMLEventReader reader, String expected) throws XMLStreamException {
 
-        XMLEvent evt = null;
+        XMLEvent evt;
         while (true) {
             evt = reader.peek();
             if (evt.isEndElement() || evt.isEndDocument()) {
@@ -96,15 +75,12 @@ public class ReadUtils {
             }
         }
         StartElement start = evt.asStartElement();
-        if (start.getName().getLocalPart().equals(expected)) {
-            return true;
-        }
-        return false;
+        return start.getName().getLocalPart().equals(expected);
     }
 
     public static boolean peek(XMLEventReader reader, String... expected) throws XMLStreamException {
 
-        XMLEvent evt = null;
+        XMLEvent evt;
         while (true) {
             evt = reader.peek();
             if (evt.isEndElement() || evt.isEndDocument()) {
@@ -116,13 +92,11 @@ public class ReadUtils {
             }
         }
         StartElement start = evt.asStartElement();
-        for (int i = 0; i < expected.length; i++) {
-            String s = expected[i];
+        for (String s : expected) {
             if (start.getName().getLocalPart().equals(s)) {
                 return true;
             }
         }
-
         return false;
     }
 }
